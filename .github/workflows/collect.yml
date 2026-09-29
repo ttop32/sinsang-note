@@ -28,6 +28,7 @@ jobs:
       - run: python collect.py
 
       - name: commit & push
+        if: always()          # 일부 어댑터가 죽어도 나머지는 반영
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

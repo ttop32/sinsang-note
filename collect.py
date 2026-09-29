@@ -9,9 +9,11 @@ import json
 import pathlib
 from datetime import date, datetime, timezone
 
-from collectors import mega
+from collectors import cu, ediya, emart24, mega, seven, starbucks
 
-ADAPTERS = [mega]
+# GS25 는 제외. gs25.gsretail.com/gscvs/* 가 기업 소개 페이지로 301 되고
+# 상품 카탈로그는 '우리동네GS' 앱 전용으로 옮겨가 공개 웹 소스가 없다.
+ADAPTERS = [mega, starbucks, cu, seven, emart24, ediya]
 
 ROOT = pathlib.Path(__file__).parent
 DATA = ROOT / "data" / "products.json"
@@ -29,7 +31,7 @@ def load_previous() -> dict:
 def main() -> None:
     today = date.today().isoformat()
     prev = load_previous()
-    first_run = not prev
+    known_brands = {p["brand"] for p in prev.values()}
 
     products, errors = [], []
     for mod in ADAPTERS:
@@ -43,8 +45,6 @@ def main() -> None:
             errors.append(f"{mod.BRAND}: {e}")
             print(f"!! {mod.BRAND} 실패: {e}")
 
-    if errors and not products:
-        raise SystemExit("모든 어댑터 실패:\n" + "\n".join(errors))
 
     rows = []
     for it in products:
@@ -52,10 +52,16 @@ def main() -> None:
         old = prev.get(d["key"])
         if old:
             d["first_seen"] = old.get("first_seen", today)
-        elif first_run:
-            d["first_seen"] = d.get("uploaded_at") or today   # 첫 실행은 업로드일로 소급
+            d["baseline"] = old.get("baseline", False)
+        elif d["brand"] not in known_brands:
+            # 브랜드가 막 합류했다. 이건 신제품이 아니라 그 브랜드 메뉴판 전체다.
+            # 날짜를 알려주는 브랜드는 소급하고, 나머지는 오늘로 두되 baseline 으로 표시해
+            # '오늘 신규' 집계와 화면 배지에서 빼놓는다.
+            d["first_seen"] = d.get("uploaded_at") or today
+            d["baseline"] = True
         else:
             d["first_seen"] = today                            # 진짜 신규
+            d["baseline"] = False
         rows.append(d)
 
     rows.sort(key=lambda r: (r["first_seen"], r.get("uploaded_at", "")), reverse=True)
@@ -67,9 +73,16 @@ def main() -> None:
          "count": len(rows), "products": rows},
         ensure_ascii=False, indent=1), encoding="utf-8")
 
-    new_today = [r for r in rows if r["first_seen"] == today] if not first_run else []
-    print(f"총 {len(rows)}건 / 오늘 신규 {len(new_today)}건 / 사라짐 {len(gone)}건")
+    new_today = [r for r in rows if r["first_seen"] == today and not r["baseline"]]
+    baseline = [r for r in rows if r["baseline"]]
+    print(f"총 {len(rows)}건 / 오늘 신규 {len(new_today)}건 "
+          f"/ 신규 브랜드 기준선 {len(baseline)}건 / 사라짐 {len(gone)}건")
     render(rows, new_today)
+
+    # 데이터는 위에서 이미 썼다. 실패한 어댑터가 있으면 여기서 죽어 Actions 가 빨갛게 뜬다.
+    # (워크플로의 커밋 스텝은 if: always() 라 부분 결과는 반영된다.)
+    if errors:
+        raise SystemExit("어댑터 실패:\n" + "\n".join(errors))
 
 
 def card(r: dict) -> str:
