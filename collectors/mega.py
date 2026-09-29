@@ -7,12 +7,10 @@ import re
 import httpx
 from selectolax.parser import HTMLParser
 
-from .base import Item
+from .base import UA, Item
 
 BRAND = "메가MGC커피"
 URL = "https://www.mega-mgccoffee.com/menu/menu.php"
-UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36")
 MAX_PAGES = 30  # 폭주 방지. 현재 4페이지.
 
 

@@ -5,6 +5,7 @@
 브랜드가 알려주는 uploaded_at 을 first_seen 으로 쓴다(메가는 이미지 파일명에 들어있음).
 """
 import html
+import inspect
 import json
 import pathlib
 from datetime import date, datetime, timezone
@@ -36,7 +37,11 @@ def main() -> None:
     products, errors = [], []
     for mod in ADAPTERS:
         try:
-            items = mod.fetch()
+            # 이전 수집 결과를 받아 재요청을 줄일 수 있는 어댑터에만 넘긴다(CU 등).
+            if "known" in inspect.signature(mod.fetch).parameters:
+                items = mod.fetch(known=prev)
+            else:
+                items = mod.fetch()
             if not items:
                 raise RuntimeError("0건 수집 — 파서가 깨졌을 가능성")
             print(f"{mod.BRAND}: {len(items)}건")
@@ -59,6 +64,11 @@ def main() -> None:
             # '오늘 신규' 집계와 화면 배지에서 빼놓는다.
             d["first_seen"] = d.get("uploaded_at") or today
             d["baseline"] = True
+        elif d.get("uploaded_at") and d["uploaded_at"] < today:
+            # 브랜드가 알려준 등록일이 과거다. 우리가 늦게 발견했을 뿐 신제품이 아니다.
+            # (수집기 버그를 고쳐 누락분이 한꺼번에 들어올 때 이 경로를 탄다.)
+            d["first_seen"] = d["uploaded_at"]
+            d["baseline"] = False
         else:
             d["first_seen"] = today                            # 진짜 신규
             d["baseline"] = False

@@ -12,12 +12,10 @@ import time
 import httpx
 from selectolax.parser import HTMLParser
 
-from .base import Item
+from .base import UA, Item
 
 BRAND = "이마트24"
 URL = "https://emart24.co.kr/goods/{section}"
-UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36")
 SECTIONS = {"event": "행사 상품", "pl": "차별화 상품", "ff": "Fresh Food"}
 MAX_PAGES = 8   # 섹션당 상한. 20건/페이지, 최신순이라 앞쪽이 신상. 전체는 event 51p+.
 DELAY = 0.4     # 연속 호출 간격(초)

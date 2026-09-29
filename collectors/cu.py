@@ -17,14 +17,12 @@ import time
 import httpx
 from selectolax.parser import HTMLParser
 
-from .base import Item
+from .base import UA, Item
 
 BRAND = "CU"
 LIST_URL = "https://cu.bgfretail.com/product/productAjax.do"
 VIEW_URL = "https://cu.bgfretail.com/product/view.do"
 REFERER = "https://cu.bgfretail.com/product/product.do?category=product&depth2=4"
-UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36")
 
 # 전체상품 페이지의 3depth 탭. gomaincategory() 가 넘기는 코드값 그대로다.
 CATEGORIES = {
@@ -72,12 +70,22 @@ def _form(cat: str, page: int) -> dict:
             "searchKeyword": ""}
 
 
-def _fill_desc(client, items: list, gd_by_key: dict) -> None:
-    """설명문은 목록에 없으니 상세를 상품당 한 번씩 긁는다. 실패하면 빈 값으로 둔다."""
+def _fill_desc(client, items: list, gd_by_key: dict, known: dict) -> int:
+    """설명문은 목록에 없으니 상세를 상품당 한 번씩 긁는다. 실패하면 빈 값으로 둔다.
+
+    설명문은 사실상 바뀌지 않는데 상품이 600건대라 매일 전량을 다시 긁으면
+    하루 700요청이 된다. 이미 받아둔 건 재사용하고 새로 나타난 것만 긁는다.
+    """
+    fetched = 0
     for it in items:
+        cached = known.get(it.key, {}).get("desc")
+        if cached:
+            it.desc = cached
+            continue
         gd = gd_by_key.get(it.key)
         if not gd:
             continue
+        fetched += 1
         try:
             r = client.get(VIEW_URL, params={"category": "product", "gdIdx": gd})
             r.raise_for_status()
@@ -88,9 +96,10 @@ def _fill_desc(client, items: list, gd_by_key: dict) -> None:
         tree = HTMLParser(r.text)
         it.desc = " ".join(" ".join(n.text().split())
                            for n in tree.css(".prodExplain li")).strip()
+    return fetched
 
 
-def fetch() -> list[Item]:
+def fetch(known: dict | None = None) -> list[Item]:
     items: list[Item] = []
     gd_by_key: dict = {}
     headers = {"User-Agent": UA, "X-Requested-With": "XMLHttpRequest", "Referer": REFERER}
@@ -129,5 +138,6 @@ def fetch() -> list[Item]:
                 if not cards or not fresh or "더보기" not in r.text:
                     break
 
-        _fill_desc(c, items, gd_by_key)
+        n = _fill_desc(c, items, gd_by_key, known or {})
+        print(f"  CU 상세 요청 {n}건 (캐시 {len(items) - n}건)")
     return items

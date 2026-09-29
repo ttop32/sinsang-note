@@ -4,7 +4,8 @@
 그 아래는 '더보기' 버튼이 ajax_brand.php 를 때린다. 쿠키·세션 없이 그대로 응답한다.
 브라우저 불필요. 더보기는 8건씩, 소진되면 본문 "none" 을 돌려줘서 종료 판정이 쉽다.
 
-목록은 최신순이라 앞 페이지가 곧 신상이다. 음료는 전체가 50페이지쯤 되는데
+목록은 최신순이 아니다. 카테고리(커피/음료/쉐이크/빙수) 블록 순서라
+중간에 자르면 상품군이 통째로 빠진다. 반드시 끝까지 돌 것. 음료는 전체가 50페이지쯤 되는데
 신상만 보는 용도라 앞쪽만 긁는다.
 가격 정보는 페이지 어디에도 없다(용량·영양성분·알레르기만 있음).
 """
@@ -15,16 +16,14 @@ from datetime import datetime
 import httpx
 from selectolax.parser import HTMLParser
 
-from .base import Item
+from .base import UA, Item
 
 BRAND = "이디야커피"
 BASE = "https://www.ediya.com"
 MORE = BASE + "/inc/ajax_brand.php"
-UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36")
 # product_cate: 목록 페이지 → (경로, 카테고리명)
 MENUS = {7: ("/contents/drink.html", "음료"), 8: ("/contents/bakery.html", "베이커리")}
-MAX_PAGES = 12   # 카테고리당 상한. 8건/페이지. 음료 전체는 50p+.
+MAX_PAGES = 60   # 폭주 방지선. 실제 종료는 서버가 "none" 을 줄 때다.
 DELAY = 0.4      # 연속 호출 간격(초)
 
 

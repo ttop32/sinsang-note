@@ -15,12 +15,10 @@ import re
 import time
 import httpx
 
-from .base import Item
+from .base import UA, Item
 
 BRAND = "스타벅스"
 JSON_URL = "https://www.starbucks.co.kr/upload/json/menu/{code}.js"
-UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36")
 MAX_CATEGORIES = 40  # 폭주 방지. 현재 17개.
 DELAY = 0.5          # 요청 간격(초)
 
@@ -84,10 +82,13 @@ def fetch() -> list[Item]:
         for code, label in CATEGORIES[:MAX_CATEGORIES]:
             r = c.get(JSON_URL.format(code=code))
             r.raise_for_status()
+            # 무효한 카테고리 코드에 스타벅스는 404 가 아니라 200 + HTML 오류페이지를 준다.
+            # 조용히 넘기면 그 카테고리가 통째로 증발하므로 예외로 올려 수집을 실패시킨다.
             try:
                 rows = json.loads(r.text).get("list", [])
-            except json.JSONDecodeError:      # 빈 카테고리가 깨진 본문을 줄 때가 있다
-                rows = []
+            except json.JSONDecodeError:
+                raise RuntimeError(
+                    f"{code}({label}): JSON 이 아닌 응답. 카테고리 코드가 폐기됐을 수 있다") from None
 
             for row in rows:
                 name = _clean(row.get("product_NM"))

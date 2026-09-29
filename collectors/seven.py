@@ -22,15 +22,14 @@ import time
 import httpx
 from selectolax.parser import HTMLParser
 
-from .base import Item
+from .base import UA, Item
 
 BRAND = "세븐일레븐"
 BASE = "https://www.7-eleven.co.kr"
-UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36")
 TAB_NEW = "8"          # presentList.asp 의 신상품 탭
 PAGE_SIZE = 200        # 더보기 한 번에 받는 건수. 현재 두 목록 다 한 번이면 덮인다.
 MAX_PAGES = 15         # 폭주 방지. 현재 섹션당 1~2회.
+MAX_PAGE_SIZE = 1000   # 배증 상한. 낡은 ASP 서버에 비상식적인 크기를 요구하지 않는다.
 DELAY = 1.0            # 낡은 ASP 서버라 몰아치지 않는다
 PLACEHOLDER = "/front/img/product/"   # 사진 없는 상품에 물려주는 디폴트 이미지 경로
 
@@ -95,7 +94,7 @@ def _fresh_food(c: httpx.Client) -> list[Item]:
                              {"intPageSize": size, "pTab": ""}), "Fresh Food")
         if len(items) < size:                 # 요청한 것보다 적게 왔으면 다 받은 것
             break
-        size *= 2                             # 딱 맞게 왔으면 잘렸을 수 있으니 넓혀서 다시
+        size = min(size * 2, MAX_PAGE_SIZE)                             # 딱 맞게 왔으면 잘렸을 수 있으니 넓혀서 다시
     return items
 
 
