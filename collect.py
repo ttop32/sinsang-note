@@ -9,21 +9,22 @@ import html
 import inspect
 import json
 import pathlib
+import re
 from datetime import date, datetime, timedelta, timezone
 
 from collectors import base
 from collectors import (burger_burgerking, burger_momstouch, chicken_bbq,
-                        chicken_bhc, chicken_kyochon, cu, ediya, emart24,
+                        chicken_bhc, chicken_kyochon, cu, ediya,
                         mega, pizza_mrpizza, pizza_pizzahut, seven, starbucks)
 
 # GS25 는 제외. gs25.gsretail.com/gscvs/* 가 기업 소개 페이지로 301 되고
 # 상품 카탈로그는 '우리동네GS' 앱 전용으로 옮겨가 공개 웹 소스가 없다.
 ADAPTERS = [mega, starbucks, ediya,                                  # 카페
-            cu, seven, emart24,                                      # 편의점
+            cu, seven,                                               # 편의점
             burger_momstouch, burger_burgerking,                     # 햄버거
             chicken_bbq, chicken_bhc, chicken_kyochon,               # 치킨
             pizza_pizzahut, pizza_mrpizza]                           # 피자
-# 롯데리아는 뺀다. lotteeatz.com/robots.txt 가 우리 UA 를 전 경로 차단한다.
+# 이마트24·도미노피자·롯데리아는 뺀다. 사유는 base.BRANDS 주석 참고.
 
 # 전일 대비 이 비율 밑으로 떨어지면 부분수집으로 보고 실패 처리한다.
 # 셀렉터가 하나 깨지면 예외가 아니라 '조용한 부분수집'으로 끝나는 게 이 프로젝트의
@@ -149,7 +150,7 @@ def main() -> None:
 
     fresh = [r for r in rows if is_fresh(r, today)]
     fresh.sort(key=lambda r: (_when(r), r["brand"]), reverse=True)
-    fresh = cap_per_brand(fresh)
+    fresh = cap_per_brand(drop_sets(merge_variants(fresh)))
     new_today = [r for r in fresh if _when(r) == today]
     print(f"총 {len(rows)}건 / 신제품 {len(fresh)}건 (오늘 {len(new_today)}건) / 사라짐 {len(gone)}건")
     render(fresh, new_today)
@@ -166,6 +167,45 @@ def main() -> None:
     # (워크플로의 커밋 스텝은 if: always() 라 부분 결과는 반영된다.)
     if errors:
         raise SystemExit("어댑터 실패:\n" + "\n".join(errors))
+
+
+# 같은 상품의 단품·세트·라지세트가 따로 올라온다. 버거킹만 12개 그룹 36건이라
+# 화면이 같은 버거로 도배된다. 표시할 때만 묶고 데이터는 전부 남긴다.
+_VARIANT = re.compile(
+    r"\s*[\[(]?\s*(라지\s*세트|L\s*세트|더블\s*PICK\s*세트|세트|콤보|단품)\s*[\])]?\s*$")
+
+
+def base_name(name: str) -> str:
+    """'몬스터 맥시멈3 라지세트' → '몬스터 맥시멈3'. 접미가 겹쳐 붙어도 다 턴다."""
+    prev = None
+    while prev != name:
+        prev = name
+        name = _VARIANT.sub("", name).strip()
+    return name
+
+
+def merge_variants(rows: list) -> list:
+    """변형을 하나로. 대표는 이름이 가장 짧은 것 — 세트가 아니라 본품이다."""
+    rep: dict = {}
+    for r in rows:
+        k = (r["brand"], base_name(r["name"]))
+        if k not in rep or len(r["name"]) < len(rep[k]["name"]):
+            rep[k] = r
+    keep = {id(v) for v in rep.values()}
+    return [r for r in rows if id(r) in keep]
+
+
+def drop_sets(rows: list) -> list:
+    """본품 없는 세트·콤보는 뺀다.
+
+    세트는 두 종류다. '몬스터 맥시멈3 세트'처럼 본품이 따로 있는 변형은
+    merge_variants 가 본품으로 묶는다. 여기서 걸리는 건 '싱글피자N버거세트'
+    처럼 본품이 없는 조합 상품인데, 이건 신제품이 아니라 구성·할인이다.
+    """
+    return [r for r in rows if not _SET.search(r["name"])]
+
+
+_SET = re.compile(r"세트|콤보")
 
 
 def cap_per_brand(rows: list) -> list:
