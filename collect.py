@@ -14,14 +14,15 @@ from datetime import date, datetime, timedelta, timezone
 from collectors import base
 from collectors import (burger_burgerking, burger_momstouch, chicken_bbq,
                         chicken_bhc, chicken_kyochon, cu, ediya, emart24,
-                        mega, seven, starbucks)
+                        mega, pizza_mrpizza, pizza_pizzahut, seven, starbucks)
 
 # GS25 는 제외. gs25.gsretail.com/gscvs/* 가 기업 소개 페이지로 301 되고
 # 상품 카탈로그는 '우리동네GS' 앱 전용으로 옮겨가 공개 웹 소스가 없다.
 ADAPTERS = [mega, starbucks, ediya,                                  # 카페
             cu, seven, emart24,                                      # 편의점
             burger_momstouch, burger_burgerking,                     # 햄버거
-            chicken_bbq, chicken_bhc, chicken_kyochon]                # 치킨
+            chicken_bbq, chicken_bhc, chicken_kyochon,               # 치킨
+            pizza_pizzahut, pizza_mrpizza]                           # 피자
 # 롯데리아는 뺀다. lotteeatz.com/robots.txt 가 우리 UA 를 전 경로 차단한다.
 
 # 전일 대비 이 비율 밑으로 떨어지면 부분수집으로 보고 실패 처리한다.
