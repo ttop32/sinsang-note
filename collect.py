@@ -4,6 +4,7 @@
 신제품 판정은 '어제 없던 키가 오늘 있으면 신규'. 첫 실행은 전부 신규가 아니라,
 브랜드가 알려주는 uploaded_at 을 first_seen 으로 쓴다(메가는 이미지 파일명에 들어있음).
 """
+import collections
 import html
 import inspect
 import json
@@ -15,6 +16,22 @@ from collectors import cu, ediya, emart24, mega, seven, starbucks
 # GS25 는 제외. gs25.gsretail.com/gscvs/* 가 기업 소개 페이지로 301 되고
 # 상품 카탈로그는 '우리동네GS' 앱 전용으로 옮겨가 공개 웹 소스가 없다.
 ADAPTERS = [mega, starbucks, cu, seven, emart24, ediya]
+
+# 전일 대비 이 비율 밑으로 떨어지면 부분수집으로 보고 실패 처리한다.
+# 셀렉터가 하나 깨지면 예외가 아니라 '조용한 부분수집'으로 끝나는 게 이 프로젝트의
+# 최대 리스크다. 0건 가드만으로는 절반이 날아가도 통과한다.
+FLOOR = 0.7
+
+# 첫 화면에 그리는 최대 개수. 전량(2,600건+)을 한 장에 그리면 1MB 를 넘어가고
+# 브랜드가 늘수록 감당이 안 된다. 이 사이트의 용건은 '신제품'이라 최신순 앞쪽이
+# 대부분의 가치를 갖는다. 전량은 data/products.json 에 그대로 남는다.
+SHOW = 300
+
+# 브랜드 하나에서 하루에 이만큼 넘게 새로 등장하면 신제품 출시가 아니라
+# 수집 범위가 바뀐 것으로 본다(상한 상향, 파서 개선 등). 그런 건 기준선으로
+# 넣어 '오늘 신규'를 오염시키지 않는다. 실제로 이디야 169건·이마트24 590건이
+# 이 경로로 들어왔다.
+SURGE = 20
 
 ROOT = pathlib.Path(__file__).parent
 DATA = ROOT / "data" / "products.json"
@@ -44,6 +61,10 @@ def main() -> None:
                 items = mod.fetch()
             if not items:
                 raise RuntimeError("0건 수집 — 파서가 깨졌을 가능성")
+            before = sum(1 for p in prev.values() if p["brand"] == mod.BRAND)
+            if before and len(items) < before * FLOOR:
+                raise RuntimeError(
+                    f"수집량 급감 {before} → {len(items)}건 — 부분수집 의심")
             print(f"{mod.BRAND}: {len(items)}건")
             products += items
         except Exception as e:                      # 한 브랜드가 죽어도 나머지는 살린다
@@ -84,6 +105,16 @@ def main() -> None:
             d["baseline"] = False
         rows.append(d)
 
+    # 브랜드별로 오늘 새로 등장한 게 급증이면 수집 범위 변경으로 보고 기준선 처리
+    surged = {b for b, n in collections.Counter(
+        r["brand"] for r in rows if r["first_seen"] == today and not r["baseline"]
+    ).items() if n > SURGE}
+    for r in rows:
+        if r["brand"] in surged and r["first_seen"] == today and not r["baseline"]:
+            r["baseline"] = True
+    if surged:
+        print(f"   수집범위 변경으로 판단해 기준선 처리: {', '.join(sorted(surged))}")
+
     rows.sort(key=lambda r: (r["first_seen"], r.get("uploaded_at", "")), reverse=True)
     gone = [k for k in prev if k not in {r["key"] for r in rows}]
 
@@ -97,7 +128,7 @@ def main() -> None:
     baseline = [r for r in rows if r["baseline"]]
     print(f"총 {len(rows)}건 / 오늘 신규 {len(new_today)}건 "
           f"/ 신규 브랜드 기준선 {len(baseline)}건 / 사라짐 {len(gone)}건")
-    render(rows, new_today)
+    render(rows[:SHOW], new_today, total=len(rows))
 
     # 데이터는 위에서 이미 썼다. 실패한 어댑터가 있으면 여기서 죽어 Actions 가 빨갛게 뜬다.
     # (워크플로의 커밋 스텝은 if: always() 라 부분 결과는 반영된다.)
@@ -116,7 +147,8 @@ def card(r: dict) -> str:
 <time datetime="{e(r["first_seen"])}">{e(r["first_seen"])}</time></div></article>'''
 
 
-def render(rows: list, new_today: list) -> None:
+def render(rows: list, new_today: list, total: int | None = None) -> None:
+    total = len(rows) if total is None else total
     updated = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
     banner = (f'<p class="new">오늘 새로 올라온 메뉴 {len(new_today)}건</p>'
               if new_today else "")
@@ -152,7 +184,7 @@ footer{{border-top:1px solid var(--line);padding:20px 0 40px;color:var(--mut);fo
 <main class="g">
 {chr(10).join(card(r) for r in rows)}
 </main>
-<footer>마지막 갱신 {updated} · 총 {len(rows)}개 ·
+<footer>마지막 갱신 {updated} · 최근 {len(rows)}개 표시 (전체 {total}개) ·
 이미지와 상품 정보의 저작권은 각 브랜드에 있습니다.</footer>
 </div></body></html>'''
     OUT.parent.mkdir(parents=True, exist_ok=True)

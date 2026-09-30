@@ -22,6 +22,7 @@ import time
 import httpx
 from selectolax.parser import HTMLParser
 
+from . import base
 from .base import UA, Item
 
 BRAND = "세븐일레븐"
@@ -64,7 +65,10 @@ def _cards(html: str, category: str) -> list[Item]:
             brand=BRAND,
             name=name,
             image="" if not src or src.startswith(PLACEHOLDER) else BASE + src,
-            labels=[t.text().strip() for t in li.css("ul.tag_list_01 li") if t.text().strip()],
+            # '신상품' 배지는 첫 화면에만 그려지고 더보기 AJAX 응답엔 없다.
+            # 같은 신상품인데 앞쪽 11건만 배지가 붙어 화면이 일관성을 잃으므로 버린다.
+            labels=[t for t in (x.text().strip() for x in li.css("ul.tag_list_01 li"))
+                    if t and t != "신상품"],
             category=category,
         ))
     return out
@@ -101,7 +105,7 @@ def _fresh_food(c: httpx.Client) -> list[Item]:
 def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
-    with httpx.Client(headers={"User-Agent": UA}, timeout=30, follow_redirects=True) as c:
+    with base.client() as c:
         # 신상품을 먼저 담아야 같은 상품이 Fresh Food 에도 있을 때 배지를 안 잃는다
         for it in _new_products(c) + _fresh_food(c):
             if it.key not in seen:

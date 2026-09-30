@@ -17,6 +17,7 @@ import time
 import httpx
 from selectolax.parser import HTMLParser
 
+from . import base
 from .base import UA, Item
 
 BRAND = "CU"
@@ -103,7 +104,7 @@ def fetch(known: dict | None = None) -> list[Item]:
     items: list[Item] = []
     gd_by_key: dict = {}
     headers = {"User-Agent": UA, "X-Requested-With": "XMLHttpRequest", "Referer": REFERER}
-    with httpx.Client(headers=headers, timeout=20, follow_redirects=True) as c:
+    with base.client(headers=headers) as c:
         for code, cat_name in CATEGORIES.items():
             for page in range(1, MAX_PAGES + 1):
                 r = c.post(LIST_URL, data=_form(code, page))

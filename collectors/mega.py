@@ -7,6 +7,7 @@ import re
 import httpx
 from selectolax.parser import HTMLParser
 
+from . import base
 from .base import UA, Item
 
 BRAND = "메가MGC커피"
@@ -28,7 +29,7 @@ def _uploaded_at(img_url: str) -> str:
 def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
-    with httpx.Client(headers={"User-Agent": UA}, timeout=20, follow_redirects=True) as c:
+    with base.client() as c:
         for page in range(1, MAX_PAGES + 1):
             r = c.get(URL, params={"page": page, "menu_category1": "",
                                    "menu_category2": "", "category": ""})

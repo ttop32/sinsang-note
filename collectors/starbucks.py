@@ -15,11 +15,15 @@ import re
 import time
 import httpx
 
+from . import base
 from .base import UA, Item
 
 BRAND = "스타벅스"
-JSON_URL = "https://www.starbucks.co.kr/upload/json/menu/{code}.js"
-MAX_CATEGORIES = 40  # 폭주 방지. 현재 17개.
+# 2026-09-30 현재 www 서브도메인의 DNS 레코드가 사라졌다(외부 네트워크에서도 ENOTFOUND).
+# 어느 쪽이 살아나도 자동으로 붙도록 후보를 순회한다.
+HOSTS = ("https://www.starbucks.co.kr", "https://starbucks.co.kr")
+JSON_PATH = "/upload/json/menu/{code}.js"
+MAX_CATEGORIES = 40  # 폭주 방지. CATEGORIES 가 고정 리터럴이라 지금은 걸릴 일이 없다.
 DELAY = 0.5          # 요청 간격(초)
 
 # 목록 페이지 getCateCodeCng() 의 코드 ↔ 분류 체크박스 라벨.
@@ -54,7 +58,7 @@ def _image(row: dict) -> str:
     """템플릿과 동일하게 www → image 로 바꾼 호스트에 파일 경로를 붙인다."""
     host = row.get("img_UPLOAD_PATH") or ""
     path = row.get("file_PATH") or ""
-    return host.replace("www", "image") + path if path else ""
+    return host.replace("www", "image", 1) + path if path else ""
 
 
 def _uploaded_at(row: dict) -> str:
@@ -75,12 +79,32 @@ def _labels(row: dict) -> list:
     return out
 
 
+def _live_host(c) -> str:
+    """JSON 을 실제로 돌려주는 호스트를 고른다. 전부 죽었으면 마지막 오류를 올린다.
+
+    apex(starbucks.co.kr)는 DNS 제공업체의 빈 파킹 페이지를 200 으로 준다.
+    상태코드만 보면 살아있다고 오판하므로 JSON 파싱까지 확인한다.
+    """
+    last = None
+    probe = JSON_PATH.format(code=CATEGORIES[0][0])
+    for h in HOSTS:
+        try:
+            r = c.get(h + probe)
+            r.raise_for_status()
+            json.loads(r.text)
+            return h
+        except Exception as e:                       # 연결 실패·DNS·HTTP·비 JSON 전부
+            last = f"{h} → {type(e).__name__}"
+    raise RuntimeError(f"스타벅스 호스트 전부 사용 불가 ({last})") from None
+
+
 def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
-    with httpx.Client(headers={"User-Agent": UA}, timeout=20, follow_redirects=True) as c:
+    with base.client() as c:
+        host = _live_host(c)
         for code, label in CATEGORIES[:MAX_CATEGORIES]:
-            r = c.get(JSON_URL.format(code=code))
+            r = base.retry(lambda: c.get(host + JSON_PATH.format(code=code)))
             r.raise_for_status()
             # 무효한 카테고리 코드에 스타벅스는 404 가 아니라 200 + HTML 오류페이지를 준다.
             # 조용히 넘기면 그 카테고리가 통째로 증발하므로 예외로 올려 수집을 실패시킨다.

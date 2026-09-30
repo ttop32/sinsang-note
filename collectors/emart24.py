@@ -12,12 +12,13 @@ import time
 import httpx
 from selectolax.parser import HTMLParser
 
+from . import base
 from .base import UA, Item
 
 BRAND = "이마트24"
 URL = "https://emart24.co.kr/goods/{section}"
 SECTIONS = {"event": "행사 상품", "pl": "차별화 상품", "ff": "Fresh Food"}
-MAX_PAGES = 8   # 섹션당 상한. 20건/페이지, 최신순이라 앞쪽이 신상. 전체는 event 51p+.
+MAX_PAGES = 25  # 섹션당 상한. 8 로는 세 섹션 모두 상한을 소진해 뒤쪽이 통째로 잘렸다.
 DELAY = 0.4     # 연속 호출 간격(초)
 
 
@@ -28,8 +29,9 @@ def _labels(card) -> list:
     if not tit:
         return out
     for span in tit.css("span"):
-        style = span.attributes.get("style") or ""
-        if "opacity: 0" in style:
+        # "opacity: 0" 문자열 비교는 공백 없는 opacity:0 이나 0.0 을 놓친다.
+        style = (span.attributes.get("style") or "").replace(" ", "")
+        if "opacity:0" in style:
             continue
         text = " ".join(span.text().split())
         if text:
@@ -40,7 +42,7 @@ def _labels(card) -> list:
 def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
-    with httpx.Client(headers={"User-Agent": UA}, timeout=20, follow_redirects=True) as c:
+    with base.client() as c:
         for section, category in SECTIONS.items():
             for page in range(1, MAX_PAGES + 1):
                 time.sleep(DELAY)

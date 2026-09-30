@@ -16,6 +16,7 @@ from datetime import datetime
 import httpx
 from selectolax.parser import HTMLParser
 
+from . import base
 from .base import UA, Item
 
 BRAND = "이디야커피"
@@ -85,7 +86,7 @@ def _parse(li, category: str, new_ids: set) -> Item | None:
 def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
-    with httpx.Client(headers={"User-Agent": UA}, timeout=20, follow_redirects=True) as c:
+    with base.client() as c:
         for cate, (path, category) in MENUS.items():
             r = c.get(BASE + path)
             r.raise_for_status()
