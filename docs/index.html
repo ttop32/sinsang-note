@@ -11,7 +11,7 @@
 <meta property="og:title" content="신상노트 — 편의점·카페·프랜차이즈 신제품 모아보기">
 <meta property="og:description" content="편의점·카페·프랜차이즈 신제품 모아보기. 편의점·카페·햄버거·피자·치킨·베이커리 신제품을 매일 자동으로 모읍니다.">
 <meta property="og:url" content="https://ttop32.github.io/sinsang-note/">
-<meta property="og:image" content="https://imgcdn4.pji.co.kr/pc/img/side/1090.png">
+<meta property="og:image" content="https://image.istarbucks.co.kr/upload/store/skuimg/2026/09/[9200000007173]_20260910142947420.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/sinsang-note/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/sinsang-note/icon-180.png">
@@ -49,77 +49,53 @@ display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hi
 time{font-size:11px;color:var(--mut);margin-top:8px}
 .empty{grid-column:1/-1;text-align:center;color:var(--mut);padding:64px 0;font-size:14px;line-height:1.8}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
-font:16px/1.55 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",Pretendard,sans-serif}}
-nav{{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
-margin:14px -16px 0;padding:8px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}}
-nav::-webkit-scrollbar{{display:none}}
-.tw{{display:flex;gap:6px;width:max-content}}
-.t{{appearance:none;border:1px solid var(--line);background:var(--chip);color:var(--fg);
-font:inherit;font-size:14px;padding:9px 14px;border-radius:999px;cursor:pointer;
-white-space:nowrap;min-height:40px;display:flex;align-items:center;gap:5px}}
-.t.on{{background:var(--accent);border-color:var(--accent);color:#fff}}
-.n{{font-size:12px;opacity:.7}}
-@media(min-width:600px){{.g{{grid-template-columns:repeat(3,1fr);gap:16px}}}}
-@media(min-width:900px){{.g{{grid-template-columns:repeat(4,1fr);gap:20px}}}}
-.c[hidden]{{display:none}}   /* .c 의 display:flex 가 브라우저 기본 [hidden] 을 덮는다 */
-overflow:hidden;display:flex;flex-direction:column}}
-a.c{{text-decoration:none;color:inherit;transition:border-color .15s}}
-a.c:hover,a.c:focus-visible{{border-color:var(--accent)}}
-.go{{display:block;padding:0 11px 11px;font-size:11px;color:var(--accent);font-weight:600}}
-.skip{{position:absolute;left:-9999px}}
-.skip:focus{{left:16px;top:8px;position:fixed;z-index:9;background:var(--accent);color:#fff;
-padding:8px 12px;border-radius:8px;text-decoration:none}}
-.tools{{display:flex;gap:8px;margin-top:12px}}
-#q{{flex:1;min-width:0;font:inherit;font-size:15px;padding:10px 13px;border-radius:999px;
-border:1px solid var(--line);background:var(--chip);color:var(--fg);min-height:42px}}
-#q::placeholder{{color:var(--mut)}}
-#sort{{flex:none}}
-.cnt{{margin:10px 0 0;font-size:12px;color:var(--mut);min-height:16px}}
-display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
 
-.c img{height:auto;aspect-ratio:1/1;object-fit:cover}</style>
+/* 홈 전용. 공통 토큰·카드·그리드는 web/theme.py CSS 가 정의한다. */
+.skip{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.skip:focus{position:fixed;left:16px;top:8px;width:auto;height:auto;z-index:9;
+background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none}
+
+.tools{display:flex;gap:8px;margin-top:14px}
+#q{flex:1;min-width:0;font:inherit;font-size:15px;padding:10px 14px;border-radius:999px;
+border:1px solid var(--line);background:var(--chip);color:var(--fg);min-height:42px;
+-webkit-appearance:none;appearance:none}
+#q::placeholder{color:var(--mut)}
+#q:focus{outline:none;border-color:var(--accent)}
+#sort{flex:none}
+.cnt{margin:10px 0 0;font-size:12px;color:var(--mut);min-height:16px}
+
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+margin:12px -16px 0;padding:10px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.tw{display:flex;gap:6px;width:max-content}
+.t{appearance:none;-webkit-appearance:none;border:1px solid var(--line);background:var(--chip);
+color:var(--fg);font:inherit;font-size:14px;line-height:1;padding:0 14px;border-radius:999px;
+cursor:pointer;white-space:nowrap;min-height:40px;display:inline-flex;align-items:center;gap:6px}
+.t.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.t .n{font-size:12px;opacity:.7}
+
+a.c{text-decoration:none;color:inherit;transition:border-color .15s}
+a.c:hover,a.c:focus-visible{border-color:var(--accent)}
+.c[hidden]{display:none}          /* .c 의 display:flex 가 브라우저 기본 [hidden] 을 덮는다 */
+.c img{height:auto}               /* width/height 속성만으론 세로로 늘어난다 */
+.go{display:block;padding:0 11px 12px;font-size:11px;color:var(--accent);font-weight:600}
+.en{margin:0;font-size:11px;color:var(--mut)}
+</style>
 
 </head><body><div class="w">
 <a class="skip" href="#g">본문으로 건너뛰기</a>
-<header><h1>신상노트</h1><p class="sub">편의점·카페·프랜차이즈 신제품 모아보기</p><p class="lead">오늘 30건</p></header>
+<header><h1>신상노트</h1><p class="sub">편의점·카페·프랜차이즈 신제품 모아보기</p><p class="lead">오늘 2건</p></header>
 <div class="tools">
   <input id="q" type="search" placeholder="상품·브랜드 검색" aria-label="상품 또는 브랜드 검색"
          autocomplete="off" enterkeyhint="search">
   <button id="sort" class="t" data-s="date" aria-label="정렬 바꾸기">최신순</button>
 </div>
-<nav aria-label="분류"><div class="tw"><button class="t on" data-f="">전체<span class="n">82</span></button><button class="t" data-f="편의점">편의점<span class="n">6</span></button><button class="t" data-f="카페">카페<span class="n">36</span></button><button class="t" data-f="햄버거">햄버거<span class="n">10</span></button><button class="t" data-f="피자">피자<span class="n">14</span></button><button class="t" data-f="치킨">치킨<span class="n">3</span></button><button class="t" data-f="디저트">디저트<span class="n">12</span></button><button class="t" data-f="분식">분식<span class="n">1</span></button></div></nav>
+<nav aria-label="분류"><div class="tw"><button class="t on" data-f="">전체<span class="n">54</span></button><button class="t" data-f="편의점">편의점<span class="n">2</span></button><button class="t" data-f="카페">카페<span class="n">36</span></button><button class="t" data-f="햄버거">햄버거<span class="n">10</span></button><button class="t" data-f="피자">피자<span class="n">2</span></button><button class="t" data-f="치킨">치킨<span class="n">3</span></button><button class="t" data-f="분식">분식<span class="n">1</span></button></div></nav>
 <p id="cnt" class="cnt" role="status" aria-live="polite"></p>
 <main class="g" id="g">
-<a class="c" data-g="피자" href="https://pji.co.kr/menu/pizza" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://imgcdn4.pji.co.kr/pc/img/side/1090.png" alt="파파존스 파파스 파스타(화이트)"><div class="b"><div class="m"><span class="br">파파존스</span></div><h2>파파스 파스타(화이트)</h2><p class="d">고소한 크림 소스와 짭짤한 베이컨의 조화가 어우러진 파스타</p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="피자" href="https://pji.co.kr/menu/pizza" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://imgcdn4.pji.co.kr/pc/img/side/2639.png" alt="파파존스 파파스 파스타(로제)"><div class="b"><div class="m"><span class="br">파파존스</span></div><h2>파파스 파스타(로제)</h2><p class="d">부드럽고 상큼한 로제소스에 담백한하고 두툼한 그릴드 치킨을 얹은 파스타</p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="편의점" href="https://emart24.co.kr/goods/pl" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8801204009644.JPG" alt="이마트24 뽀니)옥수수쫀득찰떡쿠키"><div class="b"><div class="m"><span class="br">이마트24</span></div><h2>뽀니)옥수수쫀득찰떡쿠키</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="편의점" href="https://emart24.co.kr/goods/pl" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/3760204540166.JPG" alt="이마트24 화이트)투썩점퍼와일드보어샤르도네750ml"><div class="b"><div class="m"><span class="br">이마트24</span></div><h2>화이트)투썩점퍼와일드보어샤르도네750ml</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="편의점" href="https://emart24.co.kr/goods/pl" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/3760204540234.JPG" alt="이마트24 레드)투썩점퍼와일드보어피노누아750ml"><div class="b"><div class="m"><span class="br">이마트24</span></div><h2>레드)투썩점퍼와일드보어피노누아750ml</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="편의점" href="https://emart24.co.kr/goods/pl" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8804294026522.JPG" alt="이마트24 크레이지치즈)올치글50g"><div class="b"><div class="m"><span class="br">이마트24</span></div><h2>크레이지치즈)올치글50g</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
 <a class="c" data-g="편의점" href="https://www.7-eleven.co.kr/product/presentList.asp" target="_blank" rel="noopener nofollow"><div class="ph" aria-hidden="true"></div><div class="b"><div class="m"><span class="lb">NEW</span><span class="br">세븐일레븐</span></div><h2>널담)카스테라40g(초코)</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
 <a class="c" data-g="편의점" href="https://www.7-eleven.co.kr/product/presentList.asp" target="_blank" rel="noopener nofollow"><div class="ph" aria-hidden="true"></div><div class="b"><div class="m"><span class="lb">NEW</span><span class="br">세븐일레븐</span></div><h2>롯데)옐로우테일오로라팩(까버)</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="피자" href="https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_Zt7qKoFV_ec8c5adbf2f0cfaa75e1762dc88b2c094cbc39cf_283x210.png" alt="미스터피자 더블치즈(씬)"><div class="b"><div class="m"><span class="br">미스터피자</span></div><h2>더블치즈(씬)</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="피자" href="https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_MuOZQ9wE_cb8a8c34ff71e8fa1b08b9d19665ec19886b8e99_283x210.png" alt="미스터피자 치즈후라이(씬)"><div class="b"><div class="m"><span class="br">미스터피자</span></div><h2>치즈후라이(씬)</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="피자" href="https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_1LItc38Z_5b818670f10c6ad39ef8df580ce40fca964101f1_283x210.png" alt="미스터피자 페퍼로니플러스(씬)"><div class="b"><div class="m"><span class="br">미스터피자</span></div><h2>페퍼로니플러스(씬)</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="피자" href="https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_UgWHL1m6_199d278ec236bc3c93e3e87a3e26dc5d399743f0_283x210.png" alt="미스터피자 베지테리안(씬)"><div class="b"><div class="m"><span class="br">미스터피자</span></div><h2>베지테리안(씬)</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="피자" href="https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_JWfUhRHX_9fc80b00f355f147c41214af3381e0c92974252f_283x210.png" alt="미스터피자 하와이안스페셜(씬)"><div class="b"><div class="m"><span class="br">미스터피자</span></div><h2>하와이안스페셜(씬)</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="피자" href="https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_6fpiR8kb_e25ce193733059f1c2a68c670480e068fd2cb8ea_283x210.png" alt="미스터피자 콤비네이션(씬)"><div class="b"><div class="m"><span class="br">미스터피자</span></div><h2>콤비네이션(씬)</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="피자" href="https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_RMNhzyV8_eba7c276d668c73dda7f27e815cdbd3b02be54da_283x210.png" alt="미스터피자 포테이토(씬)"><div class="b"><div class="m"><span class="br">미스터피자</span></div><h2>포테이토(씬)</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="피자" href="https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_L8b6sguy_f30a0bc11bf34a832b726515029d0551a2a139c1_283x210.png" alt="미스터피자 불고기(씬)"><div class="b"><div class="m"><span class="br">미스터피자</span></div><h2>불고기(씬)</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="피자" href="https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_eB4j9xfI_95c30d9e7a9febf04c965ab2b91f9baa63ed624b_283x210.png" alt="미스터피자 스윗고구마(씬)"><div class="b"><div class="m"><span class="br">미스터피자</span></div><h2>스윗고구마(씬)</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="피자" href="https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.mrpizza.co.kr/data/file/menu/thumb-4f537128847f700f866ba4389b1df290_sbGHADL9_e78eea802303b8ce4fa3f32ce1609a82a3d38918_283x210.png" alt="미스터피자 펩시콜라"><div class="b"><div class="m"><span class="br">미스터피자</span></div><h2>펩시콜라</h2><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/DBXI8yCA4uxrM4H6XJwoYnCIuOat68yrDTjCpywT.png" alt="던킨 피치 아이스티 (R)"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>피치 아이스티 (R)</h2><p class="en">Iced Tea Peach (R)</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/66GVM4uQchst73DB3CDOsCByBtiES8ia5s10Xr4I.png" alt="던킨 피치 아이스티 (K)"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>피치 아이스티 (K)</h2><p class="en">Iced Tea Peach (K)</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/tgt61ghDEsMff2WZfOQUyB9ou1mPhz4mBDH0UUjB.png" alt="던킨 초코 (R)"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>초코 (R)</h2><p class="en">Hershey´s Choco (R)</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/OUdb4zRpN3pHmXnL4GnZ8GjfgvU20eR4MY2Z3WNz.png" alt="던킨 아이스 초코 (S)"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>아이스 초코 (S)</h2><p class="en">Iced Hershey´s Choco (S)</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/kriAVUGDMH1VTCrnAVqzTWlZopV2zOa0ByKYO9sP.png" alt="던킨 가평잣미숫가루라떼(HOT)(R)"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>가평잣미숫가루라떼(HOT)(R)</h2><p class="en">Gapyeong Pine nut Multigrain Latte</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/bpVPbF9mu8tEyCxRVWLBbp1B4qVvrZBnQIUdzx5j.png" alt="던킨 가평잣미숫가루라떼(K)"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>가평잣미숫가루라떼(K)</h2><p class="en">Gapyeong Pine nut Multigrain Latte</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/Awxz2gHLyaa69JDNvkzxPkOKWmyWk5mA18K6772y.png" alt="던킨 비타슬러시 레몬(R)"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>비타슬러시 레몬(R)</h2><p class="en">VITA Slushy Lemon</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/07hoeVVGlpGYHfxZXHW01w8gjw23XcRzBfw70K8O.png" alt="던킨 비타슬러시 리치(R)"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>비타슬러시 리치(R)</h2><p class="en">VITA Slushy Lychee</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/rkNXYkpQcMODDe4xWnfbx3B2ukf2QW1c3uasyThU.png" alt="던킨 비타슬러시 펀치(R)"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>비타슬러시 펀치(R)</h2><p class="en">VITA Slushy Hawaiian Punch</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/dUZAKuu94jCVgkAmwfx6B3QDBkQrtsS6l9zVxXH3.png" alt="던킨 비타슬러시 믹솔로지(R)"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>비타슬러시 믹솔로지(R)</h2><p class="en">VITA Slushy Mixology</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/e6BO7GZMPHSaCOVLdhXTfYTmcIQniBdL912Mt4JI.png" alt="던킨 (앳홈) 치즈풀 크로크무슈"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>(앳홈) 치즈풀 크로크무슈</h2><p class="en">(ATHOME) Cheese Pull Croque Monsieur</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
-<a class="c" data-g="디저트" href="https://www.dunkindonuts.co.kr/menu" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.dunkindonuts.co.kr/storage/product/mainimgfile/ySu4PNBdCauY8IxrNVxvTeCcFflPYtNGVdPG0lyo.png" alt="던킨 도넛아이스크림 (허니초코크런치)"><div class="b"><div class="m"><span class="br">던킨</span></div><h2>도넛아이스크림 (허니초코크런치)</h2><p class="en">Donut Icecream Honey Choco Crunch</p><p class="d"></p><time datetime="2026-09-30">2026-09-30</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
 <a class="c" data-g="카페" href="https://www.starbucks.co.kr/menu/drink_list.do" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://image.istarbucks.co.kr/upload/store/skuimg/2026/09/[9200000007173]_20260910142947420.jpg" alt="스타벅스 글레이즈드 폼 블랙 티"><div class="b"><div class="m"><span class="br">스타벅스</span></div><h2>글레이즈드 폼 블랙 티</h2><p class="d">깊고 맑은 블랙 티에 부드러운 치즈 풍미의 글레이즈드 폼을 더한 스타벅스만의 폼 티(Foam Tea). 알로에 토핑의 산뜻한 식감이 더해져 풍부한 맛과 다채로운 식감을 즐길 수 있습니다.</p><time datetime="2026-09-29">2026-09-29</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
 <a class="c" data-g="카페" href="https://www.starbucks.co.kr/menu/drink_list.do" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://image.istarbucks.co.kr/upload/store/skuimg/2026/09/[9200000006412]_20260910142648343.jpg" alt="스타벅스 말차 글레이즈드 티 라떼"><div class="b"><div class="m"><span class="br">스타벅스</span></div><h2>말차 글레이즈드 티 라떼</h2><p class="d">글레이즈드의 색다른 변신! 쌉싸름한 말차와 달콤한 글레이즈드를 넣어 가을과 잘 어울리는 비주얼과 맛의 티 라떼 음료</p><time datetime="2026-09-29">2026-09-29</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
 <a class="c" data-g="카페" href="https://www.baristapaulbassett.co.kr/menu/List.pb" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.baristapaulbassett.co.kr/upload/product/C/thumbnail_2_202609280607547390.jpg" alt="폴바셋 아이스크림 밀크티 카페라떼"><div class="b"><div class="m"><span class="lb">NEW</span><span class="br">폴바셋</span></div><h2>아이스크림 밀크티 카페라떼</h2><p class="en">Ice Cream Milk Tea Cafe Latte</p><p class="d">우바 홍차의 향과 아쌈 홍차의 깊은 맛이 더해진 밀크티와 시그니처 에스프레소, 밀크 아이스크림이 더해진 아이스크림 밀크티 카페 라떼</p><time datetime="2026-09-28">2026-09-28</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
@@ -174,7 +150,7 @@ display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hi
 <a class="c" data-g="햄버거" href="https://www.momstouch.co.kr/menu/new.php" target="_blank" rel="noopener nofollow"><img loading="lazy" decoding="async" width="400" height="400" src="https://www.momstouch.co.kr/upload_file/product_info/1788943693-ALLSM.png" alt="맘스터치 그릴드버거"><div class="b"><div class="m"><span class="lb">NEW</span><span class="br">맘스터치</span></div><h2>그릴드버거</h2><p class="d">눌러 구운 패티로 부담 없이 즐길 수 있는 기본에 충실한 클래식 메뉴</p><time datetime="2026-09-09">2026-09-09</time></div><span class="go">브랜드에서 보기 &rarr;</span></a>
 <p class="empty" id="noresult" hidden>찾는 제품이 없습니다.<br>다른 말로 검색해 보세요.</p>
 </main>
-<footer>마지막 갱신 2026-09-30 21:08 · 최근 21일 신제품 82건<br>
+<footer>마지막 갱신 2026-09-30 21:14 · 최근 21일 신제품 54건<br>
 상품 정보와 이미지의 저작권은 각 브랜드에 있습니다.</footer>
 </div>
 <script>

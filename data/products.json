@@ -1,5 +1,5 @@
 {
- "updated_at": "2026-09-30T11:37:19+00:00",
+ "updated_at": "2026-09-30T12:14:43+00:00",
  "count": 4390,
  "products": [
   {
@@ -646,7 +646,7 @@
    "brand_sub": "",
    "key": "설빙:한입쏙치즈볼(플레인/3ea)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "설빙",
@@ -836,7 +836,7 @@
    "brand_sub": "",
    "key": "설빙:한입쏙붕어빵(슈크림)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "설빙",
@@ -855,7 +855,7 @@
    "brand_sub": "",
    "key": "설빙:한입쏙붕어빵(피자)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "설빙",
@@ -4997,7 +4997,7 @@
    "brand_sub": "",
    "key": "빽다방:퐁당치노(원조커피)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -5016,7 +5016,7 @@
    "brand_sub": "",
    "key": "빽다방:퐁당치노(미숫가루)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -6441,7 +6441,7 @@
    "brand_sub": "",
    "key": "빽다방:붕어빵(팥)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -7106,7 +7106,7 @@
    "brand_sub": "",
    "key": "빽다방:바닐라빽스치노(SOFT)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -7144,7 +7144,7 @@
    "brand_sub": "",
    "key": "빽다방:바닐라커피빽스치노(SOFT)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -7182,7 +7182,7 @@
    "brand_sub": "",
    "key": "빽다방:디카페인바닐라커피빽스치노(SOFT)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -7239,7 +7239,7 @@
    "brand_sub": "",
    "key": "빽다방:원조빽스치노(SOFT)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -7277,7 +7277,7 @@
    "brand_sub": "",
    "key": "빽다방:딸기바나나빽스치노(SOFT)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -7315,7 +7315,7 @@
    "brand_sub": "",
    "key": "빽다방:초코바나나빽스치노(SOFT)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -7353,7 +7353,7 @@
    "brand_sub": "",
    "key": "빽다방:딸기빽스치노(SOFT)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -7391,7 +7391,7 @@
    "brand_sub": "",
    "key": "빽다방:말차빽스치노(SOFT)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -7429,7 +7429,7 @@
    "brand_sub": "",
    "key": "빽다방:민트초코빽스치노(SOFT)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -7467,7 +7467,7 @@
    "brand_sub": "",
    "key": "빽다방:쿠키크런치빽스치노(SOFT)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "빽다방",
@@ -7505,7 +7505,7 @@
    "brand_sub": "",
    "key": "빽다방:초코빽스치노(SOFT)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "커피빈",
@@ -19941,7 +19941,7 @@
    "brand_sub": "",
    "key": "이마트24:레드)본테라카베르네소비뇽750ml",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "이마트24",
@@ -23983,7 +23983,7 @@
    "brand_sub": "",
    "key": "이마트24:뽀니)옥수수쫀득찰떡쿠키",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "이마트24",
@@ -24914,7 +24914,7 @@
    "brand_sub": "",
    "key": "이마트24:화이트)투썩점퍼와일드보어샤르도네750ml",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "이마트24",
@@ -24933,7 +24933,7 @@
    "brand_sub": "",
    "key": "이마트24:레드)투썩점퍼와일드보어피노누아750ml",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "이마트24",
@@ -26263,7 +26263,7 @@
    "brand_sub": "",
    "key": "이마트24:크레이지치즈)올치글50g",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "이마트24",
@@ -33132,7 +33132,7 @@
    "brand_sub": "피자",
    "key": "미스터피자:더블치즈(씬)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "미스터피자",
@@ -33151,7 +33151,7 @@
    "brand_sub": "피자",
    "key": "미스터피자:치즈후라이(씬)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "미스터피자",
@@ -33170,7 +33170,7 @@
    "brand_sub": "피자",
    "key": "미스터피자:페퍼로니플러스(씬)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "미스터피자",
@@ -33189,7 +33189,7 @@
    "brand_sub": "피자",
    "key": "미스터피자:베지테리안(씬)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "미스터피자",
@@ -33208,7 +33208,7 @@
    "brand_sub": "피자",
    "key": "미스터피자:하와이안스페셜(씬)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "미스터피자",
@@ -33227,7 +33227,7 @@
    "brand_sub": "피자",
    "key": "미스터피자:콤비네이션(씬)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "미스터피자",
@@ -33246,7 +33246,7 @@
    "brand_sub": "피자",
    "key": "미스터피자:포테이토(씬)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "미스터피자",
@@ -33265,7 +33265,7 @@
    "brand_sub": "피자",
    "key": "미스터피자:불고기(씬)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "미스터피자",
@@ -33284,7 +33284,7 @@
    "brand_sub": "피자",
    "key": "미스터피자:스윗고구마(씬)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "미스터피자",
@@ -33949,7 +33949,7 @@
    "brand_sub": "피자",
    "key": "미스터피자:펩시콜라",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "미스터피자",
@@ -34801,7 +34801,7 @@
    "brand_sub": "피자",
    "key": "파파존스:파파스파스타(화이트)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "파파존스",
@@ -34820,7 +34820,7 @@
    "brand_sub": "피자",
    "key": "파파존스:파파스파스타(로제)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "파파존스",
@@ -37879,7 +37879,7 @@
    "brand_sub": "디저트",
    "key": "던킨:피치아이스티(R)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "던킨",
@@ -37898,7 +37898,7 @@
    "brand_sub": "디저트",
    "key": "던킨:피치아이스티(K)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "던킨",
@@ -38088,7 +38088,7 @@
    "brand_sub": "디저트",
    "key": "던킨:초코(R)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "던킨",
@@ -38126,7 +38126,7 @@
    "brand_sub": "디저트",
    "key": "던킨:아이스초코",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "던킨",
@@ -38316,7 +38316,7 @@
    "brand_sub": "디저트",
    "key": "던킨:가평잣미숫가루라떼(R)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "던킨",
@@ -38335,7 +38335,7 @@
    "brand_sub": "디저트",
    "key": "던킨:가평잣미숫가루라떼(K)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "던킨",
@@ -38563,7 +38563,7 @@
    "brand_sub": "디저트",
    "key": "던킨:비타슬러시레몬(R)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "던킨",
@@ -38582,7 +38582,7 @@
    "brand_sub": "디저트",
    "key": "던킨:비타슬러시리치(R)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "던킨",
@@ -38601,7 +38601,7 @@
    "brand_sub": "디저트",
    "key": "던킨:비타슬러시펀치(R)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "던킨",
@@ -38620,7 +38620,7 @@
    "brand_sub": "디저트",
    "key": "던킨:비타슬러시믹솔로지(R)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "던킨",
@@ -39209,7 +39209,7 @@
    "brand_sub": "디저트",
    "key": "던킨:(앳홈)치즈풀크로크무슈",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "던킨",
@@ -39285,7 +39285,7 @@
    "brand_sub": "디저트",
    "key": "던킨:도넛아이스크림(허니초코크런치)",
    "first_seen": "2026-09-30",
-   "baseline": false
+   "baseline": true
   },
   {
    "brand": "이삭토스트",

@@ -70,10 +70,12 @@ PER_BRAND = 40
 SHOW = 300
 
 # 브랜드 하나에서 하루에 이만큼 넘게 새로 등장하면 신제품 출시가 아니라
-# 수집 범위가 바뀐 것으로 본다(상한 상향, 파서 개선 등). 그런 건 기준선으로
-# 넣어 '오늘 신규'를 오염시키지 않는다. 실제로 이디야 169건·이마트24 590건이
-# 이 경로로 들어왔다.
-SURGE = 20
+# 우리 쪽이 바뀐 것으로 본다(수집 범위 상향, 파서 개선, 중복 키 규칙 변경).
+# 그런 건 기준선으로 넣어 '오늘 신규'를 오염시키지 않는다.
+# 실제로 이디야 169건·이마트24 590건이 이 경로였고, 키 규칙을 바꾼 날에는
+# 미스터피자 '더블치즈(씬)' 처럼 합쳐져 있던 변형이 갈라져 10건씩 튀었다.
+# 한 브랜드가 하루에 8종 넘게 내놓는 일은 실제로는 거의 없다.
+SURGE = 8
 
 ROOT = pathlib.Path(__file__).parent
 DATA = ROOT / "data" / "products.json"
@@ -324,35 +326,39 @@ def is_fresh(r: dict, today: str) -> bool:
     return r.get("first_seen", "") >= cutoff
 
 
-CSS_EXTRA = """font:16px/1.55 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",Pretendard,sans-serif}}
-nav{{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
-margin:14px -16px 0;padding:8px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}}
-nav::-webkit-scrollbar{{display:none}}
-.tw{{display:flex;gap:6px;width:max-content}}
-.t{{appearance:none;border:1px solid var(--line);background:var(--chip);color:var(--fg);
-font:inherit;font-size:14px;padding:9px 14px;border-radius:999px;cursor:pointer;
-white-space:nowrap;min-height:40px;display:flex;align-items:center;gap:5px}}
-.t.on{{background:var(--accent);border-color:var(--accent);color:#fff}}
-.n{{font-size:12px;opacity:.7}}
-@media(min-width:600px){{.g{{grid-template-columns:repeat(3,1fr);gap:16px}}}}
-@media(min-width:900px){{.g{{grid-template-columns:repeat(4,1fr);gap:20px}}}}
-.c[hidden]{{display:none}}   /* .c 의 display:flex 가 브라우저 기본 [hidden] 을 덮는다 */
-overflow:hidden;display:flex;flex-direction:column}}
-a.c{{text-decoration:none;color:inherit;transition:border-color .15s}}
-a.c:hover,a.c:focus-visible{{border-color:var(--accent)}}
-.go{{display:block;padding:0 11px 11px;font-size:11px;color:var(--accent);font-weight:600}}
-.skip{{position:absolute;left:-9999px}}
-.skip:focus{{left:16px;top:8px;position:fixed;z-index:9;background:var(--accent);color:#fff;
-padding:8px 12px;border-radius:8px;text-decoration:none}}
-.tools{{display:flex;gap:8px;margin-top:12px}}
-#q{{flex:1;min-width:0;font:inherit;font-size:15px;padding:10px 13px;border-radius:999px;
-border:1px solid var(--line);background:var(--chip);color:var(--fg);min-height:42px}}
-#q::placeholder{{color:var(--mut)}}
-#sort{{flex:none}}
-.cnt{{margin:10px 0 0;font-size:12px;color:var(--mut);min-height:16px}}
-display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
+CSS_EXTRA = """
+/* 홈 전용. 공통 토큰·카드·그리드는 web/theme.py CSS 가 정의한다. */
+.skip{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.skip:focus{position:fixed;left:16px;top:8px;width:auto;height:auto;z-index:9;
+background:var(--accent);color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none}
 
-.c img{height:auto;aspect-ratio:1/1;object-fit:cover}"""
+.tools{display:flex;gap:8px;margin-top:14px}
+#q{flex:1;min-width:0;font:inherit;font-size:15px;padding:10px 14px;border-radius:999px;
+border:1px solid var(--line);background:var(--chip);color:var(--fg);min-height:42px;
+-webkit-appearance:none;appearance:none}
+#q::placeholder{color:var(--mut)}
+#q:focus{outline:none;border-color:var(--accent)}
+#sort{flex:none}
+.cnt{margin:10px 0 0;font-size:12px;color:var(--mut);min-height:16px}
+
+nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+margin:12px -16px 0;padding:10px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+.tw{display:flex;gap:6px;width:max-content}
+.t{appearance:none;-webkit-appearance:none;border:1px solid var(--line);background:var(--chip);
+color:var(--fg);font:inherit;font-size:14px;line-height:1;padding:0 14px;border-radius:999px;
+cursor:pointer;white-space:nowrap;min-height:40px;display:inline-flex;align-items:center;gap:6px}
+.t.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.t .n{font-size:12px;opacity:.7}
+
+a.c{text-decoration:none;color:inherit;transition:border-color .15s}
+a.c:hover,a.c:focus-visible{border-color:var(--accent)}
+.c[hidden]{display:none}          /* .c 의 display:flex 가 브라우저 기본 [hidden] 을 덮는다 */
+.c img{height:auto}               /* width/height 속성만으론 세로로 늘어난다 */
+.go{display:block;padding:0 11px 12px;font-size:11px;color:var(--accent);font-weight:600}
+.en{margin:0;font-size:11px;color:var(--mut)}
+"""
 
 SECTIONS = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"), ("햄버거", "햄버거"),
             ("피자", "피자"), ("치킨", "치킨"), ("디저트", "디저트"), ("베이커리", "베이커리"),
