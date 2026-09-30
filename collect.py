@@ -9,7 +9,7 @@ import html
 import inspect
 import json
 import pathlib
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 
 from collectors import cu, ediya, emart24, mega, seven, starbucks
 
@@ -21,6 +21,9 @@ ADAPTERS = [mega, starbucks, cu, seven, emart24, ediya]
 # 셀렉터가 하나 깨지면 예외가 아니라 '조용한 부분수집'으로 끝나는 게 이 프로젝트의
 # 최대 리스크다. 0건 가드만으로는 절반이 날아가도 통과한다.
 FLOOR = 0.7
+
+# 브랜드가 신제품이라고 표시해주지 않는 곳은 날짜로 판단한다. 이 기간 안이면 신제품.
+WINDOW = 21
 
 # 첫 화면에 그리는 최대 개수. 전량(2,600건+)을 한 장에 그리면 1MB 를 넘어가고
 # 브랜드가 늘수록 감당이 안 된다. 이 사이트의 용건은 '신제품'이라 최신순 앞쪽이
@@ -124,11 +127,11 @@ def main() -> None:
          "count": len(rows), "products": rows},
         ensure_ascii=False, indent=1), encoding="utf-8")
 
-    new_today = [r for r in rows if r["first_seen"] == today and not r["baseline"]]
-    baseline = [r for r in rows if r["baseline"]]
-    print(f"총 {len(rows)}건 / 오늘 신규 {len(new_today)}건 "
-          f"/ 신규 브랜드 기준선 {len(baseline)}건 / 사라짐 {len(gone)}건")
-    render(rows[:SHOW], new_today, total=len(rows))
+    fresh = [r for r in rows if is_fresh(r, today)]
+    fresh.sort(key=lambda r: (_when(r), r["brand"]), reverse=True)
+    new_today = [r for r in fresh if _when(r) == today]
+    print(f"총 {len(rows)}건 / 신제품 {len(fresh)}건 (오늘 {len(new_today)}건) / 사라짐 {len(gone)}건")
+    render(fresh, new_today)
 
     # 데이터는 위에서 이미 썼다. 실패한 어댑터가 있으면 여기서 죽어 Actions 가 빨갛게 뜬다.
     # (워크플로의 커밋 스텝은 if: always() 라 부분 결과는 반영된다.)
@@ -136,60 +139,146 @@ def main() -> None:
         raise SystemExit("어댑터 실패:\n" + "\n".join(errors))
 
 
+def _when(r: dict) -> str:
+    """이 상품이 '언제 것'인가. 브랜드가 준 날짜를 우선하고 없으면 우리가 처음 본 날."""
+    return r.get("released_at") or r.get("uploaded_at") or r.get("first_seen", "")
+
+
+def is_fresh(r: dict, today: str) -> bool:
+    """화면에 올릴 신제품인가.
+
+    사용자 요구는 '그날 새로 올라온 것만'이다. 전체 메뉴판은 필요 없다.
+    브랜드가 신제품이라고 말해주면 그걸 믿고, 아니면 날짜가 최근인지 본다.
+    아무 근거도 없으면 올리지 않는다 — 카탈로그를 신상인 척 내보내는 게
+    이 서비스에서 제일 큰 거짓말이다.
+    """
+    if r.get("promo"):
+        return False                      # 1+1·2+1 은 신제품이 아니다
+    if r.get("is_new") is True:
+        return True                       # 브랜드가 직접 표시한 신제품
+
+    cutoff = (date.fromisoformat(today) - timedelta(days=WINDOW)).isoformat()
+
+    # 브랜드가 준 날짜가 최근이면 신제품이다. 우리가 그 브랜드를 언제 붙였는지와 무관하다.
+    # (기준선이라고 빼면 합류 직전에 나온 진짜 신메뉴까지 사라진다.)
+    stamped = r.get("released_at") or r.get("uploaded_at")
+    if stamped:
+        return stamped >= cutoff
+
+    # 날짜를 안 주는 브랜드는 '어제 없던 게 오늘 있다'로만 판단한다.
+    # 합류 시 쌓은 기준선은 그 판단의 출발점이라 신제품이 아니다.
+    if r.get("baseline"):
+        return False
+    return r.get("first_seen", "") >= cutoff
+
+
+SECTIONS = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"),
+            ("햄버거", "햄버거"), ("피자", "피자"), ("치킨", "치킨")]
+
+
 def card(r: dict) -> str:
     e = html.escape
-    labels = "".join(f'<span class="lb">{e(l)}</span>' for l in r.get("labels", []))
-    return f'''<article class="c">
-<img loading="lazy" src="{e(r["image"])}" alt="{e(r["name"])}">
-<div class="b"><div class="m">{labels}<span class="br">{e(r["brand"])}</span></div>
-<h2>{e(r["name"])}</h2><p class="en">{e(r.get("name_en",""))}</p>
-<p class="d">{e(r.get("desc",""))}</p>
-<time datetime="{e(r["first_seen"])}">{e(r["first_seen"])}</time></div></article>'''
+    sub = r.get("brand_sub") or r.get("brand_type", "")
+    img = (f'<img loading="lazy" src="{e(r["image"])}" alt="{e(r["name"])}">'
+           if r.get("image") else '<div class="ph"></div>')
+    badge = '<span class="lb">NEW</span>' if r.get("is_new") else ""
+    tags = "".join(f'<span class="lb lb2">{e(l)}</span>'
+                   for l in r.get("labels", []) if l)
+    return (f'<article class="c" data-g="{e(sub)}">{img}'
+            f'<div class="b"><div class="m">{badge}{tags}'
+            f'<span class="br">{e(r["brand"])}</span></div>'
+            f'<h2>{e(r["name"])}</h2>'
+            f'<p class="d">{e(r.get("desc", ""))}</p>'
+            f'<time datetime="{e(_when(r))}">{e(_when(r))}</time></div></article>')
 
 
-def render(rows: list, new_today: list, total: int | None = None) -> None:
-    total = len(rows) if total is None else total
+def render(rows: list, new_today: list) -> None:
+    counts = collections.Counter()
+    for r in rows:
+        counts[r.get("brand_sub") or r.get("brand_type", "")] += 1
+
+    tabs = "".join(
+        f'<button class="t{" on" if i == 0 else ""}" data-f="{html.escape(key)}">'
+        f'{html.escape(label)}<span class="n">{len(rows) if not key else counts.get(key, 0)}</span></button>'
+        for i, (label, key) in enumerate(SECTIONS)
+        if not key or counts.get(key))
+
     updated = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
-    banner = (f'<p class="new">오늘 새로 올라온 메뉴 {len(new_today)}건</p>'
-              if new_today else "")
-    doc = f'''<!doctype html><html lang="ko"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+    lead = (f"오늘 {len(new_today)}건" if new_today
+            else f"최근 {WINDOW}일 신제품 {len(rows)}건")
+    body = "\n".join(card(r) for r in rows[:SHOW]) or (
+        '<p class="empty">아직 새로 올라온 제품이 없습니다.<br>'
+        '매일 아침 다시 확인합니다.</p>')
+
+    doc = f"""<!doctype html><html lang="ko"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16150f" media="(prefers-color-scheme:dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme:light)">
 <title>{SITE} — {TAGLINE}</title>
-<meta name="description" content="{TAGLINE}. 매일 자동 수집.">
+<meta name="description" content="{TAGLINE}. 편의점·카페·햄버거·피자·치킨 신제품을 매일 자동으로 모읍니다.">
 <meta property="og:title" content="{SITE}"><meta property="og:description" content="{TAGLINE}">
 <style>
-:root{{--bg:#fff;--fg:#16150f;--mut:#6b6a63;--line:#e6e4dc;--card:#fff;--accent:#b4451f}}
-@media(prefers-color-scheme:dark){{:root{{--bg:#16150f;--fg:#f2f0e8;--mut:#a3a199;--line:#2e2c24;--card:#1e1c15}}}}
-*{{box-sizing:border-box}}
-body{{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Pretendard",sans-serif}}
-.w{{max-width:1100px;margin:0 auto;padding:0 16px}}
-header{{padding:40px 0 20px;border-bottom:1px solid var(--line)}}
-h1{{margin:0;font-size:26px;letter-spacing:-.02em}}
-.sub{{color:var(--mut);margin:6px 0 0;font-size:14px}}
-.new{{margin:14px 0 0;color:var(--accent);font-weight:600;font-size:14px}}
-.g{{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px;padding:28px 0 60px}}
-.c{{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}}
-.c img{{width:100%;aspect-ratio:1;object-fit:cover;background:var(--line);display:block}}
-.b{{padding:14px;display:flex;flex-direction:column;gap:4px;flex:1}}
-.m{{display:flex;gap:6px;align-items:center;flex-wrap:wrap}}
-.lb{{font-size:11px;font-weight:700;padding:2px 6px;border-radius:4px;background:var(--accent);color:#fff}}
+:root{{--bg:#fff;--fg:#16150f;--mut:#6b6a63;--line:#e6e4dc;--card:#fff;--accent:#b4451f;--chip:#f4f2ea}}
+@media(prefers-color-scheme:dark){{:root{{--bg:#16150f;--fg:#f2f0e8;--mut:#a3a199;--line:#2e2c24;--card:#1e1c15;--chip:#26241c}}}}
+*{{box-sizing:border-box;-webkit-tap-highlight-color:transparent}}
+html{{-webkit-text-size-adjust:100%}}
+body{{margin:0;background:var(--bg);color:var(--fg);
+font:16px/1.55 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",Pretendard,sans-serif}}
+.w{{max-width:1120px;margin:0 auto;padding:0 16px;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}}
+header{{padding:28px 0 12px}}
+h1{{margin:0;font-size:22px;letter-spacing:-.02em}}
+.sub{{color:var(--mut);margin:4px 0 0;font-size:13px}}
+.lead{{margin:10px 0 0;font-size:14px;font-weight:600;color:var(--accent)}}
+nav{{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+margin:14px -16px 0;padding:8px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}}
+nav::-webkit-scrollbar{{display:none}}
+.tw{{display:flex;gap:6px;width:max-content}}
+.t{{appearance:none;border:1px solid var(--line);background:var(--chip);color:var(--fg);
+font:inherit;font-size:14px;padding:9px 14px;border-radius:999px;cursor:pointer;
+white-space:nowrap;min-height:40px;display:flex;align-items:center;gap:5px}}
+.t.on{{background:var(--accent);border-color:var(--accent);color:#fff}}
+.n{{font-size:12px;opacity:.7}}
+.g{{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px 0 56px}}
+@media(min-width:600px){{.g{{grid-template-columns:repeat(3,1fr);gap:16px}}}}
+@media(min-width:900px){{.g{{grid-template-columns:repeat(4,1fr);gap:20px}}}}
+.c{{background:var(--card);border:1px solid var(--line);border-radius:12px;
+overflow:hidden;display:flex;flex-direction:column}}
+.c img,.ph{{width:100%;aspect-ratio:1;object-fit:cover;background:var(--chip);display:block}}
+.b{{padding:11px;display:flex;flex-direction:column;gap:3px;flex:1}}
+.m{{display:flex;gap:4px;align-items:center;flex-wrap:wrap;min-height:18px}}
+.lb{{font-size:10px;font-weight:700;padding:2px 5px;border-radius:4px;background:var(--accent);color:#fff}}
+.lb2{{background:var(--chip);color:var(--mut)}}
 .br{{font-size:11px;color:var(--mut)}}
-.c h2{{margin:2px 0 0;font-size:16px;line-height:1.35;letter-spacing:-.01em}}
-.en{{margin:0;font-size:12px;color:var(--mut)}}
-.d{{margin:6px 0 0;font-size:13px;color:var(--mut);flex:1}}
-time{{font-size:11px;color:var(--mut);margin-top:10px}}
-footer{{border-top:1px solid var(--line);padding:20px 0 40px;color:var(--mut);font-size:13px}}
+.c h2{{margin:2px 0 0;font-size:14px;line-height:1.35;letter-spacing:-.01em;word-break:keep-all}}
+.d{{margin:4px 0 0;font-size:12px;color:var(--mut);flex:1;
+display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
+time{{font-size:11px;color:var(--mut);margin-top:8px}}
+.empty{{grid-column:1/-1;text-align:center;color:var(--mut);padding:64px 0;font-size:14px;line-height:1.8}}
+footer{{border-top:1px solid var(--line);padding:18px 0 40px;color:var(--mut);font-size:12px;line-height:1.7}}
 </style></head><body><div class="w">
-<header><h1>{SITE}</h1><p class="sub">{TAGLINE}</p>{banner}</header>
-<main class="g">
-{chr(10).join(card(r) for r in rows)}
+<header><h1>{SITE}</h1><p class="sub">{TAGLINE}</p><p class="lead">{lead}</p></header>
+<nav><div class="tw">{tabs}</div></nav>
+<main class="g" id="g">
+{body}
 </main>
-<footer>마지막 갱신 {updated} · 최근 {len(rows)}개 표시 (전체 {total}개) ·
-이미지와 상품 정보의 저작권은 각 브랜드에 있습니다.</footer>
-</div></body></html>'''
+<footer>마지막 갱신 {updated} · 최근 {WINDOW}일 신제품 {len(rows)}건<br>
+상품 정보와 이미지의 저작권은 각 브랜드에 있습니다.</footer>
+</div>
+<script>
+document.querySelector('nav').addEventListener('click', e => {{
+  const b = e.target.closest('.t'); if (!b) return;
+  document.querySelectorAll('.t').forEach(t => t.classList.toggle('on', t === b));
+  const f = b.dataset.f;
+  document.querySelectorAll('#g .c').forEach(c => {{
+    c.style.display = (!f || c.dataset.g === f) ? '' : 'none';
+  }});
+}});
+</script>
+</body></html>"""
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(doc, encoding="utf-8")
-    print(f"→ {OUT.relative_to(ROOT)} 생성")
+    print(f"→ {OUT.relative_to(ROOT)} ({len(doc)//1024}KB)")
 
 
 if __name__ == "__main__":

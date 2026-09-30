@@ -9,9 +9,43 @@ import httpx
 UA = "sinsang-note/1.0 (+https://github.com/ttop32/sinsang-note)"
 
 
+# 브랜드 유형. 화면에서 이 축으로 나눠 보여준다.
+CVS = "편의점"
+CAFE = "카페"
+FRANCHISE = "프랜차이즈"
+
+# 브랜드 → (유형, 세부분류). 어댑터가 각자 선언하면 표기가 어긋나므로 여기 한 곳에 둔다.
+# 세부분류는 프랜차이즈에서만 쓴다(햄버거/피자/치킨).
+BRANDS = {
+    "메가MGC커피": (CAFE, ""),
+    "스타벅스":    (CAFE, ""),
+    "이디야커피":  (CAFE, ""),
+    "CU":         (CVS, ""),
+    "세븐일레븐":  (CVS, ""),
+    "이마트24":    (CVS, ""),
+}
+
+
+def kind(brand: str) -> tuple:
+    """등록되지 않은 브랜드는 조용히 넘기지 않고 드러낸다."""
+    if brand not in BRANDS:
+        raise KeyError(f"BRANDS 에 없는 브랜드: {brand}")
+    return BRANDS[brand]
+
+
 @dataclass
 class Item:
-    """브랜드 어댑터가 공통으로 뱉는 상품 1건."""
+    """브랜드 어댑터가 공통으로 뱉는 상품 1건.
+
+    이 서비스의 용건은 '신제품'이다. 전체 카탈로그가 아니다.
+    어댑터는 아래 세 신호로 신제품 여부를 최대한 알려줘야 한다.
+      released_at  브랜드가 출시일/등록일을 알려주면 채운다. 가장 강한 신호.
+      is_new       브랜드가 NEW 배지 등으로 신제품이라 표시하면 True.
+                   신제품이 아니라고 확인되면 False. 알 수 없으면 None.
+      promo        1+1·2+1 같은 행사/할인 상품. 신제품이 아니므로 화면에서 뺀다.
+    셋 다 비어 있으면 '어제 없던 게 오늘 있다'는 diff 로만 판정하게 되고,
+    그 브랜드는 합류 첫날엔 신제품을 하나도 못 내놓는다. 그래도 그게 정직하다.
+    """
     brand: str
     name: str
     name_en: str = ""
@@ -20,6 +54,11 @@ class Item:
     labels: list = field(default_factory=list)   # ICE / HOT 등
     category: str = ""
     uploaded_at: str = ""                        # 브랜드가 알려주면 채움 (YYYY-MM-DD)
+    released_at: str = ""                        # 출시일/등록일. uploaded_at 보다 강한 신호
+    is_new: bool | None = None                   # 브랜드가 신제품이라 표시했는가
+    promo: bool = False                          # 행사/할인 상품 (신제품 아님)
+    brand_type: str = ""                         # 레지스트리에서 채운다. 어댑터는 비워둔다
+    brand_sub: str = ""                          # 프랜차이즈 세부분류(햄버거/피자/치킨)
 
     @property
     def key(self) -> str:
@@ -31,6 +70,7 @@ class Item:
     def to_dict(self) -> dict:
         d = asdict(self)
         d["key"] = self.key
+        d["brand_type"], d["brand_sub"] = kind(self.brand)
         return d
 
 
