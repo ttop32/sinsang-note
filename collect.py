@@ -14,24 +14,26 @@ from datetime import date, datetime, timedelta, timezone
 
 from collectors import base
 from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
-                        cafe_coffeebean, cafe_dunkin, cafe_paikdabang,
+                        cafe_coffeebean, cafe_paulbassett, cafe_dunkin, cafe_paikdabang,
+                        cafe_paulbassett,
                         cafe_sulbing, chicken_bbq, chicken_goobne,
-                        dessert_baskinrobbins,
+                        dessert_baskinrobbins, emart24,
                         chicken_bhc, chicken_kyochon, cu, ediya,
-                        mega, pizza_mrpizza, pizza_papajohns, pizza_pizzahut,
+                        mega, pizza_domino, pizza_mrpizza, pizza_papajohns,
+                        pizza_pizzahut,
                         seven, starbucks, toast_isaac)
 
 # GS25 는 제외. gs25.gsretail.com/gscvs/* 가 기업 소개 페이지로 301 되고
 # 상품 카탈로그는 '우리동네GS' 앱 전용으로 옮겨가 공개 웹 소스가 없다.
 ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
-            cafe_coffeebean,
-            cu, seven,                                               # 편의점
+            cafe_coffeebean, cafe_paulbassett,
+            cu, seven, emart24,                                      # 편의점
             burger_momstouch, burger_burgerking, burger_frankburger, # 햄버거
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
-            pizza_pizzahut, pizza_mrpizza, pizza_papajohns,          # 피자
+            pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
             toast_isaac]                                             # 분식
-# 이마트24·도미노피자·롯데리아는 뺀다. 사유는 base.BRANDS 주석 참고.
+# 롯데리아·빕스·GS25 는 뺀다. 사유는 base.BRANDS 주석 참고.
 
 # 전일 대비 이 비율 밑으로 떨어지면 부분수집으로 보고 실패 처리한다.
 # 셀렉터가 하나 깨지면 예외가 아니라 '조용한 부분수집'으로 끝나는 게 이 프로젝트의
@@ -283,20 +285,28 @@ SECTIONS = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"), ("
 def card(r: dict) -> str:
     e = html.escape
     sub = r.get("brand_sub") or r.get("brand_type", "")
-    img = (f'<img loading="lazy" src="{e(r["image"])}" alt="{e(r["name"])}">'
-           if r.get("image") else '<div class="ph"></div>')
+    img = (f'<img loading="lazy" decoding="async" width="400" height="400"'
+           f' src="{e(r["image"])}" alt="{e(r["brand"])} {e(r["name"])}">'
+           if r.get("image") else '<div class="ph" aria-hidden="true"></div>')
     badge = '<span class="lb">NEW</span>' if r.get("is_new") else ""
     # 1+1·2+1 은 뺀다. 편의점은 신상품에 도입 행사를 거의 항상 붙여서(세븐일레븐
     # 신상품 탭 91건 전부) 그대로 두면 신상 목록이 할인 목록처럼 읽힌다.
     # 행사 정보 자체는 data/products.json 과 상세 페이지에 남는다.
     tags = "".join(f'<span class="lb lb2">{e(l)}</span>'
                    for l in r.get("labels", []) if l and l not in PROMO_LABELS)
-    return (f'<article class="c" data-g="{e(sub)}">{img}'
-            f'<div class="b"><div class="m">{badge}{tags}'
-            f'<span class="br">{e(r["brand"])}</span></div>'
-            f'<h2>{e(r["name"])}</h2>'
-            f'<p class="d">{e(r.get("desc", ""))}</p>'
-            f'<time datetime="{e(_when(r))}">{e(_when(r))}</time></div></article>')
+    # 카드를 누르면 브랜드의 그 상품 페이지로 간다. 우리가 정보를 붙들지 않고
+    # 트래픽을 브랜드로 돌려주는 구조여야 한다.
+    url = r.get("url", "")
+    inner = (f'{img}<div class="b"><div class="m">{badge}{tags}'
+             f'<span class="br">{e(r["brand"])}</span></div>'
+             f'<h2>{e(r["name"])}</h2>'
+             f'<p class="d">{e(r.get("desc", ""))}</p>'
+             f'<time datetime="{e(_when(r))}">{e(_when(r))}</time></div>')
+    if url:
+        return (f'<a class="c" data-g="{e(sub)}" href="{e(url)}"'
+                f' target="_blank" rel="noopener nofollow">{inner}'
+                f'<span class="go">브랜드에서 보기 &rarr;</span></a>')
+    return f'<article class="c" data-g="{e(sub)}">{inner}</article>'
 
 
 def render(rows: list, new_today: list) -> None:
@@ -358,14 +368,33 @@ overflow:hidden;display:flex;flex-direction:column}}
 .lb2{{background:var(--chip);color:var(--mut)}}
 .br{{font-size:11px;color:var(--mut)}}
 .c h2{{margin:2px 0 0;font-size:14px;line-height:1.35;letter-spacing:-.01em;word-break:keep-all}}
+a.c{{text-decoration:none;color:inherit;transition:border-color .15s}}
+a.c:hover,a.c:focus-visible{{border-color:var(--accent)}}
+.go{{display:block;padding:0 11px 11px;font-size:11px;color:var(--accent);font-weight:600}}
+.skip{{position:absolute;left:-9999px}}
+.skip:focus{{left:16px;top:8px;position:fixed;z-index:9;background:var(--accent);color:#fff;
+padding:8px 12px;border-radius:8px;text-decoration:none}}
+.tools{{display:flex;gap:8px;margin-top:12px}}
+#q{{flex:1;min-width:0;font:inherit;font-size:15px;padding:10px 13px;border-radius:999px;
+border:1px solid var(--line);background:var(--chip);color:var(--fg);min-height:42px}}
+#q::placeholder{{color:var(--mut)}}
+#sort{{flex:none}}
+.cnt{{margin:10px 0 0;font-size:12px;color:var(--mut);min-height:16px}}
 .d{{margin:4px 0 0;font-size:12px;color:var(--mut);flex:1;
 display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
 time{{font-size:11px;color:var(--mut);margin-top:8px}}
 .empty{{grid-column:1/-1;text-align:center;color:var(--mut);padding:64px 0;font-size:14px;line-height:1.8}}
 footer{{border-top:1px solid var(--line);padding:18px 0 40px;color:var(--mut);font-size:12px;line-height:1.7}}
 </style></head><body><div class="w">
+<a class="skip" href="#g">본문으로 건너뛰기</a>
 <header><h1>{SITE}</h1><p class="sub">{TAGLINE}</p><p class="lead">{lead}</p></header>
-<nav><div class="tw">{tabs}</div></nav>
+<div class="tools">
+  <input id="q" type="search" placeholder="상품·브랜드 검색" aria-label="상품 또는 브랜드 검색"
+         autocomplete="off" enterkeyhint="search">
+  <button id="sort" class="t" data-s="date" aria-label="정렬 바꾸기">최신순</button>
+</div>
+<nav aria-label="분류"><div class="tw">{tabs}</div></nav>
+<p id="cnt" class="cnt" role="status" aria-live="polite"></p>
 <main class="g" id="g">
 {body}
 </main>
@@ -373,13 +402,48 @@ footer{{border-top:1px solid var(--line);padding:18px 0 40px;color:var(--mut);fo
 상품 정보와 이미지의 저작권은 각 브랜드에 있습니다.</footer>
 </div>
 <script>
+const g = document.getElementById('g'), q = document.getElementById('q'),
+      cnt = document.getElementById('cnt'), sortBtn = document.getElementById('sort');
+const cards = [...g.querySelectorAll('.c')];
+cards.forEach((c, i) => {{
+  c.dataset.i = i;                                    // 원래 순서(최신순)를 기억
+  c.dataset.q = c.textContent.toLowerCase();          // 검색용 텍스트 캐시
+  c.dataset.b = (c.querySelector('.br') || {{}}).textContent || '';
+}});
+let kind = '', term = '';
+
+function apply() {{
+  let n = 0;
+  for (const c of cards) {{
+    const ok = (!kind || c.dataset.g === kind) && (!term || c.dataset.q.includes(term));
+    c.hidden = !ok;
+    if (ok) n++;
+  }}
+  cnt.textContent = (kind || term) ? n + '건' : '';
+}}
+
 document.querySelector('nav').addEventListener('click', e => {{
   const b = e.target.closest('.t'); if (!b) return;
-  document.querySelectorAll('.t').forEach(t => t.classList.toggle('on', t === b));
-  const f = b.dataset.f;
-  document.querySelectorAll('#g .c').forEach(c => {{
-    c.style.display = (!f || c.dataset.g === f) ? '' : 'none';
+  document.querySelectorAll('nav .t').forEach(t => {{
+    const on = t === b; t.classList.toggle('on', on); t.setAttribute('aria-pressed', on);
   }});
+  kind = b.dataset.f; apply();
+}});
+
+let timer;
+q.addEventListener('input', () => {{
+  clearTimeout(timer);
+  timer = setTimeout(() => {{ term = q.value.trim().toLowerCase(); apply(); }}, 150);
+}});
+
+sortBtn.addEventListener('click', () => {{
+  const byDate = sortBtn.dataset.s === 'date';
+  sortBtn.dataset.s = byDate ? 'brand' : 'date';
+  sortBtn.textContent = byDate ? '브랜드순' : '최신순';
+  const sorted = [...cards].sort((a, b) => byDate
+    ? (a.dataset.b.localeCompare(b.dataset.b, 'ko') || a.dataset.i - b.dataset.i)
+    : (a.dataset.i - b.dataset.i));
+  sorted.forEach(c => g.appendChild(c));
 }});
 </script>
 </body></html>"""

@@ -23,8 +23,10 @@ BRANDS = {
     "설빙":        (CAFE, ""),
     "빽다방":      (CAFE, ""),
     "커피빈":      (CAFE, ""),
+    "폴바셋":      (CAFE, ""),
     "CU":         (CVS, ""),
     "세븐일레븐":  (CVS, ""),
+    "이마트24":    (CVS, ""),
     "맘스터치":    (FRANCHISE, "햄버거"),
     "버거킹":      (FRANCHISE, "햄버거"),
     "BBQ":        (FRANCHISE, "치킨"),
@@ -33,24 +35,65 @@ BRANDS = {
     "피자헛":      (FRANCHISE, "피자"),
     "미스터피자":  (FRANCHISE, "피자"),
     "파파존스":    (FRANCHISE, "피자"),
+    "도미노피자":  (FRANCHISE, "피자"),
     "굽네치킨":    (FRANCHISE, "치킨"),
     "프랭크버거":  (FRANCHISE, "햄버거"),
     "배스킨라빈스": (FRANCHISE, "디저트"),
     "던킨":        (FRANCHISE, "디저트"),
     "이삭토스트":  (FRANCHISE, "분식"),
-    # 아래는 등록하지 않는다. robots.txt 와 무관하게 이용약관이 스크래핑을 금지한다.
-    # 이마트24  — 약관 제8조 ⑧ "크롤러, 매크로 프로그램, 스파이더, 스크래퍼 등… 수집" 금지
-    # 도미노피자 — 푸터 "사전 서면동의 없이 정보·콘텐츠를 상업적 목적으로 스크래핑" 금지
-    # 폴바셋    — 약관 "정보를 회사의 사전 승낙 없이 복제 또는 유통하거나
-    #              상업적으로 이용하는 행위" 금지 (v9.0, 2026-01-22 시행)
-    # 롯데리아  — robots.txt 가 알려진 봇 티어 외 모든 UA 를 Disallow: / 로 차단
-    # 원래 도미노피자는 보류. robots.txt 는 /goods/ 를 허용하지만 사이트 푸터가
+    # 아래 셋은 robots.txt 는 허용하지만 이용약관이 수집·복제를 금지한다.
+    # 운영자 판단으로 수집하되, 삭제 요청이 오면 다투지 말고 즉시 내린다.
+    #   이마트24  — 약관 제8조 ⑧ "크롤러, 매크로 프로그램, 스파이더, 스크래퍼 등… 수집"
+    #   도미노피자 — 푸터 "사전 서면동의 없이 정보·콘텐츠를 상업적 목적으로 스크래핑"
+    #   폴바셋    — 약관 v9.0 "사전 승낙 없이 복제 또는 유통하거나 상업적으로 이용"
+    #
+    # 등록하지 않는 곳:
+    #   롯데리아 — lotteeatz.com/robots.txt 가 알려진 봇 티어 외 모든 UA 를
+    #              Disallow: / 로 차단한다. 뚫으려면 UA 를 위장해야 하는데,
+    #              그건 대법원 2021도1533 이 정보통신망 침입죄 근거로 든 행위다.
+    #   빕스     — robots.txt 가 Googlebot·NaverBot 외 전면 차단
+    #   GS25     — 사이트 자체가 폐쇄(앱 전용 이관) robots.txt 는 /goods/ 를 허용하지만 사이트 푸터가
     # "사전 서면동의 없이 정보·콘텐츠를 상업적 목적으로 스크래핑" 을 금지한다.
     # 이마트24(약관 제8조 ⑧)와 같은 종류의 건이라 사용자 판단이 필요하다.
     # 롯데리아는 등록하지 않는다. lotteeatz.com/robots.txt 가 알려진 봇 티어 외
     # 모든 UA 를 Disallow: / 로 막는다. 우리 UA 는 어느 티어에도 없어 전 경로 금지다.
     # 다른 호스트로 우회하는 건 신원을 밝히는 이 프로젝트 방침에 어긋난다.
 }
+
+
+# 상품 상세 페이지가 없는 브랜드를 위한 폴백. 카드를 누르면 최소한 그 브랜드
+# 메뉴 페이지로는 가야 한다. 트래픽을 브랜드로 돌려주는 게 이 링크의 목적이다.
+SITES = {
+    "메가MGC커피":  "https://www.mega-mgccoffee.com/menu/",
+    "스타벅스":     "https://www.starbucks.co.kr/menu/drink_list.do",
+    "이디야커피":   "https://www.ediya.com/contents/drink.html",
+    "설빙":         "https://sulbing.com/menu/",
+    "빽다방":       "https://paikdabang.com/menu/menu_new/",
+    "커피빈":       "https://www.coffeebeankorea.com/menu/list.asp",
+    "CU":          "https://cu.bgfretail.com/product/product.do",
+    "세븐일레븐":   "https://www.7-eleven.co.kr/product/presentList.asp",
+    "맘스터치":     "https://www.momstouch.co.kr/menu/new.php",
+    "버거킹":       "https://www.burgerking.co.kr/#/menu",
+    "프랭크버거":   "https://www.frankburger.co.kr/html/menu_1.html",
+    "BBQ":         "https://www.bbq.co.kr/menu",
+    "bhc치킨":      "https://www.bhc.co.kr/menu/chicken.asp",
+    "교촌치킨":     "https://www.kyochon.com/menu/chicken.asp",
+    "굽네치킨":     "https://www.goobne.co.kr/menu/new_p",
+    "피자헛":       "https://www.pizzahut.co.kr/menu",
+    "미스터피자":   "https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu",
+    "파파존스":     "https://pji.co.kr/menu/pizza",
+    "배스킨라빈스": "https://www.baskinrobbins.co.kr/menu/fom.php",
+    "던킨":         "https://www.dunkindonuts.co.kr/menu",
+    "이삭토스트":   "https://www.isaac-toast.co.kr/menu/menu.php",
+    "이마트24":     "https://emart24.co.kr/goods/pl",
+    "도미노피자":   "https://www.dominos.co.kr/goods/list",
+    "폴바셋":       "https://www.baristapaulbassett.co.kr/menu/List.pb",
+}
+
+
+def site(brand: str) -> str:
+    """브랜드 메뉴 페이지. 등록이 안 됐으면 빈 문자열(링크를 안 건다)."""
+    return SITES.get(brand, "")
 
 
 def kind(brand: str) -> tuple:
@@ -86,6 +129,8 @@ class Item:
     released_at: str = ""                        # 출시일/등록일. uploaded_at 보다 강한 신호
     is_new: bool | None = None                   # 브랜드가 신제품이라 표시했는가
     promo: bool = False                          # 행사/할인 상품 (신제품 아님)
+    url: str = ""                                # 브랜드 사이트의 이 상품 페이지.
+                                                 # 없으면 SITES 의 브랜드 메뉴 URL 로 떨어진다
     brand_type: str = ""                         # 레지스트리에서 채운다. 어댑터는 비워둔다
     brand_sub: str = ""                          # 프랜차이즈 세부분류(햄버거/피자/치킨)
 
@@ -100,6 +145,7 @@ class Item:
         d = asdict(self)
         d["key"] = self.key
         d["brand_type"], d["brand_sub"] = kind(self.brand)
+        d["url"] = self.url or site(self.brand)
         return d
 
 
