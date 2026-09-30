@@ -34,7 +34,7 @@ def main() -> None:
     prev = load_previous()
     known_brands = {p["brand"] for p in prev.values()}
 
-    products, errors = [], []
+    products, errors, failed_brands = [], [], []
     for mod in ADAPTERS:
         try:
             # 이전 수집 결과를 받아 재요청을 줄일 수 있는 어댑터에만 넘긴다(CU 등).
@@ -48,10 +48,20 @@ def main() -> None:
             products += items
         except Exception as e:                      # 한 브랜드가 죽어도 나머지는 살린다
             errors.append(f"{mod.BRAND}: {e}")
+            failed_brands.append(mod.BRAND)
             print(f"!! {mod.BRAND} 실패: {e}")
 
 
     rows = []
+
+    # 실패한 브랜드는 이전 수집분을 그대로 유지한다. 해외 러너에서 국내 사이트가
+    # 간헐적으로 DNS 실패하거나 타임아웃 나는데, 그때마다 그 브랜드가 통째로
+    # '사라짐' 처리되면 데이터가 깎이고 되돌릴 수 없다.
+    carried = [p for p in prev.values() if p["brand"] in failed_brands]
+    if carried:
+        print(f"   실패 브랜드 이전분 유지: {len(carried)}건")
+    rows += carried
+
     for it in products:
         d = it.to_dict()
         old = prev.get(d["key"])
