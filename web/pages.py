@@ -19,7 +19,14 @@ from web import theme
 
 # 유형 축. collect.SECTIONS 와 같은 순서지만 collect 를 import 하지 않는다 —
 # collect 가 나중에 web.pages 를 부르게 되면 순환 import 가 된다.
-KINDS = ("편의점", "카페", "햄버거", "피자", "치킨")
+def _kinds() -> tuple:
+    """유형 목록은 collect.SECTIONS 가 정본이다. 여기 따로 두면 어긋난다.
+    실제로 5종만 적어놔서 /c/디저트/ 같은 페이지가 없는데 상세가 링크했다."""
+    import collect
+    return tuple(k for _, k in collect.SECTIONS if k)
+
+
+KINDS = _kinds()
 
 # 상단 추천에 붙일 같은 브랜드 신제품 개수. 내부 링크가 SEO 의 절반이다.
 RELATED = 6

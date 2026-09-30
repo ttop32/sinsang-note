@@ -45,7 +45,11 @@ def _text(node, sel) -> str:
 
 def _image(src: str) -> str:
     """이미지 경로에 한글과 대괄호가 들어있다(/data/menu/[홈페이지]…jpg). 인코딩해 둔다."""
-    return urljoin(ROOT, quote(src, safe="/:")) if src else ""
+    if not src:
+        return ""
+    # 이미 퍼센트 인코딩된 경로를 또 quote 하면 %2520 이 돼 이미지가 깨진다.
+    # 한글·공백만 인코딩하고 기존 % 는 그대로 둔다.
+    return urljoin(ROOT, quote(src, safe="/:%?=&[]"))
 
 
 def _categories(html: str) -> dict:

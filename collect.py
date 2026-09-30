@@ -250,7 +250,8 @@ def drop_sets(rows: list) -> list:
 _SET = re.compile(r"세트|콤보")
 
 # 카드에 안 보일 행사 라벨
-PROMO_LABELS = {"1+1", "2+1", "3+1", "할인", "증정", "세일"}
+PROMO_LABELS = {"1+1", "2+1", "3+1", "1 + 1", "2 + 1", "3 + 1",
+                "할인", "증정", "세일", "특가"}
 
 # 브랜드가 준 NEW 계열 라벨. 우리 NEW 뱃지와 겹쳐 두 번 뜬다.
 DUP_LABELS = {"NEW", "New", "new", "신메뉴", "신상품", "신제품"}
@@ -290,13 +291,19 @@ def is_fresh(r: dict, today: str) -> bool:
     if r.get("is_new") is True:
         # 배지는 믿되 날짜가 있으면 그쪽을 따른다. 배지만 보고 넘기면 화면이
         # "최근 21일"이라고 써놓고 3개월 전 상품을 보여주게 된다(94건이 그랬다).
-        # 날짜를 아예 안 주는 브랜드만 배지를 그대로 믿는다.
         if stamped:
             return stamped >= cutoff
-        return True
+        # 날짜가 없으면 기준선인지 본다. 이 검사를 빠뜨려서 합류 첫날 쌓은
+        # 메뉴판이 통째로 '오늘 신상'으로 나갔다(300장 중 265장).
+        return not r.get("baseline")
 
     if r.get("promo"):
         return False                      # 행사라서 실린 상품. 신제품 근거가 없다.
+
+    # 어댑터가 promo 를 안 채워도 라벨이 행사면 같은 취급한다. 단 브랜드가
+    # 날짜를 준 경우는 '신제품 + 도입행사'일 수 있으니 날짜 판정에 맡긴다.
+    if not stamped and any(l in PROMO_LABELS for l in r.get("labels", [])):
+        return False
 
     # 브랜드가 '신제품 아님'이라고 말했으면 이미지 업로드 시각으로 뒤집지 않는다.
     # 사이트 개편 때 이미지를 일괄 재업로드하면 옛 상품이 최근 날짜를 갖는다.
@@ -369,9 +376,11 @@ def card(r: dict) -> str:
     # 카드를 누르면 브랜드의 그 상품 페이지로 간다. 우리가 정보를 붙들지 않고
     # 트래픽을 브랜드로 돌려주는 구조여야 한다.
     url = r.get("url", "")
+    # 영문명은 화면 보조이자 검색 대상이다("Latte" 로 검색해도 걸리게)
+    en = f'<p class="en">{e(r["name_en"])}</p>' if r.get("name_en") else ""
     inner = (f'{img}<div class="b"><div class="m">{badge}{tags}'
              f'<span class="br">{e(r["brand"])}</span></div>'
-             f'<h2>{e(r["name"])}</h2>'
+             f'<h2>{e(r["name"])}</h2>{en}'
              f'<p class="d">{e(r.get("desc", ""))}</p>'
              f'<time datetime="{e(_when(r))}">{e(_when(r))}</time></div>')
     if url:
@@ -382,13 +391,14 @@ def card(r: dict) -> str:
 
 
 def render(rows: list, new_today: list) -> None:
+    shown = rows[:SHOW]                 # 숫자는 실제로 그리는 것만 세야 맞는다
     counts = collections.Counter()
-    for r in rows:
+    for r in shown:
         counts[r.get("brand_sub") or r.get("brand_type", "")] += 1
 
     tabs = "".join(
         f'<button class="t{" on" if i == 0 else ""}" data-f="{html.escape(key)}">'
-        f'{html.escape(label)}<span class="n">{len(rows) if not key else counts.get(key, 0)}</span></button>'
+        f'{html.escape(label)}<span class="n">{len(shown) if not key else counts.get(key, 0)}</span></button>'
         for i, (label, key) in enumerate(SECTIONS)
         if not key or counts.get(key))
 
@@ -403,7 +413,7 @@ def render(rows: list, new_today: list) -> None:
         "/", image=(top or {}).get("image", ""),
         extra=CSS_EXTRA)
 
-    body = "\n".join(card(r) for r in rows[:SHOW]) or (
+    body = "\n".join(card(r) for r in shown) or (
         '<p class="empty">아직 새로 올라온 제품이 없습니다.<br>'
         '매일 아침 다시 확인합니다.</p>')
 
@@ -421,6 +431,7 @@ def render(rows: list, new_today: list) -> None:
 <p id="cnt" class="cnt" role="status" aria-live="polite"></p>
 <main class="g" id="g">
 {body}
+<p class="empty" id="noresult" hidden>찾는 제품이 없습니다.<br>다른 말로 검색해 보세요.</p>
 </main>
 <footer>마지막 갱신 {updated} · 최근 {WINDOW}일 신제품 {len(rows)}건<br>
 상품 정보와 이미지의 저작권은 각 브랜드에 있습니다.</footer>
@@ -429,9 +440,14 @@ def render(rows: list, new_today: list) -> None:
 const g = document.getElementById('g'), q = document.getElementById('q'),
       cnt = document.getElementById('cnt'), sortBtn = document.getElementById('sort');
 const cards = [...g.querySelectorAll('.c')];
+const empty = document.getElementById('noresult');
 cards.forEach((c, i) => {{
   c.dataset.i = i;                                    // 원래 순서(최신순)를 기억
-  c.dataset.q = c.textContent.toLowerCase();          // 검색용 텍스트 캐시
+  // 카드 안의 UI 문구("브랜드에서 보기")까지 색인되면 그 말로 검색했을 때
+  // 전건이 걸린다. 상품명·영문명·브랜드·설명만 넣는다.
+  c.dataset.q = [c.querySelector('h2'), c.querySelector('.en'),
+                 c.querySelector('.br'), c.querySelector('.d')]
+      .filter(Boolean).map(n => n.textContent).join(' ').toLowerCase();
   c.dataset.b = (c.querySelector('.br') || {{}}).textContent || '';
 }});
 let kind = '', term = '';
