@@ -11,12 +11,28 @@ POST 만으로 서버가 완성된 HTML 을 돌려주므로 브라우저 불필�
   통째로 다시 그려주는 구조라 넉넉한 크기로 한 번만 부르면 끝난다.
 PB 전용 탭(pTab=5, 7-Select)도 같은 방식으로 붙지만 신제품 목록이 아니라 뺐다.
 
-주의 두 가지.
-- listMoreAjax.asp 는 '신상품' 배지를 안 그린다(PB·1+1·할인은 그린다).
-  그래서 배지가 살아있는 첫 화면을 먼저 담고 뒷페이지를 덧붙인다.
-- 상품 설명 필드가 사이트 어디에도 없다. 상세 페이지(presentView.asp)의 설명란도
-  상품명을 그대로 반복할 뿐이라 상세를 긁을 이유가 없다. 그래서 desc 는 빈 값이다.
-  가격은 목록에 있지만 Item 계약에 없어서 버린다.
+신제품 판정은 '배지'가 아니라 '탭'을 근거로 한다. 2026-09-30 실측:
+  - presentList.asp?pTab=8 의 탭 이름이 그대로 '신상품'이고, 첫 화면 13건은
+    13건 모두 '신상품' 배지를 달고 있다(일부만 붙는 게 아니었다).
+  - 배지가 뒷페이지에 없는 건 listMoreAjax.asp 가 행사 배지(1+1·2+1·할인·증정)만
+    그리고 신상품 배지는 아예 렌더하지 않기 때문이다. 상품이 구상품이라서가 아니다.
+  - listMoreAjax.asp 가 pTab 을 정말 타는지 확인했다. pTab=8 / 5 / "" 로 같은
+    페이지를 부르면 결과가 전부 다르다. 즉 뒷페이지도 신상품 탭의 연속이다.
+그래서 이 탭에서 온 상품은 is_new=True 로 둔다. Fresh Food 는 신상품 탭이 아니라
+식품 카테고리 목록이므로 is_new=None(모름)이다.
+
+행사 배지를 promo 로 올릴지는 근거가 있느냐로 가른다. 신상품 탭 99건 중 86건이
+1+1·2+1 을 달고 있는데, 이건 갓 나온 상품에 붙는 도입 행사지 '행사라서 실린 상품'이
+아니다. 브랜드가 신상품이라고 말한 걸 행사 배지를 이유로 지우면 이 브랜드 신제품이
+87% 사라진다. 그래서 신상품 탭은 promo 를 세우지 않고 배지는 labels 로만 남긴다.
+반대로 Fresh Food 는 신제품이라는 근거가 없으므로, 행사 배지가 붙은 건 행사 상품으로
+본다(근거 없는 상품을 행사 배지만 믿고 신상인 척 내보내지 않는다).
+
+출시일·등록일은 목록·상세 어디에도 없다. 상세(presentView.asp)의 날짜는 진행중인
+이벤트의 행사 기간(2026-09-01 ~ 2026-09-30)이지 상품 출시일이 아니라 쓰지 않는다.
+상품 설명 필드도 사이트 어디에도 없다. 상세의 설명란은 상품명을 그대로 반복할 뿐이라
+상세를 긁을 이유가 없다. 그래서 desc 는 빈 값이다.
+가격은 목록에 있지만 Item 계약에 없어서 버린다.
 """
 import time
 import httpx
@@ -34,6 +50,9 @@ MAX_PAGE_SIZE = 1000   # 배증 상한. 낡은 ASP 서버에 비상식적인 크
 DELAY = 1.0            # 낡은 ASP 서버라 몰아치지 않는다
 PLACEHOLDER = "/front/img/product/"   # 사진 없는 상품에 물려주는 디폴트 이미지 경로
 
+# 행사 배지. 이게 붙었다고 구상품인 건 아니고, '신제품 근거가 없을 때'에만 행사로 본다.
+PROMO_TAGS = {"1+1", "2+1", "할인", "증정", "세일"}
+
 
 def _post(c: httpx.Client, path: str, data: dict) -> str:
     r = c.post(BASE + path, data=data)
@@ -42,7 +61,7 @@ def _post(c: httpx.Client, path: str, data: dict) -> str:
     return r.text
 
 
-def _cards(html: str, category: str) -> list[Item]:
+def _cards(html: str, category: str, is_new: bool | None) -> list[Item]:
     """목록 페이지든 더보기 조각이든 같은 카드 마크업을 쓴다."""
     tree = HTMLParser(html)
     root = tree.css_first("ul#listUl") or tree.body
@@ -61,28 +80,36 @@ def _cards(html: str, category: str) -> list[Item]:
         if not name or name == "디폴트 이미지":
             continue
 
+        # '신상품' 배지는 첫 화면에만 그려지고 더보기 AJAX 응답엔 없다. 같은 탭인데
+        # 앞 13건만 배지가 붙어 화면이 일관성을 잃으므로 labels 에선 빼고,
+        # 신제품 여부는 배지 대신 탭(is_new 인자)으로 판정한다.
+        labels = [t for t in (x.text().strip() for x in li.css("ul.tag_list_01 li"))
+                  if t and t != "신상품"]
+
         out.append(Item(
             brand=BRAND,
             name=name,
             image="" if not src or src.startswith(PLACEHOLDER) else BASE + src,
-            # '신상품' 배지는 첫 화면에만 그려지고 더보기 AJAX 응답엔 없다.
-            # 같은 신상품인데 앞쪽 11건만 배지가 붙어 화면이 일관성을 잃으므로 버린다.
-            labels=[t for t in (x.text().strip() for x in li.css("ul.tag_list_01 li"))
-                    if t and t != "신상품"],
+            labels=labels,
             category=category,
+            is_new=is_new,
+            # 신제품 근거가 있으면 행사 배지는 도입 행사로 보고 넘긴다.
+            promo=is_new is not True and any(t in PROMO_TAGS for t in labels),
         ))
     return out
 
 
 def _new_products(c: httpx.Client) -> list[Item]:
-    """신상품 탭. 첫 화면(배지 있음) + 더보기 페이지."""
-    items = _cards(_post(c, "/product/presentList.asp", {"pTab": TAB_NEW}), "신상품")
+    """신상품 탭. 탭 자체가 신상품이라 여기서 온 건 전부 is_new=True."""
+    items = _cards(_post(c, "/product/presentList.asp", {"pTab": TAB_NEW}),
+                   "신상품", True)
 
     # 더보기는 2페이지부터. 서버가 첫 13건을 건너뛴 위치에서 잘라준다.
     for page in range(2, MAX_PAGES + 2):
         got = _cards(_post(c, "/product/listMoreAjax.asp", {
             "intPageSize": PAGE_SIZE, "intCurrPage": page,
-            "cateCd1": "", "cateCd2": "", "cateCd3": "", "pTab": TAB_NEW}), "신상품")
+            "cateCd1": "", "cateCd2": "", "cateCd3": "", "pTab": TAB_NEW}),
+            "신상품", True)
         items += got
         if len(got) < PAGE_SIZE:              # 덜 왔으면 마지막 페이지
             break
@@ -90,12 +117,15 @@ def _new_products(c: httpx.Client) -> list[Item]:
 
 
 def _fresh_food(c: httpx.Client) -> list[Item]:
-    """Fresh Food. 요청한 건수만큼 목록을 처음부터 다시 그려준다."""
+    """Fresh Food. 요청한 건수만큼 목록을 처음부터 다시 그려준다.
+
+    신상품 탭이 아니라 식품 카테고리 목록이라 신제품 여부를 알 수 없다(is_new=None).
+    """
     items: list[Item] = []
     size = PAGE_SIZE
     for _ in range(MAX_PAGES):
         items = _cards(_post(c, "/product/dosirakNewMoreAjax.asp",
-                             {"intPageSize": size, "pTab": ""}), "Fresh Food")
+                             {"intPageSize": size, "pTab": ""}), "Fresh Food", None)
         if len(items) < size:                 # 요청한 것보다 적게 왔으면 다 받은 것
             break
         size = min(size * 2, MAX_PAGE_SIZE)                             # 딱 맞게 왔으면 잘렸을 수 있으니 넓혀서 다시
@@ -106,7 +136,7 @@ def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
     with base.client() as c:
-        # 신상품을 먼저 담아야 같은 상품이 Fresh Food 에도 있을 때 배지를 안 잃는다
+        # 신상품을 먼저 담아야 같은 상품이 Fresh Food 에도 있을 때 is_new 를 안 잃는다
         for it in _new_products(c) + _fresh_food(c):
             if it.key not in seen:
                 seen.add(it.key)

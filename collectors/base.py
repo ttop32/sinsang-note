@@ -23,6 +23,14 @@ BRANDS = {
     "CU":         (CVS, ""),
     "세븐일레븐":  (CVS, ""),
     "이마트24":    (CVS, ""),
+    "맘스터치":    (FRANCHISE, "햄버거"),
+    "버거킹":      (FRANCHISE, "햄버거"),
+    "BBQ":        (FRANCHISE, "치킨"),
+    "bhc치킨":     (FRANCHISE, "치킨"),
+    "교촌치킨":    (FRANCHISE, "치킨"),
+    # 롯데리아는 등록하지 않는다. lotteeatz.com/robots.txt 가 알려진 봇 티어 외
+    # 모든 UA 를 Disallow: / 로 막는다. 우리 UA 는 어느 티어에도 없어 전 경로 금지다.
+    # 다른 호스트로 우회하는 건 신원을 밝히는 이 프로젝트 방침에 어긋난다.
 }
 
 

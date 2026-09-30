@@ -11,11 +11,18 @@ import json
 import pathlib
 from datetime import date, datetime, timedelta, timezone
 
-from collectors import cu, ediya, emart24, mega, seven, starbucks
+from collectors import base
+from collectors import (burger_burgerking, burger_momstouch, chicken_bbq,
+                        chicken_bhc, chicken_kyochon, cu, ediya, emart24,
+                        mega, seven, starbucks)
 
 # GS25 는 제외. gs25.gsretail.com/gscvs/* 가 기업 소개 페이지로 301 되고
 # 상품 카탈로그는 '우리동네GS' 앱 전용으로 옮겨가 공개 웹 소스가 없다.
-ADAPTERS = [mega, starbucks, cu, seven, emart24, ediya]
+ADAPTERS = [mega, starbucks, ediya,                                  # 카페
+            cu, seven, emart24,                                      # 편의점
+            burger_momstouch, burger_burgerking,                     # 햄버거
+            chicken_bbq, chicken_bhc, chicken_kyochon]                # 치킨
+# 롯데리아는 뺀다. lotteeatz.com/robots.txt 가 우리 UA 를 전 경로 차단한다.
 
 # 전일 대비 이 비율 밑으로 떨어지면 부분수집으로 보고 실패 처리한다.
 # 셀렉터가 하나 깨지면 예외가 아니라 '조용한 부분수집'으로 끝나는 게 이 프로젝트의
@@ -24,6 +31,15 @@ FLOOR = 0.7
 
 # 브랜드가 신제품이라고 표시해주지 않는 곳은 날짜로 판단한다. 이 기간 안이면 신제품.
 WINDOW = 21
+
+# 브랜드가 NEW 배지를 안 내리는 경우가 있다. 이디야는 2017년 상품에, 버거킹은
+# 전체의 31%에 배지가 붙어 있다. 배지를 믿되 날짜가 이만큼 지났으면 신제품이
+# 아니라고 본다. WINDOW 보다 넉넉한 건 배지를 몇 달 달아두는 게 흔해서다.
+STALE = 90
+
+# 브랜드 하나가 화면을 덮지 못하게 하는 상한. CU 는 NEW 배지 유지 기간이 길어
+# 666건이 한꺼번에 올라오고, 그러면 이마트24 가 상위 300건을 덮던 문제가 재발한다.
+PER_BRAND = 40
 
 # 첫 화면에 그리는 최대 개수. 전량(2,600건+)을 한 장에 그리면 1MB 를 넘어가고
 # 브랜드가 늘수록 감당이 안 된다. 이 사이트의 용건은 '신제품'이라 최신순 앞쪽이
@@ -82,6 +98,9 @@ def main() -> None:
     # 간헐적으로 DNS 실패하거나 타임아웃 나는데, 그때마다 그 브랜드가 통째로
     # '사라짐' 처리되면 데이터가 깎이고 되돌릴 수 없다.
     carried = [p for p in prev.values() if p["brand"] in failed_brands]
+    for c in carried:
+        # 이전 수집분은 레지스트리 값이 없을 수 있다(계약이 나중에 늘었다).
+        c["brand_type"], c["brand_sub"] = base.kind(c["brand"])
     if carried:
         print(f"   실패 브랜드 이전분 유지: {len(carried)}건")
     rows += carried
@@ -129,14 +148,34 @@ def main() -> None:
 
     fresh = [r for r in rows if is_fresh(r, today)]
     fresh.sort(key=lambda r: (_when(r), r["brand"]), reverse=True)
+    fresh = cap_per_brand(fresh)
     new_today = [r for r in fresh if _when(r) == today]
     print(f"총 {len(rows)}건 / 신제품 {len(fresh)}건 (오늘 {len(new_today)}건) / 사라짐 {len(gone)}건")
     render(fresh, new_today)
+
+    # 개별 페이지·sitemap·아이콘. web.seo 가 collect 를 import 하므로 여기서 늦게 부른다.
+    from web import assets, pages, seo
+    docs = OUT.parent
+    paths = pages.build(fresh, rows, docs)
+    seo.build(fresh, paths, docs)
+    assets.build(docs)
+    print(f"→ 개별 페이지 {len(paths)}장 + sitemap·feed·아이콘")
 
     # 데이터는 위에서 이미 썼다. 실패한 어댑터가 있으면 여기서 죽어 Actions 가 빨갛게 뜬다.
     # (워크플로의 커밋 스텝은 if: always() 라 부분 결과는 반영된다.)
     if errors:
         raise SystemExit("어댑터 실패:\n" + "\n".join(errors))
+
+
+def cap_per_brand(rows: list) -> list:
+    """브랜드별 상한을 적용한다. 날짜순으로 이미 정렬돼 있어 최근 것부터 남는다."""
+    seen = collections.Counter()
+    out = []
+    for r in rows:
+        if seen[r["brand"]] < PER_BRAND:
+            seen[r["brand"]] += 1
+            out.append(r)
+    return out
 
 
 def _when(r: dict) -> str:
@@ -152,16 +191,23 @@ def is_fresh(r: dict, today: str) -> bool:
     아무 근거도 없으면 올리지 않는다 — 카탈로그를 신상인 척 내보내는 게
     이 서비스에서 제일 큰 거짓말이다.
     """
-    if r.get("promo"):
-        return False                      # 1+1·2+1 은 신제품이 아니다
-    if r.get("is_new") is True:
-        return True                       # 브랜드가 직접 표시한 신제품
+    d0 = date.fromisoformat(today)
+    cutoff = (d0 - timedelta(days=WINDOW)).isoformat()
+    stamped = r.get("released_at") or r.get("uploaded_at")
 
-    cutoff = (date.fromisoformat(today) - timedelta(days=WINDOW)).isoformat()
+    # 신제품 근거가 먼저다. 갓 나온 상품이 도입 행사를 하는 건 당연하고,
+    # promo 를 먼저 보면 그런 상품이 통째로 잘린다(CU 신제품 107건).
+    # promo 는 '신제품 근거 없이 행사라서 목록에 실린 것'을 거르는 용도다.
+    if r.get("is_new") is True:
+        # 배지는 믿되, 날짜가 한참 전이면 브랜드가 안 내린 것으로 본다.
+        stale = (d0 - timedelta(days=STALE)).isoformat()
+        return not (stamped and stamped < stale)
+
+    if r.get("promo"):
+        return False                      # 행사라서 실린 상품. 신제품 근거가 없다.
 
     # 브랜드가 준 날짜가 최근이면 신제품이다. 우리가 그 브랜드를 언제 붙였는지와 무관하다.
     # (기준선이라고 빼면 합류 직전에 나온 진짜 신메뉴까지 사라진다.)
-    stamped = r.get("released_at") or r.get("uploaded_at")
     if stamped:
         return stamped >= cutoff
 

@@ -1,0 +1,29 @@
+{
+  "name": "신상노트 — 편의점·카페·프랜차이즈 신제품 모아보기",
+  "short_name": "신상노트",
+  "description": "편의점·카페·프랜차이즈 신제품 모아보기. 매일 아침 자동으로 모읍니다.",
+  "lang": "ko",
+  "dir": "ltr",
+  "start_url": "/sinsang-note/",
+  "scope": "/sinsang-note/",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/sinsang-note/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/sinsang-note/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "/sinsang-note/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

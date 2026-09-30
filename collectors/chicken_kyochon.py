@@ -1,0 +1,123 @@
+"""교촌치킨.
+
+kyochon.com 은 예전 방식의 ASP 사이트라 목록이 서버에서 그대로 렌더돼 나온다.
+쿠키·세션 없이 열리고 브라우저도 불필요하다. 응답은 UTF-8(EUC-KR 아님).
+
+신메뉴 소스가 두 군데인데 서로 내용이 다르다.
+  - /menu/newmenu.asp        상단 '신메뉴' 메뉴. 지금은 블랙시크릿 3종.
+  - /menu/chicken.asp?code=21 치킨 탭 안의 '신메뉴'. 지금은 윙콤비·한마리 12종.
+둘 다 브랜드가 직접 '신메뉴'라고 붙여놓은 목록이라 합집합을 is_new=True 로 본다.
+다만 newmenu.asp 쪽 이미지는 2025-10 에 올라간 것들이라 갱신이 멈춘 듯하고,
+code=21 쪽이 2026-08 로 최신이다. 어느 쪽이 진짜 최신인지는 사이트만 봐서는 못 가린다.
+
+출시일·등록일을 알려주는 곳은 목록·상세·공지 어디에도 없다. released_at 은 비운다.
+이미지 파일명에도 타임스탬프가 없어서, uploaded_at 은 이미지의 Last-Modified 로 채운다.
+2025-10-30 에 몰린 덩어리(사이트 이관분)가 있긴 하지만 나머지는 제품별로 흩어져 있어
+신구 구분에는 쓸 만하다. 어디까지나 파일 업로드 시각이지 출시일은 아니다.
+
+burger.asp 와 dream.asp 는 목록이 비어 있어(각각 빈 <ul>, 빈 문서) 대상에서 뺐다.
+가격(권장소비자가격)이 목록에 있지만 Item 에 자리가 없어 버린다.
+행사/세트 상품을 구분할 표시는 없다. '반반…[간장+레드]' 같은 건 세트가 아니라 맛 조합이라
+promo 는 전부 False 로 둔다.
+"""
+import time
+from email.utils import parsedate_to_datetime
+
+from selectolax.parser import HTMLParser
+
+from . import base
+from .base import Item
+
+BRAND = "교촌치킨"
+SITE = "https://www.kyochon.com"
+MENU = SITE + "/menu/"
+
+# 전체 목록 (경로, 화면상 분류)
+LISTS = [
+    ("chicken.asp", "치킨"),
+    ("side.asp", "사이드"),
+    ("drink.asp", "음료"),
+    ("liquor.asp", "주류"),
+]
+# 브랜드가 '신메뉴'라고 내건 목록. 여기 이름이 나오면 is_new=True.
+NEW_LISTS = ["newmenu.asp", "chicken.asp?code=21"]
+
+DELAY = 0.4  # 목록 요청 간격(초)
+IMG_DELAY = 0.15  # 이미지 HEAD 간격(초)
+
+
+def _names(node) -> str:
+    dt = node.css_first("dt")
+    return " ".join(dt.text().split()) if dt else ""
+
+
+def _desc(node) -> str:
+    dd = node.css_first("dd")
+    return " ".join(dd.text().split()) if dd else ""
+
+
+def _page(client, path: str) -> list:
+    r = base.retry(lambda: client.get(MENU + path))
+    r.raise_for_status()
+    return HTMLParser(r.text).css("ul.menuProduct > li")
+
+
+def _page_delayed(client, path: str) -> list:
+    time.sleep(DELAY)
+    return _page(client, path)
+
+
+def _uploaded_at(client, img_url: str) -> str:
+    """이미지의 Last-Modified 를 날짜로. 실패하면 조용히 비운다."""
+    if not img_url:
+        return ""
+    try:
+        lm = client.head(img_url).headers.get("last-modified", "")
+        return parsedate_to_datetime(lm).date().isoformat() if lm else ""
+    except Exception:
+        return ""
+
+
+def fetch() -> list[Item]:
+    items: list[Item] = []
+    seen = set()
+    with base.client() as c:
+        # 먼저 '신메뉴' 목록을 받아 이름을 걷어둔다. 같은 페이지를 두 번 때리지 않게
+        # 노드도 같이 들고 있다가, 전체 목록에 없는 건(블랙시크릿 등)은 뒤에서 거둔다.
+        new_pages = []
+        new_names = set()
+        for path in NEW_LISTS:
+            time.sleep(DELAY)
+            lis = _page(c, path)
+            new_pages.append(lis)
+            new_names |= {n for li in lis if (n := _names(li))}
+
+        sources = [(_page_delayed(c, p), cat) for p, cat in LISTS]
+        sources += [(lis, "치킨") for lis in new_pages]
+
+        for lis, category in sources:
+            for li in lis:
+                name = _names(li)
+                if not name:
+                    continue
+                img = li.css_first("p.img img")
+                src = img.attributes.get("src", "") if img else ""
+                is_new = name in new_names
+                it = Item(
+                    brand=BRAND,
+                    name=name,
+                    desc=_desc(li),
+                    image=SITE + src if src.startswith("/") else src,
+                    labels=["신메뉴"] if is_new else [],
+                    category=category,
+                    is_new=is_new,
+                )
+                if it.key in seen:
+                    continue
+                seen.add(it.key)
+                items.append(it)
+
+        for it in items:
+            time.sleep(IMG_DELAY)
+            it.uploaded_at = _uploaded_at(c, it.image)
+    return items

@@ -9,6 +9,17 @@ drink_list.do / food_list.do 는 목록 자리를 빈 <ul> 로 내려보내고 j
 drink_view.do?product_cd= 의 인라인 drinkData 에만 들어있다. 상품당 1회 요청(300건
 이상, 건당 140KB)이라 비용이 안 맞아서 받지 않고 빈 값으로 둔다.
 가격은 어느 경로에도 없다.
+
+신제품 신호는 세 브랜드 중 여기가 제일 좋다.
+  newicon    'Y' 면 목록에 NEW 마크가 붙는다. 모든 행이 이 필드를 가지므로
+             'Y' 가 아니면 '신제품 아님'이 확인된 것으로 보고 is_new=False 를 준다.
+  new_SDATE  released_at 으로 쓴다. 근거는 2026-09-30 스냅샷(316건) 실측이다.
+             값이 2016~2026 에 고루 흩어져 있고 newicon 이 꺼진 옛 상품도 자기 날짜를
+             그대로 들고 있다. NEW 배지 노출 구간이라면 남아 있을 이유가 없는 값이라,
+             상품이 새로 등록/출시된 날로 본다. 다만 필드명이 SDATE(시작일)라
+             '배지 노출 시작일'일 가능성을 완전히 배제하진 못했다. 어느 쪽이든 브랜드가
+             이 상품을 신제품으로 내놓기 시작한 날이라 released_at 의 정의에 맞는다.
+             252/316 만 값이 있고 나머지는 빈 값이다.
 """
 import json
 import re
@@ -19,7 +30,9 @@ from . import base
 from .base import UA, Item
 
 BRAND = "스타벅스"
-# 2026-09-30 현재 www 서브도메인의 DNS 레코드가 사라졌다(외부 네트워크에서도 ENOTFOUND).
+# 2026-09-30 재확인: www 서브도메인의 A 레코드가 여전히 없다(8.8.8.8·1.1.1.1 양쪽 빈 응답).
+# apex(starbucks.co.kr)는 파킹 IP 만 물려 있고, 공식 별칭 www.istarbucks.co.kr 은 붙긴 하지만
+# 죽은 www 로 302 를 던져서 우회 경로가 되지 못한다. 후보에 넣어도 의미가 없어 뺐다.
 # 어느 쪽이 살아나도 자동으로 붙도록 후보를 순회한다.
 HOSTS = ("https://www.starbucks.co.kr", "https://starbucks.co.kr")
 JSON_PATH = "/upload/json/menu/{code}.js"
@@ -61,17 +74,24 @@ def _image(row: dict) -> str:
     return host.replace("www", "image", 1) + path if path else ""
 
 
-def _uploaded_at(row: dict) -> str:
-    """new_SDATE(20260928) = 출시일. 없는 상품도 있어서 그 땐 빈 값."""
+def _sdate(row: dict) -> str:
+    """new_SDATE(20260928)를 YYYY-MM-DD 로. 없는 상품도 있어서 그 땐 빈 값."""
     d = row.get("new_SDATE") or ""
     return f"{d[:4]}-{d[4:6]}-{d[6:]}" if re.fullmatch(r"\d{8}", d) else ""
 
 
+def _is_new(row: dict):
+    """NEW 마크. 필드 자체가 없으면 판정 근거가 없는 것이라 모름으로 둔다."""
+    return row["newicon"] == "Y" if "newicon" in row else None
+
+
 def _labels(row: dict) -> list:
-    """목록 템플릿이 붙이는 마크와 같은 기준."""
+    """목록 템플릿이 붙이는 마크와 같은 기준.
+
+    NEW 는 여기 넣지 않는다. labels 는 ICE/HOT 같은 표기용이고, 신제품 여부는
+    is_new 가 받는다. 같은 사실을 두 군데 두면 한쪽만 고치는 사고가 난다.
+    """
     out = []
-    if row.get("newicon") == "Y":
-        out.append("NEW")
     if row.get("sell_CAT") == "1":
         out.append("시즌 한정")
     if row.get("sold_OUT") == "Y":
@@ -120,6 +140,7 @@ def fetch() -> list[Item]:
                     continue
                 # cate_NAME 이 브랜드가 준 소분류. '기타'는 정보가 없어 대분류로 대체.
                 cate = _clean(row.get("cate_NAME"))
+                sdate = _sdate(row)
                 it = Item(
                     brand=BRAND,
                     name=name,
@@ -128,7 +149,9 @@ def fetch() -> list[Item]:
                     image=_image(row),
                     labels=_labels(row),
                     category=cate if cate and cate != "기타" else label,
-                    uploaded_at=_uploaded_at(row),
+                    uploaded_at=sdate,
+                    released_at=sdate,
+                    is_new=_is_new(row),
                 )
                 if it.key not in seen:        # 같은 상품이 두 카테고리에 걸쳐 있다
                     seen.add(it.key)

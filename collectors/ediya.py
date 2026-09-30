@@ -8,6 +8,15 @@
 중간에 자르면 상품군이 통째로 빠진다. 반드시 끝까지 돌 것. 음료는 전체가 50페이지쯤 되는데
 신상만 보는 용도라 앞쪽만 긁는다.
 가격 정보는 페이지 어디에도 없다(용량·영양성분·알레르기만 있음).
+
+신제품 신호는 각 목록 페이지 맨 위의 신제품 슬라이더(ul.pro_n) 하나뿐이다.
+브랜드가 new_icon 배지를 직접 달아둔 목록이라 여기 걸린 건 is_new=True 로 본다.
+같은 페이지의 나머지 상품은 브랜드가 신제품 목록에서 뺀 것이므로 is_new=False.
+슬라이더를 못 읽으면(마크업 변경 등) 전량 None 으로 떨어뜨린다. 슬라이더가 비었을 때
+전부 False 로 단정하면 '신제품 0건'과 '모름'을 구분할 수 없게 된다.
+
+출시일은 어디에도 없다. 이미지 파일명의 epoch 는 업로드 시각이라 uploaded_at 에만 두고
+released_at 은 비워둔다. 상세(.pro_detail)에도 영양성분·알레르기뿐이다.
 """
 import re
 import time
@@ -47,7 +56,7 @@ def _uploaded_at(img_url: str) -> str:
 
 
 def _new_ids(tree) -> set:
-    """상단 신제품 슬라이더(ul.pro_n)에 걸린 메뉴 id. NEW 라벨 근거."""
+    """상단 신제품 슬라이더(ul.pro_n)에 걸린 메뉴 id. is_new 의 근거."""
     ids = set()
     for a in tree.css("ul.pro_n li a"):
         m = re.search(r"show_slide_detail\('(\d+)'\)", a.attributes.get("onclick") or "")
@@ -71,15 +80,18 @@ def _parse(li, category: str, new_ids: set) -> Item | None:
     detail = li.css_first(".pro_detail")
     menu_id = (detail.attributes.get("id", "") if detail else "").removeprefix("nutri_")
 
+    # 슬라이더를 못 읽었거나 상품의 메뉴 id 를 못 뽑았으면 대조할 근거가 없다 → 모름.
+    is_new = menu_id in new_ids if (new_ids and menu_id) else None
+
     return Item(
         brand=BRAND,
         name=name,
         name_en=_text(li, ".detail_con h2 span"),
         desc=_text(li, ".detail_txt"),
         image=img,
-        labels=["NEW"] if menu_id and menu_id in new_ids else [],
         category=category,
         uploaded_at=_uploaded_at(img),
+        is_new=is_new,
     )
 
 
