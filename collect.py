@@ -398,11 +398,11 @@ def card(r: dict) -> str:
              f'<h2>{e(r["name"])}</h2>{en}'
              f'<p class="d">{e(r.get("desc", ""))}</p>'
              f'<time datetime="{e(_when(r))}">{e(_when(r))}</time></div>')
-    if url:
-        return (f'<a class="c" data-g="{e(sub)}" href="{e(url)}"'
-                f' target="_blank" rel="noopener nofollow">{inner}'
-                f'<span class="go">브랜드에서 보기 &rarr;</span></a>')
-    return f'<article class="c" data-g="{e(sub)}">{inner}</article>'
+    # 외부(브랜드)로 나갈 때만 새 탭 + nofollow. 우리 상세는 같은 탭.
+    attrs = ' target="_blank" rel="noopener nofollow"' if external else ""
+    go = "브랜드에서 보기" if external else "자세히 보기"
+    return (f'<a class="c" data-g="{e(sub)}" href="{e(url)}"{attrs}>{inner}'
+            f'<span class="go">{go} &rarr;</span></a>')
 
 
 def render(rows: list, new_today: list) -> None:
