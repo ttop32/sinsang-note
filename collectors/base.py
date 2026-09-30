@@ -215,8 +215,12 @@ def client(**kw) -> httpx.Client:
     # 어댑터가 Referer 같은 헤더를 더할 수 있게 UA 위에 덮어쓴다.
     headers = {"User-Agent": UA} | dict(kw.pop("headers", {}))
     kw.setdefault("timeout", httpx.Timeout(30.0, connect=15.0))
+    # verify 는 transport 에 넘겨야 한다. httpx.Client(transport=..., verify=...) 는
+    # transport 가 있으면 verify 를 조용히 무시한다. 이걸 모르고 구형 TLS 사이트
+    # 4곳(또래오래·노랑통닭·훌랄라·지코바)이 '연결 불가'로 잘못 판정됐다.
+    verify = kw.pop("verify", True)
     return httpx.Client(headers=headers, follow_redirects=True,
-                        transport=httpx.HTTPTransport(retries=3), **kw)
+                        transport=httpx.HTTPTransport(retries=3, verify=verify), **kw)
 
 
 def retry(fn, tries: int = 3, delay: float = 2.0):
