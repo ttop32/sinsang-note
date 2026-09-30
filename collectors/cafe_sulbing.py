@@ -16,11 +16,17 @@
           날짜가 아니고 기준 시점도 알 수 없어 released_at/uploaded_at 둘 다 비워둔다.
           이미지 파일명도 product_small_ubriiie.png 처럼 난수라 단서가 없다.
 
+url 은 목록 카드의 <a href="menu_view.php?menu=166"> 를 절대경로로 만든 것이다.
+목록에 이미 들어있는 값이라 요청이 늘지 않는다. 모달 조각이 아니라 스타일시트 4장을
+달고 GNB 까지 있는 독립 페이지고, 그 상품 하나만 본문에 나온다(2026-09-30 실측:
+menu=166 은 '허쉬초코크런치설빙' 1회, 다른 상품명 0회).
+
 설명(desc)·영양정보·알레르기는 menu_view.php?menu=N 상세에만 있다. 상세 한 장은
 그 탭의 상품 하나치 텍스트만 담고 있어서(나머지는 클릭 시 재요청) 96건이면 96요청이다.
 3요청으로 끝나는 목록에 96요청을 더할 값이 아니라 desc 는 비워둔다.
 """
 import time
+from urllib.parse import urljoin
 
 from selectolax.parser import HTMLParser
 
@@ -43,6 +49,15 @@ def _abs(host: str, src: str) -> str:
     if not src:
         return ""
     return src if src.startswith("http") else host + src
+
+
+def _view_url(host: str, card) -> str:
+    """카드의 상세 링크. href 가 'menu_view.php?menu=166' 처럼 /menu/ 기준 상대경로다."""
+    a = card.css_first("a[href]")
+    href = a.attributes.get("href", "") if a else ""
+    if not href or "menu_view.php" not in href:
+        return ""
+    return href if href.startswith("http") else urljoin(host + PATH, href)
 
 
 def _live_host(c) -> str:
@@ -88,6 +103,7 @@ def fetch() -> list[Item]:
                     image=_abs(host, img.attributes.get("src", "") if img else ""),
                     category=tp,
                     is_new=bool(card.css_first("span.flag")),
+                    url=_view_url(host, card),
                 )
                 if it.key not in seen:
                     seen.add(it.key)

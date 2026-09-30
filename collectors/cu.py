@@ -65,6 +65,11 @@ def _gd_idx(card) -> str:
     return ""
 
 
+def _view_url(gd: str) -> str:
+    """상품 상세 주소. gdIdx 를 못 뽑았으면 빈 값(브랜드 메뉴 페이지로 폴백된다)."""
+    return f"{VIEW_URL}?category=product&gdIdx={gd}" if gd else ""
+
+
 def _labels(card) -> list:
     """1+1·2+1 배지는 span 글자로, NEW·BEST 태그는 img alt 로 붙어 있다."""
     out = []
@@ -143,6 +148,7 @@ def fetch(known: dict | None = None) -> list[Item]:
                         continue
                     img = card.css_first(".prod_img img")
                     src = (img.attributes.get("src", "") or "") if img else ""
+                    gd = _gd_idx(card)
                     it = Item(
                         brand=BRAND,
                         name=name,
@@ -151,10 +157,13 @@ def fetch(known: dict | None = None) -> list[Item]:
                         category=cat_name,
                         is_new=True,          # NEW 배지 = 브랜드가 붙인 최근등록 표시
                         promo=_promo(card),   # 1+1·2+1 은 행사로 따로 뺀다
+                        # 상세는 어차피 _fill_desc 가 같은 gdIdx 로 긁는다. 요청은 안 늘고
+                        # 사용자가 카드에서 바로 그 상품 페이지로 간다.
+                        url=_view_url(gd),
                     )
                     if it.key in gd_by_key:
                         continue
-                    gd_by_key[it.key] = _gd_idx(card)
+                    gd_by_key[it.key] = gd
                     items.append(it)
 
                 time.sleep(DELAY)

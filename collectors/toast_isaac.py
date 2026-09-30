@@ -29,6 +29,10 @@ robots.txt 는 자동 수집기에 대한 규칙이지 사람이 여는 브라�
 상세페이지(ptype=view)에는 한 줄 설명과 원재료가 있지만 받지 않는다. 60건이면 요청이
 목록의 10배가 되고, 설명문 전문 게재는 CRAWLING-POLICY §3-① 에서 제일 큰 리스크로 꼽은 항목이다.
 그래서 desc 는 비워둔다. 가격 정보는 사이트 어디에도 없다.
+**다만 그 상세 URL 자체는 목록 카드의 a[href] 에 이미 들어있어 요청 없이 Item.url 에 담는다.**
+목록이 주는 href 에는 page·catcode 가 덧붙어 있는데, 목록 위치가 바뀌면 낡는 값이라
+ptype·prdcode 만 남겨 조립한다. 검증(2026-09-30): prdcode 2607100002·2604240005 는 200 이고
+본문에 상품명이 있다. 없는 prdcode 도 200 이지만 본문이 절반 크기라 상태코드만으론 못 가린다.
 """
 import re
 import time
@@ -40,6 +44,7 @@ from .base import Item
 
 BRAND = "이삭토스트"
 URL = "https://www.isaac-toast.co.kr/menu/menu.php"
+VIEW_URL = URL + "?ptype=view&prdcode={}"   # 목록 카드가 거는 상세 링크
 IMG_ROOT = "https://www.isaac-toast.co.kr"
 PAGE_SIZE = 20          # 한 페이지 20건. 이보다 적게 오면 다음 페이지가 없다.
 MAX_PAGES = 10          # 폭주 방지. 현재 최대 2페이지.
@@ -115,6 +120,7 @@ def fetch() -> list[Item]:
                         labels=[b for b in badges if b],
                         category=category,
                         released_at=_released_at(m.group(1)),
+                        url=VIEW_URL.format(m.group(1)),
                         # NEW 만 True 로 올린다. 배지 없음은 '아니다'가 아니라 '모른다'다.
                         is_new=True if "NEW" in badges else None,
                         # 세트는 collect.drop_sets() 담당. promo 는 할인·행사 전용.

@@ -18,6 +18,16 @@ WordPress SSR 이라 상품·설명·영양정보가 한 페이지에 다 들어
 released_at·uploaded_at 둘 다 비워둔다. 신제품 판정은 is_new 가 받는다.
 
 가격은 어느 경로에도 없다.
+
+url 은 비운다. WordPress 지만 상품이 글(post)이 아니라서 permalink 가 없다
+(2026-09-30 실측).
+  - 카드 안에 <a> 가 0개다. id="post-N" 도 data-* 도 없다.
+  - /wp-json/wp/v2/types 에 post·page·attachment 뿐이고 상품 커스텀 타입이 없다.
+    상품은 카테고리 페이지 템플릿 안에 통째로 박혀 나온다.
+  - 상세는 카드 안의 .hover 레이어다. 같은 페이지 요소라 주소가 없다.
+카테고리 페이지(/menu/menu_coffee/ 등)로 딥링크할 수는 있지만 상품 페이지가
+아니고, 우리가 화면에 올리는 건 is_new=True 인 신메뉴뿐이라 그 링크는 결국
+base.SITES 폴백(/menu/menu_new/)과 같은 곳이다. 이득 없이 url 만 채우는 꼴이라 둔다.
 """
 import time
 

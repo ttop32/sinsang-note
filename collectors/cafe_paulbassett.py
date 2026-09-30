@@ -18,6 +18,12 @@
           우기지 않는다. 다만 여기선 newIcon 붙은 것들이 2026-05~09, bestIcon 은
           2019-03 으로 갈려 있어 신호로서 꽤 맞는 편이다.
 
+url 은 목록 카드의 goView('PB183714') 에서 뽑은 dpid 로 조립한다. 사이트 자체는
+숨은 폼(moveFrm)을 POST 로 던지지만 같은 주소에 GET 으로 dpid 를 붙여도 같은 상세가
+나온다(2026-09-30 실측: GET /menu/View.pb?dpid=PB183714 → 200, 19,001바이트,
+title 'MENU | PaulBassett', .menuTit 에 '커피큐브 WITH 아메리카노'). 조각이 아니라
+레이아웃이 다 붙은 독립 페이지다. dpid 는 목록 HTML 에 이미 있어서 요청이 늘지 않는다.
+
 MENU > NEW 전용 탭(/menu/new/List.pb)은 쓰지 않는다. 상품 목록이 아니라
 'Mellow Sweet, Autumn Moment' 같은 캠페인 글 2건이고, 본문이 이미지 한 장뿐이라
 어떤 상품이 그 캠페인인지 텍스트로 알 방법이 없다(2026-09-30 실측).
@@ -69,7 +75,7 @@ def _uploaded_at(img_url: str) -> str:
 
 
 def _dpid(node) -> str:
-    """goView('PB184039') 의 제품코드. 상세를 받을 때만 쓴다."""
+    """goView('PB184039') 의 제품코드. 상세 요청과 상품 URL 조립에 쓴다."""
     a = node.css_first("a[onclick]")
     m = re.search(r"goView\('([^']+)'\)", a.attributes.get("onclick", "")) if a else None
     return m.group(1) if m else ""
@@ -126,6 +132,7 @@ def fetch() -> list[Item]:
                 en = txt.css_first(".sTxt")
                 img = card.css_first(".thum img")
                 src = _abs(host, img.attributes.get("src", "") if img else "")
+                dpid = _dpid(card)
                 it = Item(
                     brand=BRAND,
                     name=name,
@@ -135,15 +142,14 @@ def fetch() -> list[Item]:
                     category=label,
                     uploaded_at=_uploaded_at(src),
                     is_new=bool(card.css_first(".newIcon")),
+                    url=f"{host}{VIEW_PATH}?dpid={dpid}" if dpid else "",
                 )
                 if it.key in seen:            # 같은 상품이 두 탭에 걸쳐 있다
                     continue
                 seen.add(it.key)
                 items.append(it)
-                if it.is_new:
-                    dpid = _dpid(card)
-                    if dpid:
-                        pending.append((it, dpid))
+                if it.is_new and dpid:
+                    pending.append((it, dpid))
 
             time.sleep(DELAY)
 

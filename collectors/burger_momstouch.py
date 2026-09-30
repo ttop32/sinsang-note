@@ -3,6 +3,10 @@
 www.momstouch.co.kr 루트는 인트로 스플래시라 본문이 없다. 실제 사이트는 /home.php 이고
 메뉴는 /menu/new.php?s_sect1=<탭> 이 서버렌더로 카드를 그대로 내려준다. 브라우저 불필요.
 UTF-8, 쿠키·세션 없이 열린다. 상세(view.php)는 목록에 없는 정보가 없어서 보지 않는다.
+다만 상품 URL 은 목록 카드에 이미 들어있다 — a[href] 가 javascript:go_view('310') 이고
+같은 페이지의 go_view 정의가 view.php?idx=<번호> 로 보낸다. 요청을 더 하지 않고 조립만 한다.
+검증(2026-09-30): idx=310·311 은 200 이고 본문에 상품명이 있다. 없는 idx 는 200 이지만
+본문이 221바이트뿐이라 상태코드만 믿으면 안 된다.
 
 신제품 신호(2026-09-30 실측):
   - s_sect1=new 가 '신메뉴' 전용 탭이다. 이게 1순위 소스다.
@@ -34,6 +38,7 @@ KST = timezone(timedelta(hours=9))
 BRAND = "맘스터치"
 BASE = "https://www.momstouch.co.kr"
 LIST_URL = BASE + "/menu/new.php"
+VIEW_URL = BASE + "/menu/view.php?idx={}"   # 카드의 go_view(idx) 가 여는 상세
 NEW_TAB = "new"          # 신메뉴 전용 탭. 여기서 나머지 탭 목록도 같이 읽는다.
 MAX_PAGES = 10           # 폭주 방지. 현재 카테고리당 최대 3페이지.
 DELAY = 0.4              # 요청 간격(초)
@@ -77,6 +82,13 @@ def _last_page(tree) -> int:
     return max(nums, default=1)
 
 
+def _detail_url(li) -> str:
+    """카드 링크의 go_view('310') 에서 idx 만 뽑아 상세 URL 로."""
+    a = li.css_first("a")
+    m = re.search(r"go_view\(\s*['\"]?(\d+)", a.attributes.get("href", "") or "") if a else None
+    return VIEW_URL.format(m.group(1)) if m else ""
+
+
 def _cards(tree, category: str) -> list:
     """NEW 배지가 붙은 카드만 Item 으로. 배지 없는 건 우리 용건이 아니다."""
     items = []
@@ -108,6 +120,7 @@ def _cards(tree, category: str) -> list:
             category=category,
             uploaded_at=_uploaded_at(img),
             is_new=True,
+            url=_detail_url(li),
         ))
     return items
 

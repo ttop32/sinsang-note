@@ -14,6 +14,9 @@ robots.txt 는 2026-09-30 재확인했다(§보고 참고). Disallow 는 /menu/n
 
 신제품 신호:
   - is_new  이 목록 자체가 브랜드가 고른 '신제품' 이라 전건 True 로 둔다.
+  - url  사람이 보는 주소는 /menu/new?gubun=<gubun> 이다. 우리가 긁는 /menu/new_p 는
+    같은 gubun 을 받지만 카드 조각만 돌려주는 내부 경로라(_p = partial) 링크로 쓰면 안 된다.
+    gubun 은 이미 목록에서 받아둔 값이라 추가 요청 없이 조립만 한다.
   - uploaded_at  썸네일 경로의 /menu_new/260908_seoul/ 앞 6자리(YYMMDD)다.
     상품마다 캠페인 폴더가 따로 있고 날짜도 흩어져 있어(260602·260618·260713·260908)
     메가·노브랜드버거 같은 일괄 재업로드 흔적은 아니다. 그래도 브랜드가 '출시일'이라고
@@ -31,6 +34,7 @@ from .base import Item
 
 BRAND = "굽네치킨"
 URL = "https://www.goobne.co.kr/menu/new_p"
+VIEW = "https://www.goobne.co.kr/menu/new"   # 사람이 보는 페이지. new_p 는 조각만 준다
 LIST_GUBUN = "new_menu_list"
 DELAY = 1.0      # robots 에 Crawl-delay 는 없다. 상품 요청이 건당 1회라 1초면 충분하다.
 MAX_ITEMS = 40   # 폭주 방지. 현재 8건.
@@ -99,6 +103,7 @@ def fetch() -> list[Item]:
                 category=category.get(gubun, ""),
                 uploaded_at=_uploaded_at(image),
                 is_new=True,          # 신제품 전용 페이지에 실린 상품이다
+                url=f"{VIEW}?gubun={gubun}",
             )
             if it.key in seen:
                 continue

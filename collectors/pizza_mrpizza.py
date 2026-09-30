@@ -16,6 +16,8 @@
 전적으로 collect 단계의 어제 대비 diff 에 맡긴다.
 
 '특가세트-*' 분류 3개는 이름 그대로 행사 묶음이라 promo 로 찍는다.
+상품 페이지는 카드가 이미 달고 있는 절대주소(board.php?bo_table=menu&wr_id=N&sca=...)
+를 그대로 쓴다. 추가 요청은 없다.
 설명은 상세에만 있는데 상품당 1회씩 더 두드려야 해서 받지 않고 빈 값으로 둔다.
 가격도 상세에만 있고 Item 에 자리가 없다.
 """
@@ -72,6 +74,7 @@ def _cards(html: str, category: str) -> list[Item]:
             image=photo,
             category=category,
             is_new=is_new,
+            url=tit.attributes.get("href", ""),
             promo=category.startswith(PROMO_PREFIX),
         ))
     return items

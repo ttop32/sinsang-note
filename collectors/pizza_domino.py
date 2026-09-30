@@ -16,6 +16,10 @@
 도미노뉴스(/bbs/newsList?type=N) 도 봤지만 명절 영업안내·약관 개정뿐이고
 신메뉴 출시 공지는 없다.
 
+상품 페이지는 카드 썸네일이 이미 달고 있는 상대경로 detail?dsp_ctgr=..&code_01=..&
+dough_gb=.. 다. /goods/ 를 앞에 붙이기만 하고 추가 요청은 하지 않는다(약관 문구 때문에
+크롤을 늘리지 않는다).
+
 가격은 목록에 있지만(L 36,900원~) Item 에 자리가 없어 버린다.
 ⚠️ robots.txt 는 /goods/ 를 Allow 하지만, 사이트 푸터에 '사전 서면동의 없이 ...
 상업적 목적으로 전재·전송·스크래핑' 금지 문구가 있다. 상업적 이용 전에 확인이 필요하다.
@@ -29,7 +33,8 @@ from . import base
 from .base import UA, Item
 
 BRAND = "도미노피자"
-URL = "https://www.dominos.co.kr/goods/list"
+GOODS = "https://www.dominos.co.kr/goods/"
+URL = GOODS + "list"
 
 # 상단 GNB 가 가리키는 카테고리 전부. 파라미터 없이 받으면 C0101 과 같다.
 CATEGORIES = ("C0101", "C0201", "C0202")
@@ -49,6 +54,26 @@ def _image(card) -> str:
     """목록은 lazyload 라 진짜 주소가 src 가 아니라 data-src 에 있다."""
     n = card.css_first(".prd-img img")
     return n.attributes.get("data-src", "") if n else ""
+
+
+_SLIDE = re.compile(r"getDetailSlide\('([^']+)'\s*,\s*'([^']+)'\)")
+
+
+def _url(card) -> str:
+    """카드에 걸린 상세 링크. 상대경로라 /goods/ 를 붙인다.
+
+    피자는 detail?... 을 그대로 달고 있지만, 사이드는 링크가 슬라이드 패널을 여는
+    getDetailSlide('SST798F1','C0206') 뿐이라 그 인자로 같은 형태를 만든다
+    (코드·분류 순서가 code_01·dsp_ctgr 와 반대다). 음료는 링크 자체가 없어 빈 값이다.
+    """
+    for a in card.css(".prd-img a[href]"):
+        href = a.attributes.get("href", "")
+        if href.startswith("detail?"):
+            return GOODS + href
+        m = _SLIDE.search(href)
+        if m:
+            return f"{GOODS}detail?dsp_ctgr={m.group(2)}&code_01={m.group(1)}"
+    return ""
 
 
 def _uploaded_at(img_url: str) -> str:
@@ -97,6 +122,7 @@ def fetch() -> list[Item]:
                     labels=labels,
                     category=sec_name,
                     uploaded_at=_uploaded_at(img),
+                    url=_url(card),
                     is_new=(sec_id == NEW_SECTION_ID or "NEW" in labels) or None,
                     promo=bool(set(labels) & PROMO_LABELS) or sec_name in PROMO_SECTIONS,
                 ))

@@ -15,6 +15,9 @@ code=21 쪽이 2026-08 로 최신이다. 어느 쪽이 진짜 최신인지는 �
 2025-10-30 에 몰린 덩어리(사이트 이관분)가 있긴 하지만 나머지는 제품별로 흩어져 있어
 신구 구분에는 쓸 만하다. 어디까지나 파일 업로드 시각이지 출시일은 아니다.
 
+상품 페이지는 목록 카드가 이미 달고 있는 상대경로 view.asp?id=...&cg=... 다.
+추가 요청 없이 /menu/ 를 앞에 붙이기만 한다.
+
 burger.asp 와 dream.asp 는 목록이 비어 있어(각각 빈 <ul>, 빈 문서) 대상에서 뺐다.
 가격(권장소비자가격)이 목록에 있지만 Item 에 자리가 없어 버린다.
 행사/세트 상품을 구분할 표시는 없다. '반반…[간장+레드]' 같은 건 세트가 아니라 맛 조합이라
@@ -49,6 +52,13 @@ IMG_DELAY = 0.15  # 이미지 HEAD 간격(초)
 def _names(node) -> str:
     dt = node.css_first("dt")
     return " ".join(dt.text().split()) if dt else ""
+
+
+def _url(node) -> str:
+    """카드 안의 상세 링크(view.asp?id=...&cg=...). 상대경로라 /menu/ 를 붙인다."""
+    a = node.css_first("a[href*='view.asp']")
+    href = a.attributes.get("href", "") if a else ""
+    return MENU + href if href else ""
 
 
 def _desc(node) -> str:
@@ -116,6 +126,7 @@ def fetch() -> list[Item]:
                     labels=["신메뉴"] if is_new else [],
                     category=category,
                     is_new=is_new,
+                    url=_url(li),
                 )
                 if it.key in seen:
                     continue

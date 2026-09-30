@@ -18,6 +18,11 @@
     늦게 갈면 미래 날짜가 나오므로, 이번 달보다 앞서면 작년으로 내린다.
     '며칠에 나왔는지'가 아니라 '몇 월 것인지'라는 점은 감안해야 한다.
 가격은 상품 상세(/menu/view.php?seq=…)에 있지만 Item 에 자리가 없어 받지 않는다.
+상세 URL 자체는 '이달의 신제품' 슬라이드의 a[href] 에 절대경로로 들어있어 요청 없이 담는다
+(호스트가 www 없는 baskinrobbins.co.kr 인데 둘 다 같은 페이지를 준다). 본문 '이달의 맛'
+쪽에는 링크가 없어서, key 가 같은 슬라이드가 있으면 그 URL 을 물려준다.
+검증(2026-09-30): seq=1139 는 200 이고 본문에 '도쿄바나나 크렘브륄레' 가 있다.
+없는 seq 도 200 을 주므로(본문만 짧아진다) 상태코드만 보면 안 된다.
 """
 import re
 import time
@@ -27,7 +32,7 @@ from urllib.parse import urljoin
 from selectolax.parser import HTMLParser
 
 from . import base
-from .base import Item
+from .base import Item, make_key
 
 BRAND = "배스킨라빈스"
 ROOT = "https://www.baskinrobbins.co.kr"
@@ -44,6 +49,12 @@ def _image(node, sel) -> str:
     n = node.css_first(sel)
     src = n.attributes.get("src", "").strip() if n else ""
     return urljoin(ROOT, src) if src else ""
+
+
+def _link(node, sel) -> str:
+    n = node.css_first(sel)
+    href = n.attributes.get("href", "").strip() if n else ""
+    return urljoin(ROOT, href) if href else ""
 
 
 def _released_at(html: str, today: date) -> str:
@@ -68,6 +79,13 @@ def fetch() -> list[Item]:
         page = HTMLParser(r.text)
         released = _released_at(r.text, date.today())
 
+        # 본문 '이달의 맛'에는 링크가 없다. 같은 상품인 슬라이드에서 URL 만 빌려 쓴다.
+        slide_urls = {}
+        for slide in page.css(".menu-fom-new .swiper-slide"):
+            nm, href = _text(slide, ".menu-fom-new__name"), _link(slide, "a")
+            if nm and href:
+                slide_urls.setdefault(make_key(BRAND, nm), href)
+
         fom = page.css_first(".menu-fom__container")
         if fom:
             name = _text(fom, "h3.menu-fom__title")
@@ -81,6 +99,7 @@ def fetch() -> list[Item]:
                     category="이달의 맛",
                     released_at=released,
                     is_new=True,
+                    url=slide_urls.get(make_key(BRAND, name), ""),
                 ))
                 seen.add(items[0].key)
 
@@ -95,6 +114,7 @@ def fetch() -> list[Item]:
                 category="이달의 신제품",
                 released_at=released,
                 is_new=True,
+                url=_link(slide, "a"),
             )
             if it.key in seen:
                 continue          # 본문의 '이달의 맛'과 같은 상품이다

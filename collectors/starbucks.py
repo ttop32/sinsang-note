@@ -38,6 +38,9 @@ HOSTS = ("https://www.starbucks.co.kr", "https://starbucks.co.kr")
 JSON_PATH = "/upload/json/menu/{code}.js"
 MAX_CATEGORIES = 40  # 폭주 방지. CATEGORIES 가 고정 리터럴이라 지금은 걸릴 일이 없다.
 DELAY = 0.5          # 요청 간격(초)
+# 상품 상세. 목록 페이지가 갈리는 대로 음료·푸드 주소가 따로다.
+VIEW = {"drink": "/menu/drink_view.do", "food": "/menu/food_view.do"}
+DRINK_CATEGORIES = 10   # CATEGORIES 의 앞 10개가 음료, 나머지가 푸드
 
 # 목록 페이지 getCateCodeCng() 의 코드 ↔ 분류 체크박스 라벨.
 # 앞 10개가 음료(drink_list.do), 뒤 7개가 푸드(food_list.do).
@@ -72,6 +75,22 @@ def _image(row: dict) -> str:
     host = row.get("img_UPLOAD_PATH") or ""
     path = row.get("file_PATH") or ""
     return host.replace("www", "image", 1) + path if path else ""
+
+
+def _product_cd(row: dict) -> str:
+    """상세 주소에 넣을 상품코드.
+
+    JSON 의 코드 필드는 스타벅스가 대소문자를 섞어 써서(product_CD / product_cd)
+    한 이름만 보면 놓친다. 필드가 아예 없으면 이미지 파일명의 대괄호에서 줍는다.
+    skuimg 파일명이 [9200000007173]_20260910142947420.jpg 꼴이고, 2026-09-30
+    스냅샷 316건 전부 여기서 서로 다른 코드가 나왔다.
+    """
+    for k in ("product_CD", "product_cd", "productCd"):
+        v = str(row.get(k) or "").strip()
+        if v:
+            return v
+    m = re.search(r"\[(\d+)\]", row.get("file_PATH") or "")
+    return m.group(1) if m else ""
 
 
 def _sdate(row: dict) -> str:
@@ -123,7 +142,8 @@ def fetch() -> list[Item]:
     seen = set()
     with base.client() as c:
         host = _live_host(c)
-        for code, label in CATEGORIES[:MAX_CATEGORIES]:
+        for i, (code, label) in enumerate(CATEGORIES[:MAX_CATEGORIES]):
+            view = VIEW["drink" if i < DRINK_CATEGORIES else "food"]
             r = base.retry(lambda: c.get(host + JSON_PATH.format(code=code)))
             r.raise_for_status()
             # 무효한 카테고리 코드에 스타벅스는 404 가 아니라 200 + HTML 오류페이지를 준다.
@@ -141,6 +161,8 @@ def fetch() -> list[Item]:
                 # cate_NAME 이 브랜드가 준 소분류. '기타'는 정보가 없어 대분류로 대체.
                 cate = _clean(row.get("cate_NAME"))
                 sdate = _sdate(row)
+                # 상세는 열지 않는다. 목록 JSON 이 이미 들고 있는 코드로 주소만 만든다.
+                cd = _product_cd(row)
                 it = Item(
                     brand=BRAND,
                     name=name,
@@ -152,6 +174,7 @@ def fetch() -> list[Item]:
                     uploaded_at=sdate,
                     released_at=sdate,
                     is_new=_is_new(row),
+                    url=f"{host}{view}?product_cd={cd}" if cd else "",
                 )
                 if it.key not in seen:        # 같은 상품이 두 카테고리에 걸쳐 있다
                     seen.add(it.key)

@@ -20,6 +20,18 @@ Content-Type 이 Charset=UTF-8 이고 실제로도 UTF-8 이다(오래된 ASP �
 걸리지 않으니, 오래 걸려 있는 상품이 계속 NEW 로 보일 수 있다.
 
 가격은 페이지에 없다(영양정보만 있다). 영양정보는 Item 에 자리가 없어 버린다.
+
+url — 이 브랜드엔 상품 상세 페이지가 없다. 2026-09-30 실측으로 확인했다.
+  - 카드(ul.menu_list > li)에 <a> 도 onclick 도 data-* 도 없다. 상품 id 자체가
+    HTML 어디에도 안 나온다.
+  - 사이트 전체 링크 중 /menu/ 로 가는 건 list.asp?category=N 과 list_extra.asp,
+    messagecard.asp 뿐이다. view 류 경로는 /cbtl/overview.asp(회사 소개)가 전부다.
+그래서 '그 상품이 실제로 그려지는 목록 페이지'를 url 로 준다. 모달 조각이 아니라
+브랜드가 자기 페이저에 쓰는 바로 그 주소 형식이고(?page=2&category=32&category2=1),
+이 브랜드는 카드 하나에 사진·설명·영양정보가 다 들어있어서 목록 페이지가 곧
+상품 설명 페이지다. 폴백(list.asp)으로 두면 카테고리 없는 기본값이 '커피'(13)라
+신음료 카드를 눌러도 커피 탭이 뜬다 — 틀린 데로 보내는 쪽이 비우는 것보다 나쁘다.
+page 는 2 이상일 때만 붙인다(사이트 자신도 1페이지엔 안 붙인다).
 """
 import re
 import time
@@ -62,7 +74,12 @@ def _categories(html: str) -> dict:
     return cats
 
 
-def _cards(html: str, category: str, is_new) -> list[Item]:
+def _list_url(cat: str, page: int) -> str:
+    """상품이 그려지는 목록 페이지. 페이저가 쓰는 주소 형식 그대로."""
+    return f"{URL}?category={cat}" + (f"&page={page}" if page > 1 else "")
+
+
+def _cards(html: str, category: str, is_new, url: str = "") -> list[Item]:
     out = []
     for li in HTMLParser(html).css("ul.menu_list > li"):
         name = _text(li, ".kor")
@@ -77,6 +94,7 @@ def _cards(html: str, category: str, is_new) -> list[Item]:
             image=_image(img.attributes.get("src", "") if img else ""),
             category=category,
             is_new=is_new,
+            url=url,
         ))
     return out
 
@@ -106,7 +124,7 @@ def fetch() -> list[Item]:
                     r.raise_for_status()
                     html = r.text
 
-                parsed = _cards(html, name, is_new)
+                parsed = _cards(html, name, is_new, _list_url(cat, page))
                 if not parsed:
                     break
                 for it in parsed:

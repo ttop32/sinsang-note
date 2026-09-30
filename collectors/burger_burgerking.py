@@ -19,6 +19,14 @@ www.burgerking.co.kr 은 Vue SPA 라 HTML 에는 아무것도 없다. 대신 biz
     NEW 71건은 전부 2026년 날짜로 흩어져 있어 이 범위에선 쓸 만하다.
   - 행사/할인 표시는 메뉴 전문에 없다(상세의 prmCd 는 전부 null). promo 는 못 채운다.
 
+상품 URL 은 목록 응답의 menuCd 로 조립한다(추가 요청 없음). 2026-09-30 실측:
+  - SPA 라우터는 해시가 아니라 history 모드다. /js/app.js 의 라우트 표에
+    path:"/menu/detail/:menuCd?" 가 있고, 화면의 링크도 www.burgerking.co.kr/menu/main
+    처럼 해시 없는 경로다. base.SITES 의 '#/menu' 표기와 다르지만 그건 건드리지 않는다.
+  - 서버는 어떤 경로든 같은 5,559바이트 셸 HTML 을 200 으로 돌려준다. 상태코드·본문으로는
+    검증이 안 되므로 브라우저로 직접 열어 확인했다(7714440 → '트러플 머쉬룸 와퍼 라지세트'
+    렌더 확인). menuCd 자체의 유효성은 BKR0634 로도 교차확인된다(없는 코드는 전 필드 null).
+
 가격은 상세 전문(BKR0634)의 dineInprc 로 나오지만 Item 에 자리가 없어 버린다.
 설명도 상세에 menuDesc 가 있으나 목록의 menuComponents 와 거의 같아 추가 호출을 안 한다.
 """
@@ -32,6 +40,7 @@ from .base import UA, Item
 
 BRAND = "버거킹"
 URL = "https://www.burgerking.co.kr/burgerking/BKR0632.json"
+DETAIL_URL = "https://www.burgerking.co.kr/menu/detail/{}"   # SPA 라우트 /menu/detail/:menuCd
 TRCODE = "BKR0632"
 NEW_FLAG = "NEW"
 
@@ -73,6 +82,7 @@ def fetch() -> list[Item]:
                 if NEW_FLAG not in labels:          # 배지 없는 건 신제품이 아니다
                     continue
                 img = m.get("menuImgPath") or m.get("menuImgMPath") or ""
+                menu_cd = (m.get("menuCd") or "").strip()
                 it = Item(
                     brand=BRAND,
                     name=(m.get("menuNm") or "").strip(),
@@ -82,6 +92,7 @@ def fetch() -> list[Item]:
                     category=category,
                     uploaded_at=_uploaded_at(img),
                     is_new=True,
+                    url=DETAIL_URL.format(menu_cd) if menu_cd else "",
                 )
                 # 추천메뉴 카테고리가 다른 카테고리의 상품을 다시 담아서 겹친다.
                 if it.name and it.key not in seen:

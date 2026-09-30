@@ -21,6 +21,10 @@ menu_1.html 은 카드마다 아이콘 div 를 따로 둔다 — icon_new / icon
 출시일·등록일은 어디에도 없다. 이미지 파일명도 menu1_img39.jpg 식 일련번호라 날짜가 없다.
 영문명은 menu_1.html 에선 이미지(.menu_en img, alt 비어 있음)라 홈에서 가져온다.
 가격은 두 쪽 다 없다.
+**상품별 URL 도 없다.** menu_1.html 의 카드는 <a> 가 아니고 onclick·data 속성도 없다.
+페이지 전체 링크를 훑어도 게시판(/board/index.php)과 회사 소개 정적 페이지뿐이라
+상품을 가리키는 주소가 존재하지 않는다(2026-09-30 실측). url 은 비우고 base.SITES
+폴백(menu_1.html)에 맡긴다.
 
 robots.txt 는 User-agent: * / Allow:/ 로 전체 허용이다(2026-09-30 실측).
 푸터에 사이트 이용약관 자체가 없다.

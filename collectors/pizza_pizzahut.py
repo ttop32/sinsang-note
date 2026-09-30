@@ -27,6 +27,12 @@ DIY 하프앤하프(list/halfnhalf)와 세트(list/set)도 뺀다. 상품이 아
 후보를 순서대로 HEAD 로 찔러 첫 200 을 쓴다. 파스타헛 세트/콤보 등 일부는 어느
 후보도 없어서 빈 값으로 남는다(실측 92건 중 30건쯤).
 
+상품 페이지는 /menu/pizza/all/<digitalKey> 다. 번들의 goNavigate() 가 상품을 누를 때
+기본으로 타는 경로(["/menu/pizza/", type, rpstMenuCd])이고, type 자리에 목록을 받은
+'all' 을 넣으면 피자·파스타·사이드·플랫츠·세트가 전부 그 상품 화면으로 뜬다(실측).
+digitalKey 는 이미 받은 응답에 있어 추가 요청은 없다. Angular SPA 라 HTML 만 받으면
+어느 주소든 같은 껍데기가 오니, 검증은 브라우저 렌더로 했다.
+
 가격은 JSON 에 있지만(price/memberDlv 등) Item 에 자리가 없어 버린다.
 """
 import time
@@ -36,7 +42,8 @@ from . import base
 from .base import UA, Item
 
 BRAND = "피자헛"
-API = "https://www.pizzahut.co.kr/api"
+SITE = "https://www.pizzahut.co.kr"
+API = SITE + "/api"
 STORE = "0996"          # 사이트가 매장 미선택 시 쓰는 기본 매장 코드
 IMG_ROOT = "https://akamai.pizzahut.co.kr/2020pizzahut-prod/public/img/menu/"
 KST = timezone(timedelta(hours=9))
@@ -123,6 +130,8 @@ def fetch() -> list[Item]:
                     # NEW 만 신제품 표시로 읽는다. NOTHING·BEST 는 '아니다' 가 아니라
                     # '모른다' 다. 위 주석의 배지 노후화 참고.
                     is_new=True if badge == "NEW" else None,
+                    url=(f"{SITE}/menu/pizza/all/{row['digitalKey']}"
+                         if row.get("digitalKey") else ""),
                     # lclass=="S" 는 세트·콤보다. collect.drop_sets() 가 이름으로
                     # 거르므로 promo 로 찍지 않는다. 그러면 신메뉴 세트가 이중으로
                     # 잘린다(2026-04 출시 파스타 17건이 그랬다).

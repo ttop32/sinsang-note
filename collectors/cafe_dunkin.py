@@ -11,8 +11,15 @@ Inertia.js 사이트라 HTML 최상단 엘리먼트의 data-page 속성에 페�
 collect 의 어제 대비 diff 에 맡긴다. 신제품 탭만 받으면 커피·음료 신제품은 영영 못 잡는다.
 
 **출시일이 없다.** 상품 레코드에 날짜 필드가 하나도 없고(id/TITLE/E_TITLE/카테고리/
-이미지/색상/TOP_YN/SEASON_MENU_DIV/SORTNUM 이 전부), /menu/<id> 상세 페이지는 404 다.
+이미지/색상/TOP_YN/SEASON_MENU_DIV/SORTNUM 이 전부다).
 그래서 released_at 은 전부 빈 값이고 desc 도 받을 데가 없다. 가격 정보도 없다.
+
+**상세 페이지는 있다.** 앞서 '/menu/<id> 는 404' 라고 적어둔 건 맞지만(2026-09-30 재확인)
+경로를 잘못 짚은 것이었다. 목록 HTML 의 카드 링크가 /menu/view?cat=&sub=&id= 이고
+그 페이지의 props.product 에 해당 상품이 들어온다. 요청은 안 늘린다 — cat·sub·id 가
+이미 JSON 레코드(dd_product_cat1_id / dd_product_cat2_id / id)에 있어 조립만 하면 된다.
+검증(2026-09-30): id=6021 은 200 이고 props.product.TITLE 이 '학화 호도 먼치킨 세트(5개입)'.
+없는 id 도 200 이고 product 만 null 이라 상태코드로는 못 가린다.
 
 받는 구조에서 조심할 것 세 가지:
   - 한 페이지 12건이고 page 파라미터로 넘긴다. 다만 **다음 페이지가 없으면 서버가
@@ -34,6 +41,7 @@ from .base import Item
 
 BRAND = "던킨"
 URL = "https://www.dunkindonuts.co.kr/menu"
+VIEW_URL = URL + "/view?cat={}&sub={}&id={}"   # 목록 카드가 거는 상세 링크와 같은 꼴
 IMG_ROOT = "https://www.dunkindonuts.co.kr"
 NEW_CAT = "신제품"      # DONUT 밑의 신제품 서브카테고리 이름
 PAGE_SIZE = 12          # 한 페이지 12건. 이보다 적게 오면 다음 페이지가 없다.
@@ -88,6 +96,9 @@ def fetch() -> list[Item]:
                         category=r.get("PRODUCT_CAT1_NM") or "",
                         # 브랜드가 '신제품' 칸에 넣은 것만 True. 나머지는 모름(None).
                         is_new=True if sub_name == NEW_CAT else None,
+                        # 순회 중인 칸이 아니라 레코드가 말하는 제 카테고리를 쓴다.
+                        url=VIEW_URL.format(r.get("dd_product_cat1_id") or cat,
+                                            r.get("dd_product_cat2_id") or sub, r["id"]),
                     )
                     # 같은 상품이 여러 칸에 걸쳐 있을 수 있다. 계약대로 key 로 지운다.
                     if it.key in keys:

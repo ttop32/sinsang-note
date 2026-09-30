@@ -21,6 +21,7 @@ released_at 은 비워둔다. 상세(.pro_detail)에도 영양성분·알레르�
 import re
 import time
 from datetime import datetime
+from urllib.parse import quote
 
 import httpx
 from selectolax.parser import HTMLParser
@@ -55,6 +56,18 @@ def _uploaded_at(img_url: str) -> str:
     return d.date().isoformat() if 2010 <= d.year <= datetime.now().year + 1 else ""
 
 
+def _product_url(path: str, name: str) -> str:
+    """이 상품 한 건만 남는 목록 주소.
+
+    상품 상세 페이지가 없는 브랜드다. 상세는 목록 안에 display:none 으로 이미 박혀
+    있고 show_nutri('1300') 이 그걸 펼칠 뿐이라 고유 주소가 없다(사이트맵에도
+    drink.html 한 줄뿐). 대신 skeyword 가 서버측 필터라 전체 상품명을 넣으면
+    그 상품만 남은 목록이 GET 으로 열린다(2026-09-30 실측: 전체명 1건, 부분명 4건).
+    상세 페이지는 아니지만 사용자가 찾던 상품 앞에 떨어진다.
+    """
+    return f"{BASE}{path}?chked_val=&skeyword={quote(name)}#blockcate"
+
+
 def _new_ids(tree) -> set:
     """상단 신제품 슬라이더(ul.pro_n)에 걸린 메뉴 id. is_new 의 근거."""
     ids = set()
@@ -65,7 +78,7 @@ def _new_ids(tree) -> set:
     return ids
 
 
-def _parse(li, category: str, new_ids: set) -> Item | None:
+def _parse(li, path: str, category: str, new_ids: set) -> Item | None:
     name = _text(li, ".menu_tt a span")
     if not name:
         return None
@@ -92,6 +105,7 @@ def _parse(li, category: str, new_ids: set) -> Item | None:
         category=category,
         uploaded_at=_uploaded_at(img),
         is_new=is_new,
+        url=_product_url(path, name),
     )
 
 
@@ -121,7 +135,7 @@ def fetch() -> list[Item]:
 
                 # Item.key 가 괄호를 털어내서 (L)/(EX) 컵사이즈 변형이 한 건으로 합쳐진다.
                 # 한 페이지가 통째로 중복일 수 있으니 중복이라고 페이지를 끊으면 안 된다.
-                for it in (_parse(li, category, new_ids) for li in lis):
+                for it in (_parse(li, path, category, new_ids) for li in lis):
                     if it is None:
                         continue
                     if it.key not in seen:

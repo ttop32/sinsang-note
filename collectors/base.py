@@ -114,7 +114,7 @@ SITES = {
     "CU":          "https://cu.bgfretail.com/product/product.do",
     "세븐일레븐":   "https://www.7-eleven.co.kr/product/presentList.asp",
     "맘스터치":     "https://www.momstouch.co.kr/menu/new.php",
-    "버거킹":       "https://www.burgerking.co.kr/#/menu",
+    "버거킹":       "https://www.burgerking.co.kr/menu/main",   # 해시 라우팅 아님(history 모드)
     "프랭크버거":   "https://www.frankburger.co.kr/html/menu_1.html",
     "BBQ":         "https://bbq.co.kr/categories/17",   # /menu 는 404. Next.js 라 카테고리 경로를 쓴다
     "bhc치킨":      "https://www.bhc.co.kr/menu/chicken.asp",

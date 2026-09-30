@@ -13,6 +13,11 @@ uploaded_at 은 이미지의 Last-Modified 로 채운다. 파일명에는 타임
 대다수가 2026-04-30(사이트 이관일)에 몰려 있어 강한 신호는 아니다. 다만 실제로 새로
 올라온 건(필크런치 2026-07-21)은 출시일과 맞아떨어져서, 기준선 소급 용도로만 쓴다.
 
+상품 페이지는 /products/<menu id> 다. 목록 응답의 id 가 그대로 경로 파라미터라
+추가 요청 없이 조립만 하면 된다(번들의 /products/[id] 가 그 id 로 상세를 부른다).
+정적 export 라 HTML 만 받으면 유효한 id 든 아니든 같은 껍데기가 오니, 검증은
+브라우저 렌더로 했다.
+
 가격(menuPrice)·열량·알레르기 정보가 API 에 있지만 Item 에 담을 자리가 없어 버린다.
 """
 import time
@@ -21,7 +26,8 @@ from . import base
 from .base import Item
 
 BRAND = "BBQ"
-API = "https://www.bbq.co.kr/api/delivery"
+SITE = "https://www.bbq.co.kr"
+API = SITE + "/api/delivery"
 MAX_CATEGORIES = 30  # 폭주 방지. 현재 8개.
 DELAY = 0.3          # 요청 간격(초)
 
@@ -71,6 +77,7 @@ def fetch() -> list[Item]:
                     labels=["NEW"] if is_new else [],
                     category=cat.get("categoryName", ""),
                     is_new=is_new or None,   # 접두사 부재는 '아님'의 근거가 못 된다
+                    url=f"{SITE}/products/{m['id']}" if m.get("id") else "",
                     # 이름 기준만 쓴다. '세트' 카테고리에는 단품도 섞여 있어서
                     # 카테고리로 잡으면 황금올리브 반마리 같은 단품 9건이 영구 제외된다.
                     # 세트는 promo 가 아니다(collect.drop_sets() 담당).
