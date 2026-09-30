@@ -70,9 +70,10 @@ def fetch() -> list[Item]:
                     image=m.get("menuImageUrl") or "",
                     labels=["NEW"] if is_new else [],
                     category=cat.get("categoryName", ""),
-                    is_new=is_new,
-                    # 세트 카테고리와 이름에 '세트'가 붙은 건 조합 상품이라 신제품이 아니다
-                    promo=cat.get("categoryName") == "세트" or "세트" in name,
+                    is_new=is_new or None,   # 접두사 부재는 '아님'의 근거가 못 된다
+                    # 이름 기준만 쓴다. '세트' 카테고리에는 단품도 섞여 있어서
+                    # 카테고리로 잡으면 황금올리브 반마리 같은 단품 9건이 영구 제외된다.
+                    promo="세트" in name,
                 )
                 if it.key in seen:
                     continue

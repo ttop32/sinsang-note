@@ -26,6 +26,8 @@ from urllib.parse import parse_qs, urlparse
 from selectolax.parser import HTMLParser
 
 from . import base
+import re
+
 from .base import UA, Item
 
 BRAND = "미스터피자"
@@ -33,6 +35,9 @@ URL = "https://www.mrpizza.co.kr/bbs/board.php"
 MAX_CATEGORIES = 30   # 폭주 방지. 현재 11개.
 DELAY = 0.5           # 요청 간격(초)
 PROMO_PREFIX = "특가세트"
+
+
+_BADGE = re.compile(r"/(new|best)\.png$", re.I)   # 상품 사진이 아니라 배지
 
 
 def _categories(html: str) -> list[str]:
@@ -55,12 +60,18 @@ def _cards(html: str, category: str) -> list[Item]:
         name = " ".join(tit.text().split())
         if not name:
             continue
-        img = li.css_first(".gall_img img")
+        # .gall_img 에 img 가 둘이다. 첫 번째는 NEW/BEST 배지이고 상품 사진은
+        # alt 에 상품명이 박힌 쪽이다. css_first 로 집으면 배지가 잡혀서
+        # 화면의 음식 사진 자리에 NEW 아이콘이 뜬다.
+        srcs = [i.attributes.get("src", "") for i in li.css(".gall_img img")]
+        photo = next((u for u in srcs if not _BADGE.search(u)), "")
+        is_new = any("new.png" in u.lower() for u in srcs) or None
         items.append(Item(
             brand=BRAND,
             name=name,
-            image=img.attributes.get("src", "") if img else "",
+            image=photo,
             category=category,
+            is_new=is_new,
             promo=category.startswith(PROMO_PREFIX),
         ))
     return items

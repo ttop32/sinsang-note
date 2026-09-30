@@ -13,17 +13,24 @@ import re
 from datetime import date, datetime, timedelta, timezone
 
 from collectors import base
-from collectors import (burger_burgerking, burger_momstouch, chicken_bbq,
+from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
+                        cafe_coffeebean, cafe_dunkin, cafe_paikdabang,
+                        cafe_sulbing, chicken_bbq, chicken_goobne,
+                        dessert_baskinrobbins,
                         chicken_bhc, chicken_kyochon, cu, ediya,
-                        mega, pizza_mrpizza, pizza_pizzahut, seven, starbucks)
+                        mega, pizza_mrpizza, pizza_papajohns, pizza_pizzahut,
+                        seven, starbucks, toast_isaac)
 
 # GS25 는 제외. gs25.gsretail.com/gscvs/* 가 기업 소개 페이지로 301 되고
 # 상품 카탈로그는 '우리동네GS' 앱 전용으로 옮겨가 공개 웹 소스가 없다.
-ADAPTERS = [mega, starbucks, ediya,                                  # 카페
+ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
+            cafe_coffeebean,
             cu, seven,                                               # 편의점
-            burger_momstouch, burger_burgerking,                     # 햄버거
-            chicken_bbq, chicken_bhc, chicken_kyochon,               # 치킨
-            pizza_pizzahut, pizza_mrpizza]                           # 피자
+            burger_momstouch, burger_burgerking, burger_frankburger, # 햄버거
+            chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
+            pizza_pizzahut, pizza_mrpizza, pizza_papajohns,          # 피자
+            dessert_baskinrobbins, cafe_dunkin,                      # 디저트
+            toast_isaac]                                             # 분식
 # 이마트24·도미노피자·롯데리아는 뺀다. 사유는 base.BRANDS 주석 참고.
 
 # 전일 대비 이 비율 밑으로 떨어지면 부분수집으로 보고 실패 처리한다.
@@ -207,6 +214,9 @@ def drop_sets(rows: list) -> list:
 
 _SET = re.compile(r"세트|콤보")
 
+# 카드에 안 보일 행사 라벨
+PROMO_LABELS = {"1+1", "2+1", "3+1", "할인", "증정", "세일"}
+
 
 def cap_per_brand(rows: list) -> list:
     """브랜드별 상한을 적용한다. 날짜순으로 이미 정렬돼 있어 최근 것부터 남는다."""
@@ -247,6 +257,13 @@ def is_fresh(r: dict, today: str) -> bool:
     if r.get("promo"):
         return False                      # 행사라서 실린 상품. 신제품 근거가 없다.
 
+    # 브랜드가 '신제품 아님'이라고 말했으면 이미지 업로드 시각으로 뒤집지 않는다.
+    # 사이트 개편 때 이미지를 일괄 재업로드하면 옛 상품이 최근 날짜를 갖는다.
+    # 도미노 2026-09-14 업로드분 9건에 2020년부터 팔던 슈퍼디럭스가 들어있다.
+    if r.get("is_new") is False:
+        rel = r.get("released_at")
+        return bool(rel) and rel >= cutoff
+
     # 브랜드가 준 날짜가 최근이면 신제품이다. 우리가 그 브랜드를 언제 붙였는지와 무관하다.
     # (기준선이라고 빼면 합류 직전에 나온 진짜 신메뉴까지 사라진다.)
     if stamped:
@@ -259,8 +276,8 @@ def is_fresh(r: dict, today: str) -> bool:
     return r.get("first_seen", "") >= cutoff
 
 
-SECTIONS = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"),
-            ("햄버거", "햄버거"), ("피자", "피자"), ("치킨", "치킨")]
+SECTIONS = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"), ("햄버거", "햄버거"),
+            ("피자", "피자"), ("치킨", "치킨"), ("디저트", "디저트"), ("분식", "분식")]
 
 
 def card(r: dict) -> str:
@@ -269,8 +286,11 @@ def card(r: dict) -> str:
     img = (f'<img loading="lazy" src="{e(r["image"])}" alt="{e(r["name"])}">'
            if r.get("image") else '<div class="ph"></div>')
     badge = '<span class="lb">NEW</span>' if r.get("is_new") else ""
+    # 1+1·2+1 은 뺀다. 편의점은 신상품에 도입 행사를 거의 항상 붙여서(세븐일레븐
+    # 신상품 탭 91건 전부) 그대로 두면 신상 목록이 할인 목록처럼 읽힌다.
+    # 행사 정보 자체는 data/products.json 과 상세 페이지에 남는다.
     tags = "".join(f'<span class="lb lb2">{e(l)}</span>'
-                   for l in r.get("labels", []) if l)
+                   for l in r.get("labels", []) if l and l not in PROMO_LABELS)
     return (f'<article class="c" data-g="{e(sub)}">{img}'
             f'<div class="b"><div class="m">{badge}{tags}'
             f'<span class="br">{e(r["brand"])}</span></div>'

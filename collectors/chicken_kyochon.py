@@ -92,6 +92,11 @@ def fetch() -> list[Item]:
             new_pages.append(lis)
             new_names |= {n for li in lis if (n := _names(li))}
 
+        # 비어 있으면 셀렉터가 깨진 것이다. 건수는 112 그대로라 collect.py 의
+        # 0건 가드도 FLOOR 도 발동하지 않아 "교촌은 신제품이 없다"가 조용히 굳는다.
+        if not new_names:
+            raise RuntimeError("신메뉴 목록이 비었다 — 셀렉터가 깨졌을 가능성")
+
         sources = [(_page_delayed(c, p), cat) for p, cat in LISTS]
         sources += [(lis, "치킨") for lis in new_pages]
 
