@@ -80,6 +80,7 @@ SURGE = 8
 ROOT = pathlib.Path(__file__).parent
 DATA = ROOT / "data" / "products.json"
 OUT = ROOT / "docs" / "index.html"
+ROOT_PATH = "/sinsang-note/"
 SITE = "신상노트"
 TAGLINE = "편의점·카페·프랜차이즈 신제품 모아보기"
 
@@ -381,7 +382,15 @@ def card(r: dict) -> str:
                    if l and l not in PROMO_LABELS and l not in DUP_LABELS)
     # 카드를 누르면 브랜드의 그 상품 페이지로 간다. 우리가 정보를 붙들지 않고
     # 트래픽을 브랜드로 돌려주는 구조여야 한다.
-    url = r.get("url", "")
+    #
+    # 다만 상품 페이지가 아예 없는 브랜드가 있다(메가·빽다방·프랭크버거·이마트24
+    # — 카드에 href 가 없고 같은 페이지 모달로 뜬다). 그런 곳을 메뉴판으로
+    # 보내면 사용자가 그 제품을 다시 찾아야 한다. 차라리 우리 상세 페이지로
+    # 보낸다. 사진·설명·날짜가 다 있고 거기서 브랜드로 한 번 더 나갈 수 있다.
+    url, external = r.get("url", ""), True
+    if not url or url == base.site(r["brand"]):
+        from web import theme
+        url, external = ROOT_PATH + theme.product_path(r), False
     # 영문명은 화면 보조이자 검색 대상이다("Latte" 로 검색해도 걸리게)
     en = f'<p class="en">{e(r["name_en"])}</p>' if r.get("name_en") else ""
     inner = (f'{img}<div class="b"><div class="m">{badge}{tags}'

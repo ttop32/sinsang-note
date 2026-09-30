@@ -119,7 +119,8 @@ SITES = {
     "BBQ":         "https://bbq.co.kr/categories/17",   # /menu 는 404. Next.js 라 카테고리 경로를 쓴다
     "bhc치킨":      "https://www.bhc.co.kr/menu/chicken.asp",
     "교촌치킨":     "https://www.kyochon.com/menu/chicken.asp",
-    "굽네치킨":     "https://www.goobne.co.kr/menu/new_p",
+    # /menu/new_p 의 _p 는 AJAX 조각 경로라 사람이 열면 에러 JSON 이 뜬다.
+    "굽네치킨":     "https://www.goobne.co.kr/menu/menu_list",
     "피자헛":       "https://www.pizzahut.co.kr/menu",
     "미스터피자":   "https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu",
     "파파존스":     "https://pji.co.kr/menu/pizza",
