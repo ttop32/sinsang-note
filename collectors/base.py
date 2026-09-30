@@ -70,10 +70,18 @@ BRANDS = {
     "본흑염소·능이삼계탕": (FRANCHISE, "한식"),
     "이지브루잉커피": (CAFE, ""),
     "요거프레소":  (CAFE, ""),
+    "매머드커피":  (CAFE, ""),
+    "더벤티":      (CAFE, ""),
+    "컴포즈커피":  (CAFE, ""),
+    "할리스":      (CAFE, ""),
     "김밥천국":    (FRANCHISE, "분식"),
     "바르다김선생": (FRANCHISE, "분식"),
     "죠스떡볶이":  (FRANCHISE, "분식"),
     "명랑핫도그":  (FRANCHISE, "분식"),
+    "스시로":      (FRANCHISE, "일식"),
+    "에그드랍":    (FRANCHISE, "샌드위치"),
+    "써브웨이":    (FRANCHISE, "샌드위치"),
+    "샐러디":      (FRANCHISE, "샐러드"),
     # 아래 셋은 robots.txt 는 허용하지만 이용약관이 수집·복제를 금지한다.
     # 운영자 판단으로 수집하되, 삭제 요청이 오면 다투지 말고 즉시 내린다.
     #   이마트24  — 약관 제8조 ⑧ "크롤러, 매크로 프로그램, 스파이더, 스크래퍼 등… 수집"
@@ -135,6 +143,14 @@ SITES = {
     "바르다김선생": "https://teacherkim.co.kr/menu/list.html?bs=004001",
     "죠스떡볶이":   "https://jawsfood.co.kr/menu/menu.html",
     "명랑핫도그":   "https://myungranghotdog.com/menu/new",
+    "매머드커피":   "https://mmthcoffee.com/sub/menu/new_list.php",
+    "더벤티":       "https://theventi.co.kr/new2022/menu/all.html",
+    "컴포즈커피":   "https://composecoffee.com/index1",
+    "할리스":       "https://www.hollys.co.kr/menu/espresso.do",
+    "스시로":       "https://www.sushiro.co.kr/pm",
+    "에그드랍":     "http://www.eggdrop.co.kr/menu/list.php?category=NEW",
+    "써브웨이":     "https://www.subway.co.kr/menuList/sandwich",
+    "샐러디":       "https://salady.com/menu/list_1",
 }
 
 

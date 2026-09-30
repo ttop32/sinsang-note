@@ -15,8 +15,12 @@ from datetime import date, datetime, timedelta, timezone
 from collectors import (bakery_parisbaguette, base, bon_if, cafe_yogerpresso,
                         snack_barunkim, snack_jaws, snack_kimbabcheonguk,
                         snack_myungrang)
+from collectors import (cafe_compose, cafe_hollys, cafe_mammoth, cafe_theventi,
+                        salad_salady, sandwich_eggdrop, sandwich_subway,
+                        sushi_sushiro)
 from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
-                        cafe_coffeebean, cafe_paulbassett, cafe_yogerpresso, cafe_dunkin, cafe_paikdabang,
+                        cafe_coffeebean, cafe_paulbassett, cafe_yogerpresso,
+            cafe_mammoth, cafe_theventi, cafe_compose, cafe_hollys, cafe_dunkin, cafe_paikdabang,
                         cafe_paulbassett,
                         cafe_sulbing, chicken_bbq, chicken_goobne,
                         dessert_baskinrobbins, emart24,
@@ -29,6 +33,7 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
 # 상품 카탈로그는 '우리동네GS' 앱 전용으로 옮겨가 공개 웹 소스가 없다.
 ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             cafe_coffeebean, cafe_paulbassett, cafe_yogerpresso,
+            cafe_mammoth, cafe_theventi, cafe_compose, cafe_hollys,
             cu, seven, emart24,                                      # 편의점
             burger_momstouch, burger_burgerking, burger_frankburger, # 햄버거
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
@@ -37,7 +42,9 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             toast_isaac, snack_kimbabcheonguk, snack_barunkim,       # 분식
             snack_jaws, snack_myungrang,
             bakery_parisbaguette,                                    # 베이커리
-            bon_if]                        # 본아이에프 8브랜드(한식·도시락·카페)
+            bon_if,                        # 본아이에프 8브랜드(한식·도시락·카페)
+            sushi_sushiro, sandwich_eggdrop, sandwich_subway,        # 일식·샌드위치
+            salad_salady]                                            # 샐러드
 # 롯데리아·빕스·GS25 는 뺀다. 사유는 base.BRANDS 주석 참고.
 
 # 전일 대비 이 비율 밑으로 떨어지면 부분수집으로 보고 실패 처리한다.
@@ -75,6 +82,18 @@ SITE = "신상노트"
 TAGLINE = "편의점·카페·프랜차이즈 신제품 모아보기"
 
 
+def brands_of(mod) -> list:
+    """어댑터가 담당하는 브랜드 이름들.
+
+    대부분은 BRAND 하나지만 본아이에프처럼 한 API 로 여러 브랜드를 가져오는
+    어댑터는 BRANDS 리스트를 내놓는다. 실패 시 이전분 유지·급감 가드가
+    브랜드 단위로 동작해야 해서 여기서 통일한다.
+    """
+    if hasattr(mod, "BRANDS"):
+        return list(mod.BRANDS)
+    return [mod.BRAND]
+
+
 def load_previous() -> dict:
     if not DATA.exists():
         return {}
@@ -95,6 +114,8 @@ def main() -> None:
 
     products, errors, failed_brands = [], [], []
     for mod in ADAPTERS:
+        names = brands_of(mod)
+        label = names[0] if len(names) == 1 else f"{mod.__name__.split('.')[-1]}({len(names)}종)"
         try:
             # 이전 수집 결과를 받아 재요청을 줄일 수 있는 어댑터에만 넘긴다(CU 등).
             if "known" in inspect.signature(mod.fetch).parameters:
@@ -103,16 +124,16 @@ def main() -> None:
                 items = mod.fetch()
             if not items:
                 raise RuntimeError("0건 수집 — 파서가 깨졌을 가능성")
-            before = sum(1 for p in prev.values() if p["brand"] == mod.BRAND)
+            before = sum(1 for p in prev.values() if p["brand"] in names)
             if before and len(items) < before * FLOOR:
                 raise RuntimeError(
                     f"수집량 급감 {before} → {len(items)}건 — 부분수집 의심")
-            print(f"{mod.BRAND}: {len(items)}건")
+            print(f"{label}: {len(items)}건")
             products += items
         except Exception as e:                      # 한 브랜드가 죽어도 나머지는 살린다
-            errors.append(f"{mod.BRAND}: {e}")
-            failed_brands.append(mod.BRAND)
-            print(f"!! {mod.BRAND} 실패: {e}")
+            errors.append(f"{label}: {e}")
+            failed_brands += names
+            print(f"!! {label} 실패: {e}")
 
 
     rows = []
@@ -231,6 +252,9 @@ _SET = re.compile(r"세트|콤보")
 # 카드에 안 보일 행사 라벨
 PROMO_LABELS = {"1+1", "2+1", "3+1", "할인", "증정", "세일"}
 
+# 브랜드가 준 NEW 계열 라벨. 우리 NEW 뱃지와 겹쳐 두 번 뜬다.
+DUP_LABELS = {"NEW", "New", "new", "신메뉴", "신상품", "신제품"}
+
 
 def cap_per_brand(rows: list) -> list:
     """브랜드별 상한을 적용한다. 날짜순으로 이미 정렬돼 있어 최근 것부터 남는다."""
@@ -264,9 +288,12 @@ def is_fresh(r: dict, today: str) -> bool:
     # promo 를 먼저 보면 그런 상품이 통째로 잘린다(CU 신제품 107건).
     # promo 는 '신제품 근거 없이 행사라서 목록에 실린 것'을 거르는 용도다.
     if r.get("is_new") is True:
-        # 배지는 믿되, 날짜가 한참 전이면 브랜드가 안 내린 것으로 본다.
-        stale = (d0 - timedelta(days=STALE)).isoformat()
-        return not (stamped and stamped < stale)
+        # 배지는 믿되 날짜가 있으면 그쪽을 따른다. 배지만 보고 넘기면 화면이
+        # "최근 21일"이라고 써놓고 3개월 전 상품을 보여주게 된다(94건이 그랬다).
+        # 날짜를 아예 안 주는 브랜드만 배지를 그대로 믿는다.
+        if stamped:
+            return stamped >= cutoff
+        return True
 
     if r.get("promo"):
         return False                      # 행사라서 실린 상품. 신제품 근거가 없다.
@@ -290,9 +317,40 @@ def is_fresh(r: dict, today: str) -> bool:
     return r.get("first_seen", "") >= cutoff
 
 
+CSS_EXTRA = """font:16px/1.55 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",Pretendard,sans-serif}}
+nav{{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
+margin:14px -16px 0;padding:8px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}}
+nav::-webkit-scrollbar{{display:none}}
+.tw{{display:flex;gap:6px;width:max-content}}
+.t{{appearance:none;border:1px solid var(--line);background:var(--chip);color:var(--fg);
+font:inherit;font-size:14px;padding:9px 14px;border-radius:999px;cursor:pointer;
+white-space:nowrap;min-height:40px;display:flex;align-items:center;gap:5px}}
+.t.on{{background:var(--accent);border-color:var(--accent);color:#fff}}
+.n{{font-size:12px;opacity:.7}}
+@media(min-width:600px){{.g{{grid-template-columns:repeat(3,1fr);gap:16px}}}}
+@media(min-width:900px){{.g{{grid-template-columns:repeat(4,1fr);gap:20px}}}}
+.c[hidden]{{display:none}}   /* .c 의 display:flex 가 브라우저 기본 [hidden] 을 덮는다 */
+overflow:hidden;display:flex;flex-direction:column}}
+a.c{{text-decoration:none;color:inherit;transition:border-color .15s}}
+a.c:hover,a.c:focus-visible{{border-color:var(--accent)}}
+.go{{display:block;padding:0 11px 11px;font-size:11px;color:var(--accent);font-weight:600}}
+.skip{{position:absolute;left:-9999px}}
+.skip:focus{{left:16px;top:8px;position:fixed;z-index:9;background:var(--accent);color:#fff;
+padding:8px 12px;border-radius:8px;text-decoration:none}}
+.tools{{display:flex;gap:8px;margin-top:12px}}
+#q{{flex:1;min-width:0;font:inherit;font-size:15px;padding:10px 13px;border-radius:999px;
+border:1px solid var(--line);background:var(--chip);color:var(--fg);min-height:42px}}
+#q::placeholder{{color:var(--mut)}}
+#sort{{flex:none}}
+.cnt{{margin:10px 0 0;font-size:12px;color:var(--mut);min-height:16px}}
+display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
+
+.c img{height:auto;aspect-ratio:1/1;object-fit:cover}"""
+
 SECTIONS = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"), ("햄버거", "햄버거"),
             ("피자", "피자"), ("치킨", "치킨"), ("디저트", "디저트"), ("베이커리", "베이커리"),
-            ("분식", "분식"), ("한식", "한식"), ("도시락", "도시락")]
+            ("분식", "분식"), ("한식", "한식"), ("도시락", "도시락"),
+            ("일식", "일식"), ("샌드위치", "샌드위치"), ("샐러드", "샐러드")]
 
 
 def card(r: dict) -> str:
@@ -306,7 +364,8 @@ def card(r: dict) -> str:
     # 신상품 탭 91건 전부) 그대로 두면 신상 목록이 할인 목록처럼 읽힌다.
     # 행사 정보 자체는 data/products.json 과 상세 페이지에 남는다.
     tags = "".join(f'<span class="lb lb2">{e(l)}</span>'
-                   for l in r.get("labels", []) if l and l not in PROMO_LABELS)
+                   for l in r.get("labels", [])
+                   if l and l not in PROMO_LABELS and l not in DUP_LABELS)
     # 카드를 누르면 브랜드의 그 상품 페이지로 간다. 우리가 정보를 붙들지 않고
     # 트래픽을 브랜드로 돌려주는 구조여야 한다.
     url = r.get("url", "")
@@ -336,70 +395,21 @@ def render(rows: list, new_today: list) -> None:
     updated = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
     lead = (f"오늘 {len(new_today)}건" if new_today
             else f"최근 {WINDOW}일 신제품 {len(rows)}건")
+    from web import theme
+    top = next((r for r in rows if r.get("image")), None)
+    _head = theme.head(
+        f"{SITE} — {TAGLINE}",
+        f"{TAGLINE}. 편의점·카페·햄버거·피자·치킨·베이커리 신제품을 매일 자동으로 모읍니다.",
+        "/", image=(top or {}).get("image", ""),
+        extra=CSS_EXTRA)
+
     body = "\n".join(card(r) for r in rows[:SHOW]) or (
         '<p class="empty">아직 새로 올라온 제품이 없습니다.<br>'
         '매일 아침 다시 확인합니다.</p>')
 
     doc = f"""<!doctype html><html lang="ko"><head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#16150f" media="(prefers-color-scheme:dark)">
-<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme:light)">
-<title>{SITE} — {TAGLINE}</title>
-<meta name="description" content="{TAGLINE}. 편의점·카페·햄버거·피자·치킨 신제품을 매일 자동으로 모읍니다.">
-<meta property="og:title" content="{SITE}"><meta property="og:description" content="{TAGLINE}">
-<style>
-:root{{--bg:#fff;--fg:#16150f;--mut:#6b6a63;--line:#e6e4dc;--card:#fff;--accent:#b4451f;--chip:#f4f2ea}}
-@media(prefers-color-scheme:dark){{:root{{--bg:#16150f;--fg:#f2f0e8;--mut:#a3a199;--line:#2e2c24;--card:#1e1c15;--chip:#26241c}}}}
-*{{box-sizing:border-box;-webkit-tap-highlight-color:transparent}}
-html{{-webkit-text-size-adjust:100%}}
-body{{margin:0;background:var(--bg);color:var(--fg);
-font:16px/1.55 -apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo",Pretendard,sans-serif}}
-.w{{max-width:1120px;margin:0 auto;padding:0 16px;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}}
-header{{padding:28px 0 12px}}
-h1{{margin:0;font-size:22px;letter-spacing:-.02em}}
-.sub{{color:var(--mut);margin:4px 0 0;font-size:13px}}
-.lead{{margin:10px 0 0;font-size:14px;font-weight:600;color:var(--accent)}}
-nav{{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
-margin:14px -16px 0;padding:8px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}}
-nav::-webkit-scrollbar{{display:none}}
-.tw{{display:flex;gap:6px;width:max-content}}
-.t{{appearance:none;border:1px solid var(--line);background:var(--chip);color:var(--fg);
-font:inherit;font-size:14px;padding:9px 14px;border-radius:999px;cursor:pointer;
-white-space:nowrap;min-height:40px;display:flex;align-items:center;gap:5px}}
-.t.on{{background:var(--accent);border-color:var(--accent);color:#fff}}
-.n{{font-size:12px;opacity:.7}}
-.g{{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px 0 56px}}
-@media(min-width:600px){{.g{{grid-template-columns:repeat(3,1fr);gap:16px}}}}
-@media(min-width:900px){{.g{{grid-template-columns:repeat(4,1fr);gap:20px}}}}
-.c[hidden]{{display:none}}   /* .c 의 display:flex 가 브라우저 기본 [hidden] 을 덮는다 */
-.c{{background:var(--card);border:1px solid var(--line);border-radius:12px;
-overflow:hidden;display:flex;flex-direction:column}}
-.c img,.ph{{width:100%;aspect-ratio:1;object-fit:cover;background:var(--chip);display:block}}
-.b{{padding:11px;display:flex;flex-direction:column;gap:3px;flex:1}}
-.m{{display:flex;gap:4px;align-items:center;flex-wrap:wrap;min-height:18px}}
-.lb{{font-size:10px;font-weight:700;padding:2px 5px;border-radius:4px;background:var(--accent);color:#fff}}
-.lb2{{background:var(--chip);color:var(--mut)}}
-.br{{font-size:11px;color:var(--mut)}}
-.c h2{{margin:2px 0 0;font-size:14px;line-height:1.35;letter-spacing:-.01em;word-break:keep-all}}
-a.c{{text-decoration:none;color:inherit;transition:border-color .15s}}
-a.c:hover,a.c:focus-visible{{border-color:var(--accent)}}
-.go{{display:block;padding:0 11px 11px;font-size:11px;color:var(--accent);font-weight:600}}
-.skip{{position:absolute;left:-9999px}}
-.skip:focus{{left:16px;top:8px;position:fixed;z-index:9;background:var(--accent);color:#fff;
-padding:8px 12px;border-radius:8px;text-decoration:none}}
-.tools{{display:flex;gap:8px;margin-top:12px}}
-#q{{flex:1;min-width:0;font:inherit;font-size:15px;padding:10px 13px;border-radius:999px;
-border:1px solid var(--line);background:var(--chip);color:var(--fg);min-height:42px}}
-#q::placeholder{{color:var(--mut)}}
-#sort{{flex:none}}
-.cnt{{margin:10px 0 0;font-size:12px;color:var(--mut);min-height:16px}}
-.d{{margin:4px 0 0;font-size:12px;color:var(--mut);flex:1;
-display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}}
-time{{font-size:11px;color:var(--mut);margin-top:8px}}
-.empty{{grid-column:1/-1;text-align:center;color:var(--mut);padding:64px 0;font-size:14px;line-height:1.8}}
-footer{{border-top:1px solid var(--line);padding:18px 0 40px;color:var(--mut);font-size:12px;line-height:1.7}}
-</style></head><body><div class="w">
+{_head}
+</head><body><div class="w">
 <a class="skip" href="#g">본문으로 건너뛰기</a>
 <header><h1>{SITE}</h1><p class="sub">{TAGLINE}</p><p class="lead">{lead}</p></header>
 <div class="tools">
