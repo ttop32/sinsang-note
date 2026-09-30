@@ -25,7 +25,11 @@ import httpx
 from selectolax.parser import HTMLParser
 
 from . import base
+from datetime import timedelta, timezone
+
 from .base import UA, Item
+
+KST = timezone(timedelta(hours=9))
 
 BRAND = "맘스터치"
 BASE = "https://www.momstouch.co.kr"
@@ -45,7 +49,8 @@ def _uploaded_at(img_url: str) -> str:
     m = re.search(r"/(\d{10})-[A-Z]+\.", img_url)
     if not m:
         return ""
-    return datetime.fromtimestamp(int(m.group(1))).strftime("%Y-%m-%d")
+    # 러너 로컬 타임존을 쓰면 UTC 러너에서 KST 새벽 업로드분이 하루 당겨진다.
+    return datetime.fromtimestamp(int(m.group(1)), KST).strftime("%Y-%m-%d")
 
 
 def _tabs(tree) -> list:

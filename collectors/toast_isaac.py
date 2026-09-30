@@ -117,7 +117,8 @@ def fetch() -> list[Item]:
                         released_at=_released_at(m.group(1)),
                         # NEW 만 True 로 올린다. 배지 없음은 '아니다'가 아니라 '모른다'다.
                         is_new=True if "NEW" in badges else None,
-                        promo=(category == "세트메뉴"),
+                        # 세트는 collect.drop_sets() 담당. promo 는 할인·행사 전용.
+                        promo=False,
                     )))
 
                 # 범위를 넘긴 page 는 서버가 1페이지를 되돌려주므로, 전부 기존 코드면 종료

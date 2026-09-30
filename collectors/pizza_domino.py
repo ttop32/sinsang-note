@@ -114,4 +114,9 @@ def fetch() -> list[Item]:
                     seen.add(it.key)
                     items.append(it)
             time.sleep(DELAY)
+    # 배지·섹션 id 가 바뀌면 전건 None 이 되는데 건수는 그대로라
+    # collect.py 의 0건 가드도 FLOOR 도 발동하지 않는다. 조용히 굳는 걸 막는다.
+    if items and all(it.is_new is None for it in items):
+        raise RuntimeError("NEW 신호가 하나도 없다 — 배지·섹션 id 가 바뀌었을 가능성")
+
     return items

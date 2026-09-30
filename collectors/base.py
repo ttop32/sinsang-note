@@ -9,6 +9,25 @@ import httpx
 UA = "sinsang-note/1.0 (+https://github.com/ttop32/sinsang-note)"
 
 
+# 괄호 안이 '같은 상품의 사이즈·온도 표기'일 때만 턴다.
+# 예전엔 괄호를 통째로 지웠는데 그러면 맛·종류 변형까지 합쳐져 상품이 사라졌다.
+# 미스터피자 '더블치즈(씬)' 9건이 클래식에 흡수됐고, bhc 크리스피번 3종과
+# 파파존스 파스타 3종도 각각 1건이 됐다.
+_SIZE = re.compile(
+    r"^(L|M|S|XL|EX|대|중|소|Mini|Regular|Large|HOT|ICE|ICED|아이스|핫|"
+    r"\d+\s*(ml|mL|L|g|G|kg|인분|개입|P|입))$", re.I)
+
+
+def make_key(brand: str, name: str) -> str:
+    """중복 판정 키. 사이즈·온도 표기만 털고 나머지 괄호 내용은 남긴다."""
+    def drop(m):
+        inner = m.group(1).strip()
+        return "" if _SIZE.match(inner) else m.group(0)
+    n = re.sub(r"\(([^)]*)\)", drop, name)
+    n = re.sub(r"\s+", "", n)
+    return f"{brand}:{n}"
+
+
 # 브랜드 유형. 화면에서 이 축으로 나눠 보여준다.
 CVS = "편의점"
 CAFE = "카페"
@@ -41,6 +60,20 @@ BRANDS = {
     "배스킨라빈스": (FRANCHISE, "디저트"),
     "던킨":        (FRANCHISE, "디저트"),
     "이삭토스트":  (FRANCHISE, "분식"),
+    "파리바게뜨":  (FRANCHISE, "베이커리"),
+    "본죽":        (FRANCHISE, "한식"),
+    "본죽&비빔밥":  (FRANCHISE, "한식"),
+    "본도시락":    (FRANCHISE, "도시락"),
+    "본설렁탕":    (FRANCHISE, "한식"),
+    "본우리반상":  (FRANCHISE, "한식"),
+    "멘지":        (FRANCHISE, "한식"),
+    "본흑염소·능이삼계탕": (FRANCHISE, "한식"),
+    "이지브루잉커피": (CAFE, ""),
+    "요거프레소":  (CAFE, ""),
+    "김밥천국":    (FRANCHISE, "분식"),
+    "바르다김선생": (FRANCHISE, "분식"),
+    "죠스떡볶이":  (FRANCHISE, "분식"),
+    "명랑핫도그":  (FRANCHISE, "분식"),
     # 아래 셋은 robots.txt 는 허용하지만 이용약관이 수집·복제를 금지한다.
     # 운영자 판단으로 수집하되, 삭제 요청이 오면 다투지 말고 즉시 내린다.
     #   이마트24  — 약관 제8조 ⑧ "크롤러, 매크로 프로그램, 스파이더, 스크래퍼 등… 수집"
@@ -75,7 +108,7 @@ SITES = {
     "맘스터치":     "https://www.momstouch.co.kr/menu/new.php",
     "버거킹":       "https://www.burgerking.co.kr/#/menu",
     "프랭크버거":   "https://www.frankburger.co.kr/html/menu_1.html",
-    "BBQ":         "https://www.bbq.co.kr/menu",
+    "BBQ":         "https://bbq.co.kr/categories/17",   # /menu 는 404. Next.js 라 카테고리 경로를 쓴다
     "bhc치킨":      "https://www.bhc.co.kr/menu/chicken.asp",
     "교촌치킨":     "https://www.kyochon.com/menu/chicken.asp",
     "굽네치킨":     "https://www.goobne.co.kr/menu/new_p",
@@ -88,6 +121,20 @@ SITES = {
     "이마트24":     "https://emart24.co.kr/goods/pl",
     "도미노피자":   "https://www.dominos.co.kr/goods/list",
     "폴바셋":       "https://www.baristapaulbassett.co.kr/menu/List.pb",
+    "파리바게뜨":   "https://www.paris.co.kr/products/",
+    "본죽":         "https://www.bonif.co.kr/brand/menu?brdCd=BF101",
+    "본죽&비빔밥":   "https://www.bonif.co.kr/brand/menu?brdCd=BF102",
+    "본도시락":     "https://www.bonif.co.kr/brand/menu?brdCd=BF104",
+    "본설렁탕":     "https://www.bonif.co.kr/brand/menu?brdCd=BF105",
+    "본우리반상":   "https://www.bonif.co.kr/brand/menu?brdCd=BF107",
+    "멘지":         "https://www.bonif.co.kr/brand/menu?brdCd=BF111",
+    "본흑염소·능이삼계탕": "https://www.bonif.co.kr/brand/menu?brdCd=BF113",
+    "이지브루잉커피": "https://www.bonif.co.kr/brand/menu?brdCd=BF114",
+    "요거프레소":   "https://yogerpresso.co.kr/menu/menu-new.html",
+    "김밥천국":     "https://kimbab1009.com/31",
+    "바르다김선생": "https://teacherkim.co.kr/menu/list.html?bs=004001",
+    "죠스떡볶이":   "https://jawsfood.co.kr/menu/menu.html",
+    "명랑핫도그":   "https://myungranghotdog.com/menu/new",
 }
 
 
@@ -136,10 +183,7 @@ class Item:
 
     @property
     def key(self) -> str:
-        """중복 판정 키. 공백/괄호/용량 표기를 털어낸 상품명."""
-        n = re.sub(r"\(.*?\)", "", self.name)
-        n = re.sub(r"\s+", "", n)
-        return f"{self.brand}:{n}"
+        return make_key(self.brand, self.name)
 
     def to_dict(self) -> dict:
         d = asdict(self)

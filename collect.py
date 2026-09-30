@@ -12,9 +12,11 @@ import pathlib
 import re
 from datetime import date, datetime, timedelta, timezone
 
-from collectors import base
+from collectors import (bakery_parisbaguette, base, bon_if, cafe_yogerpresso,
+                        snack_barunkim, snack_jaws, snack_kimbabcheonguk,
+                        snack_myungrang)
 from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
-                        cafe_coffeebean, cafe_paulbassett, cafe_dunkin, cafe_paikdabang,
+                        cafe_coffeebean, cafe_paulbassett, cafe_yogerpresso, cafe_dunkin, cafe_paikdabang,
                         cafe_paulbassett,
                         cafe_sulbing, chicken_bbq, chicken_goobne,
                         dessert_baskinrobbins, emart24,
@@ -26,13 +28,16 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
 # GS25 는 제외. gs25.gsretail.com/gscvs/* 가 기업 소개 페이지로 301 되고
 # 상품 카탈로그는 '우리동네GS' 앱 전용으로 옮겨가 공개 웹 소스가 없다.
 ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
-            cafe_coffeebean, cafe_paulbassett,
+            cafe_coffeebean, cafe_paulbassett, cafe_yogerpresso,
             cu, seven, emart24,                                      # 편의점
             burger_momstouch, burger_burgerking, burger_frankburger, # 햄버거
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
             pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
-            toast_isaac]                                             # 분식
+            toast_isaac, snack_kimbabcheonguk, snack_barunkim,       # 분식
+            snack_jaws, snack_myungrang,
+            bakery_parisbaguette,                                    # 베이커리
+            bon_if]                        # 본아이에프 8브랜드(한식·도시락·카페)
 # 롯데리아·빕스·GS25 는 뺀다. 사유는 base.BRANDS 주석 참고.
 
 # 전일 대비 이 비율 밑으로 떨어지면 부분수집으로 보고 실패 처리한다.
@@ -73,7 +78,14 @@ TAGLINE = "편의점·카페·프랜차이즈 신제품 모아보기"
 def load_previous() -> dict:
     if not DATA.exists():
         return {}
-    return {p["key"]: p for p in json.loads(DATA.read_text(encoding="utf-8"))["products"]}
+    # 저장된 key 를 그대로 쓰지 않고 이름에서 다시 계산한다. key 규칙이 바뀌어도
+    # 이전 수집분이 그대로 매칭돼 first_seen 이력이 끊기지 않는다.
+    out = {}
+    for p in json.loads(DATA.read_text(encoding="utf-8"))["products"]:
+        k = base.make_key(p["brand"], p["name"])
+        p["key"] = k
+        out[k] = p
+    return out
 
 
 def main() -> None:
@@ -279,7 +291,8 @@ def is_fresh(r: dict, today: str) -> bool:
 
 
 SECTIONS = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"), ("햄버거", "햄버거"),
-            ("피자", "피자"), ("치킨", "치킨"), ("디저트", "디저트"), ("분식", "분식")]
+            ("피자", "피자"), ("치킨", "치킨"), ("디저트", "디저트"), ("베이커리", "베이커리"),
+            ("분식", "분식"), ("한식", "한식"), ("도시락", "도시락")]
 
 
 def card(r: dict) -> str:
@@ -359,6 +372,7 @@ white-space:nowrap;min-height:40px;display:flex;align-items:center;gap:5px}}
 .g{{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px 0 56px}}
 @media(min-width:600px){{.g{{grid-template-columns:repeat(3,1fr);gap:16px}}}}
 @media(min-width:900px){{.g{{grid-template-columns:repeat(4,1fr);gap:20px}}}}
+.c[hidden]{{display:none}}   /* .c 의 display:flex 가 브라우저 기본 [hidden] 을 덮는다 */
 .c{{background:var(--card);border:1px solid var(--line);border-radius:12px;
 overflow:hidden;display:flex;flex-direction:column}}
 .c img,.ph{{width:100%;aspect-ratio:1;object-fit:cover;background:var(--chip);display:block}}

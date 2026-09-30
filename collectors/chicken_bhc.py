@@ -74,7 +74,9 @@ def fetch() -> list[Item]:
                     uploaded_at=_uploaded_at(p.get("mainImg") or ""),
                     is_new=p.get("isNew") == "Y",
                     # 버거 세트와 '치킨(반)+라이스+콜라' 조합은 구성 상품이라 신제품이 아니다
-                    promo="세트" in name or "콜라" in name,
+                    # 세트는 promo 가 아니다. collect.drop_sets() 가 이름으로 거른다.
+                    # promo 는 할인·행사 전용인데 bhc 는 그런 표시가 없다.
+                    promo=False,
                 )
                 if it.key in seen:
                     continue

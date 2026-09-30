@@ -61,7 +61,8 @@ def _released_at(row: dict) -> str:
     stamps = [s for s in stamps if s]
     if not stamps:
         return ""
-    dt = datetime.strptime(min(stamps), "%Y-%m-%dT%H:%M:%S.%f%z")
+    # strptime 은 마이크로초가 없으면 죽는다. fromisoformat 이 둘 다 받는다.
+    dt = datetime.fromisoformat(min(stamps))
     return dt.astimezone(KST).strftime("%Y-%m-%d")
 
 
@@ -122,7 +123,10 @@ def fetch() -> list[Item]:
                     # NEW 만 신제품 표시로 읽는다. NOTHING·BEST 는 '아니다' 가 아니라
                     # '모른다' 다. 위 주석의 배지 노후화 참고.
                     is_new=True if badge == "NEW" else None,
-                    promo=row.get("lclass") == "S",   # 세트·콤보
+                    # lclass=="S" 는 세트·콤보다. collect.drop_sets() 가 이름으로
+                    # 거르므로 promo 로 찍지 않는다. 그러면 신메뉴 세트가 이중으로
+                    # 잘린다(2026-04 출시 파스타 17건이 그랬다).
+                    promo=False,
                 )
                 if it.key in seen:
                     continue

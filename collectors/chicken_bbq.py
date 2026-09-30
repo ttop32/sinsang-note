@@ -73,7 +73,9 @@ def fetch() -> list[Item]:
                     is_new=is_new or None,   # 접두사 부재는 '아님'의 근거가 못 된다
                     # 이름 기준만 쓴다. '세트' 카테고리에는 단품도 섞여 있어서
                     # 카테고리로 잡으면 황금올리브 반마리 같은 단품 9건이 영구 제외된다.
-                    promo="세트" in name,
+                    # 세트는 promo 가 아니다(collect.drop_sets() 담당).
+                    # BBQ 메뉴에는 할인·행사 표시가 없다.
+                    promo=False,
                 )
                 if it.key in seen:
                     continue
