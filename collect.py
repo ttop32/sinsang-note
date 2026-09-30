@@ -352,6 +352,11 @@ color:var(--fg);font:inherit;font-size:14px;line-height:1;padding:0 14px;border-
 cursor:pointer;white-space:nowrap;min-height:40px;display:inline-flex;align-items:center;gap:6px}
 .t.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .t .n{font-size:12px;opacity:.7}
+.subnav{margin:0 -16px;padding:8px 16px;overflow-x:auto;scrollbar-width:none;
+border-bottom:1px solid var(--line)}
+.subnav::-webkit-scrollbar{display:none}
+.t.s{min-height:34px;font-size:13px;padding:0 12px;background:transparent}
+.t.s.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 
 a.c{text-decoration:none;color:inherit;transition:border-color .15s}
 a.c:hover,a.c:focus-visible{border-color:var(--accent)}
@@ -361,15 +366,28 @@ a.c:hover,a.c:focus-visible{border-color:var(--accent)}
 .en{margin:0;font-size:11px;color:var(--mut)}
 """
 
-SECTIONS = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"), ("햄버거", "햄버거"),
-            ("피자", "피자"), ("치킨", "치킨"), ("디저트", "디저트"), ("베이커리", "베이커리"),
-            ("분식", "분식"), ("한식", "한식"), ("도시락", "도시락"),
-            ("일식", "일식"), ("샌드위치", "샌드위치"), ("샐러드", "샐러드")]
+# 1단 탭. 375px 화면에서는 탭이 몇 개든 4개까지만 보인다(칩 폭 실측). 그래서
+# 대분류는 4개로 묶고 세부 분류는 2단에서 고르게 한다.
+PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"), ("외식", "외식")]
+
+# 2단(세부). brand_sub 값이다. 프랜차이즈에만 있다.
+SUBS = ["햄버거", "피자", "치킨", "베이커리", "디저트", "분식",
+        "한식", "도시락", "일식", "샌드위치", "샐러드"]
+
+# web/pages.py 가 유형 페이지(/c/...)를 만들 때 쓰는 목록. 1단+2단을 합친다.
+SECTIONS = [("전체", "")] + [(k, k) for k in ["편의점", "카페"] + SUBS]
+
+
+def primary_of(r: dict) -> str:
+    """대분류. 프랜차이즈는 전부 '외식' 으로 묶는다."""
+    t = r.get("brand_type", "")
+    return "외식" if t == "프랜차이즈" else t
 
 
 def card(r: dict) -> str:
     e = html.escape
-    sub = r.get("brand_sub") or r.get("brand_type", "")
+    sub = r.get("brand_sub", "")
+    pri = primary_of(r)
     img = (f'<img loading="lazy" decoding="async" width="400" height="400"'
            f' src="{e(r["image"])}" alt="{e(r["brand"])} {e(r["name"])}">'
            if r.get("image") else '<div class="ph" aria-hidden="true"></div>')
@@ -401,21 +419,26 @@ def card(r: dict) -> str:
     # 외부(브랜드)로 나갈 때만 새 탭 + nofollow. 우리 상세는 같은 탭.
     attrs = ' target="_blank" rel="noopener nofollow"' if external else ""
     go = "브랜드에서 보기" if external else "자세히 보기"
-    return (f'<a class="c" data-g="{e(sub)}" href="{e(url)}"{attrs}>{inner}'
+    return (f'<a class="c" data-p="{e(pri)}" data-s="{e(sub)}" href="{e(url)}"{attrs}>{inner}'
             f'<span class="go">{go} &rarr;</span></a>')
 
 
 def render(rows: list, new_today: list) -> None:
     shown = rows[:SHOW]                 # 숫자는 실제로 그리는 것만 세야 맞는다
-    counts = collections.Counter()
-    for r in shown:
-        counts[r.get("brand_sub") or r.get("brand_type", "")] += 1
+    pcount = collections.Counter(primary_of(r) for r in shown)
+    scount = collections.Counter(r.get("brand_sub", "") for r in shown if r.get("brand_sub"))
 
     tabs = "".join(
-        f'<button class="t{" on" if i == 0 else ""}" data-f="{html.escape(key)}">'
-        f'{html.escape(label)}<span class="n">{len(shown) if not key else counts.get(key, 0)}</span></button>'
-        for i, (label, key) in enumerate(SECTIONS)
-        if not key or counts.get(key))
+        f'<button class="t{" on" if i == 0 else ""}" data-f="{html.escape(key)}"'
+        f' aria-pressed="{"true" if i == 0 else "false"}">'
+        f'{html.escape(label)}<span class="n">{len(shown) if not key else pcount.get(key, 0)}</span>'
+        f'</button>'
+        for i, (label, key) in enumerate(PRIMARY)
+        if not key or pcount.get(key))
+    subs = "".join(
+        f'<button class="t s" data-s="{html.escape(k)}" aria-pressed="false">'
+        f'{html.escape(k)}<span class="n">{scount[k]}</span></button>'
+        for k in SUBS if scount.get(k))
 
     updated = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
     lead = (f"오늘 {len(new_today)}건" if new_today
@@ -443,6 +466,7 @@ def render(rows: list, new_today: list) -> None:
   <button id="sort" class="t" data-s="date" aria-label="정렬 바꾸기">최신순</button>
 </div>
 <nav aria-label="분류"><div class="tw">{tabs}</div></nav>
+<div class="subnav" id="subnav" hidden><div class="tw">{subs}</div></div>
 <p id="cnt" class="cnt" role="status" aria-live="polite"></p>
 <main class="g" id="g">
 {body}
@@ -482,8 +506,24 @@ document.querySelector('nav').addEventListener('click', e => {{
   document.querySelectorAll('nav .t').forEach(t => {{
     const on = t === b; t.classList.toggle('on', on); t.setAttribute('aria-pressed', on);
   }});
-  kind = b.dataset.f; apply();
+  kind = b.dataset.f;
+  sub = '';                                    // 대분류를 바꾸면 세부는 초기화
+  subBtns.forEach(x => {{ x.classList.remove('on'); x.setAttribute('aria-pressed', 'false'); }});
+  syncSub(); apply();
 }});
+
+subnav.addEventListener('click', e => {{
+  const b = e.target.closest('.t.s'); if (!b) return;
+  const off = b.classList.contains('on');     // 다시 누르면 해제
+  subBtns.forEach(x => {{
+    const on = !off && x === b;
+    x.classList.toggle('on', on); x.setAttribute('aria-pressed', on);
+  }});
+  sub = off ? '' : b.dataset.s;
+  apply();
+}});
+
+syncSub();
 
 let timer;
 q.addEventListener('input', () => {{
