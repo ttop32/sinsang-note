@@ -479,44 +479,64 @@ def render(rows: list, new_today: list) -> None:
 </div>
 <script>
 const g = document.getElementById('g'), q = document.getElementById('q'),
-      cnt = document.getElementById('cnt'), sortBtn = document.getElementById('sort');
+      cnt = document.getElementById('cnt'), sortBtn = document.getElementById('sort'),
+      subnav = document.getElementById('subnav'),
+      empty = document.getElementById('noresult');
 const cards = [...g.querySelectorAll('.c')];
-const empty = document.getElementById('noresult');
+const priBtns = [...document.querySelectorAll('nav .t')];
+const subBtns = [...subnav.querySelectorAll('.t.s')];
+
 cards.forEach((c, i) => {{
-  c.dataset.i = i;                                    // 원래 순서(최신순)를 기억
-  // 카드 안의 UI 문구("브랜드에서 보기")까지 색인되면 그 말로 검색했을 때
-  // 전건이 걸린다. 상품명·영문명·브랜드·설명만 넣는다.
+  c.dataset.i = i;                                  // 원래 순서(최신순)
+  // 카드 안 UI 문구("브랜드에서 보기")까지 색인하면 그 말로 전건이 걸린다.
   c.dataset.q = [c.querySelector('h2'), c.querySelector('.en'),
                  c.querySelector('.br'), c.querySelector('.d')]
       .filter(Boolean).map(n => n.textContent).join(' ').toLowerCase();
   c.dataset.b = (c.querySelector('.br') || {{}}).textContent || '';
 }});
-let kind = '', term = '';
+
+let kind = '', sub = '', term = '';
 
 function apply() {{
   let n = 0;
   for (const c of cards) {{
-    const ok = (!kind || c.dataset.g === kind) && (!term || c.dataset.q.includes(term));
+    const ok = (!kind || c.dataset.p === kind)
+            && (!sub  || c.dataset.s === sub)
+            && (!term || c.dataset.q.includes(term));
     c.hidden = !ok;
     if (ok) n++;
   }}
-  cnt.textContent = (kind || term) ? n + '건' : '';
+  cnt.textContent = (kind || sub || term) ? n + '건' : '';
+  empty.hidden = n > 0;
+}}
+
+function syncSub() {{
+  // 그 대분류에 실제로 있는 세부만 남긴다. 하나도 없으면 2단 줄을 숨긴다.
+  let any = false;
+  for (const b of subBtns) {{
+    const has = cards.some(c => c.dataset.s === b.dataset.s
+                             && (!kind || c.dataset.p === kind));
+    b.hidden = !has;
+    if (has) any = true;
+  }}
+  subnav.hidden = !any;
 }}
 
 document.querySelector('nav').addEventListener('click', e => {{
   const b = e.target.closest('.t'); if (!b) return;
-  document.querySelectorAll('nav .t').forEach(t => {{
-    const on = t === b; t.classList.toggle('on', on); t.setAttribute('aria-pressed', on);
+  priBtns.forEach(t => {{
+    const on = t === b;
+    t.classList.toggle('on', on); t.setAttribute('aria-pressed', on);
   }});
   kind = b.dataset.f;
-  sub = '';                                    // 대분류를 바꾸면 세부는 초기화
+  sub = '';                                         // 대분류를 바꾸면 세부는 초기화
   subBtns.forEach(x => {{ x.classList.remove('on'); x.setAttribute('aria-pressed', 'false'); }});
   syncSub(); apply();
 }});
 
 subnav.addEventListener('click', e => {{
   const b = e.target.closest('.t.s'); if (!b) return;
-  const off = b.classList.contains('on');     // 다시 누르면 해제
+  const off = b.classList.contains('on');           // 다시 누르면 해제
   subBtns.forEach(x => {{
     const on = !off && x === b;
     x.classList.toggle('on', on); x.setAttribute('aria-pressed', on);
@@ -524,8 +544,6 @@ subnav.addEventListener('click', e => {{
   sub = off ? '' : b.dataset.s;
   apply();
 }});
-
-syncSub();
 
 let timer;
 q.addEventListener('input', () => {{
@@ -537,11 +555,12 @@ sortBtn.addEventListener('click', () => {{
   const byDate = sortBtn.dataset.s === 'date';
   sortBtn.dataset.s = byDate ? 'brand' : 'date';
   sortBtn.textContent = byDate ? '브랜드순' : '최신순';
-  const sorted = [...cards].sort((a, b) => byDate
+  [...cards].sort((a, b) => byDate
     ? (a.dataset.b.localeCompare(b.dataset.b, 'ko') || a.dataset.i - b.dataset.i)
-    : (a.dataset.i - b.dataset.i));
-  sorted.forEach(c => g.appendChild(c));
+    : (a.dataset.i - b.dataset.i)).forEach(c => g.appendChild(c));
 }});
+
+syncSub();
 </script>
 </body></html>"""
     OUT.parent.mkdir(parents=True, exist_ok=True)
