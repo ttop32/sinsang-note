@@ -36,14 +36,14 @@ TLS — 서버가 중간인증서를 빠뜨린다. `verify=False` 가 아니라 
 리프의 AIA 가 가리키는 진짜 중간 인증서를 받아
 `collectors/certs/globalsign-gcc-r3-dv-tls-ca-2020.pem` 에 넣고, certifi 루트 번들에
 `load_verify_locations()` 로 **더해서** 쓴다. 출처·만료일은 그 파일 머리말에 적어뒀다.
-docs/CRAWLING-POLICY.md §6-1 (2026-10-01 운영자 결정)이 허용한 경로다.
+notes/CRAWLING-POLICY.md §6-1 (2026-10-01 운영자 결정)이 허용한 경로다.
 
 검증은 **켜진 채로 돈다.** 보충한 컨텍스트로 실측:
     company.lottechilsung.co.kr   200   (보충 전에는 CERTIFICATE_VERIFY_FAILED)
     wrong.host.badssl.com         실패  Hostname mismatch
     self-signed.badssl.com        실패  self-signed certificate
 즉 호스트명·서명 검증이 그대로 살아 있다. `http://` 우회는 쓸 수 없다 —
-이 호스트는 http 를 443 으로 302 리다이렉트한다(docs/CANDIDATES-DIRECT2.md §3-1).
+이 호스트는 http 를 443 으로 302 리다이렉트한다(notes/CANDIDATES-DIRECT2.md §3-1).
 
 컨텍스트를 `base.client(verify=...)` 로 넘긴다. httpx 는 verify 에 경로 말고
 `ssl.SSLContext` 도 받는다. 번들 경로를 넘기려면 certifi 전체를 어딘가에 복사해

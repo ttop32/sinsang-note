@@ -27,7 +27,7 @@
   - 유일하게 비슷한 게 icon_seasolan_menu.gif('시즌 메뉴' 아이콘)인데 시즌이지
     신제품이 아니다. labels 에 '시즌메뉴'로 넣되 is_new 근거로는 쓰지 않는다.
 
-그런데 **상품 이미지 자체에 NEW 배지가 합성돼 있다**(2026-10-01, docs/IMAGE-BADGES.md §1).
+그런데 **상품 이미지 자체에 NEW 배지가 합성돼 있다**(2026-10-01, notes/IMAGE-BADGES.md §1).
 좌상단에 빨간 사각형 `NEW` 가 고정 크기·고정 위치로 박힌다. HTML 에 흔적이 없으니
 픽셀로 읽는 수밖에 없고, 그게 이 브랜드의 **유일한 신상 신호**다. 아래 _has_badge 가
 그 일을 한다. 라벨 '시즌메뉴'는 MD 굿즈(춘식 키링·담요)에도 붙어 신상 판정에 못 쓴다.
@@ -67,7 +67,7 @@ CATEGORIES = ["espresso", "hollyccino", "signature", "juice",
               "tea", "bakery", "bean", "md"]
 DELAY = 2.0
 
-# 이미지 NEW 배지 검출. 수치 근거는 docs/IMAGE-BADGES.md §1(샘플 25장)이고,
+# 이미지 NEW 배지 검출. 수치 근거는 notes/IMAGE-BADGES.md §1(샘플 25장)이고,
 # 2026-10-01 에 전수 240장으로 다시 재 봤다. 좌상단 빨강 비율이
 #   0.0 쪽 206건(203건이 정확히 0.000, 나머지 3건도 최대 0.008)
 #   0.2018~0.2019  34건  (배지 크기·위치가 고정이라 소수 4자리까지 같다)
@@ -148,7 +148,7 @@ def _img_url(src: str) -> str:
       httpx(우리 base.client) 원본 그대로 → 7/7 200. 알아서 인코딩해 보낸다.
       urllib(조사 스크립트)   원본 그대로 → 7/7 실패(UnicodeEncodeError,
                                             써브웨이만 InvalidURL).
-    즉 docs/IMAGE-BADGES.md §E 의 '빽다방 25장 전멸'은 urllib 함정이다. 지금
+    즉 notes/IMAGE-BADGES.md §E 의 '빽다방 25장 전멸'은 urllib 함정이다. 지금
     당장은 httpx 가 막아주지만 그 동작에 기대고 싶지 않다 — 클라이언트를 바꾸거나
     조사 스크립트를 재활용하는 순간 바로 터지고, 명시적으로 인코딩해 두면 어느
     쪽이든 같은 바이트가 나간다.
@@ -173,7 +173,7 @@ def _has_badge(data: bytes) -> bool:
     고채도 빨강 픽셀 비율을 센다.
 
     색 기준은 **Pillow HSV(H·S·V 모두 0-255)** 다. 0-360/0-100 스케일로 읽으면
-    docs/IMAGE-BADGES.md 의 수치가 재현되지 않는다.
+    notes/IMAGE-BADGES.md 의 수치가 재현되지 않는다.
 
     ⚠️ 이 판정은 **할리스 전용**이다. 같은 자리에 다른 뜻의 배지를 쓰는 브랜드가
     있다(컴포즈 노란 별 = NEW/베스트/콤보, 메가 `ONLY ICE`). 범용 헬퍼로 올려

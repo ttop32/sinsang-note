@@ -74,6 +74,13 @@ grep -n "\.c img" collect.py web/pages.py web/theme.py
 
 ### A-2. 에그드랍 상품 사진이 깨진다 — `http://` 이미지 + 만료된 인증서
 
+> ✅ **12:02 빌드에서 해소됐다 (2026-10-01 12:05 재확인).** `data/products.json` 의 에그드랍 73건
+> `image` 가 전부 **빈 문자열**로 바뀌었고, 배포본(12:02 빌드)에도 `http://` 이미지가 0건이다.
+> 즉 **https 로 바꾼 게 아니라 이미지를 떼는 쪽으로 해결됐다** — 해당 4장은 이제 깨진 네모가 아니라
+> 회색 플레이스홀더다. 사진은 없다. `collectors/sandwich_eggdrop.py:50` 의 `HOST` 는 여전히 `http://`
+> 이므로, 이미지 URL 을 다시 채우면 같은 문제가 돌아온다.
+> 아래 본문은 **11:54 측정 당시 기록**이다.
+
 **증상** 카드 자리가 빈 회색 네모로 남는다. 콘솔에 Mixed Content 경고 + `net::ERR_CERT_DATE_INVALID`.
 
 **재현**
