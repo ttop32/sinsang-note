@@ -158,8 +158,15 @@ def main() -> None:
     # '사라짐' 처리되면 데이터가 깎이고 되돌릴 수 없다.
     carried = [p for p in prev.values() if p["brand"] in failed_brands]
     for c in carried:
-        # 이전 수집분은 레지스트리 값이 없을 수 있다(계약이 나중에 늘었다).
+        # 이전 수집분은 판정값이 낡았거나 아예 없다 — to_dict() 를 안 거치기
+        # 때문이다. 단어 목록을 고쳐도 하필 그날 수집이 실패한 브랜드만
+        # 옛 판정을 그대로 들고 있게 되고, 필드가 없으면 거짓으로 읽혀
+        # 샴푸가 식품 목록에 섞인다. 실제로 385행이 그 상태였다.
+        # 수집이 실패한 날에만 터지는데 그날은 아무도 화면을 안 본다.
         c["brand_type"], c["brand_sub"] = base.kind(c["brand"])
+        c["nonfood"] = base.is_nonfood(c["name"], c.get("category", ""))
+        c["alcohol"] = base.is_alcohol(c["name"], c.get("category", ""),
+                                       c["brand"])
     if carried:
         print(f"   실패 브랜드 이전분 유지: {len(carried)}건")
     rows += carried
