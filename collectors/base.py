@@ -197,9 +197,10 @@ SITES = {
     "롯데칠성음료": "https://company.lottechilsung.co.kr/kor/product/newprdt/list.do",
     # 상품별 주소(/product/detail?prdId=)가 Item.url 로 붙으므로 이건 폴백이다.
     "hy프레딧":    "https://m.fredit.co.kr/product/main-tab-menu?keyword=main&ctgId=C10000001001",
-    # 셋 다 상품 목록 페이지가 없어 보도자료 목록을 폴백으로 쓴다(GS25 선례).
+    # 아워홈·샘표는 상품 목록 페이지가 없어 보도자료를 폴백으로 쓴다(GS25 선례).
+    # 동서식품은 상품 목록이 있고 어댑터도 그쪽을 읽는다.
     "아워홈":      "https://www.ourhome.co.kr/front/newsboardlist.do",
-    "동서식품":    "https://www.dongsuh.co.kr/news/news",
+    "동서식품":    "https://www.dongsuh.co.kr/product/list/1",
     "샘표":        "https://www.sempio.com/news/press-release",
 }
 
