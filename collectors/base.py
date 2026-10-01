@@ -70,6 +70,9 @@ BRANDS = {
     # 누가 만들었나가 아니라 무엇이냐 축이기 때문이다(TAXONOMY §3). 세부분류를
     # '음료' 가 아니라 '냉동식품' 으로 둔 근거는 collectors/fredit.py docstring.
     "hy프레딧":    (MAKER, "냉동식품"),
+    "아워홈":      (MAKER, "냉동식품"),
+    "동서식품":    (MAKER, "커피"),
+    "샘표":        (MAKER, "조미료"),
     "배스킨라빈스": (CAFE, "아이스크림"),
     "던킨":        (CAFE, "도넛"),
     "이삭토스트":  (FRANCHISE, "분식"),
@@ -188,6 +191,10 @@ SITES = {
     "롯데칠성음료": "https://company.lottechilsung.co.kr/kor/product/newprdt/list.do",
     # 상품별 주소(/product/detail?prdId=)가 Item.url 로 붙으므로 이건 폴백이다.
     "hy프레딧":    "https://m.fredit.co.kr/product/main-tab-menu?keyword=main&ctgId=C10000001001",
+    # 셋 다 상품 목록 페이지가 없어 보도자료 목록을 폴백으로 쓴다(GS25 선례).
+    "아워홈":      "https://www.ourhome.co.kr/front/newsboardlist.do",
+    "동서식품":    "https://www.dongsuh.co.kr/news/news",
+    "샘표":        "https://www.sempio.com/news/press-release",
 }
 
 
@@ -362,6 +369,147 @@ def shown_labels(labels) -> list:
             if l and l not in PROMO_LABELS and not _is_dup(l)]
 
 
+# ── 표시용 이름 ────────────────────────────────────────────────────────
+#
+# 편의점 상품명은 POS 에 박힌 문자열 그대로다 — `CJ)얼큰우동221g(큰컵)`,
+# `롯데)말랑카우밀크79g`. 사람이 읽기도 어렵고 유튜브에 검색도 안 된다.
+#
+# 🔴 **원본 name 은 절대 바꾸지 않는다.** make_key() 가 name 으로 키를 만들고
+# 그 키에 first_seen 이력이 매달려 있다. 이름을 건드리면 전 상품의 키가 바뀌어
+# "어제 없던 게 오늘 있다" 가 전건 참이 되고 이력이 통째로 끊긴다.
+# 그래서 원본은 그대로 두고 **표시용 이름을 따로** 만든다(derive 가 d["display"]).
+
+# 제조사·납품사 접두. 떼도 되는 것만 들어간다.
+#
+# 가르는 기준은 추측이 아니라 실측이다 — **둘 이상의 편의점 체인에 같은 접두가
+# 나타나면 제조사**다. 제조사는 모든 체인에 납품하지만 PB·자체 라인은 그 체인에만
+# 있다. data/products.json 7,005건으로 세어 32개가 나왔고 전건을 눈으로 확인했다.
+# 반대로 한 체인에만 있는 접두(`포차24)` 이마트24 30건, `성수310)` 53건,
+# `405)` CU 18건, `PBICK)` 22건)는 PB 브랜드라 떼면 상품명을 잃는다 — 안 뗀다.
+#
+# ⚠️ 정확히 일치할 때만 뗀다. 부분일치로 하면 `하이트진로)`·`롯데리아)` 가
+# `하이트)`·`롯데)` 로 걸려서 회사가 다른데도 떨어진다.
+# ⚠️ 새 접두를 넣기 전에 전체 데이터에 돌려 상품명이 깎이지 않는지 먼저 세라.
+MAKER_PREFIXES = {
+    "CJ", "HK", "그린", "널담", "농심", "대상", "동원", "롯데", "리뉴", "마즈",
+    "매일", "바세린", "바프", "빙그레", "삼립", "샘표", "서주", "스위트", "엠즈",
+    "오뚜기", "오비", "유한", "제니코", "카브루", "코카", "크라운", "티젠", "피지",
+    "하겐", "하림", "하이트", "해태",
+}
+
+# 선두 대괄호. 숫자뿐이면(나폴레옹과자점 `[123] Love you more` 등 83건) 버리고,
+# 말이 들어 있으면(`[파란라벨]`·`[프로틴]`·`[고기곱빼기]`) 괄호만 벗겨 남긴다.
+# 통째로 버리면 `[프로틴]닭가슴살` 에서 라인 구분이 사라진다.
+_LEAD_BRACKET = re.compile(r"^\[([^\[\]]*)\]\s*")
+
+# `제조사)` 접두. 여는 괄호를 품으면 안 된다 — `디카페인카페모카(H)` 의 `(H)` 가
+# 접두로 걸려 이름 앞 10글자가 통째로 날아간다(빽다방·브레댄코 349건이 그랬다).
+_PREFIX = re.compile(r"^([^()\[\]\s]{1,10})\)\s*")
+
+# 용량·규격 단위. 숫자가 **바로 앞에 붙어** 있을 때만 단위로 본다.
+#   - 사이에 공백을 허용하면 `포차24 매콤껍데기` 의 `24 매` 가 걸린다.
+#   - 맨 앞이면 이름 자체다 — `5G_국대급시너지도시락` 의 `5G`.
+#   - 앞이 숫자·쉼표면 가격이다 — `롯데)3,900매콤닭껍질튀김` 의 `900매`.
+#   - 뒤에 영문·숫자가 오면 단위가 아니다 — `자이언트X3_…`, `초BIG!…`.
+# `개`·`구`·`포`는 뺐다. `8포션`·`6구`·`12개월` 처럼 말의 일부로 걸린다
+# (`개입` 은 남긴다 — 그건 단위가 맞다).
+_UNIT = r"(?:kg|개입|ml|인분|g|l|t|p|입|매)"
+_SPEC = re.compile(r"(?<=.)(?<![\d,.])\d+(?:\.\d+)?" + _UNIT + r"(?![A-Za-z0-9])", re.I)
+
+# `*6`·`*4입` 같은 묶음 표기. `x`·`X` 는 넣지 않는다 — `자이언트X3` 이 걸린다.
+_MULT = re.compile(r"\s*[*×]\s*\d+\s*(?:개입|입|매|p)?(?![A-Za-z0-9가-힣])", re.I)
+
+# 괄호 안이 규격뿐인 것. `(6입)`·`(355ml)` 과 POS 입수코드 `(12)`·`(36)`.
+_SPEC_PAREN = re.compile(r"\s*\(\s*(?:[*×]?\s*)?\d+(?:\.\d+)?\s*" + _UNIT + r"?\s*\)", re.I)
+
+# 끝에 붙은 보조 괄호 앞에만 공백을 넣는다. `카스테라(초코)` → `카스테라 (초코)`.
+# 이름 중간은 건드리지 않는다 — `소프트(모닝)롤` 을 쪼개면 더 읽기 나쁘다.
+_TAIL_PAREN = re.compile(r"(?<=\S)\(([^()]*)\)\s*$")
+
+
+def _sub_outside_parens(rx, s: str) -> str:
+    """괄호 **밖**에서만 치환한다. 괄호 안은 통째로 두거나 통째로 버린다.
+
+    괄호 안에서 용량만 빼면 껍데기가 남아 더 흉해진다 — hy프레딧
+    `…도라지 캔디(1.2g x 50정) 2통` 이 `…캔디( x 50정) 2통` 이 됐었다.
+    """
+    spans = [m.span() for m in re.finditer(r"\([^()]*\)", s)]
+    def rep(m):
+        return m.group(0) if any(a <= m.start() < b for a, b in spans) else " "
+    return rx.sub(rep, s)
+
+
+def _drop_unmatched_parens(s: str) -> str:
+    """짝 없는 괄호만 공백으로 바꾼다. 안의 글자는 안 버린다.
+
+    편의점 이름은 괄호가 열리고 안 닫힌 게 흔하다(`…하몽맛45g(`,
+    `바닐라라떼300ml(컵`). 여는 괄호에서 잘라버리면 `스키틀즈젤리(후르츠요거트`
+    의 맛 이름이 사라진다 — 글자는 남기고 괄호만 없앤다.
+    """
+    depth, out = 0, []
+    for ch in s:
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            if depth == 0:
+                out.append(" ")
+                continue
+            depth -= 1
+        out.append(ch)
+    if depth:                       # 안 닫힌 여는 괄호를 뒤에서부터 지운다
+        left, rev = depth, []
+        for ch in reversed(out):
+            if ch == "(" and left:
+                rev.append(" ")
+                left -= 1
+            else:
+                rev.append(ch)
+        out = list(reversed(rev))
+    return "".join(out)
+
+
+def display_name(name: str) -> str:
+    """화면·검색어에 쓸 이름. 원본은 그대로 두고 읽을 수 있는 쪽만 만든다.
+
+    `CJ)얼큰우동221g(큰컵)` → `얼큰우동 (큰컵)`
+    `롯데)말랑카우밀크79g`   → `말랑카우밀크`
+    `포차24)맥반석오징어`    → `포차24 맥반석오징어`   (PB 브랜드라 안 뗀다)
+
+    ⚠️ 사이즈·온도 괄호(`(HOT)`·`(L)`·`(R)`)는 **남긴다.** 빽다방
+    `아메리카노(HOT)`/`(ICED)` 와 이디야 `(L)`/`(EX)` 가 128건 있는데, 떼면
+    목록에 같은 이름의 카드가 둘씩 뜬다. 변형을 접는 건 별개 작업이다.
+
+    정리한 결과가 2글자 이하로 줄면 **원본을 그대로 돌려준다** — 복구 불가로
+    보고 손대지 않는 쪽이 안전하다(`면)2`·`CJ)맛밤80g` 등 12건).
+    """
+    src = (name or "").strip()
+    if not src:
+        return name or ""
+    s = src
+
+    m = _LEAD_BRACKET.match(s)
+    if m:
+        inner, rest = m.group(1).strip(), s[m.end():]
+        s = rest if (not inner or inner.isdigit()) else f"{inner} {rest}"
+
+    m = _PREFIX.match(s)
+    if m:
+        head, rest = m.group(1), s[m.end():]
+        # 1글자 접두는 CU 의 분류 코드다 — `도)`=도시락 `김)`=김밥 `샌)`=샌드위치
+        # `햄)`·`샐)`·`면)`·`삼)`·`주)`·`랩)`·`핫)`. 전건 확인했고 상품명이 아니다.
+        # 나머지는 떼지 않고 괄호만 벗긴다. 글자를 하나도 안 잃는 쪽이다.
+        s = rest if (head in MAKER_PREFIXES or len(head) == 1) else f"{head} {rest}"
+
+    s = _SPEC_PAREN.sub(" ", s)        # 괄호 안이 규격뿐이면 괄호째 버린다
+    s = _sub_outside_parens(_MULT, s)
+    s = _sub_outside_parens(_SPEC, s)
+    s = re.sub(r"\(\s*\)", " ", s)
+    s = _drop_unmatched_parens(s)
+    s = _TAIL_PAREN.sub(r" (\1)", s)
+    s = re.sub(r"\s+", " ", s).strip(" ·,/")
+    return s if len(s.replace(" ", "")) >= 3 else src
+
+
 def derive(d: dict) -> dict:
     """레지스트리·판정에서 나오는 값들을 채운다. 제자리에서 고치고 그대로 돌려준다.
 
@@ -373,6 +521,11 @@ def derive(d: dict) -> dict:
     """
     d["brand_type"], d["brand_sub"] = kind(d["brand"])
     d["url"] = d.get("url") or site(d["brand"])
+    # 표시용 이름. 원본 name 은 건드리지 않는다(위 display_name 주석 참고).
+    # 위의 nonfood·alcohol 과 달리 **매번 다시 계산한다** — 규칙을 고치면
+    # 수집이 실패해 이월된 행도 같이 따라오게 하려는 것이다. 재료가 name
+    # 하나뿐이라 다시 계산해도 잃을 값이 없다.
+    d["display"] = display_name(d["name"])
     # 어댑터가 따로 표시하지 않았으면 이름·분류로 판정한다.
     #
     # ⚠️ 이 두 줄은 한 방향으로만 움직인다(True 가 박히면 안 내려간다).

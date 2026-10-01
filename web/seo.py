@@ -16,8 +16,17 @@ import collect
 
 from . import theme
 
-# 피드에 싣는 최대 건수. 신제품 피드라 최근분이면 용건이 끝난다.
-FEED_MAX = 50
+# 피드에 싣는 기본 건수. 신제품 피드라 최근분이면 용건이 끝난다.
+#
+# 50 이었는데 그게 '하루치'를 못 담았다. 2026-10-01 실측 — 창 안 352건 중
+# 그날 새로 들어온 것만 41건, 전날은 137건이다. 50 으로 자르면 하루만 안 봐도
+# 그날 것이 통째로 사라지고, 사라진 사실조차 아무 데도 안 적혔다.
+#
+# 용량이 유일한 제약이다. 한 항목이 본문·이미지까지 약 1.2KB 라 120건이 141KB.
+# 리더가 갱신마다 통째로 받아가는 파일이라 그 이상을 기본값으로 두지 않는다.
+# 다만 이건 '기본'이고 상한이 아니다 — 하루치가 이보다 많으면 _feed() 가
+# 늘려 잡는다. 자세한 건 _feed() 주석.
+FEED_MAX = 120
 
 # 우리 사이트 경로에서 그대로 둘 문자. 나머지(한글 포함)는 퍼센트 인코딩한다.
 # theme.slug() 가 한글을 살려두므로 이 단계가 없으면 sitemap 이 규격을 어긴다.
@@ -144,6 +153,22 @@ def _entry(r: dict) -> str:
     img = _ext_url(r.get("image", ""))
     when = _rfc3339(collect._when(r))
 
+    # <published> = '세상에 나온 날'. Atom 에서 선택 항목이고, <updated> 와 달리
+    # 지어내면 바로 거짓말이 된다.
+    #
+    # 우리가 아는 날짜는 두 종류다. 브랜드가 찍어준 출시일(released_at/uploaded_at)과
+    # '우리가 처음 봤다'일 뿐인 first_seen. collect._when() 은 둘을 합쳐 돌려주므로
+    # <updated>(= 이 항목을 마지막으로 손본 때) 에는 맞지만 <published> 에는 못 쓴다.
+    # 기준선 상품(브랜드가 막 합류한 날 한꺼번에 들어온 것)은 출시일을 아예 모른다 —
+    # 2026-10-01 실측으로 피드 120건 중 97건이 그렇다. <published> 가 달리는 건 23건뿐이다.
+    #
+    # 그 판정은 이미 collect.shown_date() 에 있다. 카드에 날짜를 찍을지 말지를
+    # 가르는 바로 그 규칙이고, 여기서 같은 규칙을 다시 쓰면 화면과 피드가 갈라진다.
+    # 근거가 없으면 <published> 를 통째로 생략한다. 자정이든 빌드 시각이든
+    # 없는 날짜를 채워 넣는 것보다, 안 쓰는 쪽이 맞다.
+    born = collect.shown_date(r)
+    pub = f"  <published>{_x(_rfc3339(born))}</published>\n" if born else ""
+
     # 이미지는 두 갈래로 낸다. 리더에 따라 enclosure 를 쓰기도, 본문 img 를 쓰기도 한다.
     enc = ""
     inner = f"<p>{html.escape(desc)}</p>"
@@ -160,6 +185,7 @@ def _entry(r: dict) -> str:
             f"  <title>{_x(name)}</title>\n"
             f'  <link rel="alternate" type="text/html" href="{_x(url)}"/>{enc}\n'
             f"  <id>{_x(url)}</id>\n"
+            f"{pub}"
             f"  <updated>{_x(when)}</updated>\n"
             f"  <author><name>{_x(r.get('brand', ''))}</name></author>\n"
             f'  <category term="{_x(r.get("brand", ""))}"/>\n'
@@ -169,10 +195,39 @@ def _entry(r: dict) -> str:
 
 
 def _feed(fresh: list) -> str:
-    rows = sorted(fresh,
-                  key=lambda r: (collect._when(r), r.get("brand", ""), r.get("name", "")),
-                  reverse=True)[:FEED_MAX]
-    updated = _rfc3339(collect._when(rows[0])) if rows else _now()
+    """구독자가 '우리 사이트에 새로 올라온 것'을 하나도 안 놓치게 만든다.
+
+    정렬 기준이 first_seen 인 이유. 전에는 상품 날짜(_when)로 줄을 세웠는데,
+    구독자가 겪는 '새로움'은 상품 출시일이 아니라 **우리 목록에 등장한 날**이다.
+    둘은 자주 어긋난다 — 2026-10-01 실측으로, 그날 처음 수집한 41건 중 13건이
+    출시일 2026-09-29 라 09-30 자 110건 뒤로 밀려 상한 밖으로 떨어졌다.
+    오늘 처음 올라온 상품이 피드에 아예 안 실리고, 아무도 모른다.
+    first_seen 으로 세우면 오늘 것이 항상 맨 앞이라 이 구멍이 닫힌다.
+    항목 안의 <updated>·<published> 는 그대로 상품 날짜다 — 거긴 상품이 주어다.
+
+    상한을 넘겨 잡는 경우. FEED_MAX 는 상한이 아니라 기본값이다. 가장 최근
+    first_seen 하루치가 FEED_MAX 보다 많으면 그 하루를 통째로 싣는다. 하루를
+    반만 싣는 건 '용량을 아꼈다'가 아니라 '오늘 올라온 걸 반만 알렸다'이다.
+    """
+    ranked = sorted(fresh,
+                    key=lambda r: (r.get("first_seen", ""), collect._when(r),
+                                   r.get("brand", ""), r.get("name", "")),
+                    reverse=True)
+    newest = ranked[0].get("first_seen", "") if ranked else ""
+    day = sum(1 for r in ranked if r.get("first_seen", "") == newest)
+    rows = ranked[:max(FEED_MAX, day)]
+    cut = len(ranked) - len(rows)
+    if cut:
+        # 자르는 것 자체는 설계다. 조용히 자르는 게 결함이다.
+        print(f"   피드 {len(rows)}건 (창 안 {len(ranked)}건 중 {cut}건은 기본값 밖,"
+              f" 최신 {newest} 신규 {day}건은 전부 포함)")
+
+    # 피드 자체의 <updated> 는 '이 문서를 언제 갱신했나'이지 상품 날짜가 아니다.
+    # 전에는 맨 앞 상품의 날짜를 썼더니, 11시에 만든 피드가 리더에 "어제 자정에
+    # 갱신됨"으로 뜨고 하루 종일 새 글이 없는 것처럼 보였다. 빌드 시각이 정답이고,
+    # 이건 지어낸 값이 아니라 실제로 지금 아는 값이다.
+    # 항목의 <updated> 는 그대로 상품 날짜를 쓴다 — 거긴 상품이 주어다.
+    updated = _now()
     home = theme.BASE_URL + "/"
     return ('<?xml version="1.0" encoding="UTF-8"?>\n'
             '<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko">\n'
@@ -197,9 +252,19 @@ def build(fresh: list, page_paths: list, out_dir: pathlib.Path) -> None:
     out = pathlib.Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     paths = _index_paths(fresh, page_paths)
+    feed = _feed(fresh)
+
+    # 조용한 실패 금지. 상품이 있는데 피드가 비었거나 사이트맵에 홈 한 줄뿐이면
+    # 그건 '오늘은 신제품이 없었다'가 아니라 생성기가 망가진 것이다. 빈 파일을
+    # 그대로 써 두면 리더가 구독을 끊고 색인이 빠지는데, 아무 데도 안 적힌다.
+    if fresh and feed.count("<entry>") == 0:
+        raise SystemExit(f"feed.xml 에 항목이 0건 — 창 안에 {len(fresh)}건이 있는데 하나도 안 실렸다")
+    if fresh and len(paths) < 2:
+        raise SystemExit(f"sitemap 경로가 {len(paths)}개뿐 — 창 안에 {len(fresh)}건이 있는데 홈밖에 없다")
+
     (out / "sitemap.xml").write_text(_sitemap(paths, _lastmod(fresh)), encoding="utf-8")
     (out / "robots.txt").write_text(_robots(), encoding="utf-8")
-    (out / "feed.xml").write_text(_feed(fresh), encoding="utf-8")
+    (out / "feed.xml").write_text(feed, encoding="utf-8")
 
 
 # ── JSON-LD ─────────────────────────────────────────────────────────

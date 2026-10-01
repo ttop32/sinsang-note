@@ -31,7 +31,7 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
                         mega, pizza_domino, pizza_mrpizza, pizza_papajohns,
                         pizza_pizzahut,
                         seven, starbucks, toast_isaac)
-from collectors import fredit, gs25, lottechilsung
+from collectors import dongsuh, fredit, gs25, lottechilsung, ourhome, sempio
 
 # GS25 는 상품 카탈로그를 긁을 수 없다 — gs25.gsretail.com 은 전 경로가 본사
 # 브랜드 페이지로 리다이렉트되는 SPA 껍데기고, 카탈로그는 '우리동네GS' 앱 전용이다.
@@ -44,7 +44,8 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             burger_momstouch, burger_burgerking, burger_frankburger, # 햄버거
             burger_mcdonalds,
             maker_ottogi, maker_paldo, maker_orion,                  # 제조사(과자·라면)
-            lottechilsung, fredit,                      # 제조사(음료·냉동식품)
+            lottechilsung, fredit, ourhome,             # 제조사(음료·냉동식품)
+            dongsuh, sempio,                            # 제조사(커피·조미료)
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
             pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
@@ -511,7 +512,8 @@ PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"),
 # 이 순서는 건수가 같을 때만 쓴다. 전에는 선언 순서 그대로 깔려서 2위인
 # 일식 40건이 8번째로 밀려 375px 화면 밖에 있었다.
 SUBS = ["커피", "베이커리", "아이스크림", "빙수", "도넛",
-        "과자", "라면", "음료", "냉동식품", "햄버거", "피자", "치킨",
+        "과자", "라면", "음료", "냉동식품", "조미료",
+        "햄버거", "피자", "치킨",
         "분식", "한식", "도시락", "일식", "샌드위치", "샐러드"]
 
 # web/pages.py 가 유형 페이지(/c/...)를 만들 때 쓰는 목록. 1단+2단을 합친다.
@@ -565,13 +567,18 @@ def card(r: dict) -> str:
     en = f'<p class="en">{e(r["name_en"])}</p>' if r.get("name_en") else ""
     inner = (f'{img}<div class="b"><div class="m">{badge}{tags}'
              f'<span class="br">{e(r["brand"])}</span></div>'
-             f'<h2>{e(r["name"])}</h2>{en}'
+             f'<h2>{e(r.get("display") or r["name"])}</h2>{en}'
              f'<p class="d">{e(r.get("desc", ""))}</p>'
              f'{_date_tag(r)}</div>')
     # 외부(브랜드)로 나갈 때만 새 탭 + nofollow. 우리 상세는 같은 탭.
     attrs = ' target="_blank" rel="noopener nofollow"' if external else ""
     go = "브랜드에서 보기" if external else "자세히 보기"
-    return (f'<a class="c" data-p="{e(pri)}" data-s="{e(sub)}" href="{e(url)}"{attrs}>{inner}'
+    # 화면에는 다듬은 이름을 쓰지만 원본도 검색에 걸려야 한다. POS 이름
+    # (롯데)꼬깔콘애플시나몬)으로 찾던 사람이 0건을 보면 안 된다.
+    raw = r["name"] if (r.get("display") or r["name"]) != r["name"] else ""
+    return (f'<a class="c" data-p="{e(pri)}" data-s="{e(sub)}"'
+            f'{f' data-raw="{e(raw)}"' if raw else ""}'
+            f' href="{e(url)}"{attrs}>{inner}'
             f'<span class="go">{go} &rarr;</span></a>')
 
 
@@ -624,12 +631,17 @@ def render(rows: list, new_today: list, total: int = 0) -> None:
              if whole > len(shown) else f"최근 {WINDOW}일 신제품 {len(shown)}건")
     lead = (f"오늘 {len(new_today)}건" if new_today
             else f"최근 {WINDOW}일 신제품 {len(shown)}건")
-    from web import theme
-    top = next((r for r in rows if r.get("image")), None)
+    from web import seo, theme
+    # 공유 카드에 그날 첫 상품의 브랜드 CDN 사진이 나가고 있었다. 날마다 바뀌고
+    # 남의 얼굴이다. 코드로 그린 우리 커버를 쓴다(web/assets.py 가 만든다).
+    # 콜라주는 반려됐다 — 브랜드 이미지를 받아 합성한 사본을 우리 도메인에서
+    # 재배포하는 것이라 "브랜드 이미지 자체 호스팅 금지" 와 충돌한다.
     _head = theme.head(
         f"{SITE} — {TAGLINE}",
         f"{TAGLINE}. 편의점·카페·햄버거·피자·치킨·베이커리 신제품을 매일 자동으로 모읍니다.",
-        "/", image=(top or {}).get("image", ""),
+        "/", image=ROOT_PATH + "og.png",
+        # 홈에만 JSON-LD 가 없었다. 하위 페이지는 web/pages 가 자기 것을 넣는다.
+        jsonld=seo.website_jsonld(),
         extra=CSS_EXTRA)
 
     body = "\n".join(card(r) for r in shown) or (
@@ -656,7 +668,8 @@ def render(rows: list, new_today: list, total: int = 0) -> None:
 <footer>마지막 갱신 {updated} · {count}
 <div class="fl"><b>분류</b> {klinks}</div>
 <div class="fl"><b>업체</b> {blinks}</div>
-{theme.NOTICE}</footer>
+{theme.NOTICE}<br>
+<a href="{ROOT_PATH}feed.xml">RSS 구독</a></footer>
 </div>
 <script>
 const g = document.getElementById('g'), q = document.getElementById('q'),
@@ -671,9 +684,12 @@ const subBtns = [...subnav.querySelectorAll('.t.s')];
 cards.forEach((c, i) => {{
   c.dataset.i = i;                                  // 원래 순서(최신순)
   // 카드 안 UI 문구("브랜드에서 보기")까지 색인하면 그 말로 전건이 걸린다.
-  c.dataset.q = [c.querySelector('h2'), c.querySelector('.en'),
-                 c.querySelector('.br'), c.querySelector('.d')]
-      .filter(Boolean).map(n => n.textContent).join(' ').toLowerCase();
+  // 원본 상품명(data-raw)도 색인한다. 화면에는 다듬은 이름만 보이지만
+  // 'CJ)얼큰우동221g' 처럼 POS 이름으로 찾는 사람이 있다.
+  c.dataset.q = ([c.querySelector('h2'), c.querySelector('.en'),
+                  c.querySelector('.br'), c.querySelector('.d')]
+      .filter(Boolean).map(n => n.textContent).concat(c.dataset.raw || [])
+      ).join(' ').toLowerCase();
   c.dataset.b = (c.querySelector('.br') || {{}}).textContent || '';
 }});
 

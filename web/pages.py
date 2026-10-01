@@ -12,9 +12,10 @@ all_rows 는 '이 브랜드 전체 메뉴 N건' 같은 맥락 숫자에만 쓴�
 import html
 import json
 import pathlib
+import re
 import shutil
 from datetime import date
-from urllib.parse import quote, urlsplit
+from urllib.parse import quote, quote_plus, urlsplit
 
 from collectors import base
 from web import theme
@@ -53,6 +54,11 @@ dl.f{margin:20px 0 0;padding:16px 0 0;border-top:1px solid var(--line);
 display:grid;grid-template-columns:76px 1fr;gap:9px 12px;font-size:14px}
 dl.f dt{margin:0;color:var(--mut)}
 dl.f dd{margin:0;word-break:keep-all}
+.out{margin:18px 0 0;font-size:15px;word-break:keep-all}
+.out a{color:var(--accent);font-weight:700;text-decoration:none}
+.yt{margin:9px 0 0;font-size:13px;line-height:1.6;word-break:keep-all}
+.yt a{color:var(--mut);text-decoration:none}
+.yt a:hover{text-decoration:underline}
 h2.sec{margin:38px 0 0;font-size:16px;letter-spacing:-.01em}
 .more{margin:6px 0 0;font-size:13px;color:var(--mut)}
 """
@@ -175,6 +181,94 @@ def _write(out_dir: pathlib.Path, path: str, doc: str) -> str:
     return path
 
 
+# ── 유튜브 리뷰 검색 (WO-4 / FEATURE-PLAN-2 F1) ────────────────────────
+#
+# API 를 쓰지 않는다. YouTube Data API 는 `search.list` 가 하루 100콜 상한인데
+# 창 안에 483건이 있고 하루 신규가 107건이던 날이 있었다. 넘기면 403 으로
+# **수집 자체가 깨진다.** 검색 URL 은 할당량도 비밀값도 빌드 시간도 0 이고,
+# 오매칭이 나도 그 화면은 우리 페이지가 아니라 유튜브 안이다.
+#
+# 상세 페이지에만 넣는다. 홈 카드는 `<a class="c">` 가 카드 전체를 감싸서
+# 안에 링크를 또 넣으면 HTML 위반이고 브라우저가 바깥 <a> 를 닫아버린다.
+# 브랜드·유형 목록에도 안 넣는다 — 브랜드 단위 검색어는 평판 뉴스를 끌어온다.
+
+YT_SEARCH = "https://www.youtube.com/results?search_query="
+
+# 출시 N일 이내면 링크를 안 단다. 당일 출시 `파리바게트 크림치즈말랑` 은
+# 관련 영상이 0건이고 상위가 `프랑스 사람들을 혼란에 빠뜨린 바게트` 였다.
+# 1개월 된 `버거킹 몬스터 맥시멈` 은 상위 6건이 전부 정타였다. 둘 사이
+# 어디에 선을 그을지는 데이터가 없어서 7일로 시작한다 — 운영하며 조정한다.
+YT_FRESH_DAYS = 7
+
+# 검색어에서는 앞뒤에 붙은 보조 괄호를 뺀다. `(큰컵)`·`(초코)`·`(R)`·`(L)` 는
+# 화면에서는 변형을 가르는 정보지만 검색어로는 잡음이다.
+# ⚠️ 화면용 이름에서 떼면 안 된다 — 빽다방 `아메리카노(HOT)`/`(ICED)` 와
+# 이디야 `(L)`/`(EX)` 가 같은 이름의 카드 두 장이 된다. 그래서
+# base.display_name 이 아니라 검색어를 만드는 여기서만 뗀다.
+# 이름 **가운데** 괄호는 남긴다 — `소프트(모닝)롤` 에서 '모닝' 을 잃는다.
+_YT_EDGE_PAREN = re.compile(r"^\s*\([^()]*\)\s*|\s*\([^()]*\)\s*$")
+
+
+def _yt_query(r: dict) -> str:
+    """유튜브 검색어. 만들 수 없으면 빈 문자열(링크를 안 단다).
+
+    `신메뉴`·`신상`·`출시` 를 붙이지 않는다. `메가커피 신메뉴` 로 검색하면
+    상위에 `[자막뉴스] … 메가커피의 민낯 / YTN`(165만회)이 뜬다. 트래픽을
+    브랜드로 돌려주겠다면서 그 브랜드의 가맹점 피해 뉴스로 보낼 수는 없다.
+    """
+    # 정본은 base.derive() 가 채우는 d["display"] 다. 다만 derive 를 안 거친
+    # 행이 들어오면(저장본을 그대로 읽어 렌더하는 경로) 조용히 링크가 사라져서
+    # 같은 함수를 직접 한 번 더 부른다 — 규칙이 두 벌이 되는 게 아니다.
+    name = r.get("display") or base.display_name(r.get("name", ""))
+    # 짝 안 맞는 괄호가 남아 있으면 base.display_name 이 정리를 포기하고 원본을
+    # 그대로 돌려준 것이다(`면)2`·`CJ)맛밤80g` 등 12건). POS 문자열을 그대로
+    # 검색어로 쓰느니 링크를 안 다는 쪽이 낫다 — 오탐이 미탐보다 나쁘다.
+    if name.count("(") != name.count(")"):
+        return ""
+    prev = None
+    while prev != name:               # `A (x) (y)` 처럼 둘 이상 붙을 수 있다
+        prev = name
+        name = _YT_EDGE_PAREN.sub(" ", name).strip()
+    name = re.sub(r"\s+", " ", name).strip(" ·,/")
+    if len(name.replace(" ", "")) < 3:
+        return ""                     # 복구 불가. base.display_name 과 같은 기준이다
+    return f'{r["brand"]} {name}'
+
+
+def _yt_url(r: dict, today: date = None) -> str:
+    """완성된 유튜브 검색 URL. 검색어가 없거나 너무 최근이면 빈 문자열."""
+    q = _yt_query(r)
+    if not q:
+        return ""
+    try:
+        when = date.fromisoformat(_when(r))
+    except (TypeError, ValueError):
+        return ""                     # 언제 것인지 모르면 달지 않는다
+    if ((today or date.today()) - when).days < YT_FRESH_DAYS:
+        return ""
+    return YT_SEARCH + quote_plus(q)
+
+
+def _brand_link(r: dict) -> str:
+    """브랜드로 나가는 링크. 문구가 두 갈래다.
+
+    상품별 주소가 있으면 `브랜드에서 보기`, 브랜드 대표 메뉴판뿐이면
+    `브랜드 메뉴판에서 보기`. 실측으로 62건은 브랜드 서버에 상품 주소가
+    아예 없다(스시로 40·빽다방 11·메가 6·프랭크버거 3·할리스 1·파파존스 1).
+    없는 걸 있는 척하지 않는 게 이 프로젝트의 계약이다.
+
+    🔴 판정은 문자열 비교가 아니라 base.site() 호출이다. collect.card() 와
+    같은 조건이어야 하고, 그래야 김밥천국처럼 대표 URL 에 해시만 붙은
+    딥링크(`…/31#lg=…&slide=6`)가 '메뉴판뿐'으로 오분류되지 않는다.
+    """
+    url = r.get("url") or ""
+    if not url:
+        return ""                     # SITES 에도 없는 브랜드. 걸 데가 없다
+    label = "브랜드 메뉴판에서 보기" if url == base.site(r["brand"]) else "브랜드에서 보기"
+    return (f'<p class="out"><a href="{E(url)}" target="_blank" '
+            f'rel="noopener nofollow">{label} &rarr;</a></p>')
+
+
 # ── 상품 상세 ──────────────────────────────────────────────────────────
 
 def product_page(r: dict, siblings: list, neighbors: list) -> str:
@@ -214,6 +308,18 @@ def product_page(r: dict, siblings: list, neighbors: list) -> str:
         facts.append(("등록일",
                       f'<time datetime="{E(shown)}">{E(_kdate(shown))}</time>'))
     fl = "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in facts)
+
+    # 브랜드 먼저, 유튜브 나중. 이 서비스는 트래픽을 브랜드로 돌려주는 게 원칙이다.
+    out = _brand_link(r)
+    yt_url = _yt_url(r)
+    yt = ""
+    if yt_url:
+        # 문구는 "리뷰 보기"가 아니라 "리뷰 찾기"다. 영상이 있다고 약속하지 않는다
+        # — 도달이 탭 2번(링크 → 결과에서 영상 고르기)이고 0건일 수도 있다.
+        # 검색어를 따옴표로 보여줘 무엇으로 검색하는지 먼저 알린다.
+        yt = (f'<p class="yt"><a href="{E(yt_url)}" target="_blank" '
+              f'rel="noopener nofollow">🔎 유튜브에서 '
+              f'「{E(_yt_query(r))}」 리뷰 찾기 &rarr;</a></p>')
 
     # 추천은 같은 브랜드가 먼저다. 모자라면 같은 유형으로 채운다 — 빈 칸을 두느니
     # 내부 링크를 하나라도 더 만드는 쪽이 낫다.
@@ -262,6 +368,7 @@ def product_page(r: dict, siblings: list, neighbors: list) -> str:
             f'{E(brand)} 신메뉴 전체 보기</a></p>'
             + (f'<p class="dd">{E(desc)}</p>' if desc else "")
             + f'<dl class="f">{fl}</dl>'
+            f'{out}{yt}'
             f'{related}'
             f'</main>')
     return _shell(head, body)
