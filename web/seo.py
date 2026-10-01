@@ -148,7 +148,8 @@ def _robots() -> str:
 
 def _entry(r: dict) -> str:
     url = _site_url(theme.product_path(r))
-    name = r.get("name", "")
+    # 제목은 다듬은 이름을 쓴다. 피드 리더에 POS 이름이 그대로 나가고 있었다.
+    name = r.get("display") or r.get("name", "")
     desc = r.get("desc") or f'{r.get("brand", "")} 신제품 {name}'
     img = _ext_url(r.get("image", ""))
     when = _rfc3339(collect._when(r))

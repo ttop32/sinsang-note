@@ -620,7 +620,7 @@ a.c:hover,a.c:focus-visible{border-color:var(--accent)}
 # 배지를 떼면 5탭 291px 로 들어가고, 6탭은 344px 라 한 픽셀 차로 안 된다.
 # 건수는 칩을 누르면 바로 아래 #cnt 가 말해주고 푸터가 총계를 적는다.
 PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"),
-           ("외식", "외식"), ("가공식품", "가공식품")]
+           ("외식", "외식"), ("식품", "식품")]
 
 # 2단(세부). brand_sub 값이다. 화면에는 건수 많은 순으로 깔리고(아래 render),
 # 이 순서는 건수가 같을 때만 쓴다. 전에는 선언 순서 그대로 깔려서 2위인
@@ -630,22 +630,23 @@ PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"),
 # 줄이라 앞자리가 곧 화면 안이다.
 DEMOTE = {"일식", "한식"}
 
-# 편의점 2단은 업체다(위 sub_of 참고). 건수가 아니라 점포 수 기준으로 고정한다 —
-# 수집량은 우리가 어느 페이지를 긁느냐에 따라 출렁이는데 사람이 기대하는 순서는
-# 그 브랜드의 크기다. 이마트24가 981건을 긁혀도 CU 앞에 오면 이상하다.
-CVS_ORDER = ["CU", "GS25", "세븐일레븐", "이마트24"]
 
-SUBS = CVS_ORDER + ["커피", "베이커리", "아이스크림", "빙수", "도넛",
+# 편의점이 실제로 쓰는 분류 5종을 새로 넣었다. 전부 사이트가 준 이름이고
+# 내가 지어낸 게 아니다 — 김밥·즉석식은 세 브랜드가 공통으로 쓰고, 디저트·
+# 안주·식재료는 CU 자체 2depth 이름이다. '간편식사' 는 안 넣는다(이마트24
+# 행사 섹션의 거친 1depth 라 피스타치오·스프·치킨꼬치가 한 묶음이고,
+# 140건 전부 행사라 화면에 한 건도 안 오른다).
+SUBS = ["커피", "베이커리", "아이스크림", "빙수", "도넛",
+        "김밥", "즉석식", "디저트", "안주", "식재료",
         "과자", "라면", "음료", "냉동식품", "조미료",
         "햄버거", "피자", "치킨",
         "분식", "한식", "도시락", "일식", "샌드위치", "샐러드"]
 
 # web/pages.py 가 유형 페이지(/c/...)를 만들 때 쓰는 목록. 1단+2단을 합친다.
-# 유형 페이지 목록. 편의점 업체(CVS_ORDER)는 뺀다 — 그건 화면 필터일 뿐이고
-# /c/CU/ 를 만들면 /b/CU/ 와 내용이 같은 주소가 둘이 된다.
+# 유형 페이지 목록. 1단 넷 + 2단 전부.
 SECTIONS = ([("전체", "")]
-            + [(k, k) for k in ["편의점", "카페", "외식", "가공식품"]
-               + [x for x in SUBS if x not in CVS_ORDER]])
+            + [(k, k) for k in ["편의점", "카페", "외식", "식품"]
+               + list(SUBS)])
 
 
 def sub_of(r: dict) -> str:
@@ -659,7 +660,13 @@ def sub_of(r: dict) -> str:
     페이지가 생겨 /b/CU/ 와 내용이 같은 주소가 둘이 된다.
     """
     if r.get("brand_type") == "편의점":
-        return r["brand"]
+        # 세 브랜드 사이트에서 받아온 실제 상품 분류를 쓴다(도시락·김밥·
+        # 샌드위치·즉석식·과자·음료…). 전에는 category 가 '신상품'·'행사 상품'
+        # 같은 판매채널이라 업체를 대신 넣었는데, 어댑터가 진짜 분류를 받아오게
+        # 되면서 그럴 이유가 없어졌다. 업체별로 보는 건 푸터의 업체 링크와
+        # /b/<브랜드>/ 로 된다.
+        cat = r.get("category", "")
+        return cat if cat in SUBS else ""
     return r.get("brand_sub", "")
 
 
@@ -671,7 +678,7 @@ def primary_of(r: dict) -> str:
     # 과자·라면·음료·냉동식품. 나머지 셋은 "어디서 파나" 축인데 이것만 "무엇인가"
     # 축이다. 신라면 툼바는 편의점에서도 마트에서도 사니 "어디서" 로는 못 넣는다.
     if t == "제조사":
-        return "가공식품"
+        return "식품"
     return t
 
 
@@ -755,10 +762,7 @@ def render(rows: list, new_today: list, total: int = 0) -> None:
         f'{html.escape(k)}<span class="n">{scount[k]}</span></button>'
         for k in sorted((k for k in SUBS if scount.get(k)),
                         key=lambda k: (k in DEMOTE,
-                                       0 if k in CVS_ORDER else 1,
-                                       SUBS.index(k) if k in CVS_ORDER
-                                       else -scount[k],
-                                       SUBS.index(k))))
+                                       -scount[k], SUBS.index(k))))
 
     updated = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
     # 홈에서 /c/ 로 나가는 길이 하나도 없었다. SHOW 가 자른 분량과, 홈 칩에

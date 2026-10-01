@@ -218,12 +218,16 @@ def _check_nav(section: str, html: str, expected: dict) -> None:
     되어 칩이 사라진다). 눈에 안 띄는 고장이라 수집 때마다 대조한다.
     """
     nav = _nav_categories(html)
-    missing = {k: v for k, v in expected.items() if nav.get(k) != v}
-    if missing:
+    if nav != expected:
+        # 사라진 분류만 보면 안 된다. 분류가 **늘었을 때**는 그 분류 상품이
+        # 조용히 통째로 빠지는데(우리 표에 없으니 안 긁는다) 화면에선
+        # '그 칩이 원래 없었나' 로만 보인다.
         raise ValueError(
             f"이마트24 /goods/{section} 의 분류 메뉴가 달라졌다. "
-            f"기대 {expected} / 실제 {nav} — 어긋난 것 {missing}. "
-            f"CATEGORY 표와 CATEGORY_NAMES 를 사이트에 맞춰 고쳐라")
+            f"기대 {expected} / 실제 {nav} — 빠진 것 "
+            f"{ {k: v for k, v in expected.items() if nav.get(k) != v} } / 늘어난 것 "
+            f"{ {k: v for k, v in nav.items() if expected.get(k) != v} }. "
+            f"FF_CATEGORIES·EVENT_CATEGORIES 와 CATEGORY_NAMES 를 사이트에 맞춰 고쳐라")
 
 
 def fetch() -> list[Item]:

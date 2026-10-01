@@ -66,6 +66,17 @@ h2.sec{margin:38px 0 0;font-size:16px;letter-spacing:-.01em}
 
 # ── 작은 도구들 ────────────────────────────────────────────────────────
 
+def _shown_name(r: dict) -> str:
+    """화면에 쓸 상품명. 정본은 collectors.base.display_name 이다.
+
+    홈(collect.card)만 다듬은 이름을 쓰고 상세·브랜드·유형·피드는 POS 이름을
+    그대로 내보내고 있었다 — `CU 도)튀김순대떡볶이트리플` 이 475장의 <h1>·
+    <title>·og:title 에 그대로 박혀 있었다. 같은 규칙이 두 곳에 있고 한쪽만
+    고친 이 레포 최빈 결함의 네 번째다.
+    """
+    return r.get("display") or r["name"]
+
+
 def _when(r: dict) -> str:
     """정렬용. '언제 것'인가 — 브랜드 날짜 우선, 없으면 처음 본 날."""
     return r.get("released_at") or r.get("uploaded_at") or r.get("first_seen", "")
@@ -148,7 +159,7 @@ def _card(r: dict) -> str:
     """목록용 카드. collect.card() 와 같은 모양이되 통째로 링크가 된다."""
     sub = _kind(r)
     if r.get("image"):
-        alt = f'{r["brand"]} {r["name"]} 제품 이미지'
+        alt = f'{r["brand"]} {_shown_name(r)} 제품 이미지'
         img = (f'<img loading="lazy" width="400" height="400" '
                f'src="{E(r["image"])}" alt="{E(alt)}">')
     else:
@@ -160,7 +171,7 @@ def _card(r: dict) -> str:
     return (f'<a class="c" href="{_href(theme.product_path(r))}" data-g="{E(sub)}">{img}'
             f'<div class="b"><div class="m">{badge}{tags}'
             f'<span class="br">{E(r["brand"])}</span></div>'
-            f'<h2>{E(r["name"])}</h2>'
+            f'<h2>{E(_shown_name(r))}</h2>'
             f'<p class="d">{E(r.get("desc", ""))}</p>'
             f'{_date_tag(r)}</div></a>')
 
@@ -274,7 +285,7 @@ def _brand_link(r: dict) -> str:
 def product_page(r: dict, siblings: list, neighbors: list) -> str:
     """검색어는 대부분 '브랜드 + 상품명'이라 <title> 을 그 순서로 짠다."""
     path = theme.product_path(r)
-    brand, name = r["brand"], r["name"]
+    brand, name = r["brand"], _shown_name(r)
     kind = _kind(r)
     when = _when(r)
     desc = (r.get("desc") or "").strip()
@@ -382,7 +393,7 @@ def _list_page(title: str, h1: str, lead: str, meta_desc: str,
         "@context": "https://schema.org", "@type": "ItemList",
         "name": h1, "numberOfItems": len(rows),
         "itemListElement": [
-            {"@type": "ListItem", "position": i, "name": r["name"],
+            {"@type": "ListItem", "position": i, "name": _shown_name(r),
              "url": theme.BASE_URL + "/" + theme.product_path(r)}
             for i, r in enumerate(rows, start=1)],
     })
@@ -404,7 +415,7 @@ def brand_page(brand: str, rows: list, total: int, today: date) -> str:
     ym = f"{today.year}년 {today.month}월"
     title = f"{brand} 신메뉴 — {ym} | {theme.SITE}"
     lead = f"최근 신제품 {len(rows)}건"
-    names = ", ".join(r["name"] for r in rows[:5])
+    names = ", ".join(_shown_name(r) for r in rows[:5])
     meta_desc = _clip(f"{brand} 신메뉴 {ym} 기준 {len(rows)}건. " +
                       (names if names else "새로 올라온 제품을 매일 모읍니다."))
     note = f"{brand} 전체 메뉴 {total}건 중 최근 등록분입니다." if total else ""
@@ -418,7 +429,10 @@ def brand_page(brand: str, rows: list, total: int, today: date) -> str:
 # 어디로 갔는지 적은 안내만 남긴다. noindex 를 달아 색인에서는 빠지게 한다.
 # 여기 적힌 유형은 프루너가 지우지 않는다(생성 목록에 들어가므로).
 RETIRED = {
-    "디저트": ["아이스크림", "도넛", "베이커리"],
+    # 디저트는 되살아났다 — CU 가 떡케익·마카롱·찹쌀떡·푸딩을 '디저트' 로
+    # 분류해서 준다(70건). 전에 비었던 건 던킨→도넛, 배스킨라빈스→아이스크림
+    # 으로 쪼개면서 남는 게 없어서였다. 안내 스텁과 실제 목록이 같은 주소에
+    # 둘 다 있으면 안 되니 여기서 뺀다.
 }
 
 

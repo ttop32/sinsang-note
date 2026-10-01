@@ -526,7 +526,7 @@ def display_name(name: str) -> str:
     # '두부흑임자스낵 50g x 5개' 에서 _SPEC 가 '50g' 을 지워 'x 5개' 가 남았다.
     # _MULT 는 'x' 를 일부러 안 보는데(자이언트X3 때문) _SPEC 는 그 사정을
     # 모른다. 두 규칙이 서로를 모르니 뒤에서 한 번 더 턴다.
-    s = _ORPHAN_MULT.sub(" ", s)
+    s = _sub_outside_parens(_ORPHAN_MULT, s)
     s = re.sub(r"\(\s*\)", " ", s)
     s = _drop_unmatched_parens(s)
     s = _TAIL_PAREN.sub(r" (\1)", s)
