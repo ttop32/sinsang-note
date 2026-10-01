@@ -1289,3 +1289,142 @@ BRANDS·SITES 등록이 먼저다"가 명시됐다. BRANDS 에 등록하지 **�
 
 **남은 미해결은 §11-1 의 `is_alcohol()` 누락(화면에 술 1건)과 §11-2 의 FT-1(고아 페이지 49개)뿐이다.**
 둘 다 `collectors/` 밖이라 이번 작업 범위가 아니었다.
+
+---
+
+## 15. 롯데칠성음료 어댑터 (`collectors/lottechilsung.py`, 신규) — **통과**
+
+작성자 `adc90f7f29de68721`. 변경 3개(`lottechilsung.py` 신규 · `certs/…pem` 신규 ·
+`base.py` BRANDS/SITES 각 1줄). collect.py·web/·다른 어댑터 무변경을 `git status` 로 확인.
+
+### 15-1. TLS 중간인증서 보충 — **이 변경이 이번 검수에서 가장 위험할 수 있는 자리였다. 안전하다.**
+
+레포에 CA 인증서를 커밋하는 변경이라 제일 먼저, 제일 세게 봤다.
+
+**① 신뢰 범위가 넓어지지 않는다 (핵심).**
+```
+subject = CN=GlobalSign GCC R3 DV TLS CA 2020,  O=GlobalSign nv-sa,  C=BE
+issuer  = CN=GlobalSign, OU=GlobalSign Root CA - R3        ← 공개 루트
+openssl verify -CAfile $(certifi.where())  …pem   →  OK
+```
+상위 루트가 **이미 certifi 에 들어 있다.** 즉 이 파일은 새 신뢰 기점(root)이 아니라
+**이미 신뢰하는 루트 밑의 중간 고리 한 칸**이다. 루트가 여전히 이 인증서를 검증해야 하므로
+우리가 신뢰하는 범위는 한 치도 늘지 않는다. 루트 CA 를 번들에 끼워 넣는 것과는 질이 다르다.
+
+**② 이 인증서로 또 다른 CA 를 만들 수 없다.**
+```
+X509v3 Basic Constraints: critical  CA:TRUE, pathlen:0
+X509v3 Key Usage: critical  Digital Signature, Certificate Sign, CRL Sign
+X509v3 Extended Key Usage:  TLS Web Server/Client Authentication
+```
+`pathlen:0` 이라 최종 엔티티 인증서만 발급할 수 있다. EKU 도 TLS 로 한정돼 있다.
+
+**③ 검증을 끄지 않았다. 내가 직접 깨 봤다.**
+```
+ctx.check_hostname = True   ctx.verify_mode = 2 (CERT_REQUIRED)     ← 기본값 그대로
+
+같은 컨텍스트로 실측:
+  200   https://company.lottechilsung.co.kr/kor/product/newprdt/list.do
+  FAIL  https://wrong.host.badssl.com/      CERTIFICATE_VERIFY_FAILED: Hostname mismatch
+  FAIL  https://self-signed.badssl.com/     CERTIFICATE_VERIFY_FAILED: self-signed certificate
+  FAIL  https://expired.badssl.com/         CERTIFICATE_VERIFY_FAILED: certificate has expired
+  FAIL  https://untrusted-root.badssl.com/  CERTIFICATE_VERIFY_FAILED: self-signed … in chain
+```
+뒤의 둘(expired·untrusted-root)은 **작성자가 안 돌린 것을 내가 추가**했다. 전부 올바르게 막힌다.
+
+**④ 오염 범위가 이 어댑터뿐이다.** `grep -rn "certs/|load_verify_locations|set_default_verify"
+collectors/base.py collect.py` → **0건**. `ssl.create_default_context(cafile=certifi.where())`
+위에 `load_verify_locations()` 로 **더하고**, 그 컨텍스트를 `base.client(verify=...)` 로만 넘긴다.
+전역 기본 컨텍스트나 다른 어댑터에 영향이 없다.
+
+**⑤ 출처 추적 가능.** pem 머리말에 AIA 주소·받은 날·SHA256 지문·`openssl verify` 확인법·
+만료일(2029-03-18)·재발급 절차가 적혀 있고, 내가 잰 지문이 적힌 값과 일치한다
+(`76:25:38:43:…:67:6E`). 리프 만료(2027-01-20) 시 **조용히 0건이 아니라 `ConnectError` 로
+죽는다**는 점도 적혀 있다 — 이 레포 기준으로 올바른 실패 방향이다.
+
+**판정: `verify=False` 를 쓰지 않고 중간인증서를 보충한 것은 옳은 해법이고, 구현도 안전하다.**
+`CRAWLING-POLICY.md` §6-1 의 "중간인증서 보충은 다른 이야기다" 칸에 정확히 들어맞는다.
+
+### 15-2. 실행 — 보고와 일치
+
+```
+18건 / 0.2초 (요청 1회, 페이지네이션 없음)
+빈 필드: name 0 · desc 0 · image 0 · url 0 · uploaded_at 0 · released_at 7
+is_new: {True: 18}      중복키 0      주류 0      비식품 0
+합류 시 화면 노출: 3건 (WINDOW=60 적용)
+```
+보고한 18 / 11 / 18 / 3 과 전부 일치한다. `BRANDS`·`SITES` 등록 확인
+(`"롯데칠성음료": (MAKER, "음료")`, SITES 는 신제품 페이지 폴백).
+
+### 15-3. 날짜 근거 — **핵심 주장을 내가 다시 세서 확인했다. 맞다.**
+
+작성자가 이미지 타임스탬프를 믿는 근거로 "`data-seq` 내림차순과 18/18 초 단위까지 일치"를
+들었다. 원본 HTML 에서 직접 뽑아 대조했다:
+
+```
+GET …/newprdt/list.do → 200  72,925B   카드 18개
+data-seq 수집 18/18 · 이미지 타임스탬프 수집 18/18
+seq 내림차순 == 타임스탬프 내림차순 : True
+역전 건수 : 0
+  seq=340  202609220615531610.png  펩시 엑스트라 피즈
+  seq=339  202609101142453760.png  오트몬드 프로틴 커피셰이크
+  seq=338  202609101140215920.png  오트몬드 검은콩단백
+  …
+```
+**등록 일련번호와 이미지 업로드 시각이 완전히 동기화돼 있다.** 즉 이미지는 이 목록에
+등록하는 순간 올라간다. `mega.py` 가 거부한 '일괄 재업로드'(173건 중 81건이 한 달에 뭉침)
+흔적이 없다. 정렬이 깨지면 `_trust_dates()` 가 `released_at` 을 통째로 비우는 안전장치도 맞다.
+
+`BULK` 처리도 확인했다 — `2026-04-13` ×7(05:09~05:38, 29분)이 편집 세션이라
+`released_at` 을 비웠다. 남은 쏠림은 ×2 가 최대다. `maker_lottewellfood.py` 와 같은 규칙이고
+일관적이다.
+
+**`is_new` 를 True 로 올리되 날짜를 못 뽑은 건은 `None` 으로 떨어뜨리는 처리**가
+§2-1(브레댄코 D2) 사고를 선제로 막는다. 현재 18/18 날짜가 있어 해당 건은 0이다.
+**다른 어댑터의 결함을 읽고 자기 설계에 반영한 것은 이번 라운드에서 이 어댑터만 했다.**
+
+### 15-4. ⚠️ L1 (결함 아님, 그러나 가장 중요한 후속) — 주류가 올라오면 그대로 샌다
+
+지금 18건에 주류는 0건이고, 작성자가 한국어 단어 규칙을 **새로 만들지 않은 것도 맞다**
+(레포 사고 4건 기준). 그런데 이 회사가 바로 그 문제의 당사자다.
+
+```
+base.is_alcohol() 로 롯데칠성 자사 주류 브랜드를 재 봤다:
+   False  클라우드            ← §11-1 에서 '지금 홈 화면에 떠 있는 술' 로 잡은 바로 그 브랜드
+   False  클라우드 생 드래프트
+   False  처음처럼
+   False  처음처럼 새로
+   False  백화수복
+   False  스카치블루
+   False  순하리 레몬진
+```
+**롯데칠성 주류 라인업이 `is_alcohol()` 에 하나도 안 걸린다.** 이 회사 사이트에는
+`/kor/product/liquor/` 섹션이 따로 있고, 신제품 페이지에 주류가 한 건이라도 올라오는 순간
+`is_new=True` + 신선한 날짜로 **곧장 화면에 간다.** `collect.is_fresh()` 의 주류 게이트는
+`is_alcohol()` 이 못 잡으면 작동하지 않는다.
+
+이건 이 어댑터의 결함이 아니다 — 어댑터는 제 할 일을 했고 자체 단어 목록을 안 만든 것도 옳다.
+다만 **§11-1 의 `is_alcohol()` 누락 수정 우선순위를 이 어댑터 투입 전으로 끌어올려야 한다.**
+`클라우드`·`처음처럼`·`새로`·`백화수복`·`스카치블루`·`순하리` 를 §11-1 의 ①번 갈래
+(브랜드명만 쓰고 주종을 안 쓴 이름)에 같이 넣어라.
+
+### 15-5. 조용한 0건 방지 · URL · 기타
+
+작성자가 셀렉터 4종을 일부러 깨뜨려 `ValueError` 발동을 확인했다고 보고했다 —
+**나는 재현하지 않았다(미확인).** 코드에 가드가 있고 메시지에 진단정보가 담긴 것은 확인했다.
+
+상품 URL 3건을 열어 **200 / 11,914B** 를 확인했다. 다만 몰이 CSR SPA 라 HTML 로는
+상품 일치를 확인할 수 없다 — **작성자가 브라우저로 본 4건(펩시 엑스트라 피즈·오트몬드
+프로틴 커피셰이크·칠성사이다 제로 라임·깨수깡)은 내 쪽에서는 미확인**이다.
+"묶음 SKU(24캔 등)라 낱개 소개 페이지가 아니다"를 스스로 적은 것은 적절하다.
+
+`certifi` 를 직접 import 하면서 `requirements.txt` 에 안 넣은 건은 — httpx 의 필수 의존이라
+항상 설치되는 게 맞다. 다만 **명시 의존을 적는 쪽을 권한다.** 같은 라운드에서 할리스
+작업자가 Pillow 를 안 넣었으면 CI 가 죽었을 자리를 겪었고, "간접 의존이라 항상 있다"는
+전제는 상위 패키지가 바뀌면 소리 없이 깨진다. 한 줄 비용이다.
+
+### 15-6. 판정
+
+**통과.** 결함 없음. TLS 처리는 이번 라운드에서 가장 조심스러운 변경이었는데
+신뢰 범위를 넓히지 않았고, 검증이 살아 있음을 내가 badssl 4종으로 직접 확인했다.
+후속은 L1(§11-1 주류 목록에 롯데칠성 주류 브랜드 추가) 하나이고 **이 어댑터 밖의 일**이다.

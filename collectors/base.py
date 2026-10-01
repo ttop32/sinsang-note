@@ -66,6 +66,10 @@ BRANDS = {
     "팔도":        (MAKER, "라면"),
     "오리온":      (MAKER, "과자"),
     "롯데칠성음료": (MAKER, "음료"),
+    # 직영몰이라 남의 브랜드도 판다. 그래도 '제조사' 로 두는 건 1단 '가공식품' 이
+    # 누가 만들었나가 아니라 무엇이냐 축이기 때문이다(TAXONOMY §3). 세부분류를
+    # '음료' 가 아니라 '냉동식품' 으로 둔 근거는 collectors/fredit.py docstring.
+    "hy프레딧":    (MAKER, "냉동식품"),
     "배스킨라빈스": (CAFE, "아이스크림"),
     "던킨":        (CAFE, "도넛"),
     "이삭토스트":  (FRANCHISE, "분식"),
@@ -182,6 +186,8 @@ SITES = {
     "오리온":       "https://www.orionworld.com/board/list/87",
     # 상품별 주소는 롯데칠성몰(mall.) 이라 Item.url 로 따로 붙는다. 이건 폴백이다.
     "롯데칠성음료": "https://company.lottechilsung.co.kr/kor/product/newprdt/list.do",
+    # 상품별 주소(/product/detail?prdId=)가 Item.url 로 붙으므로 이건 폴백이다.
+    "hy프레딧":    "https://m.fredit.co.kr/product/main-tab-menu?keyword=main&ctgId=C10000001001",
 }
 
 
@@ -266,11 +272,23 @@ NONALCOHOL_MARKS = ("무알콜", "논알콜", "넌알콜", "비알콜",
                     "무알코올", "논알코올", "넌알코올", "0.0")
 
 
-def is_alcohol(name: str, category: str = "") -> bool:
+# 제조사 자사 주류 브랜드. 이름만으로는 못 가르고 그 회사 상품일 때만 술이다.
+# '클라우드' 를 전역 단어로 넣으면 노티드 '밀크 클라우드'·'티라미수 클라우드'
+# 와 할리스 '미니저그 (클라우드크림)' 을 문다. 브랜드를 묶으면 그게 안 걸린다.
+# 편의점이 파는 같은 제품은 제조사 접두가 붙어("롯데)클라우드…") 따로 잡힌다.
+ALCOHOL_BY_BRAND = {
+    "롯데칠성음료": ("클라우드", "처음처럼", "백화수복", "스카치블루", "순하리",
+                 "청하", "설중매", "마주앙", "충전소", "별빛"),
+}
+
+
+def is_alcohol(name: str, category: str = "", brand: str = "") -> bool:
     """술인가. 무알콜 표기가 있으면 이름에 '맥주' 가 들어가도 술이 아니다."""
     if any(m in name for m in NONALCOHOL_MARKS):
         return False
     if category in ALCOHOL_CATEGORIES:
+        return True
+    if any(w in name for w in ALCOHOL_BY_BRAND.get(brand, ())):
         return True
     head = name.split(")", 1)[0] if ")" in name else ""
     return head in ALCOHOL_PREFIXES or any(w in name for w in ALCOHOL_WORDS)
@@ -357,7 +375,8 @@ class Item:
         d["url"] = self.url or site(self.brand)
         # 어댑터가 따로 표시하지 않았으면 이름·분류로 판정한다.
         d["nonfood"] = self.nonfood or is_nonfood(self.name, self.category)
-        d["alcohol"] = self.alcohol or is_alcohol(self.name, self.category)
+        d["alcohol"] = self.alcohol or is_alcohol(
+            self.name, self.category, self.brand)
         # 우리 페이지는 https 라 http 이미지는 브라우저가 막는다(혼합 콘텐츠).
         # 빈 네모가 뜨느니 사진 없는 카드로 그리는 게 낫다. 에그드랍 73건이
         # 그랬다 — 인증서가 2025-05-27 에 만료돼 https 로는 아예 안 열린다.
