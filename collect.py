@@ -74,7 +74,13 @@ STALE = 90
 
 # 브랜드 하나가 화면을 덮지 못하게 하는 상한. CU 는 NEW 배지 유지 기간이 길어
 # 666건이 한꺼번에 올라오고, 그러면 이마트24 가 상위 300건을 덮던 문제가 재발한다.
-PER_BRAND = 40
+# 브랜드당 상한. 40 이었을 때 세븐일레븐·팔도·스시로 셋이 300장 중 120장을
+# 먹어서 58곳을 수집하는데 화면에는 23곳만 떴다. 12 로 내리면 46곳이 뜨고
+# 후보가 329건이라 화면 300장과 거의 같아진다 — 상한이 가리는 양도 줄어든다.
+# 팔도 라면 46종·스시로 '이달의 한정메뉴' 46종처럼 한 브랜드가 비슷한 걸
+# 수십 개 올리는 경우를 막는 장치지, 그 브랜드를 벌주는 게 아니다.
+# 전체는 /b/<브랜드>/ 에서 볼 수 있다.
+PER_BRAND = 12
 
 # 첫 화면에 그리는 최대 개수. 전량(2,600건+)을 한 장에 그리면 1MB 를 넘어가고
 # 브랜드가 늘수록 감당이 안 된다. 이 사이트의 용건은 '신제품'이라 최신순 앞쪽이
@@ -158,15 +164,15 @@ def main() -> None:
     # '사라짐' 처리되면 데이터가 깎이고 되돌릴 수 없다.
     carried = [p for p in prev.values() if p["brand"] in failed_brands]
     for c in carried:
-        # 이전 수집분은 판정값이 낡았거나 아예 없다 — to_dict() 를 안 거치기
-        # 때문이다. 단어 목록을 고쳐도 하필 그날 수집이 실패한 브랜드만
-        # 옛 판정을 그대로 들고 있게 되고, 필드가 없으면 거짓으로 읽혀
-        # 샴푸가 식품 목록에 섞인다. 실제로 385행이 그 상태였다.
-        # 수집이 실패한 날에만 터지는데 그날은 아무도 화면을 안 본다.
-        c["brand_type"], c["brand_sub"] = base.kind(c["brand"])
-        c["nonfood"] = base.is_nonfood(c["name"], c.get("category", ""))
-        c["alcohol"] = base.is_alcohol(c["name"], c.get("category", ""),
-                                       c["brand"])
+        # 이전 수집분은 to_dict() 를 안 거쳐서 파생값이 낡았거나 아예 없다.
+        # 단어 목록을 고쳐도 하필 그날 수집이 실패한 브랜드만 옛 판정을 들고
+        # 있게 되고, 필드가 없으면 거짓으로 읽혀 샴푸가 식품 목록에 섞인다.
+        # 실제로 385행이 그 상태였다. 수집이 실패한 날에만 터지는데 그날은
+        # 아무도 화면을 안 본다.
+        #
+        # 계산을 여기 베껴 적지 마라. 전에 그렇게 했다가 image 정규화 하나를
+        # 빠뜨려서, 같은 종류의 버그를 고치는 커밋 안에서 같은 버그를 다시 냈다.
+        base.derive(c)
     if carried:
         print(f"   실패 브랜드 이전분 유지: {len(carried)}건")
     rows += carried
@@ -212,22 +218,25 @@ def main() -> None:
          "count": len(rows), "products": rows},
         ensure_ascii=False, indent=1), encoding="utf-8")
 
-    fresh = pick(rows, today)
+    fresh = pick(rows, today)                  # 홈 목록(브랜드 상한 적용)
     goods = pick(rows, today, goods=True)      # 굿즈는 버리지 않고 따로 모은다
+    # 페이지는 상한 없이 만든다. 상한에 걸린 것도 /b/<브랜드>/ 와 검색으로 닿아야 한다.
+    listed = pick(rows, today, cap=False)
+    listed_goods = pick(rows, today, goods=True, cap=False)
     # 세는 기준과 카드에 찍는 날짜가 같아야 한다. 전에는 카운터만 기준선을 빼서
     # "오늘 3건" 이라고 써놓고 오늘 날짜 카드가 92장 떴다.
     # shown_date 는 브랜드가 준 날짜를 그대로 쓰고, 날짜가 없는 기준선 상품만
     # 비운다 — 기준선이 막아야 할 건 '우리가 처음 본 날'이라는 추측이지
     # 브랜드가 직접 찍어준 날짜가 아니다.
     new_today = [r for r in fresh if shown_date(r) == today]
-    print(f"총 {len(rows)}건 / 신제품 {len(fresh)}건 (오늘 {len(new_today)}건)"
-          f" / 굿즈 {len(goods)}건 / 사라짐 {len(gone)}건")
-    render(fresh, new_today)
+    print(f"총 {len(rows)}건 / 신제품 {len(listed)}건 (홈 {min(len(fresh), SHOW)}장,"
+          f" 오늘 {len(new_today)}건) / 굿즈 {len(listed_goods)}건 / 사라짐 {len(gone)}건")
+    render(fresh, new_today, total=len(listed))
 
     # 개별 페이지·sitemap·아이콘. web.seo 가 collect 를 import 하므로 여기서 늦게 부른다.
     from web import assets, pages, seo
     docs = OUT.parent
-    paths = pages.build(fresh, rows, docs, goods=goods)
+    paths = pages.build(listed, rows, docs, goods=listed_goods)
     seo.build(fresh, paths, docs)
     assets.build(docs)
     print(f"→ 개별 페이지 {len(paths)}장 + sitemap·feed·아이콘")
@@ -238,12 +247,20 @@ def main() -> None:
         raise SystemExit("어댑터 실패:\n" + "\n".join(errors))
 
 
-def pick(rows: list, today: str, *, goods: bool = False) -> list:
-    """화면에 올릴 목록. 고르고·정렬하고·변형을 묶는 순서가 식품과 굿즈 모두 같아야
-    한다. 전에는 이 네 줄이 호출부에 펼쳐져 있어서 한쪽만 고치면 어긋났다."""
+def pick(rows: list, today: str, *, goods: bool = False,
+         cap: bool = True) -> list:
+    """신제품 목록. 고르고·정렬하고·변형을 묶는 순서가 식품과 굿즈 모두 같아야
+    한다. 전에는 이 네 줄이 호출부에 펼쳐져 있어서 한쪽만 고치면 어긋났다.
+
+    cap 은 브랜드별 상한이다. 홈 한 장에 한 브랜드가 도배되는 걸 막는 장치라
+    목록 화면에만 쓴다. 상세·브랜드·유형 페이지는 상한 없이 만든다 — 상한은
+    '한 화면에 몇 장을 보여줄까' 의 문제지 그 상품의 페이지가 있으면 안 된다는
+    뜻이 아니다. 섞어 쓰면 상한을 내릴 때마다 검색 유입 경로가 같이 사라진다.
+    """
     out = [r for r in rows if is_fresh(r, today, goods=goods)]
     out.sort(key=lambda r: (_when(r), r["brand"]), reverse=True)
-    return cap_per_brand(drop_sets(merge_variants(out), rows))
+    out = drop_sets(merge_variants(out), rows)
+    return cap_per_brand(out) if cap else out
 
 
 # 같은 상품의 단품·세트·라지세트가 따로 올라온다. 버거킹만 12개 그룹 36건이라
@@ -548,7 +565,12 @@ def card(r: dict) -> str:
             f'<span class="go">{go} &rarr;</span></a>')
 
 
-def render(rows: list, new_today: list) -> None:
+def render(rows: list, new_today: list, total: int = 0) -> None:
+    """홈 한 장. rows 는 브랜드 상한을 거친 목록, total 은 상한 전 전체 건수다.
+
+    둘을 구분해야 푸터가 거짓말을 안 한다 — 상한이 헤드라인 숫자까지 줄이면
+    '신제품 329건' 이라고 써놓고 실제로는 1,403건의 페이지가 있게 된다.
+    """
     # 숫자는 화면에 실제로 있는 것만 센다. len(rows) 를 쓰면 SHOW 가 자른 뒤에도
     # 483건이라고 써서, 끝까지 내려도 300장뿐인 화면이 거짓말을 한다.
     shown = rows[:SHOW]
@@ -587,8 +609,9 @@ def render(rows: list, new_today: list) -> None:
         f'<a href="{ROOT_PATH}{_t.brand_path(b)}">{html.escape(b)}</a>'
         f'<span class="bn">{n}</span>'
         for b, n in sorted(bcount.items(), key=lambda kv: (-kv[1], kv[0])))
-    count = (f"최근 {WINDOW}일 신제품 {len(rows)}건 — 이 화면에 최신 {len(shown)}장"
-             if more else f"최근 {WINDOW}일 신제품 {len(shown)}건")
+    whole = total or len(rows)
+    count = (f"최근 {WINDOW}일 신제품 {whole}건 — 이 화면에 최신 {len(shown)}장"
+             if whole > len(shown) else f"최근 {WINDOW}일 신제품 {len(shown)}건")
     lead = (f"오늘 {len(new_today)}건" if new_today
             else f"최근 {WINDOW}일 신제품 {len(shown)}건")
     from web import theme
