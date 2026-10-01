@@ -628,7 +628,11 @@ function syncSub() {{
     b.hidden = !has;
     if (has) any = true;
   }}
-  subwrap.hidden = !any;
+  // '전체' 에서는 숨긴다. 13칩 1,051px 중 676px 가 화면 밖인 데다 커피·라면·
+  // 일식·햄버거가 뒤섞여 있어 고르는 데 도움이 안 된다.
+  // 칩이 하나뿐일 때도 숨긴다 — 고를 게 없으면 필터가 아니라 라벨이다.
+  const shownChips = subBtns.filter(b => !b.hidden).length;
+  subwrap.hidden = !kind || shownChips < 2;
   subnav.scrollLeft = 0;
   hint();
 }}

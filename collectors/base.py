@@ -358,6 +358,11 @@ class Item:
         # 어댑터가 따로 표시하지 않았으면 이름·분류로 판정한다.
         d["nonfood"] = self.nonfood or is_nonfood(self.name, self.category)
         d["alcohol"] = self.alcohol or is_alcohol(self.name, self.category)
+        # 우리 페이지는 https 라 http 이미지는 브라우저가 막는다(혼합 콘텐츠).
+        # 빈 네모가 뜨느니 사진 없는 카드로 그리는 게 낫다. 에그드랍 73건이
+        # 그랬다 — 인증서가 2025-05-27 에 만료돼 https 로는 아예 안 열린다.
+        if d["image"].startswith("http://"):
+            d["image"] = ""
         return d
 
 
