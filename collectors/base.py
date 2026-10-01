@@ -374,6 +374,12 @@ def derive(d: dict) -> dict:
     d["brand_type"], d["brand_sub"] = kind(d["brand"])
     d["url"] = d.get("url") or site(d["brand"])
     # 어댑터가 따로 표시하지 않았으면 이름·분류로 판정한다.
+    #
+    # ⚠️ 이 두 줄은 한 방향으로만 움직인다(True 가 박히면 안 내려간다).
+    # 수집 성공분은 매번 어댑터가 준 값(보통 False)에서 다시 계산하니 괜찮지만,
+    # 수집 실패해서 이월된 행은 이미 파생된 값이라 **단어를 빼도 안 풀린다.**
+    # "단어를 뺐는데 왜 아직 굿즈로 있지?" 가 나오면 여기가 답이다.
+    # 지금 데이터는 깨끗하다(저장값 vs 재계산 불일치 0건).
     cat = d.get("category", "")
     d["nonfood"] = bool(d.get("nonfood")) or is_nonfood(d["name"], cat)
     d["alcohol"] = bool(d.get("alcohol")) or is_alcohol(d["name"], cat, d["brand"])
