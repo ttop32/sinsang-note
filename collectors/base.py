@@ -284,13 +284,23 @@ PROMO_LABELS = {"1+1", "2+1", "3+1", "1 + 1", "2 + 1", "3 + 1",
                 "할인", "증정", "세일", "특가"}
 
 # NEW 배지를 이미 그리므로 같은 뜻의 라벨은 겹쳐 찍지 않는다.
-DUP_LABELS = {"NEW", "New", "new", "신메뉴", "신상품", "신제품"}
+#
+# 목록으로 적지 않고 규칙으로 센다. 전에 {"NEW","신메뉴",…} 로 열거했다가
+# 삼송빵집의 'NEW MENU' 를 놓쳐 'NEW NEW MENU' 가 나란히 떴다. 브랜드마다
+# 띄어쓰기·대소문자·꼬리말이 제각각이라 열거하면 반드시 빠뜨린다.
+_DUP_HEADS = ("NEW", "신메뉴", "신상품", "신제품", "출시")
+
+
+def _is_dup(label: str) -> bool:
+    """우리 NEW 배지와 같은 뜻인가. 'NEW MENU'·'new'·'신 메뉴' 를 다 잡는다."""
+    flat = label.replace(" ", "").upper()
+    return any(flat.startswith(h.replace(" ", "").upper()) for h in _DUP_HEADS)
 
 
 def shown_labels(labels) -> list:
     """카드에 찍을 라벨만 남긴다. 홈·상세·브랜드·유형 전부 이걸 쓴다."""
     return [l for l in (labels or [])
-            if l and l not in PROMO_LABELS and l not in DUP_LABELS]
+            if l and l not in PROMO_LABELS and not _is_dup(l)]
 
 
 def kind(brand: str) -> tuple:

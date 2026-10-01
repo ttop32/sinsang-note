@@ -206,7 +206,11 @@ def main() -> None:
 
     fresh = pick(rows, today)
     goods = pick(rows, today, goods=True)      # 굿즈는 버리지 않고 따로 모은다
-    new_today = [r for r in fresh if _when(r) == today]
+    # 기준선은 '오늘'에서 뺀다. 브랜드가 합류하거나 수집 범위가 넓어진 날에는
+    # 그 브랜드의 신메뉴 목록 전체가 처음 보이는 거라 first_seen 이 오늘이 된다.
+    # 목록에는 올리되(브랜드가 신메뉴라고 말하니까) "오늘 N건"으로 세지는 않는다.
+    # 세면 어댑터를 붙일 때마다 오늘 신상이 수십 건씩 뛴다.
+    new_today = [r for r in fresh if _when(r) == today and not r.get("baseline")]
     print(f"총 {len(rows)}건 / 신제품 {len(fresh)}건 (오늘 {len(new_today)}건)"
           f" / 굿즈 {len(goods)}건 / 사라짐 {len(gone)}건")
     render(fresh, new_today)
