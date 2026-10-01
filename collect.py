@@ -181,7 +181,7 @@ def main() -> None:
         #
         # 계산을 여기 베껴 적지 마라. 전에 그렇게 했다가 image 정규화 하나를
         # 빠뜨려서, 같은 종류의 버그를 고치는 커밋 안에서 같은 버그를 다시 냈다.
-        base.derive(c)
+        base.derive(c, stored=True)   # 어댑터 뜻이 아니라 옛 판정이다
     if carried:
         print(f"   실패 브랜드 이전분 유지: {len(carried)}건")
     rows += carried

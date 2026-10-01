@@ -565,7 +565,7 @@ def display_name(name: str) -> str:
     return s if len(s.replace(" ", "")) >= 3 else src
 
 
-def derive(d: dict) -> dict:
+def derive(d: dict, *, stored: bool = False) -> dict:
     """레지스트리·판정에서 나오는 값들을 채운다. 제자리에서 고치고 그대로 돌려준다.
 
     여기가 정본이어야 한다. 수집한 상품은 Item.to_dict() 로 들어오지만, 수집이
@@ -583,14 +583,27 @@ def derive(d: dict) -> dict:
     d["display"] = display_name(d["name"])
     # 어댑터가 따로 표시하지 않았으면 이름·분류로 판정한다.
     #
-    # ⚠️ 이 두 줄은 한 방향으로만 움직인다(True 가 박히면 안 내려간다).
-    # 수집 성공분은 매번 어댑터가 준 값(보통 False)에서 다시 계산하니 괜찮지만,
-    # 수집 실패해서 이월된 행은 이미 파생된 값이라 **단어를 빼도 안 풀린다.**
-    # "단어를 뺐는데 왜 아직 굿즈로 있지?" 가 나오면 여기가 답이다.
-    # 지금 데이터는 깨끗하다(저장값 vs 재계산 불일치 0건).
+    # `or` 라서 한 방향으로만 움직인다 — 어댑터가 True 를 찍었으면 규칙이
+    # 몰라도 존중해야 하기 때문이다(GS25 '손앤박 하티' 처럼 이름으로는 못
+    # 가리는 화장품). 문제는 **이미 파생된 값**에 같은 함수를 돌릴 때다.
+    # 그때는 저장된 True 가 어댑터 뜻인지 옛 규칙의 결과인지 구분이 안 되고,
+    # 단어 목록에서 단어를 빼도 안 풀린다. 실제로 '와인' 을 뺐는데 나폴레옹
+    # 와인바게트가 계속 술로 남았다.
+    #
+    # stored=True 로 부르면 저장값을 무시하고 처음부터 다시 센다. 수집 실패
+    # 이월분과 일괄 재계산이 그 경로다 — 거기엔 어댑터 뜻이 섞여 있지 않다.
     cat = d.get("category", "")
-    d["nonfood"] = bool(d.get("nonfood")) or is_nonfood(d["name"], cat)
-    d["alcohol"] = bool(d.get("alcohol")) or is_alcohol(d["name"], cat, d["brand"])
+    # 어댑터가 찍은 값은 따로 기억해 둔다. 안 그러면 다시 계산할 때 그 뜻이
+    # 사라진다 — '와인' 을 빼려고 전체를 재계산했더니 GS25 '손앤박 하티'
+    # (어댑터가 화장품이라고 찍은 것)가 같이 풀렸다.
+    if not stored:
+        for k in ("nonfood", "alcohol"):
+            if d.get(k):
+                d.setdefault("by_adapter", []).append(k) if k not in d.get(
+                    "by_adapter", []) else None
+    said = set(d.get("by_adapter") or ())
+    d["nonfood"] = "nonfood" in said or is_nonfood(d["name"], cat)
+    d["alcohol"] = "alcohol" in said or is_alcohol(d["name"], cat, d["brand"])
     # 우리 페이지는 https 라 http 이미지는 브라우저가 막는다(혼합 콘텐츠).
     # 빈 네모가 뜨느니 사진 없는 카드로 그리는 게 낫다. 에그드랍 73건이
     # 그랬다 — 인증서가 2025-05-27 에 만료돼 https 로는 아예 안 열린다.
