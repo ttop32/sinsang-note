@@ -227,6 +227,7 @@ def main() -> None:
          "count": len(rows), "products": rows},
         ensure_ascii=False, indent=1), encoding="utf-8")
 
+    untrust_bulk_dates(rows)                   # 사이트 개편 재발행분을 날짜에서 뺀다
     fresh = pick(rows, today)                  # 홈 목록(브랜드 상한 적용)
     goods = pick(rows, today, goods=True)      # 굿즈는 버리지 않고 따로 모은다
     # 페이지는 상한 없이 만든다. 상한에 걸린 것도 /b/<브랜드>/ 와 검색으로 닿아야 한다.
@@ -255,6 +256,52 @@ def main() -> None:
     # (워크플로의 커밋 스텝은 if: always() 라 부분 결과는 반영된다.)
     if errors:
         raise SystemExit("어댑터 실패:\n" + "\n".join(errors))
+
+
+# 일괄 재발행 판정. 한 브랜드가 같은 날짜에 이만큼 몰아서 올렸으면 그건 출시일이
+# 아니라 사이트 개편·재등록 자국이다.
+BULK_MIN = 20          # 이보다 적게 몰린 건 그냥 같은 날 나온 것일 수 있다
+BULK_RATIO = 10        # 그 브랜드의 평소 묶음 크기의 몇 배를 이상치로 볼 것인가
+
+
+def untrust_bulk_dates(rows: list) -> int:
+    """일괄 재발행 날짜를 지운다. 지운 건수를 돌려준다.
+
+    파리바게뜨가 2026-08-26 에 98건, 08-28 에 67건을 같은 날짜로 달고 들어왔다.
+    소보루빵·카스테라·단팥빵 같은 상시 품목이고 사이트 개편 때 재발행된 것이다.
+    어댑터가 그걸 알고 released_at 대신 uploaded_at 에 넣어 '약하게' 쓰려 했는데,
+    is_fresh 는 둘을 같은 자격으로 봐서 방어가 아무 일도 안 했다. 그래서 홈
+    1,237장 중 312장(25%)이 파리바게뜨 메뉴판이 됐다.
+
+    평평한 임계값은 못 쓴다 — CU 는 이미지 등록이 주 단위 배치라 한 날짜에
+    45~78건이 정상이다. 그 브랜드의 **평소 묶음 크기(중앙값)** 와 비교해야
+    이상치가 갈린다. CU 는 중앙값이 12라 120건부터 걸리고, 파리바게뜨는
+    중앙값이 2라 20건부터 걸린다.
+    """
+    import statistics
+    per = collections.defaultdict(collections.Counter)
+    for r in rows:
+        if r.get("uploaded_at"):
+            per[r["brand"]][r["uploaded_at"]] += 1
+    bad = set()
+    for brand, c in per.items():
+        sizes = list(c.values())
+        if len(sizes) < 3:
+            continue                      # 날짜가 몇 개 없으면 이상치를 못 가린다
+        med = statistics.median(sizes)
+        for dt, n in c.items():
+            if n >= BULK_MIN and med and n >= BULK_RATIO * med:
+                bad.add((brand, dt))
+    gone = 0
+    for r in rows:
+        if (r["brand"], r.get("uploaded_at")) in bad:
+            r["uploaded_at"] = ""
+            gone += 1
+    if bad:
+        top = sorted(bad, key=lambda x: -per[x[0]][x[1]])[:3]
+        print(f"   일괄 재발행 날짜 {len(bad)}묶음 {gone}건 무효화: "
+              + ", ".join(f"{b} {d}({per[b][d]})" for b, d in top))
+    return gone
 
 
 def pick(rows: list, today: str, *, goods: bool = False,
@@ -432,11 +479,17 @@ def is_fresh(r: dict, today: str, *, goods: bool = False) -> bool:
         # 사용자가 처음 지적한 게 정확히 이거였다("신상이 아니라 2+1 행사 상품").
         if any(l in base.PROMO_LABELS for l in r.get("labels", [])):
             return False
-        # 그 외에는 배지를 그대로 믿는다. 브랜드가 자기 신메뉴 목록에
-        # 올려놓은 것이라 합류 첫날이어도 신제품이 맞다.
+        # 그 외에는 배지를 믿는다. 브랜드가 자기 신메뉴 목록에 올려놓은
+        # 것이라 합류 첫날이어도 신제품이 맞다.
         # (기준선이라고 막았더니 빽다방 신메뉴 11건·설빙 NEW 14건이 통째로
         #  사라졌다. 기준선 가드는 아무 근거가 없는 diff 경로에만 쓴다.)
-        return True
+        #
+        # 다만 영원히는 아니다. 날짜가 없으면 브랜드가 배지를 내릴 때까지
+        # 계속 신상으로 남는데, 설빙 '인절미설빙'(2013년 간판)처럼 몇 년째
+        # 배지가 달린 것도 있다. 우리가 처음 본 지 STALE 일이 지났으면 그만
+        # 내린다. STALE 은 여태 정의만 돼 있고 아무 데서도 안 읽혔다.
+        seen = r.get("first_seen", "")
+        return not seen or seen >= (d0 - timedelta(days=STALE)).isoformat()
 
     if r.get("promo"):
         return False                      # 행사라서 실린 상품. 신제품 근거가 없다.
