@@ -296,6 +296,8 @@ def is_fresh(r: dict, today: str) -> bool:
     # 페이지에 올라온 굿즈(매머드 키링·볼펜 등)가 그대로 통과한다.
     if r.get("nonfood"):
         return False                      # 텀블러·키링 같은 굿즈. 먹는 게 아니다.
+    if r.get("alcohol"):
+        return False                      # 술. 연령 확인 없이 내보낼 게 아니다.
     d0 = date.fromisoformat(today)
     cutoff = (d0 - timedelta(days=WINDOW)).isoformat()
     stamped = r.get("released_at") or r.get("uploaded_at")
@@ -490,7 +492,7 @@ def render(rows: list, new_today: list) -> None:
 <p class="empty" id="noresult" hidden>찾는 제품이 없습니다.<br>다른 말로 검색해 보세요.</p>
 </main>
 <footer>마지막 갱신 {updated} · 최근 {WINDOW}일 신제품 {len(rows)}건<br>
-상품 정보와 이미지의 저작권은 각 브랜드에 있습니다.</footer>
+{theme.NOTICE}</footer>
 </div>
 <script>
 const g = document.getElementById('g'), q = document.getElementById('q'),

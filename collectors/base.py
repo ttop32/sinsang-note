@@ -47,6 +47,7 @@ BRANDS = {
     "CU":         (CVS, ""),
     "세븐일레븐":  (CVS, ""),
     "이마트24":    (CVS, ""),
+    "GS25":       (CVS, ""),
     "맘스터치":    (FRANCHISE, "햄버거"),
     "버거킹":      (FRANCHISE, "햄버거"),
     "BBQ":        (FRANCHISE, "치킨"),
@@ -103,9 +104,11 @@ BRANDS = {
     #              Disallow: / 로 차단한다. 뚫으려면 UA 를 위장해야 하는데,
     #              그건 대법원 2021도1533 이 정보통신망 침입죄 근거로 든 행위다.
     #   빕스     — robots.txt 가 Googlebot·NaverBot 외 전면 차단
-    #   GS25     — 사이트 자체가 폐쇄(앱 전용 이관) robots.txt 는 /goods/ 를 허용하지만 사이트 푸터가
-    # "사전 서면동의 없이 정보·콘텐츠를 상업적 목적으로 스크래핑" 을 금지한다.
-    # 이마트24(약관 제8조 ⑧)와 같은 종류의 건이라 사용자 판단이 필요하다.
+    #
+    # GS25 는 2026-10-01 에 등록했다. 상품 목록은 여전히 수집 불가다 —
+    # gs25.gsretail.com 이 전 경로 본사 SPA 로 리다이렉트되고, 앱(우리동네GS)의 웹 짝인
+    # m.woodongs.com 에도 상품 라우트가 없다. 대신 본사 보도자료에서 오뚜기·오리온과
+    # 같은 방식으로 신제품만 뽑는다. 자세한 근거는 collectors/gs25.py docstring 참고.
     # 롯데리아는 등록하지 않는다. lotteeatz.com/robots.txt 가 알려진 봇 티어 외
     # 모든 UA 를 Disallow: / 로 막는다. 우리 UA 는 어느 티어에도 없어 전 경로 금지다.
     # 다른 호스트로 우회하는 건 신원을 밝히는 이 프로젝트 방침에 어긋난다.
@@ -123,6 +126,9 @@ SITES = {
     "커피빈":       "https://www.coffeebeankorea.com/menu/list.asp",
     "CU":          "https://cu.bgfretail.com/product/product.do",
     "세븐일레븐":   "https://www.7-eleven.co.kr/product/presentList.asp",
+    # 상품 목록 페이지가 없는 브랜드다. 기사별 상세 주소가 Item.url 로 붙으므로
+    # 이건 폴백일 뿐이다. 브랜드 소개(/brand/gs25)보다 보도자료 목록이 용건에 가깝다.
+    "GS25":        "https://www.gsretail.com/news/press-releases",
     "맘스터치":     "https://www.momstouch.co.kr/menu/new.php",
     "버거킹":       "https://www.burgerking.co.kr/menu/main",   # 해시 라우팅 아님(history 모드)
     "프랭크버거":   "https://www.frankburger.co.kr/html/menu_1.html",
@@ -204,6 +210,58 @@ def is_nonfood(name: str, category: str = "") -> bool:
     return category in NONFOOD_CATEGORIES or any(w in name for w in NONFOOD_WORDS)
 
 
+# 주류. 청소년보호법상 주류 광고는 연령 확인 없는 공개 페이지에 올릴 게 아니고,
+# "오늘 뭐 새로 나왔나" 보러 온 사람이 찾는 것도 아니다. 비식품과 같은 방식으로
+# 본 목록에서 뺀다. 데이터에는 남겨둔다 — 나중에 연령 확인을 붙이면 살릴 수 있다.
+ALCOHOL_CATEGORIES = {"주류"}
+
+# 이마트24 는 상품명 앞에 주종을 붙인다("레드)베어풋카베르네소비뇽750ml").
+# 이름 단어보다 이게 정확하다. 세븐일레븐은 제조사를 붙여서("롯데)옐로우테일…")
+# 접두로는 못 가르고, 그쪽은 아래 포도품종 단어로 잡는다.
+# 실측해서 주종인 것만 넣었다 — '옐로우)' 는 과자, '포차24)' 는 안주다.
+ALCOHOL_PREFIXES = ("레드", "화이트", "로제", "스파클링", "샴페인",
+                    "위스키", "사케", "칵테일", "보드카", "럼")
+
+ALCOHOL_WORDS = (
+    "맥주", "비어", "라거", "에일", "IPA", "흑맥주", "발포주",
+    "위스키", "하이볼", "칵테일", "소주", "보드카", "샴페인", "데낄라", "브랜디",
+    "하이네켄", "기네스", "칭따오", "버드와이저",
+    # 포도품종·와인용어. 와인은 이름에 '와인' 이 안 들어가는 게 보통이라
+    # 품종으로 잡아야 한다(세븐일레븐 '롯데)옐로우테일오로라팩(쉬라)').
+    "와인", "까버네", "까베르네", "카베르네", "쇼비뇽", "소비뇽",
+    "샤르도네", "샤도네이", "피노누아", "메를로", "모스카토", "쉬라", "시라즈",
+    "리슬링", "산지오베제", "말벡",
+    # 품종을 줄여 쓴 이름은 품종 단어로 못 잡는다("…오로라팩(까버)" = 까베르네).
+    # 그런 건 와인 브랜드명으로 잡을 수밖에 없고, 이건 늘려가야 하는 목록이다.
+    # '까버' 로 잡으면 2글자라 언젠가 엉뚱한 걸 문다. 브랜드명이 더 안전하다.
+    "옐로우테일",
+)
+# 넣으면 안 되는 단어들. 전체 데이터에 대고 센 결과다.
+#   막걸리 → 스타벅스 '막걸리향 크림 콜드 브루' = 커피. 2건 전부 오탐
+#   사케  → '사케라또 아포가토'(스타벅스), 사케동. 접두 '사케)' 로만 잡는다
+#   카스  → 카스테라 28건
+#   테라  → 카스테라, 프론테라
+#   럼    → 브라운쿠키크럼블, 블루베리플럼주스. 접두 '럼)' 로만 잡는다
+#   사와  → 사사사와플크림샌드
+#   청주  → 청주식돼지김치짜글이
+#   하이트 → 제조사명이라 '하이트)무알콜레몬유자' 같은 음료도 걸린다
+# 새 단어를 넣기 전에 전체 데이터에 대고 식품 오탐이 0인지 먼저 세라.
+
+# 무알콜 표기가 있으면 주류가 아니다. '아사히스타일프리캔맥주' 처럼 이름에
+# 맥주가 들어가도 술이 아닌 것들이 있다.
+NONALCOHOL_MARKS = ("무알콜", "논알콜", "비알콜", "무알코올", "논알코올", "0.0")
+
+
+def is_alcohol(name: str, category: str = "") -> bool:
+    """술인가. 무알콜 표기가 있으면 이름에 '맥주' 가 들어가도 술이 아니다."""
+    if any(m in name for m in NONALCOHOL_MARKS):
+        return False
+    if category in ALCOHOL_CATEGORIES:
+        return True
+    head = name.split(")", 1)[0] if ")" in name else ""
+    return head in ALCOHOL_PREFIXES or any(w in name for w in ALCOHOL_WORDS)
+
+
 def kind(brand: str) -> tuple:
     """등록되지 않은 브랜드는 조용히 넘기지 않고 드러낸다."""
     if brand not in BRANDS:
@@ -238,6 +296,7 @@ class Item:
     is_new: bool | None = None                   # 브랜드가 신제품이라 표시했는가
     promo: bool = False                          # 행사/할인 상품 (신제품 아님)
     nonfood: bool = False                        # 굿즈·생활용품. 먹는 게 아니라 따로 관리한다
+    alcohol: bool = False                        # 술. 연령 확인이 없으니 본 목록에서 뺀다
     url: str = ""                                # 브랜드 사이트의 이 상품 페이지.
                                                  # 없으면 SITES 의 브랜드 메뉴 URL 로 떨어진다
     brand_type: str = ""                         # 레지스트리에서 채운다. 어댑터는 비워둔다
@@ -254,6 +313,7 @@ class Item:
         d["url"] = self.url or site(self.brand)
         # 어댑터가 따로 표시하지 않았으면 이름·분류로 판정한다.
         d["nonfood"] = self.nonfood or is_nonfood(self.name, self.category)
+        d["alcohol"] = self.alcohol or is_alcohol(self.name, self.category)
         return d
 
 

@@ -10,6 +10,20 @@ SITE = "신상노트"
 TAGLINE = "편의점·카페·프랜차이즈 신제품 모아보기"
 BASE_URL = "https://ttop32.github.io/sinsang-note"
 
+# 게시 중단 요청 창구. CRAWLING-POLICY §6 이 "요청이 오면 바로 내린다" 고
+# 약속해 놓고 정작 사이트에 연락할 곳이 없었다. 공개 레포의 이슈가 실제로
+# 열려 있는 유일한 창구다.
+CONTACT = "https://github.com/ttop32/sinsang-note/issues"
+
+# 푸터 고지. 홈·하위 페이지·404 세 군데가 같은 문구를 쓴다. 전에는 세 군데에
+# 복붙돼 있어서 한 곳만 고치면 조용히 어긋났다. 여기가 정본이다.
+NOTICE = (
+    "먹는 것만 모읍니다 — 굿즈와 주류는 목록에서 뺍니다.<br>"
+    "상품 정보와 이미지의 저작권은 각 브랜드에 있습니다. "
+    f'브랜드 관계자께서 <a href="{CONTACT}" rel="nofollow">게시 중단을 요청</a>하시면 '
+    "확인 후 바로 내리겠습니다."
+)
+
 CSS = """
 :root{--bg:#fff;--fg:#16150f;--mut:#6b6a63;--line:#e6e4dc;--card:#fff;--accent:#b4451f;--chip:#f4f2ea}
 @media(prefers-color-scheme:dark){:root{--bg:#16150f;--fg:#f2f0e8;--mut:#a3a199;--line:#2e2c24;--card:#1e1c15;--chip:#26241c}}

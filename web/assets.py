@@ -218,6 +218,11 @@ def _root() -> str:
     return "/" + host_and_path.split("/", 1)[1].strip("/") + "/"
 
 
+def _notice() -> str:
+    """푸터 고지. 정본은 theme.NOTICE 다 — 여기서 문구를 새로 쓰지 마라."""
+    return theme.NOTICE
+
+
 def _manifest() -> str:
     root = _root()
     return json.dumps({
@@ -299,7 +304,7 @@ def _404() -> str:
 신제품 목록은 아래에서 계속 보실 수 있습니다.</p>
 <a class="home" href="{_root()}">신제품 목록으로</a>
 </main>
-<footer>상품 정보와 이미지의 저작권은 각 브랜드에 있습니다.</footer>
+<footer>{_notice()}</footer>
 </div></body></html>
 """
 

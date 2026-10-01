@@ -30,7 +30,16 @@ Imweb 빌더 사이트지만 상품은 SSR 이다. 브라우저 불필요, UTF-8
 같은 이름이 여러 번 나온다(오므돈까스 4건, 까르보떡볶이 3건 — 촬영컷만 다르다).
 계약대로 Item.key 로 접는다. 이름이 비어 있는 카드가 2건 있어 그건 버린다.
 가격 정보는 /46 메뉴단가 에 따로 있는데 Item 에 자리가 없어 받지 않는다.
-상품 상세 페이지가 없다(라이트박스라 URL 이 안 바뀐다). url 은 비워 둔다.
+상품 상세 페이지는 라이트박스다. **주소는 있다** — 2026-10-01 실측으로 앞선
+'URL 이 안 바뀐다'를 정정한다.
+  - 카드를 누르면 주소가 `/31#lg=<갤러리id>&slide=<순번>` 으로 바뀐다.
+  - 그 주소를 새로 열면 라이트박스가 그 상품에 열린 채로 뜬다(slide=5 해물파스타,
+    slide=70 호박죽 — 둘 다 새 탭에서 확인). 메인으로 튕기지 않는다.
+  - 두 값 다 우리가 받는 HTML 안에 있다. 갤러리 id 는 `div#container_<id>`,
+    순번은 카드 안 `._lightbox_item` 의 `data-no` 다.
+순번이 위치값이라 갤러리 순서가 바뀌면 다른 상품을 가리킨다. 다만 수집할 때마다
+그날 HTML 에서 다시 뽑으므로(collect 가 어댑터 결과를 그대로 저장한다) 우리가 내보내는
+주소는 항상 당일 순서와 맞는다. `data-no` 가 없는 카드는 url 을 비워 폴백에 맡긴다.
 """
 import re
 import time
@@ -65,6 +74,26 @@ def _image(card) -> str:
     return n.attributes.get("data-original", "") or n.attributes.get("src", "")
 
 
+def _gallery_id(doc) -> str:
+    """라이트박스 주소에 들어가는 갤러리 id.
+
+    컨테이너 div 의 id 가 container_<갤러리id> 다(container_w2017041658f257c4531df).
+    """
+    n = doc.css_first("div._gallery_wrap div[id^=container_]")
+    return n.attributes.get("id", "")[len("container_"):] if n else ""
+
+
+def _url(gallery_id: str, card) -> str:
+    """그 상품이 열린 채로 뜨는 라이트박스 주소.
+
+    갤러리 id 와 카드 순번이 둘 다 있어야 만든다. 하나라도 비면 빈 값을 돌려주고
+    base.SITES 폴백에 맡긴다 — 순번을 짐작해 넣으면 엉뚱한 상품이 열린다.
+    """
+    n = card.css_first("._lightbox_item")
+    no = (n.attributes.get("data-no", "") if n else "") or ""
+    return f"{URL}#lg={gallery_id}&slide={no}" if gallery_id and no.isdigit() else ""
+
+
 def fetch() -> list[Item]:
     items: list[Item] = []
     keys = set()
@@ -73,7 +102,9 @@ def fetch() -> list[Item]:
         r.raise_for_status()
         time.sleep(DELAY)
 
-        for card in HTMLParser(r.text).css("div._item.item_gallary"):
+        doc = HTMLParser(r.text)
+        gallery_id = _gallery_id(doc)
+        for card in doc.css("div._item.item_gallary"):
             # 상품명·설명은 라이트박스용 숨은 캡션에 들어 있다.
             cap = card.css_first("div[id^=caption_]")
             name = _text(cap, "h4") if cap else ""
@@ -90,6 +121,7 @@ def fetch() -> list[Item]:
                 # 브랜드가 '신메뉴'로 분류한 페이지다. 낡은 항목은 uploaded_at 을
                 # 보고 collect 가 거른다.
                 is_new=True,
+                url=_url(gallery_id, card),
             )
             if it.key in keys:
                 continue          # 같은 상품의 다른 촬영컷

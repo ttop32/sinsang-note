@@ -131,7 +131,7 @@ def _shell(head: str, body: str) -> str:
     return (f'<!doctype html><html lang="ko"><head>\n{head}\n</head>'
             f'<body><div class="w">\n{body}\n'
             f'<footer><a href="{_href("")}">{E(theme.SITE)}</a> · {E(theme.TAGLINE)}<br>'
-            f'상품 정보와 이미지의 저작권은 각 브랜드에 있습니다.</footer>\n'
+            f'{theme.NOTICE}</footer>\n'
             f'</div></body></html>')
 
 
