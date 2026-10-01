@@ -80,7 +80,31 @@ grep -n "\.c img" collect.py web/pages.py web/theme.py
 
 ### A-2. 에그드랍 상품 사진이 깨진다 — `http://` 이미지 + 만료된 인증서
 
-> 🔴 **12:20 재발 확인 — 아직 열려 있다. 아래 ✅ 는 12:05 시점 기록이다.**
+> ✅ **12:24 최종 — 닫혔다. 땜질이 아니라 구조로 닫혔다.**
+> `collectors/base.py` 에 **`derive(d) -> d`** 가 생겼고 `to_dict()` 와 `collect.py` 의 carried 루프가
+> **같은 함수를 부른다**(carried 쪽은 `base.derive(c)` 한 줄). 권고대로다.
+> 실측: 데이터 `http://` 이미지 **0건**, 빌드 산출물 `src="http://"` **0개**.
+> `derive()` 주석에 재발 경위("한쪽에만 image 정규화가 빠져서… 필드를 하나 더 늘릴 때 여기만 고치면
+> 되게 둔다")까지 적혔다.
+>
+> ⚠️ **완료 검증식 주의 — 지금까지 셋이 쓰던 쿼리가 틀렸다.**
+> `bool(p['nonfood']) != base.is_nonfood(...)` 로 비교하면 **어댑터가 명시한 override 를 불일치로 오탐한다**
+> (현재 1건: GS25 `손앤박 하티` — 화장품이라 어댑터가 `nonfood=True` 를 직접 넣는다. `derive()` 는
+> `bool(d.get("nonfood")) or is_nonfood(...)` 라 그 값을 보존하는 게 정상이다).
+> 올바른 불변식은 **`derive()` 를 사본에 돌려 비교**하는 것이다:
+> ```
+> ./.venv/bin/python -c "
+> import json,sys,copy; sys.path.insert(0,'.')
+> from collectors import base
+> ps=json.load(open('data/products.json',encoding='utf-8'))['products']
+> F=('brand_type','brand_sub','url','nonfood','alcohol','image')
+> bad=[p for p in ps if any(p.get(f)!=base.derive(copy.deepcopy(p)).get(f) for f in F)]
+> print(len(bad),'/',len(ps))"
+> # → 0 / 7005
+> ```
+>
+> ---
+> 🔴 **12:20 재발 기록 (아래 ✅ 는 12:05 시점)**
 >
 > 현재 `data/products.json` 에 에그드랍 `http://` 이미지가 **73건** 다시 들어와 있고,
 > **화면 4장 · 빌드 산출물의 `src="http://"` 36개**다.
