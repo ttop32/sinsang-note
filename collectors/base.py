@@ -427,6 +427,14 @@ _SPEC = re.compile(r"(?<=.)(?<![\d,.])\d+(?:\.\d+)?" + _UNIT + r"(?![A-Za-z0-9])
 _MULT = re.compile(r"\s*[*×]\s*\d+\s*(?:개입|입|매|p)?(?![A-Za-z0-9가-힣])", re.I)
 
 # 괄호 안이 규격뿐인 것. `(6입)`·`(355ml)` 과 POS 입수코드 `(12)`·`(36)`.
+# 배송 방식 접두. 상품명이 아니라 주문 조건이다.
+_SHIP = re.compile(r"^\s*[\[(]\s*(?:택배배송|택배|새벽배송|냉장|냉동)"
+                   r"(?:\s*[/·,]\s*(?:택배배송|택배|새벽배송|냉장|냉동))*\s*[\])]")
+
+# 규격을 떼고 남은 곱셈 꼬리. ' x 5개' · ' X 3' 처럼 앞에 수량이 사라진 것.
+_ORPHAN_MULT = re.compile(r"\s+[xX×*]\s*\d+\s*(?:개입|개|입|매|p|P)?"
+                          r"(?![A-Za-z0-9가-힣])")
+
 _SPEC_PAREN = re.compile(r"\s*\(\s*(?:[*×]?\s*)?\d+(?:\.\d+)?\s*" + _UNIT + r"?\s*\)", re.I)
 
 # 끝에 붙은 보조 괄호 앞에만 공백을 넣는다. `카스테라(초코)` → `카스테라 (초코)`.
@@ -494,6 +502,10 @@ def display_name(name: str) -> str:
         return name or ""
     s = src
 
+    # 배송 방식은 상품명이 아니다. hy프레딧 39건이 '[택배배송]'·'[택배배송/냉동]'
+    # 으로 시작한다. _LEAD_BRACKET 이 괄호만 벗겨서 '택배배송 실리만 …' 이 됐다.
+    s = _SHIP.sub("", s).lstrip()
+
     m = _LEAD_BRACKET.match(s)
     if m:
         inner, rest = m.group(1).strip(), s[m.end():]
@@ -510,6 +522,11 @@ def display_name(name: str) -> str:
     s = _SPEC_PAREN.sub(" ", s)        # 괄호 안이 규격뿐이면 괄호째 버린다
     s = _sub_outside_parens(_MULT, s)
     s = _sub_outside_parens(_SPEC, s)
+    # 규격을 떼고 나면 곱셈 꼬리만 허공에 남는 경우가 있다 —
+    # '두부흑임자스낵 50g x 5개' 에서 _SPEC 가 '50g' 을 지워 'x 5개' 가 남았다.
+    # _MULT 는 'x' 를 일부러 안 보는데(자이언트X3 때문) _SPEC 는 그 사정을
+    # 모른다. 두 규칙이 서로를 모르니 뒤에서 한 번 더 턴다.
+    s = _ORPHAN_MULT.sub(" ", s)
     s = re.sub(r"\(\s*\)", " ", s)
     s = _drop_unmatched_parens(s)
     s = _TAIL_PAREN.sub(r" (\1)", s)

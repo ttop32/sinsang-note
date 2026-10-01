@@ -5,7 +5,7 @@
  <id>https://ttop32.github.io/sinsang-note/</id>
  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/"/>
  <link rel="self" type="application/atom+xml" href="https://ttop32.github.io/sinsang-note/feed.xml"/>
- <updated>2026-10-01T09:03:20Z</updated>
+ <updated>2026-10-01T09:18:40Z</updated>
  <author><name>신상노트</name></author>
  <rights>상품 정보와 이미지의 저작권은 각 브랜드에 있습니다.</rights>
  <entry>
@@ -2577,18 +2577,6 @@
   <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_SEe1ywzU_db0ddf452163d8d354f026f60a66ce0ed483346f_283x210.png&quot; alt=&quot;핫치킨 퀘사디아&quot;&gt;&lt;/p&gt;&lt;p&gt;미스터피자 신제품 핫치킨 퀘사디아&lt;/p&gt;</content>
  </entry>
  <entry>
-  <title>피치 세트 M(포장)</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%AF%B8%EC%8A%A4%ED%84%B0%ED%94%BC%EC%9E%90-%ED%94%BC%EC%B9%98-%EC%84%B8%ED%8A%B8-m-%ED%8F%AC%EC%9E%A5/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_z53loMdy_f8cdd3eb35b1b8bb4b9c1a9fb11bd2aa18c0d948_283x210.jpg"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%AF%B8%EC%8A%A4%ED%84%B0%ED%94%BC%EC%9E%90-%ED%94%BC%EC%B9%98-%EC%84%B8%ED%8A%B8-m-%ED%8F%AC%EC%9E%A5/</id>
-  <published>2026-09-30T00:00:00Z</published>
-  <updated>2026-09-30T00:00:00Z</updated>
-  <author><name>미스터피자</name></author>
-  <category term="미스터피자"/>
-  <summary type="text">미스터피자 신제품 피치 세트 M(포장)</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_z53loMdy_f8cdd3eb35b1b8bb4b9c1a9fb11bd2aa18c0d948_283x210.jpg&quot; alt=&quot;피치 세트 M(포장)&quot;&gt;&lt;/p&gt;&lt;p&gt;미스터피자 신제품 피치 세트 M(포장)&lt;/p&gt;</content>
- </entry>
- <entry>
   <title>피치 세트 M(배달)</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%AF%B8%EC%8A%A4%ED%84%B0%ED%94%BC%EC%9E%90-%ED%94%BC%EC%B9%98-%EC%84%B8%ED%8A%B8-m-%EB%B0%B0%EB%8B%AC/"/>
   <link rel="enclosure" type="image/jpeg" href="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_b6GNpLf1_90a324c52d75537df91e3dbf770bcdee5245bb0e_283x210.jpg"/>
@@ -2598,29 +2586,6 @@
   <category term="미스터피자"/>
   <summary type="text">미스터피자 신제품 피치 세트 M(배달)</summary>
   <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_b6GNpLf1_90a324c52d75537df91e3dbf770bcdee5245bb0e_283x210.jpg&quot; alt=&quot;피치 세트 M(배달)&quot;&gt;&lt;/p&gt;&lt;p&gt;미스터피자 신제품 피치 세트 M(배달)&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>피치 세트 L(포장)</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%AF%B8%EC%8A%A4%ED%84%B0%ED%94%BC%EC%9E%90-%ED%94%BC%EC%B9%98-%EC%84%B8%ED%8A%B8-l-%ED%8F%AC%EC%9E%A5/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_USubesXg_b1ab0af3af51ef82b2ccb47e4f5bf2c18a39a1d5_283x210.jpg"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%AF%B8%EC%8A%A4%ED%84%B0%ED%94%BC%EC%9E%90-%ED%94%BC%EC%B9%98-%EC%84%B8%ED%8A%B8-l-%ED%8F%AC%EC%9E%A5/</id>
-  <published>2026-09-30T00:00:00Z</published>
-  <updated>2026-09-30T00:00:00Z</updated>
-  <author><name>미스터피자</name></author>
-  <category term="미스터피자"/>
-  <summary type="text">미스터피자 신제품 피치 세트 L(포장)</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_USubesXg_b1ab0af3af51ef82b2ccb47e4f5bf2c18a39a1d5_283x210.jpg&quot; alt=&quot;피치 세트 L(포장)&quot;&gt;&lt;/p&gt;&lt;p&gt;미스터피자 신제품 피치 세트 L(포장)&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>피치 세트 L(배달)</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%AF%B8%EC%8A%A4%ED%84%B0%ED%94%BC%EC%9E%90-%ED%94%BC%EC%B9%98-%EC%84%B8%ED%8A%B8-l-%EB%B0%B0%EB%8B%AC/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_uASjliDg_cfd641f4c9b38c7e1acbfb509dd6004c3f202227_283x210.jpg"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%AF%B8%EC%8A%A4%ED%84%B0%ED%94%BC%EC%9E%90-%ED%94%BC%EC%B9%98-%EC%84%B8%ED%8A%B8-l-%EB%B0%B0%EB%8B%AC/</id>
-  <updated>2026-09-30T00:00:00Z</updated>
-  <author><name>미스터피자</name></author>
-  <category term="미스터피자"/>
-  <summary type="text">미스터피자 신제품 피치 세트 L(배달)</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.mrpizza.co.kr/data/file/menu/thumb-9fc4b1693dca29b02fae25560268e34c_uASjliDg_cfd641f4c9b38c7e1acbfb509dd6004c3f202227_283x210.jpg&quot; alt=&quot;피치 세트 L(배달)&quot;&gt;&lt;/p&gt;&lt;p&gt;미스터피자 신제품 피치 세트 L(배달)&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>토마토포크 퀘사디아</title>
@@ -8684,18 +8649,6 @@
   <category term="맘스터치"/>
   <summary type="text">페퍼로니·페퍼맛 소시지·미트토핑에 스모키 바비큐소스로 감칠맛을 더한 피자</summary>
   <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.momstouch.co.kr/upload_file/product_info/1789594275-DBNJD.png&quot; alt=&quot;트리플미트 (싱글피자)&quot;&gt;&lt;/p&gt;&lt;p&gt;페퍼로니·페퍼맛 소시지·미트토핑에 스모키 바비큐소스로 감칠맛을 더한 피자&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>싱글피자N치킨세트 (순살)</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%A7%98%EC%8A%A4%ED%84%B0%EC%B9%98-%EC%8B%B1%EA%B8%80%ED%94%BC%EC%9E%90n%EC%B9%98%ED%82%A8%EC%84%B8%ED%8A%B8-%EC%88%9C%EC%82%B4/"/>
-  <link rel="enclosure" type="image/png" href="https://www.momstouch.co.kr/upload_file/product_info/1789594417-DDCNJ.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%A7%98%EC%8A%A4%ED%84%B0%EC%B9%98-%EC%8B%B1%EA%B8%80%ED%94%BC%EC%9E%90n%EC%B9%98%ED%82%A8%EC%84%B8%ED%8A%B8-%EC%88%9C%EC%82%B4/</id>
-  <published>2026-09-17T00:00:00Z</published>
-  <updated>2026-09-17T00:00:00Z</updated>
-  <author><name>맘스터치</name></author>
-  <category term="맘스터치"/>
-  <summary type="text">피자와 치킨을 한 번에! 싱글피자+치킨(순살)+콜라로 구성된 풍성 한 끼 세트</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.momstouch.co.kr/upload_file/product_info/1789594417-DDCNJ.png&quot; alt=&quot;싱글피자N치킨세트 (순살)&quot;&gt;&lt;/p&gt;&lt;p&gt;피자와 치킨을 한 번에! 싱글피자+치킨(순살)+콜라로 구성된 풍성 한 끼 세트&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>싱글피자N치킨세트 (뼈)</title>

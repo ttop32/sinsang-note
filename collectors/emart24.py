@@ -91,6 +91,7 @@ mtime 이 최근이어도 promo 면 is_fresh 가 버린다 — WINDOW=60 기준�
 
 가격(.price, 예: "1,700 원")도 같이 내려오지만 Item 에 담을 자리가 없어 버린다.
 """
+import re
 import time
 from email.utils import parsedate_to_datetime
 
@@ -102,10 +103,42 @@ from .base import UA, Item
 
 BRAND = "이마트24"
 URL = "https://emart24.co.kr/goods/{section}"
-SECTIONS = {"event": "행사 상품", "pl": "차별화 상품", "ff": "Fresh Food"}
 PROMO_SECTIONS = {"event"}   # 행사 매대. 신제품이 아니라 행사라서 실린 상품들이다.
-MAX_PAGES = 25  # 섹션당 상한. 8 로는 세 섹션 모두 상한을 소진해 뒤쪽이 통째로 잘렸다.
+MAX_PAGES = 25  # 분류당 상한. 8 로는 세 섹션 모두 상한을 소진해 뒤쪽이 통째로 잘렸다.
 DELAY = 0.4     # 연속 호출 간격(초)
+
+# 행사 섹션은 분류 하나가 수백 건이다(간편식사 596 · 음료 600+ · 생활용품 272 ·
+# 과자 196, 2026-10-01 실측). 전부 promo 라 화면엔 한 건도 안 오르는데 25페이지씩
+# 네 번 긁으면 수집량이 3배가 된다. align=RECENT 라 앞쪽이 최신이므로 분류마다
+# 최신 7페이지(140건)씩만 본다 — 합이 560건으로 섹션 통짜로 긁던 때(500건)와
+# 비슷하면서 네 분류에 고르게 퍼진다.
+EVENT_MAX_PAGES = 7
+
+# `base_category_seq` → 이마트24가 쓰는 분류 이름. 섹션마다 축이 다르다.
+# 이 표는 아래 _check_nav() 가 매 수집마다 사이트 메뉴와 대조한다.
+FF_CATEGORIES = {"41": "도시락", "42": "김밥", "43": "햄버거",
+                 "45": "주먹밥", "46": "샌드위치", "47": "즉석식"}
+EVENT_CATEGORIES = {"1": "간편식사", "2": "과자", "3": "생활용품", "5": "음료"}
+
+# 섹션 → (분류 축, 정밀도). 정밀도가 높은 쪽이 중복 상품의 분류를 가져간다.
+# pl 은 축이 None 이다 — 사이트가 상품 분류를 안 준다(모듈 docstring 참고).
+SECTIONS = {
+    "event": (EVENT_CATEGORIES, 1),
+    "pl": (None, 0),
+    "ff": (FF_CATEGORIES, 2),
+}
+
+# 브랜드마다 다른 말을 쓰는 걸 화면용 한 가지 이름으로 모은다.
+# 주먹밥(삼각김밥)은 김밥과 같은 칩으로 묶는다 — 따로 두면 35건·25건으로
+# 쪼개지는데 "김밥끼리 모아보기" 하는 사람이 둘을 구분해 찾지 않는다.
+# '간편식사'는 이마트24 행사 섹션이 쓰는 이름 그대로 둔다. 거친 묶음이라
+# (피스타치오·샤인머스켓·스프가 같이 들어 있다) 더 좁은 이름을 붙일 근거가 없다.
+# ⚠️ '생활용품' 은 base.NONFOOD_CATEGORIES 가 읽는 값이다. 바꾸지 마라.
+CATEGORY_NAMES = {
+    "도시락": "도시락", "김밥": "김밥", "주먹밥": "김밥", "햄버거": "햄버거",
+    "샌드위치": "샌드위치", "즉석식": "즉석식",
+    "간편식사": "간편식사", "과자": "과자", "음료": "음료", "생활용품": "생활용품",
+}
 
 
 def _labels(card) -> list:
@@ -158,62 +191,120 @@ def _uploaded_at(client, img_url: str, cache: dict) -> str:
     return out
 
 
+def _nav_categories(html: str) -> dict:
+    """섹션 페이지가 선언한 분류 메뉴. {base_category_seq: 이름}.
+
+    행사 섹션은 혜택 필터(1+1·2+1·세일·골라담기)도 같은 모양의 ul 로 그린다.
+    그쪽은 `category_seq` 쪽에 값이 들어가는데, **분류를 고른 상태로 열면 혜택
+    링크가 base_category_seq 를 그대로 물고 온다**(예: 간편식사 페이지에서
+    골라담기 = category_seq=12&base_category_seq=1). 그래서 'base_category_seq 가
+    있는 링크'로 잡으면 골라담기가 간편식사를 덮어쓴다 — 실제로 그렇게 깨졌다.
+    분류 링크는 category_seq 가 **빈 값**이라는 점으로 가른다.
+    """
+    out = {}
+    for a in HTMLParser(html).css("a"):
+        m = re.search(r"[?&]category_seq=&base_category_seq=(\d+)",
+                      a.attributes.get("href") or "")
+        if m:
+            out[m.group(1)] = " ".join(a.text().split())
+    return out
+
+
+def _check_nav(section: str, html: str, expected: dict) -> None:
+    """사이트가 분류를 바꾸면 조용히 넘기지 않는다.
+
+    이 어댑터의 분류는 전적으로 base_category_seq 표에 기대고 있다. 사이트가
+    코드를 갈아끼우면 목록은 멀쩡히 오는데 분류만 통째로 틀려진다(또는 0건이
+    되어 칩이 사라진다). 눈에 안 띄는 고장이라 수집 때마다 대조한다.
+    """
+    nav = _nav_categories(html)
+    missing = {k: v for k, v in expected.items() if nav.get(k) != v}
+    if missing:
+        raise ValueError(
+            f"이마트24 /goods/{section} 의 분류 메뉴가 달라졌다. "
+            f"기대 {expected} / 실제 {nav} — 어긋난 것 {missing}. "
+            f"CATEGORY 표와 CATEGORY_NAMES 를 사이트에 맞춰 고쳐라")
+
+
 def fetch() -> list[Item]:
     items: list[Item] = []
     by_key: dict = {}
+    rank_of: dict = {}      # key → 지금 담긴 분류의 정밀도
     stamps: dict = {}
+    checked: set = set()
     with base.client() as c:
-        for section, category in SECTIONS.items():
+        for section, (cats, rank) in SECTIONS.items():
             promo = section in PROMO_SECTIONS
-            for page in range(1, MAX_PAGES + 1):
-                time.sleep(DELAY)
-                r = c.get(URL.format(section=section),
-                          params={"search": "", "page": page,
-                                  "category_seq": "", "align": "RECENT"})
-                r.raise_for_status()
-                cards = HTMLParser(r.text).css("section.itemList .itemWrap")
-                # 마크업이 바뀌어 조용히 0건이 되는 게 제일 나쁘다. 1페이지는
-                # 반드시 카드가 와야 한다(세 섹션 다 수백 건짜리 목록이다).
-                if page == 1 and not cards:
-                    raise ValueError(
-                        f"이마트24 /goods/{section} 1페이지에 카드가 0건이다. "
-                        f"응답 {len(r.text)}바이트 — section.itemList .itemWrap "
-                        f"셀렉터나 섹션 주소가 바뀌었는지 확인하라")
-                if not cards:
-                    break   # 범위를 넘긴 page 는 빈 목록을 돌려준다
+            limit = EVENT_MAX_PAGES if section == "event" else MAX_PAGES
+            # 분류 축이 없는 섹션(pl)은 한 번만, 있는 섹션은 분류별로 훑는다.
+            streams = list(cats.items()) if cats else [("", "")]
+            for seq, raw_category in streams:
+                category = CATEGORY_NAMES[raw_category] if raw_category else ""
+                for page in range(1, limit + 1):
+                    time.sleep(DELAY)
+                    r = c.get(URL.format(section=section),
+                              params={"search": "", "page": page,
+                                      "category_seq": "", "base_category_seq": seq,
+                                      "align": "RECENT"})
+                    r.raise_for_status()
+                    if section not in checked:
+                        checked.add(section)
+                        if cats:
+                            _check_nav(section, r.text, cats)
+                    cards = HTMLParser(r.text).css("section.itemList .itemWrap")
+                    # 마크업이 바뀌어 조용히 0건이 되는 게 제일 나쁘다. 1페이지는
+                    # 반드시 카드가 와야 한다(2026-10-01 실측으로 분류별 최소가
+                    # ff/햄버거 19건이다 — 1페이지가 비는 분류는 없다).
+                    if page == 1 and not cards:
+                        raise ValueError(
+                            f"이마트24 /goods/{section}"
+                            f"{f'?base_category_seq={seq}({raw_category})' if seq else ''} "
+                            f"1페이지에 카드가 0건이다. 응답 {len(r.text)}바이트 — "
+                            f"section.itemList .itemWrap 셀렉터나 분류 코드가 "
+                            f"바뀌었는지 확인하라")
+                    if not cards:
+                        break   # 범위를 넘긴 page 는 빈 목록을 돌려준다
 
-                parsed = []
-                for card in cards:
-                    name_node = card.css_first(".itemtitle a")
-                    name = " ".join(name_node.text().split()) if name_node else ""
-                    if not name:
-                        continue
-                    img_node = card.css_first(".itemSpImg img")
-                    image = img_node.attributes.get("src", "") if img_node else ""
-                    labels = _labels(card)
-                    parsed.append(Item(
-                        brand=BRAND,
-                        name=name,
-                        image=image,
-                        labels=labels,
-                        category=category,
-                        promo=promo,
-                        # 등록 시점. 출시일이 아니라 사진이 올라간 날이다(위 docstring).
-                        uploaded_at=_uploaded_at(c, image, stamps),
-                        is_new=_is_new(labels),
-                    ))
+                    parsed = []
+                    for card in cards:
+                        name_node = card.css_first(".itemtitle a")
+                        name = " ".join(name_node.text().split()) if name_node else ""
+                        if not name:
+                            continue
+                        img_node = card.css_first(".itemSpImg img")
+                        image = img_node.attributes.get("src", "") if img_node else ""
+                        labels = _labels(card)
+                        parsed.append(Item(
+                            brand=BRAND,
+                            name=name,
+                            image=image,
+                            labels=labels,
+                            category=category,
+                            promo=promo,
+                            # 등록 시점. 출시일이 아니라 사진이 올라간 날이다(위 docstring).
+                            uploaded_at=_uploaded_at(c, image, stamps),
+                            is_new=_is_new(labels),
+                        ))
 
-                # 섹션끼리 상품이 겹친다(FF 상품이 차별화/행사에도 뜬다).
-                # 중복이라고 페이지를 끊으면 뒤 섹션이 통째로 날아가므로 그냥 건너뛰기만 한다.
-                # 다만 행사 매대에도 걸린 상품은 어느 섹션에서 먼저 만났든 행사 상품이므로
-                # promo 만은 살려서 합친다(섹션 순서에 따라 표시가 뒤집히지 않게).
-                for it in parsed:
-                    old = by_key.get(it.key)
-                    if old is None:
-                        by_key[it.key] = it
-                        items.append(it)
-                    elif it.promo:
-                        old.promo = True
+                    # 섹션끼리 상품이 겹친다(FF 상품이 차별화/행사에도 뜬다).
+                    # 중복이라고 페이지를 끊으면 뒤 섹션이 통째로 날아가므로 그냥 건너뛰기만 한다.
+                    # 다만 행사 매대에도 걸린 상품은 어느 섹션에서 먼저 만났든 행사 상품이므로
+                    # promo 만은 살려서 합친다(섹션 순서에 따라 표시가 뒤집히지 않게).
+                    # 분류도 같은 이유로 합친다 — 먼저 만난 섹션이 아니라 **더 정밀한
+                    # 축**이 이긴다. 전에는 pl 을 먼저 만나는 바람에 Fresh Food 상품
+                    # 146건이 '차별화 상품'(판매채널)을 달고 있었다.
+                    for it in parsed:
+                        old = by_key.get(it.key)
+                        if old is None:
+                            by_key[it.key] = it
+                            rank_of[it.key] = rank if category else -1
+                            items.append(it)
+                            continue
+                        if it.promo:
+                            old.promo = True
+                        if category and rank > rank_of.get(it.key, -1):
+                            old.category = category
+                            rank_of[it.key] = rank
 
     # 날짜는 전적으로 이미지 CDN 의 Last-Modified 에 기대고 있다. 그게 통째로
     # 끊기면(헤더 제거·호스트 교체) 날짜 0건인 채로 조용히 돌아가 화면이 빈다.
@@ -224,4 +315,16 @@ def fetch() -> list[Item]:
             f"이마트24 이미지 Last-Modified 가 {len(items)}건 중 {dated}건뿐이다. "
             f"이 브랜드는 날짜 신호가 이것 하나라 이대로면 화면이 빈다 — "
             f"이미지 호스트(msave.emart24.co.kr)나 응답 헤더가 바뀌었는지 확인하라")
+
+    # 분류가 조용히 비면 화면에서 칩이 사라진다. 메뉴 대조(_check_nav)를 통과했는데도
+    # 분류가 안 붙었다면 목록 자체가 비어 돌아온 것이다.
+    # 2026-10-01 실측: Fresh Food 172건 + 행사 분류 4종이 붙어 전체의 과반이 넘는다.
+    # pl 전용 상품(338건)은 사이트에 분류가 없어서 원래 비는 자리다.
+    tagged = sum(1 for it in items if it.category)
+    if items and not tagged:
+        raise ValueError(
+            f"이마트24 {len(items)}건 전부 분류가 비었다. base_category_seq 로 "
+            f"거른 목록이 통째로 안 온다는 뜻이다 — 분류 코드가 바뀌었는지 확인하라")
+    print(f"  이마트24 분류 {tagged}/{len(items)}건 "
+          f"(차별화 전용 상품은 사이트에 분류가 없다)")
     return items

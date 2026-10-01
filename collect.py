@@ -228,6 +228,7 @@ def main() -> None:
         ensure_ascii=False, indent=1), encoding="utf-8")
 
     untrust_bulk_dates(rows)                   # 사이트 개편 재발행분을 날짜에서 뺀다
+    undupe_display(rows)                       # 다듬다 같아진 이름은 원본으로
     fresh = pick(rows, today)                  # 홈 목록(브랜드 상한 적용)
     goods = pick(rows, today, goods=True)      # 굿즈는 버리지 않고 따로 모은다
     # 페이지는 상한 없이 만든다. 상한에 걸린 것도 /b/<브랜드>/ 와 검색으로 닿아야 한다.
@@ -262,6 +263,38 @@ def main() -> None:
 # 아니라 사이트 개편·재등록 자국이다.
 BULK_MIN = 20          # 이보다 적게 몰린 건 그냥 같은 날 나온 것일 수 있다
 BULK_RATIO = 10        # 그 브랜드의 평소 묶음 크기의 몇 배를 이상치로 볼 것인가
+
+
+def undupe_display(rows: list) -> int:
+    """다듬은 이름이 같아진 것들은 원본으로 되돌린다. 되돌린 건수를 돌려준다.
+
+    규격을 떼다 보면 서로 다른 상품이 같은 이름이 된다 —
+    팔도 '이천햅쌀 비락식혜 1.5L' 과 '이천햅쌀 비락식혜' 가 둘 다
+    '이천햅쌀 비락식혜' 가 돼서 카드가 두 장 나란히 떴다. 파리바게뜨
+    '버터 크라상 파이 (8개입)' 과 '(낱개)' 도 같다.
+
+    이건 display_name 혼자서는 못 푼다 — 다른 상품을 봐야 알 수 있다.
+    겹치면 그 브랜드 안에서 겹친 것들만 원본으로 돌린다. 읽기 좋은 이름보다
+    구별되는 이름이 먼저다.
+    """
+    per = collections.defaultdict(lambda: collections.defaultdict(list))
+    for r in rows:
+        d = r.get("display")
+        if d:
+            per[r["brand"]][d].append(r)
+    back = 0
+    for brand, groups in per.items():
+        for disp, items in groups.items():
+            if len(items) < 2:
+                continue
+            if len({i["name"] for i in items}) < 2:
+                continue              # 원본까지 같으면 되돌려도 소용없다
+            for i in items:
+                i["display"] = i["name"]
+                back += 1
+    if back:
+        print(f"   이름이 겹쳐 원본으로 되돌린 것 {back}건")
+    return back
 
 
 def untrust_bulk_dates(rows: list) -> int:
@@ -325,13 +358,22 @@ def pick(rows: list, today: str, *, goods: bool = False,
 _VARIANT = re.compile(
     r"\s*[\[(]?\s*(라지\s*세트|L\s*세트|더블\s*PICK\s*세트|세트|콤보|단품)\s*[\])]?\s*$")
 
+# 같은 상품을 주문 방식·크기·부위로 쪼개 올리는 것들. 묶을 때만 턴다
+# (화면 이름은 display_name 이 따로 만든다).
+#   미스터피자 '피치 세트 M(배달)'·'L(배달)'·'M(포장)'·'L(포장)' = 카드 4장
+#   맘스터치   '싱글피자N치킨세트 (순살)'·'(뼈)'
+_CHANNEL = re.compile(r"\s*[\[(]\s*(배달|포장|매장|홀|테이크아웃|순살|뼈)\s*[\])]\s*$")
+_SIZE_TAIL = re.compile(r"\s+(?:[SML]|라지|미디엄|스몰|대|중|소)\s*$")
+
 
 def base_name(name: str) -> str:
     """'몬스터 맥시멈3 라지세트' → '몬스터 맥시멈3'. 접미가 겹쳐 붙어도 다 턴다."""
     prev = None
     while prev != name:
         prev = name
+        name = _CHANNEL.sub("", name).strip()
         name = _VARIANT.sub("", name).strip()
+        name = _SIZE_TAIL.sub("", name).strip()
     return name
 
 
