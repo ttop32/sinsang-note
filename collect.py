@@ -236,7 +236,7 @@ def pick(rows: list, today: str, *, goods: bool = False) -> list:
     한다. 전에는 이 네 줄이 호출부에 펼쳐져 있어서 한쪽만 고치면 어긋났다."""
     out = [r for r in rows if is_fresh(r, today, goods=goods)]
     out.sort(key=lambda r: (_when(r), r["brand"]), reverse=True)
-    return cap_per_brand(drop_sets(merge_variants(out)))
+    return cap_per_brand(drop_sets(merge_variants(out), rows))
 
 
 # 같은 상품의 단품·세트·라지세트가 따로 올라온다. 버거킹만 12개 그룹 36건이라
@@ -265,17 +265,60 @@ def merge_variants(rows: list) -> list:
     return [r for r in rows if id(r) in keep]
 
 
-def drop_sets(rows: list) -> list:
+def drop_sets(rows: list, universe: list = None) -> list:
     """본품 없는 세트·콤보는 뺀다.
 
     세트는 두 종류다. '몬스터 맥시멈3 세트'처럼 본품이 따로 있는 변형은
-    merge_variants 가 본품으로 묶는다. 여기서 걸리는 건 '싱글피자N버거세트'
-    처럼 본품이 없는 조합 상품인데, 이건 신제품이 아니라 구성·할인이다.
+    구성·할인이지 신제품이 아니다. 반면 '학화 호도 먼치킨 세트(5개입)'처럼
+    세트 자체가 하나의 상품인 것도 있다.
+
+    전에는 이름에 '세트'·'콤보' 가 들었다는 이유로 전부 뺐다. 그래서 신제품
+    24건이 사라졌고 그중 17건은 본품 이름이 데이터 어디에도 없었다. 목록에서만
+    빠지는 게 아니라 상세 페이지 자체가 안 생겨 검색으로도 못 닿는다.
+
+    universe 는 본품을 찾을 범위다(보통 수집한 전체). 안 주면 rows 안에서 찾는다.
     """
-    return [r for r in rows if not _SET.search(r["name"])]
+    if universe is None:
+        universe = rows
+    # 본품은 '실제로 그 이름으로 존재하는 상품' 이어야 한다. 가공한 이름을
+    # 모아두면 세트끼리 서로를 본품으로 쳐서 전부 지워진다.
+    # 띄어쓰기·괄호는 브랜드마다 들쭉날쭉이라 지우고 비교한다.
+    names = {}
+    for r in universe:
+        names.setdefault(r["brand"], set()).add(_flat(r["name"]))
+    out = []
+    for r in rows:
+        base = _flat(_set_base(r["name"]))
+        # 본품이 실제로 있을 때만 뺀다. 이름에 '세트' 가 들었다는 이유로 전부
+        # 빼면 '학화 호도 먼치킨 세트(5개입)'·'러스크 어소트먼트 세트' 처럼
+        # 그 자체가 상품인 것까지 사라지고, 상세 페이지도 안 생겨 검색으로도
+        # 못 닿는다. 조용히 지워지는 쪽이라 더 나쁘다.
+        if _SET.search(r["name"]) and base and base != _flat(r["name"]) \
+                and base in names.get(r["brand"], ()):
+            continue
+        out.append(r)
+    return out
 
 
 _SET = re.compile(r"세트|콤보")
+
+# 이름에서 세트 표기를 떼어 본품 이름 후보를 만든다.
+_SET_TAIL = re.compile(
+    r"\s*[\[(]?\s*(?:라지\s*)?(?:세트|콤보)\s*[\])]?\s*(?:\(.*\))?\s*$")
+
+
+def _flat(name: str) -> str:
+    """띄어쓰기·괄호를 지운 비교용 이름. '피치 세트 M(배달)' → '피치세트M배달'."""
+    return re.sub(r"[\s()\[\]（）]", "", name)
+
+
+def _set_base(name: str) -> str:
+    """'불고기버거 세트' → '불고기버거'. 뗄 게 없으면 원래 이름을 돌려준다."""
+    prev = None
+    while prev != name:
+        prev = name
+        name = _SET_TAIL.sub("", name).strip()
+    return name
 
 def cap_per_brand(rows: list) -> list:
     """브랜드별 상한을 적용한다. 날짜순으로 이미 정렬돼 있어 최근 것부터 남는다."""
