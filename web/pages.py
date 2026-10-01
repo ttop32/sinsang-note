@@ -60,8 +60,23 @@ h2.sec{margin:38px 0 0;font-size:16px;letter-spacing:-.01em}
 # ── 작은 도구들 ────────────────────────────────────────────────────────
 
 def _when(r: dict) -> str:
-    """이 상품이 '언제 것'인가. collect._when 과 같은 규칙(순환 import 때문에 사본)."""
+    """정렬용. '언제 것'인가 — 브랜드 날짜 우선, 없으면 처음 본 날."""
     return r.get("released_at") or r.get("uploaded_at") or r.get("first_seen", "")
+
+
+def _shown_date(r: dict) -> str:
+    """화면에 찍을 날짜. 정본은 collect.shown_date 다 — 두 벌로 두면 어긋난다.
+
+    기준선 상품의 first_seen 은 출시일이 아니라 '우리가 처음 본 날'이라 안 찍는다.
+    """
+    import collect
+    return collect.shown_date(r)
+
+
+def _date_tag(r: dict) -> str:
+    """날짜 칸. 모르면 칸 자체를 비운다 — '미상' 을 쓰면 카드마다 그 말이 깔린다."""
+    d = _shown_date(r)
+    return f'<time datetime="{E(d)}">{E(d)}</time>' if d else ""
 
 
 def _kind(r: dict) -> str:
@@ -140,7 +155,7 @@ def _card(r: dict) -> str:
             f'<span class="br">{E(r["brand"])}</span></div>'
             f'<h2>{E(r["name"])}</h2>'
             f'<p class="d">{E(r.get("desc", ""))}</p>'
-            f'<time datetime="{E(when)}">{E(when)}</time></div></a>')
+            f'{_date_tag(r)}</div></a>')
 
 
 def _shell(head: str, body: str) -> str:
@@ -193,8 +208,10 @@ def product_page(r: dict, siblings: list, neighbors: list) -> str:
         facts.append(("카테고리", E(r["category"])))
     if r.get("name_en"):
         facts.append(("영문명", E(r["name_en"])))
-    if when:
-        facts.append(("등록일", f'<time datetime="{E(when)}">{E(_kdate(when))}</time>'))
+    shown = _shown_date(r)
+    if shown:
+        facts.append(("등록일",
+                      f'<time datetime="{E(shown)}">{E(_kdate(shown))}</time>'))
     fl = "".join(f"<dt>{k}</dt><dd>{v}</dd>" for k, v in facts)
 
     # 추천은 같은 브랜드가 먼저다. 모자라면 같은 유형으로 채운다 — 빈 칸을 두느니
@@ -423,7 +440,12 @@ def _sweep(out_dir: pathlib.Path, paths: list) -> None:
     상세 337장을 통째로 날린 적이 있다).
     """
     keep = {(out_dir / rel / "index.html").resolve() for rel in paths}
-    gone = 0
+    # 수집에는 FLOOR 급감 가드가 있는데 삭제에는 대응물이 없었다. 생성이 비정상
+    # 적으로 적은 날 이 함수가 사이트를 통째로 턴다. 전에 접두를 빼고 비교해
+    # 상세 337장을 날린 적이 있고, 그때도 코드는 조용히 끝까지 돌았다.
+    if len(keep) < 10:
+        raise RuntimeError(f"생성 경로가 {len(keep)}개뿐이다 — 삭제를 멈춘다")
+    gone, leftover = 0, []
     for sub in ("p", "b", "c"):
         d = out_dir / sub
         if not d.is_dir():
@@ -432,7 +454,14 @@ def _sweep(out_dir: pathlib.Path, paths: list) -> None:
             f = child / "index.html"
             if child.is_dir() and f.is_file() and f.resolve() not in keep:
                 f.unlink()
-                child.rmdir()
+                # 디렉터리에 군더더기가 있으면 rmdir 이 터진다. 거기서 멈추면
+                # 이미 지운 앞쪽만 사라진 채로 끝난다 — 지나가고 나중에 알린다.
+                try:
+                    child.rmdir()
+                except OSError:
+                    leftover.append(str(child))
                 gone += 1
     if gone:
         print(f"→ 더 이상 만들지 않는 페이지 {gone}장 정리")
+    if leftover:
+        print(f"   !! 빈 디렉터리로 못 지운 것 {len(leftover)}개: {leftover[:3]}")

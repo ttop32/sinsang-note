@@ -31,7 +31,7 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
                         mega, pizza_domino, pizza_mrpizza, pizza_papajohns,
                         pizza_pizzahut,
                         seven, starbucks, toast_isaac)
-from collectors import gs25, lottechilsung
+from collectors import fredit, gs25, lottechilsung
 
 # GS25 는 상품 카탈로그를 긁을 수 없다 — gs25.gsretail.com 은 전 경로가 본사
 # 브랜드 페이지로 리다이렉트되는 SPA 껍데기고, 카탈로그는 '우리동네GS' 앱 전용이다.
@@ -44,7 +44,7 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             burger_momstouch, burger_burgerking, burger_frankburger, # 햄버거
             burger_mcdonalds,
             maker_ottogi, maker_paldo, maker_orion,                  # 제조사(과자·라면)
-            lottechilsung,                                           # 제조사(음료)
+            lottechilsung, fredit,                      # 제조사(음료·냉동식품)
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
             pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
@@ -207,11 +207,12 @@ def main() -> None:
 
     fresh = pick(rows, today)
     goods = pick(rows, today, goods=True)      # 굿즈는 버리지 않고 따로 모은다
-    # 기준선은 '오늘'에서 뺀다. 브랜드가 합류하거나 수집 범위가 넓어진 날에는
-    # 그 브랜드의 신메뉴 목록 전체가 처음 보이는 거라 first_seen 이 오늘이 된다.
-    # 목록에는 올리되(브랜드가 신메뉴라고 말하니까) "오늘 N건"으로 세지는 않는다.
-    # 세면 어댑터를 붙일 때마다 오늘 신상이 수십 건씩 뛴다.
-    new_today = [r for r in fresh if _when(r) == today and not r.get("baseline")]
+    # 세는 기준과 카드에 찍는 날짜가 같아야 한다. 전에는 카운터만 기준선을 빼서
+    # "오늘 3건" 이라고 써놓고 오늘 날짜 카드가 92장 떴다.
+    # shown_date 는 브랜드가 준 날짜를 그대로 쓰고, 날짜가 없는 기준선 상품만
+    # 비운다 — 기준선이 막아야 할 건 '우리가 처음 본 날'이라는 추측이지
+    # 브랜드가 직접 찍어준 날짜가 아니다.
+    new_today = [r for r in fresh if shown_date(r) == today]
     print(f"총 {len(rows)}건 / 신제품 {len(fresh)}건 (오늘 {len(new_today)}건)"
           f" / 굿즈 {len(goods)}건 / 사라짐 {len(gone)}건")
     render(fresh, new_today)
@@ -290,6 +291,20 @@ def cap_per_brand(rows: list) -> list:
 def _when(r: dict) -> str:
     """이 상품이 '언제 것'인가. 브랜드가 준 날짜를 우선하고 없으면 우리가 처음 본 날."""
     return r.get("released_at") or r.get("uploaded_at") or r.get("first_seen", "")
+
+
+def shown_date(r: dict) -> str:
+    """카드에 찍을 날짜. 모르면 빈 문자열이다.
+
+    기준선(brand 가 막 합류했거나 수집 범위가 넓어진 날 한꺼번에 들어온 것)에
+    first_seen 밖에 없으면 그건 '우리가 오늘 처음 봤다' 일 뿐 출시일이 아니다.
+    그걸 그대로 찍어서 "오늘 3건" 이라고 써놓고 오늘 날짜 카드가 92장 뜨고 있었다.
+    숫자를 맞추는 게 아니라 모르는 날짜를 안 쓰는 쪽이 맞다.
+    """
+    stamped = r.get("released_at") or r.get("uploaded_at")
+    if stamped:
+        return stamped
+    return "" if r.get("baseline") else r.get("first_seen", "")
 
 
 def is_fresh(r: dict, today: str, *, goods: bool = False) -> bool:
@@ -419,7 +434,7 @@ PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"),
 # 이 순서는 건수가 같을 때만 쓴다. 전에는 선언 순서 그대로 깔려서 2위인
 # 일식 40건이 8번째로 밀려 375px 화면 밖에 있었다.
 SUBS = ["커피", "베이커리", "아이스크림", "빙수", "도넛",
-        "과자", "라면", "음료", "햄버거", "피자", "치킨",
+        "과자", "라면", "음료", "냉동식품", "햄버거", "피자", "치킨",
         "분식", "한식", "도시락", "일식", "샌드위치", "샐러드"]
 
 # web/pages.py 가 유형 페이지(/c/...)를 만들 때 쓰는 목록. 1단+2단을 합친다.
@@ -437,6 +452,12 @@ def primary_of(r: dict) -> str:
     if t == "제조사":
         return "가공식품"
     return t
+
+
+def _date_tag(r: dict) -> str:
+    """날짜 칸. 모르면 칸 자체를 비운다 — '미상' 을 쓰면 카드마다 그 말이 깔린다."""
+    d = shown_date(r)
+    return f'<time datetime="{html.escape(d)}">{html.escape(d)}</time>' if d else ""
 
 
 def card(r: dict) -> str:
@@ -469,7 +490,7 @@ def card(r: dict) -> str:
              f'<span class="br">{e(r["brand"])}</span></div>'
              f'<h2>{e(r["name"])}</h2>{en}'
              f'<p class="d">{e(r.get("desc", ""))}</p>'
-             f'<time datetime="{e(_when(r))}">{e(_when(r))}</time></div>')
+             f'{_date_tag(r)}</div>')
     # 외부(브랜드)로 나갈 때만 새 탭 + nofollow. 우리 상세는 같은 탭.
     attrs = ' target="_blank" rel="noopener nofollow"' if external else ""
     go = "브랜드에서 보기" if external else "자세히 보기"
