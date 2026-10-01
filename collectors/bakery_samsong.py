@@ -105,4 +105,15 @@ def fetch() -> list[Item]:
                 it.is_new = "NEW" in label
                 items.append(it)
             time.sleep(DELAY)
+
+    # 배지가 깨져도 상품 건수는 그대로라 collect.py 의 0건 가드도 FLOOR 도 안 걸린다.
+    # 신호만 조용히 사라진다. gs25.py 가 '1페이지가 비었다'에 넣은 가드를 여기로 옮긴다.
+    # ⚠️ NEW 가 0건인 것 자체는 고장이 아니다 — 지금 5건뿐이라 브랜드가 다 내릴 수
+    #    있다. 깨짐의 신호는 NEW·BEST·HIT 를 통틀어 라벨이 0건인 것이다
+    #    (실측 2026-10-01: NEW 5 · BEST 4 · HIT 2 = 37건 중 11건).
+    if items and not any(it.labels for it in items):
+        raise ValueError(
+            f"삼송빵집 배지 라벨(.info p.eng)이 {len(items)}건 중 0건이다. "
+            f"실측 기준 NEW 5 · BEST 4 · HIT 2 가 붙어 있어야 한다 — "
+            f"모달 셀렉터가 바뀌었는지 확인하라")
     return items

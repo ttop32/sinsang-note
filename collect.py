@@ -382,15 +382,27 @@ color:var(--fg);font:inherit;font-size:14px;line-height:1;padding:0 10px;border-
 cursor:pointer;white-space:nowrap;min-height:40px;display:inline-flex;align-items:center;gap:6px}
 .t.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .t .n{font-size:12px;opacity:.7}
+/* 2단은 가로로 흐른다. 외식이 7칩 500px 이라 375px 화면에서는 뒤가 잘리는데,
+   스크롤 막대를 숨겨놔서 더 있다는 걸 알 수가 없었다. 오른쪽 끝에 그라데이션을
+   깔아 "뒤에 더 있다" 를 보여준다. 끝까지 밀면 사라진다(아래 스크립트). */
 .subnav{margin:0 -16px;padding:8px 16px;overflow-x:auto;scrollbar-width:none;
-border-bottom:1px solid var(--line)}
+border-bottom:1px solid var(--line);position:relative}
 .subnav::-webkit-scrollbar{display:none}
+.subwrap{position:relative}
+.subwrap::after{content:"";position:absolute;right:0;top:0;bottom:1px;width:36px;
+pointer-events:none;opacity:0;transition:opacity .15s;
+background:linear-gradient(90deg,transparent,var(--bg) 70%)}
+.subwrap.more::after{opacity:1}
 .t.s{min-height:34px;font-size:13px;padding:0 12px;background:transparent}
 .t.s.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 
 a.c{text-decoration:none;color:inherit;transition:border-color .15s}
 a.c:hover,a.c:focus-visible{border-color:var(--accent)}
-.c[hidden]{display:none}          /* .c 의 display:flex 가 브라우저 기본 [hidden] 을 덮는다 */
+.c[hidden]{display:none}
+/* .t 가 display:inline-flex 라 브라우저 기본 [hidden]{display:none} 을 이긴다.
+   카드(.c)에서 같은 사고가 났을 때 그쪽만 고치고 칩은 놔뒀다 — 그래서 2단
+   칩이 지금껏 한 번도 안 숨겨졌고, 카페를 골라도 치킨·피자 칩이 남아 있었다. */
+.t[hidden]{display:none}          /* .c 의 display:flex 가 브라우저 기본 [hidden] 을 덮는다 */
 .c img{height:auto}               /* width/height 속성만으론 세로로 늘어난다 */
 .go{display:block;padding:0 11px 12px;font-size:11px;color:var(--accent);font-weight:600}
 .en{margin:0;font-size:11px;color:var(--mut)}
@@ -531,7 +543,7 @@ def render(rows: list, new_today: list) -> None:
   <button id="sort" class="t" data-s="date" aria-label="정렬 바꾸기">최신순</button>
 </div>
 <nav aria-label="분류"><div class="tw">{tabs}</div></nav>
-<div class="subnav" id="subnav" hidden><div class="tw">{subs}</div></div>
+<div class="subwrap" id="subwrap" hidden><div class="subnav" id="subnav"><div class="tw">{subs}</div></div></div>
 <p id="cnt" class="cnt" role="status" aria-live="polite"></p>
 <main class="g" id="g">
 {body}
@@ -546,6 +558,7 @@ def render(rows: list, new_today: list) -> None:
 const g = document.getElementById('g'), q = document.getElementById('q'),
       cnt = document.getElementById('cnt'), sortBtn = document.getElementById('sort'),
       subnav = document.getElementById('subnav'),
+      subwrap = document.getElementById('subwrap'),
       empty = document.getElementById('noresult');
 const cards = [...g.querySelectorAll('.c')];
 const priBtns = [...document.querySelectorAll('nav .t')];
@@ -615,8 +628,19 @@ function syncSub() {{
     b.hidden = !has;
     if (has) any = true;
   }}
-  subnav.hidden = !any;
+  subwrap.hidden = !any;
+  subnav.scrollLeft = 0;
+  hint();
 }}
+
+// 2단이 가로로 넘치면 오른쪽에 그라데이션을 켠다. 스크롤 막대를 숨겨놔서
+// 더 있다는 걸 알 수가 없었다. 끝까지 밀면 끈다.
+function hint() {{
+  const left = subnav.scrollWidth - subnav.clientWidth - subnav.scrollLeft;
+  subwrap.classList.toggle('more', left > 4);
+}}
+subnav.addEventListener('scroll', hint, {{passive: true}});
+addEventListener('resize', hint);
 
 document.querySelector('nav').addEventListener('click', e => {{
   const b = e.target.closest('.t'); if (!b) return;

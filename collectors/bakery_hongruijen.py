@@ -55,7 +55,7 @@ def _page(c, cate: str, page: int):
     params = {"cateCd": cate} | ({"page": page} if page > 1 else {})
     r = base.retry(lambda: c.get(LIST, params=params))
     r.raise_for_status()
-    return HTMLParser(r.text).css(".item_cont")
+    return HTMLParser(r.text)
 
 
 def _goods_no(card) -> str:
@@ -68,7 +68,19 @@ def _cards(c, cate: str) -> dict:
     """번호 → 카드. 범위를 넘긴 page 는 새 번호를 안 주므로 그때 끊는다."""
     out = {}
     for page in range(1, MAX_PAGES + 1):
-        cards = _page(c, cate, page)
+        doc = _page(c, cate, page)
+        # 신제품 신호가 002 분류 하나뿐이라, 거기서 0건이 나와도 43건은 그대로 나오고
+        # is_new 만 전부 False 가 된다. collect.py 의 0건 가드도 FLOOR 도 안 걸리는
+        # 조용한 신호 손실이다. 그래서 '목록 페이지이긴 한가'를 먼저 확인한다.
+        # 실측 2026-10-01: 없는 cateCd(00299)는 200 에 408바이트짜리
+        # `alert('잘못된 접근입니다.')` 페이지를 주고 .goods_list 가 없다. 반면
+        # 분류는 살아 있는데 상품만 0건인 경우는 브랜드의 정상 상태라 통과시킨다.
+        if page == 1 and not doc.css_first(".goods_list"):
+            raise ValueError(
+                f"홍루이젠 cateCd={cate} 가 상품목록 페이지가 아니다(.goods_list 없음). "
+                f"없는 분류코드는 200 에 alert 페이지를 준다 — "
+                f"분류코드나 목록 셀렉터가 바뀌었는지 확인하라")
+        cards = doc.css(".item_cont")
         fresh = {no: card for card in cards if (no := _goods_no(card)) and no not in out}
         if not fresh:
             break

@@ -65,6 +65,7 @@ BRANDS = {
     "오뚜기":      (MAKER, "라면"),
     "팔도":        (MAKER, "라면"),
     "오리온":      (MAKER, "과자"),
+    "롯데칠성음료": (MAKER, "음료"),
     "배스킨라빈스": (CAFE, "아이스크림"),
     "던킨":        (CAFE, "도넛"),
     "이삭토스트":  (FRANCHISE, "분식"),
@@ -179,6 +180,8 @@ SITES = {
     "오뚜기":       "https://www.otoki.com/pr/news?searchNewsCategory=PRESS",
     "팔도":         "https://www.paldofood.co.kr/product/noodle",
     "오리온":       "https://www.orionworld.com/board/list/87",
+    # 상품별 주소는 롯데칠성몰(mall.) 이라 Item.url 로 따로 붙는다. 이건 폴백이다.
+    "롯데칠성음료": "https://company.lottechilsung.co.kr/kor/product/newprdt/list.do",
 }
 
 

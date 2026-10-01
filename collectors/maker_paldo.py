@@ -59,7 +59,7 @@ CATEGORIES = (
 )
 
 
-def _parse(html: str, slug: str, label: str, seen: set) -> list:
+def _parse(html: str, slug: str, label: str, seen: set, flags: set) -> list:
     out = []
     for a in HTMLParser(html).css("li a"):
         href = a.attributes.get("href", "")
@@ -73,6 +73,8 @@ def _parse(html: str, slug: str, label: str, seen: set) -> list:
         seen.add(href)
         img = a.css_first(".thumb-block img")
         flag = a.css_first("span.flag")
+        if flag:
+            flags.add(" ".join(flag.text().split()))   # 가드가 쓸 진단용
         out.append(Item(
             brand=BRAND,
             name=name,
@@ -88,6 +90,7 @@ def _parse(html: str, slug: str, label: str, seen: set) -> list:
 def fetch() -> list[Item]:
     items: list[Item] = []
     keys = set()
+    flags: set = set()        # span.flag 에서 실제로 읽힌 문구. 아래 가드의 진단용.
     first = True
     with base.client() as c:
         for slug, label in CATEGORIES:
@@ -98,7 +101,7 @@ def fetch() -> list[Item]:
             first = False
             r = base.retry(lambda: c.get(url))
             r.raise_for_status()
-            found = _parse(r.text, slug, label, seen)
+            found = _parse(r.text, slug, label, seen, flags)
 
             for page in range(2, MAX_PAGES + 1):
                 if not found:
@@ -111,7 +114,7 @@ def fetch() -> list[Item]:
                 data = r.json()
                 if str(data.get("code")) != "1":
                     break
-                more = _parse(data.get("msg") or "", slug, label, seen)
+                more = _parse(data.get("msg") or "", slug, label, seen, flags)
                 found += more
                 if not more or int((data.get("etc") or {}).get("nextPage") or 0) <= 0:
                     break
@@ -120,4 +123,15 @@ def fetch() -> list[Item]:
                 if it.key not in keys:
                     keys.add(it.key)
                     items.append(it)
+
+    # 배지가 깨져도 상품 건수는 그대로라 collect.py 의 0건 가드도 FLOOR 도 안 걸린다.
+    # 신호만 조용히 사라지고 팔도가 화면에서 조용히 빠진다 — 이 레포가 가장 여러 번
+    # 데인 실패 모양이다. gs25.py 가 '1페이지가 비었다'에 넣은 가드를 여기로 옮긴다.
+    # 102건 중 46건이 5개 분류에 걸쳐 붙어 있다(실측 2026-10-01). 브랜드가 하루아침에
+    # 전 분류의 배지를 한꺼번에 내릴 일은 없다고 보고 0건을 고장으로 읽는다.
+    if items and not any(it.is_new for it in items):
+        raise ValueError(
+            f"팔도 '신제품' 배지가 {len(items)}건 중 0건이다. "
+            f"span.flag 에서 읽은 문구={sorted(flags)} — "
+            f"배지 셀렉터(span.flag)나 배지 문구가 바뀌었는지 확인하라")
     return items

@@ -24,8 +24,15 @@ portfolio-sitemap.xml(214건)과 portfolio_category-sitemap.xml(30건)이 있다
 **날짜는 uploaded_at 까지만 쓴다.** 이미지 파일명이 `YYMMDD_웹누끼_제품명` 규칙이라
 사진 촬영·업로드 시점이 드러나지만 출시일은 아니다. 26건 중 17건에 날짜가 붙고
 고유 일자는 9개다. 2026-09-07 하루에 4건(쿠키·선물세트 묶음 촬영)이 몰려 있어
-released_at 으로 올리면 그날 신제품 4종이 나온 걸로 오보가 난다. 날짜 없는 9건은
-비워 둔다. 파일 경로의 /uploads/YYYY/MM/ 은 연·월뿐이라 대체로 쓰지 않는다.
+released_at 으로 올리면 그날 신제품 4종이 나온 걸로 오보가 난다.
+파일 경로의 /uploads/YYYY/MM/ 은 연·월뿐이라 대체로 쓰지 않는다.
+
+⚠️ **파일명에 날짜가 없는 9건은 비워 두면 안 된다.** `new` 분류는 '이번 달 신상'이
+아니라 2025-07~2026-09 가 쌓인 보관함이고, `collect.is_fresh()` 는 is_new=True 에
+날짜가 없으면 무조건 True 를 돌려준다. 그래서 날짜를 못 뽑은 9건이 영구히 신제품
+칸에 남았다 — 같은 상품인데 `디카페인오트밀라떼(H)` 는 파일명 날짜(2025-09-19)로
+걸러지고 `(I)` 는 신상으로 떴다. 그래서 portfolio-sitemap.xml 을 한 번 더 받아
+`lastmod` 로 받친다(요청 1회 추가). 2026-10-01 실측 26/26 매칭.
 
 is_new 는 전부 True 다. 브랜드가 직접 `new` 분류에 넣은 상품만 담기 때문이다.
 설명은 없다. 아카이브의 excerpt 가 26건 전부 "Product info" 라는 자리표시자다.
@@ -35,6 +42,7 @@ robots.txt: 200 text/plain 115B, 본문 첫 글자 'U'. /wp-admin/ 만 막는다
 """
 import re
 import time
+from urllib.parse import unquote
 
 from selectolax.parser import HTMLParser
 
@@ -43,11 +51,14 @@ from .base import Item
 
 BRAND = "브레댄코"
 LIST = "https://www.breadnco.kr/portfolio-category/new/"
+SITEMAP = "https://www.breadnco.kr/portfolio-sitemap.xml"
 MAX_PAGES = 8   # 폭주 방지. 현재 3페이지(26건).
 DELAY = 2.0
 
 # /wp-content/uploads/2026/08/260818_웹누끼_왁뿌소금빵.png → 2026-08-18
 _DATE = re.compile(r"/uploads/\d{4}/\d{2}/(\d{2})(\d{2})(\d{2})_")
+# <loc>…</loc> 다음 줄의 <lastmod>2026-07-21T…Z</lastmod>
+_LOC = re.compile(r"<loc>([^<]+)</loc>\s*<lastmod>(\d{4}-\d{2}-\d{2})")
 
 
 def _uploaded_at(src: str) -> str:
@@ -56,10 +67,35 @@ def _uploaded_at(src: str) -> str:
     return f"20{m.group(1)}-{m.group(2)}-{m.group(3)}" if m else ""
 
 
+def _key(url: str) -> str:
+    """sitemap 의 loc 과 아카이브의 href 를 맞추는 키.
+
+    loc 은 퍼센트인코딩된 한글이고 href 는 디코딩돼 있다. 끝 슬래시도 한쪽에만
+    붙는 경우가 있어 둘 다 턴다.
+    """
+    return unquote(url or "").rstrip("/")
+
+
+def _lastmod(c) -> dict:
+    """portfolio-sitemap.xml 의 상품 URL → lastmod(YYYY-MM-DD). 214건."""
+    r = base.retry(lambda: c.get(SITEMAP))
+    r.raise_for_status()
+    out = {_key(loc): day for loc, day in _LOC.findall(r.text)}
+    # 비면 날짜가 전부 빠지고 날짜 없는 건이 다시 영구 노출된다. 조용히 넘기지 않는다.
+    if not out:
+        raise ValueError(
+            f"브레댄코 portfolio-sitemap.xml 에서 <loc>/<lastmod> 를 하나도 못 읽었다. "
+            f"status={r.status_code} len={len(r.text)} — sitemap 주소나 형식이 "
+            f"바뀌었는지 확인하라")
+    return out
+
+
 def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
     with base.client() as c:
+        lastmod = _lastmod(c)
+        time.sleep(DELAY)
         for page in range(1, MAX_PAGES + 1):
             url = LIST if page == 1 else f"{LIST}page/{page}/"
             r = base.retry(lambda: c.get(url))
@@ -87,9 +123,12 @@ def fetch() -> list[Item]:
                 src = img.attributes.get("src", "") if img else ""
 
                 it.image = src
-                it.uploaded_at = _uploaded_at(src)
                 it.is_new = True          # 브랜드의 '신제품' 분류에 들어있는 상품만 본다
                 it.url = link.attributes.get("href", "") if link else ""
+                # 파일명 날짜가 먼저다. 없으면 sitemap 의 lastmod 로 받친다 —
+                # 안 받치면 날짜 없는 건이 is_fresh 의 '날짜 없으면 배지를 믿는다'
+                # 분기를 타고 영구히 신제품 칸에 남는다(docstring 참고).
+                it.uploaded_at = _uploaded_at(src) or lastmod.get(_key(it.url), "")
                 items.append(it)
                 added += 1
 

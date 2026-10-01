@@ -33,6 +33,13 @@ robots: https://www.lottewellfood.com/robots.txt → **404 + text/html, 본문 3
 약관: /policy/use — 푸터 링크가 주석 처리돼 숨어 있다. "회원은 서비스를 이용하여
       얻은 정보를 사전승낙 없이 복사, 복제…할 수 없다"(회원 대상 조항).
       CRAWLING-POLICY.md §6-4 '약관이 금지' 칸에 해당한다. **운영자 판단이 필요하다.**
+
+⚠️⚠️ **이 브랜드는 `base.BRANDS`·`base.SITES` 양쪽에 등록돼 있지 않다.**
+지금은 `collect.ADAPTERS` 밖이라 아무 일도 안 일어나지만, 누가 ADAPTERS 에 한 줄
+추가하면 `Item.to_dict()` 가 `KeyError: "BRANDS 에 없는 브랜드: 롯데웰푸드"` 로 터지고
+브랜드가 통째로 실패한다. **ADAPTERS 에 넣기 전에 BRANDS·SITES 등록이 먼저다.**
+(지금 등록하라는 뜻이 아니다. 제외 상태는 위 robots 404·noindex·일괄 등록 날짜
+ 세 가지로 타당하다고 검수에서 확인됐다 — docs/QA-REPORT.md §2-9.)
 """
 import re
 import time
@@ -69,6 +76,15 @@ _SKIP = ("돌파", "완판", "누적", "성료", "수상", "선정", "채용", "
 _BETWEEN = ("협업", "컬래버", "콜라보", "브랜드", "메뉴", "에디션", "테마", "전용 앱")
 _TAIL = ("돌파", "만에", "만인", "판매", "인기", "완판", "누적", "기록", "연다", "쏜다")
 
+# 기존 제품의 테마/에디션 패키지 기사. 상품이 새 게 아니고 따옴표 안도 상품명이 아니다.
+# 실측: 롯데웰푸드, 디즈니코리아와 함께 ‘토이 스토리 5’ 테마 ‘가나 초콜릿’ 제품 출시
+#       — ‘가나 초콜릿’은 1975년부터 팔던 대표 제품이다. 신제품이 아니라 테마 패키지다.
+# ⚠️ _BETWEEN 검사를 head 전체로 넓히는 식으로는 못 고친다. 협업으로 '만든' 신제품까지
+#    같이 죽는다 — GS25 채택분 '사워레몬요거트'·'초BIG!무쿠점보멜론구미' 2건으로 실증됐다
+#    (docs/QA-REPORT.md §2-6). '협업'이라는 단어가 아니라 **위치**가 그 구분이다.
+_REPACK_HEAD = ("에디션", "라벨")                              # “…” 헤드라인 안
+_REPACK_MID = ("테마", "에디션", "라벨", "컬래버", "콜라보")      # 따옴표와 따옴표 사이
+
 
 def _pick(title: str) -> str:
     """보도자료 제목에서 상품명을 뽑는다. 상품을 특정 못 하면 빈 문자열.
@@ -78,8 +94,15 @@ def _pick(title: str) -> str:
     버린다 — 상품명을 '젤리 2종'으로 쓸 수는 없다.
     """
     t = " ".join(title.split())
+    # “…” 홍보 헤드라인 안에 에디션/라벨이 있으면 기존 제품의 패키지 기사다.
+    if any(w in m.group(1) for m in _HEAD.finditer(t) for w in _REPACK_HEAD):
+        return ""
     body = _HEAD.sub(" ", t)
     if any(w in body for w in _SKIP) or _MULTI.search(body):
+        return ""
+    # ‘A’ 테마 ‘B’ 꼴 — 마지막 두 따옴표 사이가 테마/에디션이면 B 는 기존 제품이다.
+    qs = list(_SINGLE.finditer(body))
+    if len(qs) >= 2 and any(w in body[qs[-2].end():qs[-1].start()] for w in _REPACK_MID):
         return ""
     verb = None
     for m in _VERB.finditer(body):

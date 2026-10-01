@@ -62,12 +62,28 @@ _SKIP = ("돌파", "완판", "누적", "성료", "수상", "선정", "채용", "
 _BETWEEN = ("협업", "컬래버", "콜라보", "브랜드", "메뉴", "에디션", "테마", "전용 앱")
 _TAIL = ("돌파", "만에", "만인", "판매", "인기", "완판", "누적", "기록", "연다", "쏜다")
 
+# 기존 제품의 테마/에디션 패키지 기사. 상품이 새 게 아니고 따옴표 안도 상품명이 아니다.
+# 실측: “박지훈이 패키지에 쏙… 팬심이 만든 스페셜 에디션” 오리온, 닥터유 제주용암수
+#       ‘박지훈 라벨’ 출시 — 상품은 기존 제품인 닥터유 제주용암수고 그 패키지 라벨이다.
+# ⚠️ _BETWEEN 검사를 head 전체로 넓히는 식으로는 못 고친다. 협업으로 '만든' 신제품까지
+#    같이 죽는다 — GS25 채택분 '사워레몬요거트'·'초BIG!무쿠점보멜론구미' 2건으로 실증됐다
+#    (docs/QA-REPORT.md §2-6). '협업'이라는 단어가 아니라 **위치**가 그 구분이다.
+_REPACK_HEAD = ("에디션", "라벨")                              # “…” 헤드라인 안
+_REPACK_MID = ("테마", "에디션", "라벨", "컬래버", "콜라보")      # 따옴표와 따옴표 사이
+
 
 def _pick(title: str) -> str:
     """보도자료 제목에서 상품명을 뽑는다. 상품을 특정 못 하면 빈 문자열."""
     t = " ".join(title.split())
+    # “…” 홍보 헤드라인 안에 에디션/라벨이 있으면 기존 제품의 패키지 기사다.
+    if any(w in m.group(1) for m in _HEAD.finditer(t) for w in _REPACK_HEAD):
+        return ""
     body = _HEAD.sub(" ", t)          # “…” 는 홍보 헤드라인이다
     if any(w in body for w in _SKIP) or _MULTI.search(body):
+        return ""
+    # ‘A’ 테마 ‘B’ 꼴 — 마지막 두 따옴표 사이가 테마/에디션이면 B 는 기존 제품이다.
+    qs = list(_SINGLE.finditer(body))
+    if len(qs) >= 2 and any(w in body[qs[-2].end():qs[-1].start()] for w in _REPACK_MID):
         return ""
     verb = None
     for m in _VERB.finditer(body):
