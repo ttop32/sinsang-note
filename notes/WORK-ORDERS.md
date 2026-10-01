@@ -18,6 +18,7 @@
 | **WO-9** | 라벨 필터를 홈·하위가 공유 (NEW 중복 934건) | **P0** | 수집 계약 + 페이지 생성 | `collectors/base.py` · `collect.py` · `web/pages.py` |
 | **WO-10** | 검색 — 띄어쓴 검색어 0건 + 0건 이유 안내 | **P0** | 웹 렌더 | `collect.py` (`<script>`) |
 | **WO-11** | 브랜드 인스타그램 링크 (핸들 수동 수집) | P2 | 수집 계약 + 페이지 생성 | `collectors/base.py` · `web/pages.py` |
+| **WO-12** | 인스타 링크 **적용** (조사 완료분 51곳) | P2 | 수집 계약 + 페이지 생성 | `collectors/base.py` · `web/pages.py` |
 
 ### 🟢 2026-10-01 중간 실측 — 착수 전에 반드시 보라
 
@@ -37,7 +38,8 @@
 | **WO-8** og | 🔴 미착수 | og:image 아직 파리바게뜨 CDN · `docs/og.png` 없음 |
 | **WO-9** 라벨 | 🔴 **미착수 · P0** | `NEW`+`NEW` 중복 **934건 / 137페이지**. 홈 0, 굿즈 38. 행사 라벨도 하위 124건 |
 | **WO-10** 검색 | 🔴 **미착수 · P0** | `바닐라 라떼`·`얼큰 우동` 등 **띄어쓴 검색어가 전부 0건**. 0건 이유도 안 알려줌 |
-| **WO-11** 인스타 | 🔴 미착수 · P2 | 핸들 추측 20개 중 **4개가 남의 개인 계정**. 수동 수집이 선행 |
+| **WO-11** 인스타(조사) | 🟢 **완료** | `notes/INSTAGRAM.md` — 확인 51 / 없음 5 / 조건부 2. **WO-12 가 이어받는다** |
+| **WO-12** 인스타(적용) | 🔴 미착수 · P2 | 상수 + `brand_page()` 한 줄. 조사 끝나 비용 작음 |
 | 분류체계 개편 | 📄 `docs/TAXONOMY.md` | 1단 5개(+가공식품)·카페 2단 신설. **WO-6 이 선행.** 코디네이터가 직렬로 구현 |
 
 🔴 **`requirements.txt` 에 `Pillow==12.3.0` 이 추가됐다**(할리스 배지 작업자, `.venv` import 확인).
@@ -1317,6 +1319,99 @@ terms = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
 🟡 **`web/pages.py` 를 WO-3(`_shell`) · WO-4(`product_page`) · WO-9(`_card`+`product_page`) 와 공유.**
 WO-11 은 `brand_page()` 라 **함수가 겹치지 않는다.** 그래도 같은 파일이니 머지 순서를 정해라.
 🟡 `collectors/base.py` 를 WO-2(완료) · WO-9 와 공유. WO-9 는 라벨 상수라 자리가 다르다.
+
+---
+
+## WO-12 — 브랜드 인스타그램 링크 **적용** (조사 완료분)
+
+| | |
+|---|---|
+| **우선순위** | **P2** |
+| **담당 역할** | 수집 계약 + 페이지 생성 |
+| **선행조건** | 없음. **조사가 끝났다** — `notes/INSTAGRAM.md` (확인 51 / 없음 5 / 조건부 2) |
+| **근거** | `notes/FEATURE-PLAN-2.md` §7-1 |
+
+🟢 **WO-11 을 대체한다.** WO-11 은 "핸들을 수집하라"였고 그 일은 끝났다. 여기서는 **적용만** 한다.
+🔴 **핸들을 새로 만들거나 고치지 마라.** `notes/INSTAGRAM.md` 표에 있는 값을 **그대로 옮긴다.**
+그 표는 "브랜드 공식 사이트가 가리키는 링크만" 딴 것이고, **추측은 10%만 맞았다**(§7-1).
+
+### 손댈 파일
+
+- `/Users/swkim72/source/sinsang-note/collectors/base.py` — `INSTAGRAM` 상수 신규. `SITES` 아래, 같은 모양
+- `/Users/swkim72/source/sinsang-note/web/pages.py` — `brand_page()` 에 한 줄
+
+### 변경 내용
+
+**① `collectors/base.py`**
+
+```python
+# 브랜드 공식 인스타그램. notes/INSTAGRAM.md 가 정본이고 그 표에서만 옮긴다.
+# 🔴 핸들을 유추하지 마라. 20개를 찍어봤더니 2개만 맞았고(10%),
+#    ediya_coffee(언더바)는 '윤소연'이라는 일반인 계정이었다. 정답은 ediya.coffee(점)다.
+#    bhc_chicken→임방환, bbq_chicken→Jazhari Johnson, orionworld→Ajay Kaundal 도 개인이었다.
+#    공식 사이트가 안 가리키면 '없음'이다. 키를 만들지 마라.
+INSTAGRAM = {브랜드: (핸들, 표시이름)}
+```
+
+- **값을 `(핸들, 표시이름)` 2튜플로** 둔다. 표시이름은 `notes/INSTAGRAM.md` 의 "프로필명" 열이다.
+  브랜드명과 계정명이 다른 경우(`hy프레딧` → `hy(한국야쿠르트)`)를 **화면에서 드러내기 위해서**다.
+- **등록하지 않는 5곳**: 설빙 · 롯데칠성음료 · 본흑염소·능이삼계탕 · 김밥천국 · 바르다김선생
+- 🟠 **`본죽` 과 `본죽&비빔밥` 은 같은 핸들(`bonjukofficial`)** 이다. 둘 다 등록하되 표시이름이
+  `본죽 공식 인스타그램` 이라 사용자에게 자동으로 드러난다. 중복이라고 하나를 빼지 마라
+- 🔴 **팔로워 수를 넣지 마라.** 숫자가 늙고 다시 잴 방법이 없다
+
+**② `web/pages.py:brand_page()`**
+
+`_list_page()` 의 `note` 줄 옆에 한 줄. `INSTAGRAM` 에 없으면 **블록 자체를 출력하지 않는다.**
+
+```html
+<p class="ig"><a href="https://www.instagram.com/{handle}/"
+   target="_blank" rel="noopener nofollow">📷 {표시이름} (@{handle}) →</a></p>
+```
+
+🔴 **상품 상세(`/p/`)·홈에는 넣지 않는다.** 인스타는 브랜드 단위까지만 간다.
+상세에 달면 "이 제품"을 기대하고 눌렀다가 브랜드 피드가 열린다(§6 F11-4).
+
+### 완료 판정 기준
+
+1. **상수가 조사 문서와 정확히 일치한다.**
+   ```bash
+   cd /Users/swkim72/source/sinsang-note && ./.venv/bin/python - <<'EOF'
+   import sys,re,pathlib; sys.path.insert(0,'.')
+   from collectors.base import INSTAGRAM, BRANDS
+   md = pathlib.Path('notes/INSTAGRAM.md').read_text(encoding='utf-8')
+   print('등록', len(INSTAGRAM), '/ BRANDS', len(BRANDS))
+   bad = [b for b in INSTAGRAM if b not in BRANDS]
+   print('BRANDS 에 없는 키:', bad or 'none')
+   miss = [b for b,(h,_) in INSTAGRAM.items() if h not in md]
+   print('조사 문서에 없는 핸들:', miss or 'none')
+   EOF
+   ```
+   → `등록 53` (확인 51 + 조건부 2) · `BRANDS 에 없는 키: none` · `조사 문서에 없는 핸들: none`
+2. **없음 5곳에 줄이 없다.**
+   ```bash
+   for b in 설빙 롯데칠성음료 김밥천국 바르다김선생; do
+     printf '%s: ' "$b"; grep -c 'instagram.com' "docs/b/$b/index.html" 2>/dev/null || echo "페이지없음"
+   done
+   ```
+   → 전부 `0` 또는 `페이지없음`
+3. **브랜드 페이지에만 있다.**
+   ```bash
+   grep -rl 'instagram.com' docs/b/ | wc -l     # INSTAGRAM 중 페이지가 생성된 수와 일치
+   grep -rl 'instagram.com' docs/p/ | wc -l     # 0
+   grep -c  'instagram.com' docs/index.html     # 0
+   ```
+4. **`@undefined`·빈 핸들이 안 찍힌다.** `grep -o 'instagram.com/[^/"]*' docs/b/*/index.html | sort -u` 를 눈으로 확인
+5. **링크 속성** `target="_blank" rel="noopener nofollow"`
+6. **🔴 표본 3곳을 실제로 열어 프로필명이 맞는지 본다** — `이디야커피`(`ediya.coffee`, 점) ·
+   `컴포즈커피`(`compose_coffee`, 언더바) · `hy프레딧`(`hy.official.kr`). **이 셋이 추측이 틀렸던 자리다**
+7. **§0-4 스모크 검사 `OK`** (홈 불변)
+
+### 다른 지시서와 같은 파일을 건드리는가
+
+🟡 **`web/pages.py` 를 WO-3(`_shell`)·WO-4(`product_page`)·WO-9(`_card`+`product_page`) 와 공유한다.**
+WO-12 는 **`brand_page()` 라 함수가 겹치지 않는다.** 같은 파일이니 머지 순서만 정해라.
+🟡 `collectors/base.py` 는 WO-2(완료)·WO-9 와 공유. `INSTAGRAM` 은 새 상수라 자리가 다르다.
 
 ---
 

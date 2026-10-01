@@ -523,14 +523,37 @@ PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"),
 # 줄이라 앞자리가 곧 화면 안이다.
 DEMOTE = {"일식", "한식"}
 
-SUBS = ["커피", "베이커리", "아이스크림", "빙수", "도넛",
+# 편의점 2단은 업체다(위 sub_of 참고). 건수가 아니라 점포 수 기준으로 고정한다 —
+# 수집량은 우리가 어느 페이지를 긁느냐에 따라 출렁이는데 사람이 기대하는 순서는
+# 그 브랜드의 크기다. 이마트24가 981건을 긁혀도 CU 앞에 오면 이상하다.
+CVS_ORDER = ["CU", "GS25", "세븐일레븐", "이마트24"]
+
+SUBS = CVS_ORDER + ["커피", "베이커리", "아이스크림", "빙수", "도넛",
         "과자", "라면", "음료", "냉동식품", "조미료",
         "햄버거", "피자", "치킨",
         "분식", "한식", "도시락", "일식", "샌드위치", "샐러드"]
 
 # web/pages.py 가 유형 페이지(/c/...)를 만들 때 쓰는 목록. 1단+2단을 합친다.
+# 유형 페이지 목록. 편의점 업체(CVS_ORDER)는 뺀다 — 그건 화면 필터일 뿐이고
+# /c/CU/ 를 만들면 /b/CU/ 와 내용이 같은 주소가 둘이 된다.
 SECTIONS = ([("전체", "")]
-            + [(k, k) for k in ["편의점", "카페", "외식", "가공식품"] + SUBS])
+            + [(k, k) for k in ["편의점", "카페", "외식", "가공식품"]
+               + [x for x in SUBS if x not in CVS_ORDER]])
+
+
+def sub_of(r: dict) -> str:
+    """2단 값. 편의점만 세부 분류 대신 업체를 쓴다.
+
+    편의점 네 곳은 한 곳 안에 도시락·라면·음료·과자가 다 들어 있어서 상품
+    분류를 주지 않는다(category 가 '신상품'·'행사 상품' 같은 판매채널이다).
+    그 자리에 업체를 넣으면 'CU 에 뭐 나왔나' 를 바로 고를 수 있다.
+
+    registry 의 brand_sub 은 안 건드린다 — 거기까지 바꾸면 /c/CU/ 유형
+    페이지가 생겨 /b/CU/ 와 내용이 같은 주소가 둘이 된다.
+    """
+    if r.get("brand_type") == "편의점":
+        return r["brand"]
+    return r.get("brand_sub", "")
 
 
 def primary_of(r: dict) -> str:
@@ -553,7 +576,7 @@ def _date_tag(r: dict) -> str:
 
 def card(r: dict) -> str:
     e = html.escape
-    sub = r.get("brand_sub", "")
+    sub = sub_of(r)
     pri = primary_of(r)
     img = (f'<img loading="lazy" decoding="async" width="400" height="400"'
            f' src="{e(r["image"])}" alt="{e(r["brand"])} {e(r["name"])}">'
@@ -605,7 +628,7 @@ def render(rows: list, new_today: list, total: int = 0) -> None:
     shown = rows[:SHOW]
     more = len(rows) - len(shown)
     pcount = collections.Counter(primary_of(r) for r in shown)
-    scount = collections.Counter(r.get("brand_sub", "") for r in shown if r.get("brand_sub"))
+    scount = collections.Counter(x for x in map(sub_of, shown) if x)
 
     tabs = "".join(
         f'<button class="t{" on" if i == 0 else ""}" data-f="{html.escape(key)}"'
@@ -615,11 +638,20 @@ def render(rows: list, new_today: list, total: int = 0) -> None:
         if not key or pcount.get(key))
     # 건수 많은 순. 가로로 흐르는 줄이라 화면 안에 드는 건 앞의 네댓 개뿐이고,
     # 선언 순서대로 깔면 제일 볼 게 많은 분류가 화면 밖으로 밀린다.
-    subs = "".join(
+    # 맨 앞에 '전체'. 세부를 골랐다가 되돌릴 길이 다시 누르는 것뿐이었는데
+    # 그걸 아는 사람이 없다. 그리고 카페는 145장 중 커피가 94장이라 첫 칩이
+    # 커피면 "왜 커피부터지" 가 된다 — 기본값이 뭔지 보여줘야 한다.
+    subs = ('<button class="t s on" data-s="" aria-pressed="true">'
+            '전체<span class="n"></span></button>')
+    subs += "".join(
         f'<button class="t s" data-s="{html.escape(k)}" aria-pressed="false">'
         f'{html.escape(k)}<span class="n">{scount[k]}</span></button>'
         for k in sorted((k for k in SUBS if scount.get(k)),
-                        key=lambda k: (k in DEMOTE, -scount[k], SUBS.index(k))))
+                        key=lambda k: (k in DEMOTE,
+                                       0 if k in CVS_ORDER else 1,
+                                       SUBS.index(k) if k in CVS_ORDER
+                                       else -scount[k],
+                                       SUBS.index(k))))
 
     updated = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
     # 홈에서 /c/ 로 나가는 길이 하나도 없었다. SHOW 가 자른 분량과, 홈 칩에
@@ -743,7 +775,10 @@ function resetAll() {{
     t.classList.toggle('on', i === 0);
     t.setAttribute('aria-pressed', i === 0);
   }});
-  subBtns.forEach(x => {{ x.classList.remove('on'); x.setAttribute('aria-pressed', 'false'); }});
+  subBtns.forEach(x => {{
+    const on = !x.dataset.s;
+    x.classList.toggle('on', on); x.setAttribute('aria-pressed', on);
+  }});
   syncSub(); apply();
 }}
 
@@ -756,18 +791,21 @@ function syncSub() {{
   // 전에는 숫자가 전체 기준이라 '가공식품 > 커피 95' 라고 써놓고 누르면
   // 1건이 나왔다 — 95는 카페의 커피였다. 숫자와 필터의 범위가 달랐다.
   let any = false;
+  const inKind = cards.filter(c => !kind || c.dataset.p === kind);
   for (const b of subBtns) {{
-    const n = cards.filter(c => c.dataset.s === b.dataset.s
-                             && (!kind || c.dataset.p === kind)).length;
+    // data-s 가 빈 것이 '전체' 칩이다. 늘 보이고 숫자는 그 대분류 총합이다.
+    const all = !b.dataset.s;
+    const n = all ? inKind.length
+                  : inKind.filter(c => c.dataset.s === b.dataset.s).length;
     const tag = b.querySelector('.n');
     if (tag) tag.textContent = n;
-    b.hidden = !n;
-    if (n) any = true;
+    b.hidden = !all && !n;
+    if (!all && n) any = true;
   }}
   // '전체' 에서는 숨긴다. 13칩 1,051px 중 676px 가 화면 밖인 데다 커피·라면·
   // 일식·햄버거가 뒤섞여 있어 고르는 데 도움이 안 된다.
   // 칩이 하나뿐일 때도 숨긴다 — 고를 게 없으면 필터가 아니라 라벨이다.
-  const shownChips = subBtns.filter(b => !b.hidden).length;
+  const shownChips = subBtns.filter(b => !b.hidden && b.dataset.s).length;
   subwrap.hidden = !kind || shownChips < 2;
   subnav.scrollLeft = 0;
   hint();
@@ -790,13 +828,17 @@ document.querySelector('nav').addEventListener('click', e => {{
   }});
   kind = b.dataset.f;
   sub = '';                                         // 대분류를 바꾸면 세부는 초기화
-  subBtns.forEach(x => {{ x.classList.remove('on'); x.setAttribute('aria-pressed', 'false'); }});
+  subBtns.forEach(x => {{
+    const on = !x.dataset.s;                        // '전체' 칩이 켜진 상태로 돌아간다
+    x.classList.toggle('on', on); x.setAttribute('aria-pressed', on);
+  }});
   syncSub(); apply();
 }});
 
 subnav.addEventListener('click', e => {{
   const b = e.target.closest('.t.s'); if (!b) return;
-  const off = b.classList.contains('on');           // 다시 누르면 해제
+  // '전체' 는 해제 토글이 아니다 — 누르면 늘 '세부 없음' 으로 간다.
+  const off = b.dataset.s && b.classList.contains('on');
   subBtns.forEach(x => {{
     const on = !off && x === b;
     x.classList.toggle('on', on); x.setAttribute('aria-pressed', on);
