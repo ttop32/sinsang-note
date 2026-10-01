@@ -36,7 +36,7 @@
 | **2** | **hy 프레딧** | 제조사(유제품·간편식) | **채택** | 보통 | **159건** | `/product/main-tab-menu?…ctgId=C10000001001` — `<title>신제품`. 1.65MB **SSR**, 카테고리 11종 |
 | **3** | **샘표** | 제조사(조미료) | **채택** | **쉬움** | **월 4~6건** | `/news/press-release` **SSR**, 날짜+제목 한 줄. 12건 중 **"출시" 6건** — 밀도 최고 |
 | **4** | **아워홈** | 직영 대형 F&B | **채택** | **쉬움** | **월 4~6건** | `/front/newsboardlist.do` **SSR**, 날짜+제목+부제. robots **부재(0바이트)** = 가장 깨끗 |
-| **5** | **동서식품** | 제조사(커피·시리얼) | **채택** | 보통 | **월 1~2건** | `POST /api/news/listData/{n}` JSON `regDt` **분 단위**, 522건·53페이지 |
+| **5** | **동서식품** | 제조사(커피·시리얼) | **채택** | 보통 | **월 1~2건** | `POST /api/news/listData/{n}` JSON. 🔴 **정정: 날짜는 `regDt` 가 아니라 `showDt` 다**(아래 §2-2) |
 | 6 | 푸르밀 | 제조사(유제품) | 보류 | 어려움 | 미확인 | 상품명은 SSR인데 **NEW 배지가 JS 주입**. SSR 쪽 배지는 전부 주석(§6-1) |
 | 7 | 신라호텔 패스트리 부티크 | 직영 호텔 베이커리 | 보류 | 어려움 | 미확인 | 화면엔 상품명·가격·**시즌 기간**(`2026.09.01 ~ 10.18`), 원본 HTML엔 없음. XHR 미포착 |
 | 8 | 대상 | 제조사(조미료) | 보류 | 보통 | 2개월 1건 | `POST /proc/boardListJson.jsp`. 신제품 기사 **빈도가 낮다** |
@@ -75,7 +75,7 @@
 | 브랜드 | 구분 | URL | 수집 난이도 | 신제품 신호 | SSR/XHR | robots | 비고 |
 |---|---|---|---|---|---|---|---|
 | **샘표** | 제조사 | `www.sempio.com/news/press-release` | **쉬움** | **`press  제목  2026.09.08`** 한 줄 SSR. 58페이지. **12건 중 "출시" 6건** | **SSR** | ⚠️**404 + HTML** (판정 불가) | 조사 중 **출시 기사 밀도 1위**. 질러·차오차이·백년동안·새미네부엌 등 자회 브랜드까지 한 피드에 |
-| **동서식품** | 제조사 | `POST www.dongsuh.co.kr/api/news/listData/{page}` | 보통 | JSON `regDt` **"2026-10-01 10:07"** 분 단위. 522건·53페이지. 제목에 `신제품 … 출시` | **XHR** (POST JSON) | ⚠️**404 + HTML** (판정 불가) | `POST /api/product/mainListData` 는 `prodName`·`brandNm`·`categoryNm` 카탈로그. 10건 중 출시 3건 |
+| **동서식품** | 제조사 | `POST www.dongsuh.co.kr/api/news/listData/{page}` | 보통 | 🔴 **정정: `regDt` 가 아니라 `showDt`.** `regDt` 는 일괄 재등록 흔적이 있다. 522건·53페이지. 제목에 `신제품 … 출시` | **XHR** (POST JSON) | ⚠️**404 + HTML** (판정 불가) | `POST /api/product/mainListData` 는 `prodName`·`brandNm`·`categoryNm` 카탈로그. 10건 중 출시 3건 |
 | **대상** | 제조사 | `www.daesang.com/kr/pr/news.jsp` | 보통 | 화면엔 날짜(2026.09.08). **신제품 기사는 2개월에 1건**(알룰로스 3종, 2026.08.10) | **XHR** (`POST /proc/boardListJson.jsp`) | ⚠️**`User-Agent: *` 한 줄, 규칙 0개** (13바이트, §5-2) | 기사 6건 중 5건이 CSR·상생. 밀도가 낮다 |
 | **청정원** | 제조사 | `www.chungjungone.com/news/` | — | **없음** | SSR (WordPress) | 허용 (WP 기본 + sitemap 2종) | ⚠️뉴스 최신 날짜가 **2022년**. 대상 본체 쪽이 살아 있고 여기는 죽어 있다 |
 | **SPC삼립** | 제조사 | `spcsamlip.co.kr/brand/bakery` | — | **없음** | SSR (브랜드 소개만) | 허용 — ⚠️`Allow: /` 선행 (영향 없음: Disallow 가 `/admin`·`/now/promise` 뿐) | **상품 카탈로그 자체가 없다.** 제품은 `brand.naver.com/samlip` = 네이버 스마트스토어(범위 밖) |
@@ -193,7 +193,19 @@ pageSize · rank · recordCountPerPage · regDt · regId · regIp · showDt · s
 ```
 
 > ⚠️ **제목 필드는 `sj` 다. `nttSj` 가 아니다** (`'nttSj' in rows[0]` → `False`).
-> 본문은 `cn`(+`cnHtml`), 날짜는 `regDt`.
+> 본문은 `cn`(+`cnHtml`).
+>
+> 🔴 **날짜 정정 (2026-10-01, 어댑터 작성자 실측).** 이 문서가 처음에 `regDt`
+> 가 분 단위인 걸 채택 가치로 적었는데 **틀렸다.** `regDt` 는 일괄 재등록
+> 흔적이 있는 등록 시각이고, 사이트가 화면에 찍는 날짜도 목록 정렬도
+> **`showDt`** 다. 80건 실측:
+> - `regDt` 2025-05-28 14:04~14:14 에 7건이 몰려 있는데 그 7건의 `showDt`
+>   는 2025-04-23 ~ 05-26 로 33일에 흩어진다. 2025-03-20 16:11~16:16 에도 3건.
+> - 80건 중 15건에서 `regDt` 날짜 ≠ `showDt`. 서로 다른 날짜 수 regDt 67 / showDt 79.
+> - `newsFunc.js` 가 목록·카루셀·상세 세 군데 전부 `newsInfo.showDt` 를 쓴다.
+> - 목록 정렬이 `showDt` 내림차순(80건 전수 완전 내림차순), `regDt` 는 아니다.
+>
+> GS25 의 `regDttm` 과 완전히 같은 모양이다. 어댑터는 `showDt` 를 쓴다.
 > 이 문서 초판에 `nttSj` 로 잘못 적혀 있었다 — 검수에서 잡혀 2026-10-01 정정했다.
 > 틀린 이름을 `.get()` 으로 쓰면 **예외 없이 전건 `None` 이 되고 어댑터가 조용히 0건을 낸다.**
 
