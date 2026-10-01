@@ -290,7 +290,13 @@ def kind_page(kind: str, rows: list, brands: list, today: date) -> str:
 
 # ── 진입점 ────────────────────────────────────────────────────────────
 
-def build(fresh: list, all_rows: list, out_dir: pathlib.Path) -> list:
+# 굿즈는 홈 탭에 넣지 않는다 — 먹을 걸 보러 온 사람의 1단 탭을 늘리면 375px 폭이
+# 깨진다. 대신 유형 페이지 하나로 모으고 푸터에서 링크한다.
+GOODS = "굿즈"
+
+
+def build(fresh: list, all_rows: list, out_dir: pathlib.Path,
+          goods: list = ()) -> list:
     """신제품 상세 + 브랜드 목록 + 유형 목록을 만들고 생성한 경로를 돌려준다."""
     today = date.today()
     out_dir = pathlib.Path(out_dir)
@@ -337,4 +343,49 @@ def build(fresh: list, all_rows: list, out_dir: pathlib.Path) -> list:
         paths.append(_write(out_dir, theme.kind_path(kind),
                             kind_page(kind, rows, brands, today)))
 
+    # 굿즈. 먹는 게 아니라 본 목록에서는 뺐지만 신제품인 건 맞아서 따로 모은다.
+    # 상세도 같이 만든다 — 목록만 있고 상세가 없으면 카드가 메뉴판으로 떨어진다.
+    gseen, gitems = set(), []
+    for r in sorted(goods, key=lambda r: (_when(r), r["brand"]), reverse=True):
+        gp = theme.product_path(r)
+        if gp in seen or gp in gseen:
+            continue
+        gseen.add(gp)
+        gitems.append(r)
+    if gitems:
+        for r in gitems:
+            sib = [x for x in gitems
+                   if x["brand"] == r["brand"] and x["key"] != r["key"]][:RELATED]
+            paths.append(_write(out_dir, theme.product_path(r),
+                                product_page(r, sib, [])))
+        gbrands = sorted({r["brand"] for r in gitems})
+        paths.append(_write(out_dir, theme.kind_path(GOODS),
+                            kind_page(GOODS, gitems, gbrands, today)))
+
+    _sweep(out_dir, paths)
     return paths
+
+
+def _sweep(out_dir: pathlib.Path, paths: list) -> None:
+    """이번에 안 만든 상세·목록 페이지를 지운다.
+
+    신제품 창을 벗어난 상품의 페이지가 디스크에 계속 남아 있었다. 사이트맵에는
+    없는데 주소로는 열려서, 검색에서 들어온 사람이 몇 달 전 메뉴를 신상으로 본다.
+    생성 결과를 정본으로 삼고 그 바깥을 턴다 — 지우는 쪽이라 sitemap 문자열이 아니라
+    이번 실행이 실제로 돌려준 경로와 대조해야 한다(전에 접두 'p/' 를 빼고 비교해
+    상세 337장을 통째로 날린 적이 있다).
+    """
+    keep = {(out_dir / rel / "index.html").resolve() for rel in paths}
+    gone = 0
+    for sub in ("p", "b", "c"):
+        d = out_dir / sub
+        if not d.is_dir():
+            continue
+        for child in d.iterdir():
+            f = child / "index.html"
+            if child.is_dir() and f.is_file() and f.resolve() not in keep:
+                f.unlink()
+                child.rmdir()
+                gone += 1
+    if gone:
+        print(f"→ 더 이상 만들지 않는 페이지 {gone}장 정리")

@@ -31,13 +31,16 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
                         mega, pizza_domino, pizza_mrpizza, pizza_papajohns,
                         pizza_pizzahut,
                         seven, starbucks, toast_isaac)
+from collectors import gs25
 
-# GS25 는 제외. gs25.gsretail.com/gscvs/* 가 기업 소개 페이지로 301 되고
-# 상품 카탈로그는 '우리동네GS' 앱 전용으로 옮겨가 공개 웹 소스가 없다.
+# GS25 는 상품 카탈로그를 긁을 수 없다 — gs25.gsretail.com 은 전 경로가 본사
+# 브랜드 페이지로 리다이렉트되는 SPA 껍데기고, 카탈로그는 '우리동네GS' 앱 전용이다.
+# 대신 본사 보도자료에서 출시 기사만 추린다. 오뚜기·오리온과 같은 종류의 소스라
+# 수집량도 같은 급(연 10건 안팎)이고 편의점 3사와 비교할 물량이 아니다.
 ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             cafe_coffeebean, cafe_paulbassett, cafe_yogerpresso,
             cafe_mammoth, cafe_theventi, cafe_compose, cafe_hollys,
-            cu, seven, emart24,                                      # 편의점
+            cu, seven, emart24, gs25,                                # 편의점
             burger_momstouch, burger_burgerking, burger_frankburger, # 햄버거
             burger_mcdonalds,
             maker_ottogi, maker_paldo, maker_orion,                  # 제조사(과자·라면)
@@ -201,17 +204,17 @@ def main() -> None:
          "count": len(rows), "products": rows},
         ensure_ascii=False, indent=1), encoding="utf-8")
 
-    fresh = [r for r in rows if is_fresh(r, today)]
-    fresh.sort(key=lambda r: (_when(r), r["brand"]), reverse=True)
-    fresh = cap_per_brand(drop_sets(merge_variants(fresh)))
+    fresh = pick(rows, today)
+    goods = pick(rows, today, goods=True)      # 굿즈는 버리지 않고 따로 모은다
     new_today = [r for r in fresh if _when(r) == today]
-    print(f"총 {len(rows)}건 / 신제품 {len(fresh)}건 (오늘 {len(new_today)}건) / 사라짐 {len(gone)}건")
+    print(f"총 {len(rows)}건 / 신제품 {len(fresh)}건 (오늘 {len(new_today)}건)"
+          f" / 굿즈 {len(goods)}건 / 사라짐 {len(gone)}건")
     render(fresh, new_today)
 
     # 개별 페이지·sitemap·아이콘. web.seo 가 collect 를 import 하므로 여기서 늦게 부른다.
     from web import assets, pages, seo
     docs = OUT.parent
-    paths = pages.build(fresh, rows, docs)
+    paths = pages.build(fresh, rows, docs, goods=goods)
     seo.build(fresh, paths, docs)
     assets.build(docs)
     print(f"→ 개별 페이지 {len(paths)}장 + sitemap·feed·아이콘")
@@ -220,6 +223,14 @@ def main() -> None:
     # (워크플로의 커밋 스텝은 if: always() 라 부분 결과는 반영된다.)
     if errors:
         raise SystemExit("어댑터 실패:\n" + "\n".join(errors))
+
+
+def pick(rows: list, today: str, *, goods: bool = False) -> list:
+    """화면에 올릴 목록. 고르고·정렬하고·변형을 묶는 순서가 식품과 굿즈 모두 같아야
+    한다. 전에는 이 네 줄이 호출부에 펼쳐져 있어서 한쪽만 고치면 어긋났다."""
+    out = [r for r in rows if is_fresh(r, today, goods=goods)]
+    out.sort(key=lambda r: (_when(r), r["brand"]), reverse=True)
+    return cap_per_brand(drop_sets(merge_variants(out)))
 
 
 # 같은 상품의 단품·세트·라지세트가 따로 올라온다. 버거킹만 12개 그룹 36건이라
@@ -284,7 +295,7 @@ def _when(r: dict) -> str:
     return r.get("released_at") or r.get("uploaded_at") or r.get("first_seen", "")
 
 
-def is_fresh(r: dict, today: str) -> bool:
+def is_fresh(r: dict, today: str, *, goods: bool = False) -> bool:
     """화면에 올릴 신제품인가.
 
     사용자 요구는 '그날 새로 올라온 것만'이다. 전체 메뉴판은 필요 없다.
@@ -294,10 +305,12 @@ def is_fresh(r: dict, today: str) -> bool:
     """
     # 맨 앞이어야 한다. 아래 is_new 분기가 먼저 return 해버리면 브랜드 신메뉴
     # 페이지에 올라온 굿즈(매머드 키링·볼펜 등)가 그대로 통과한다.
-    if r.get("nonfood"):
-        return False                      # 텀블러·키링 같은 굿즈. 먹는 게 아니다.
     if r.get("alcohol"):
         return False                      # 술. 연령 확인 없이 내보낼 게 아니다.
+    # 굿즈는 버리는 게 아니라 따로 모은다. 신제품 판정 근거(아래)는 식품과 똑같이
+    # 적용하고, 어느 쪽 목록에 넣을지만 여기서 가른다.
+    if bool(r.get("nonfood")) != goods:
+        return False
     d0 = date.fromisoformat(today)
     cutoff = (d0 - timedelta(days=WINDOW)).isoformat()
     stamped = r.get("released_at") or r.get("uploaded_at")
@@ -443,7 +456,10 @@ def card(r: dict) -> str:
 
 
 def render(rows: list, new_today: list) -> None:
-    shown = rows[:SHOW]                 # 숫자는 실제로 그리는 것만 세야 맞는다
+    # 숫자는 화면에 실제로 있는 것만 센다. len(rows) 를 쓰면 SHOW 가 자른 뒤에도
+    # 483건이라고 써서, 끝까지 내려도 300장뿐인 화면이 거짓말을 한다.
+    shown = rows[:SHOW]
+    more = len(rows) - len(shown)
     pcount = collections.Counter(primary_of(r) for r in shown)
     scount = collections.Counter(r.get("brand_sub", "") for r in shown if r.get("brand_sub"))
 
@@ -460,8 +476,19 @@ def render(rows: list, new_today: list) -> None:
         for k in SUBS if scount.get(k))
 
     updated = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
+    # 홈에서 /c/ 로 나가는 길이 하나도 없었다. SHOW 가 자른 분량과, 홈 칩에
+    # 안 뜨는 분류(화면 300장 안에 한 건도 없는 유형)가 여기서만 닿는다.
+    from web import theme as _t
+    kinds = [k for _, k in SECTIONS if k and any(
+        primary_of(r) == k or r.get("brand_sub") == k or r.get("brand_type") == k
+        for r in rows)]
+    klinks = " · ".join(
+        f'<a href="{ROOT_PATH}{_t.kind_path(k)}">{html.escape(k)}</a>' for k in kinds)
+    klinks += f' · <a href="{ROOT_PATH}{_t.kind_path("굿즈")}">굿즈</a>'
+    count = (f"최근 {WINDOW}일 신제품 {len(rows)}건 — 이 화면에 최신 {len(shown)}장"
+             if more else f"최근 {WINDOW}일 신제품 {len(shown)}건")
     lead = (f"오늘 {len(new_today)}건" if new_today
-            else f"최근 {WINDOW}일 신제품 {len(rows)}건")
+            else f"최근 {WINDOW}일 신제품 {len(shown)}건")
     from web import theme
     top = next((r for r in rows if r.get("image")), None)
     _head = theme.head(
@@ -491,7 +518,8 @@ def render(rows: list, new_today: list) -> None:
 {body}
 <p class="empty" id="noresult" hidden>찾는 제품이 없습니다.<br>다른 말로 검색해 보세요.</p>
 </main>
-<footer>마지막 갱신 {updated} · 최근 {WINDOW}일 신제품 {len(rows)}건<br>
+<footer>마지막 갱신 {updated} · {count}<br>
+{klinks}<br>
 {theme.NOTICE}</footer>
 </div>
 <script>
