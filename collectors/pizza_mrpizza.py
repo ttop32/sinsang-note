@@ -39,7 +39,10 @@ DELAY = 0.5           # 요청 간격(초)
 PROMO_PREFIX = "특가세트"
 
 
-_BADGE = re.compile(r"/(new|best)\.png$", re.I)   # 상품 사진이 아니라 배지
+# 상품 사진은 업로드 경로에, 배지는 스킨 경로에 있다. 배지 파일명을 열거하면
+# 반드시 빠뜨린다 — new·best 만 적어놨다가 hot.png 를 놓쳐서 '핫치킨 퀘사디아'
+# 자리에 HOT 아이콘이 떴다(3건). 파일명이 아니라 경로로 가른다.
+_PHOTO = re.compile(r"/data/file/", re.I)
 
 
 def _categories(html: str) -> list[str]:
@@ -62,11 +65,10 @@ def _cards(html: str, category: str) -> list[Item]:
         name = " ".join(tit.text().split())
         if not name:
             continue
-        # .gall_img 에 img 가 둘이다. 첫 번째는 NEW/BEST 배지이고 상품 사진은
-        # alt 에 상품명이 박힌 쪽이다. css_first 로 집으면 배지가 잡혀서
-        # 화면의 음식 사진 자리에 NEW 아이콘이 뜬다.
+        # .gall_img 에 img 가 둘 이상이다. 배지(/skin/…)가 앞에 와서 css_first
+        # 로 집으면 음식 사진 자리에 아이콘이 뜬다. 업로드 경로만 고른다.
         srcs = [i.attributes.get("src", "") for i in li.css(".gall_img img")]
-        photo = next((u for u in srcs if not _BADGE.search(u)), "")
+        photo = next((u for u in srcs if _PHOTO.search(u)), "")
         is_new = any("new.png" in u.lower() for u in srcs) or None
         items.append(Item(
             brand=BRAND,
