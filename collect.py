@@ -15,6 +15,9 @@ from datetime import date, datetime, timedelta, timezone
 from collectors import (bakery_parisbaguette, base, bon_if, cafe_yogerpresso,
                         snack_barunkim, snack_jaws, snack_kimbabcheonguk,
                         snack_myungrang)
+from collectors import (bakery_breadnco, bakery_hongruijen, bakery_knotted,
+                        bakery_napoleon, bakery_samsong, burger_mcdonalds,
+                        maker_orion, maker_ottogi, maker_paldo)
 from collectors import (cafe_compose, cafe_hollys, cafe_mammoth, cafe_theventi,
                         salad_salady, sandwich_eggdrop, sandwich_subway,
                         sushi_sushiro)
@@ -36,12 +39,15 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             cafe_mammoth, cafe_theventi, cafe_compose, cafe_hollys,
             cu, seven, emart24,                                      # 편의점
             burger_momstouch, burger_burgerking, burger_frankburger, # 햄버거
+            burger_mcdonalds,
+            maker_ottogi, maker_paldo, maker_orion,                  # 제조사(과자·라면)
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
             pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
             toast_isaac, snack_kimbabcheonguk, snack_barunkim,       # 분식
             snack_jaws, snack_myungrang,
-            bakery_parisbaguette,                                    # 베이커리
+            bakery_parisbaguette, bakery_napoleon, bakery_breadnco,  # 베이커리
+            bakery_hongruijen, bakery_knotted, bakery_samsong,
             bon_if,                        # 본아이에프 8브랜드(한식·도시락·카페)
             sushi_sushiro, sandwich_eggdrop, sandwich_subway,        # 일식·샌드위치
             salad_salady]                                            # 샐러드
@@ -286,6 +292,10 @@ def is_fresh(r: dict, today: str) -> bool:
     아무 근거도 없으면 올리지 않는다 — 카탈로그를 신상인 척 내보내는 게
     이 서비스에서 제일 큰 거짓말이다.
     """
+    # 맨 앞이어야 한다. 아래 is_new 분기가 먼저 return 해버리면 브랜드 신메뉴
+    # 페이지에 올라온 굿즈(매머드 키링·볼펜 등)가 그대로 통과한다.
+    if r.get("nonfood"):
+        return False                      # 텀블러·키링 같은 굿즈. 먹는 게 아니다.
     d0 = date.fromisoformat(today)
     cutoff = (d0 - timedelta(days=WINDOW)).isoformat()
     stamped = r.get("released_at") or r.get("uploaded_at")
@@ -295,12 +305,14 @@ def is_fresh(r: dict, today: str) -> bool:
     # promo 는 '신제품 근거 없이 행사라서 목록에 실린 것'을 거르는 용도다.
     if r.get("is_new") is True:
         # 배지는 믿되 날짜가 있으면 그쪽을 따른다. 배지만 보고 넘기면 화면이
-        # "최근 21일"이라고 써놓고 3개월 전 상품을 보여주게 된다(94건이 그랬다).
+        # "최근 60일"이라고 써놓고 반년 전 상품을 보여주게 된다.
         if stamped:
             return stamped >= cutoff
-        # 날짜가 없으면 기준선인지 본다. 이 검사를 빠뜨려서 합류 첫날 쌓은
-        # 메뉴판이 통째로 '오늘 신상'으로 나갔다(300장 중 265장).
-        return not r.get("baseline")
+        # 날짜가 없으면 배지를 그대로 믿는다. 브랜드가 자기 신메뉴 목록에
+        # 올려놓은 것이라 합류 첫날이어도 신제품이 맞다.
+        # (기준선이라고 막았더니 빽다방 신메뉴 11건·설빙 NEW 14건이 통째로
+        #  사라졌다. 기준선 가드는 아무 근거가 없는 diff 경로에만 쓴다.)
+        return True
 
     if r.get("promo"):
         return False                      # 행사라서 실린 상품. 신제품 근거가 없다.
@@ -373,8 +385,8 @@ a.c:hover,a.c:focus-visible{border-color:var(--accent)}
 PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"), ("외식", "외식")]
 
 # 2단(세부). brand_sub 값이다. 프랜차이즈에만 있다.
-SUBS = ["햄버거", "피자", "치킨", "베이커리", "디저트", "분식",
-        "한식", "도시락", "일식", "샌드위치", "샐러드"]
+SUBS = ["과자", "라면", "햄버거", "피자", "치킨", "베이커리", "디저트",
+        "분식", "한식", "도시락", "일식", "샌드위치", "샐러드"]
 
 # web/pages.py 가 유형 페이지(/c/...)를 만들 때 쓰는 목록. 1단+2단을 합친다.
 SECTIONS = [("전체", "")] + [(k, k) for k in ["편의점", "카페"] + SUBS]
@@ -383,7 +395,10 @@ SECTIONS = [("전체", "")] + [(k, k) for k in ["편의점", "카페"] + SUBS]
 def primary_of(r: dict) -> str:
     """대분류. 프랜차이즈는 전부 '외식' 으로 묶는다."""
     t = r.get("brand_type", "")
-    return "외식" if t == "프랜차이즈" else t
+    if t == "프랜차이즈":
+        return "외식"
+    # 제조사 상품은 결국 편의점에서 산다. 1단을 5개로 늘리면 375px 폭이 깨진다.
+    return "편의점" if t == "제조사" else t
 
 
 def card(r: dict) -> str:

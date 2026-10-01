@@ -32,6 +32,7 @@ def make_key(brand: str, name: str) -> str:
 CVS = "편의점"
 CAFE = "카페"
 FRANCHISE = "프랜차이즈"
+MAKER = "제조사"     # 편의점에 상품을 넣는 식품 제조사. 보도자료가 출시일을 준다
 
 # 브랜드 → (유형, 세부분류). 어댑터가 각자 선언하면 표기가 어긋나므로 여기 한 곳에 둔다.
 # 세부분류는 프랜차이즈에서만 쓴다(햄버거/피자/치킨).
@@ -57,10 +58,19 @@ BRANDS = {
     "도미노피자":  (FRANCHISE, "피자"),
     "굽네치킨":    (FRANCHISE, "치킨"),
     "프랭크버거":  (FRANCHISE, "햄버거"),
+    "맥도날드":    (FRANCHISE, "햄버거"),
+    "오뚜기":      (MAKER, "라면"),
+    "팔도":        (MAKER, "라면"),
+    "오리온":      (MAKER, "과자"),
     "배스킨라빈스": (FRANCHISE, "디저트"),
     "던킨":        (FRANCHISE, "디저트"),
     "이삭토스트":  (FRANCHISE, "분식"),
     "파리바게뜨":  (FRANCHISE, "베이커리"),
+    "나폴레옹과자점": (FRANCHISE, "베이커리"),
+    "브레댄코":    (FRANCHISE, "베이커리"),
+    "홍루이젠":    (FRANCHISE, "베이커리"),
+    "노티드":      (FRANCHISE, "베이커리"),
+    "삼송빵집":    (FRANCHISE, "베이커리"),
     "본죽":        (FRANCHISE, "한식"),
     "본죽&비빔밥":  (FRANCHISE, "한식"),
     "본도시락":    (FRANCHISE, "도시락"),
@@ -131,6 +141,11 @@ SITES = {
     "도미노피자":   "https://www.dominos.co.kr/goods/list",
     "폴바셋":       "https://www.baristapaulbassett.co.kr/menu/List.pb",
     "파리바게뜨":   "https://www.paris.co.kr/products/",
+    "나폴레옹과자점": "https://napoleonbakery.co.kr/h/b/napoleon/products",
+    "브레댄코":     "https://www.breadnco.kr/portfolio-category/new/",
+    "홍루이젠":     "https://www.hongruizhen.com/goods/goods_list.php?cateCd=001",
+    "노티드":       "http://www.knottedstore.com/menu",   # TLS 2026-09-06 만료 → http
+    "삼송빵집":     "https://ssbnc.kr/doc/menu0.php",
     "본죽":         "https://www.bonif.co.kr/brand/menu?brdCd=BF101",
     "본죽&비빔밥":   "https://www.bonif.co.kr/brand/menu?brdCd=BF102",
     "본도시락":     "https://www.bonif.co.kr/brand/menu?brdCd=BF104",
@@ -152,12 +167,41 @@ SITES = {
     "에그드랍":     "http://www.eggdrop.co.kr/menu/list.php?category=NEW",
     "써브웨이":     "https://www.subway.co.kr/menuList/sandwich",
     "샐러디":       "https://salady.com/menu/list_1",
+    "맥도날드":     "https://www.mcdonalds.co.kr/kor/menu/burger",
+    "오뚜기":       "https://www.otoki.com/pr/news?searchNewsCategory=PRESS",
+    "팔도":         "https://www.paldofood.co.kr/product/noodle",
+    "오리온":       "https://www.orionworld.com/board/list/87",
 }
 
 
 def site(brand: str) -> str:
     """브랜드 메뉴 페이지. 등록이 안 됐으면 빈 문자열(링크를 안 건다)."""
     return SITES.get(brand, "")
+
+
+# 먹는 게 아닌 것들. 브랜드가 분류로 알려주는 경우가 가장 정확하고, 없으면 이름을 본다.
+# 이름 단어는 좁게 잡는다 — '보틀'·'케이스' 를 넣었더니 '보틀캔디'·'빅보틀팝'·
+# '드립백 커피 틴케이스' 같은 실제 식품이 걸렸다.
+NONFOOD_CATEGORIES = {"MD상품", "생활용품"}
+NONFOOD_WORDS = (
+    "텀블러", "머그", "키링", "파우치", "볼펜", "피규어", "무드등",
+    "에코백", "담요", "인형", "칫솔", "치약", "바디밤", "가그린", "스타킹", "양말",
+    "립밤", "클렌징", "핸드크림", "샴푸", "앞치마", "쇼핑백", "보냉백", "보온병",
+    "우산", "슬리퍼", "방향제", "콘돔", "마스크3", "손소독", "굿즈", "가방", "세제",
+)
+# 넣으면 안 되는 단어들. 한국어는 단어 경계가 없어서 우연히 걸린다.
+#   보틀  → 빅보틀팝·보틀캔디 (과자)
+#   모자  → 분모자 = 당면. 로제분모자볶이·분모자 로제 떡볶이
+#   케이스 → 드립백 커피 틴케이스 세트
+#   타올  → 롯데)로케타올리베라스750ml = 와인 ('로케타 올리베라스')
+#   매트  → 패트와매트반반바 (아이스크림)
+#   핸디  → 복숭아 가득 핸디 젤리 (스타벅스). 텀블러류는 '텀블러' 로 이미 잡힌다
+# 새 단어를 넣기 전에 전체 데이터에 대고 식품 오탐이 0인지 먼저 세라.
+
+
+def is_nonfood(name: str, category: str = "") -> bool:
+    """굿즈·생활용품인가. 카페 MD, 편의점 생활용품, 콜라보 굿즈가 여기 걸린다."""
+    return category in NONFOOD_CATEGORIES or any(w in name for w in NONFOOD_WORDS)
 
 
 def kind(brand: str) -> tuple:
@@ -193,6 +237,7 @@ class Item:
     released_at: str = ""                        # 출시일/등록일. uploaded_at 보다 강한 신호
     is_new: bool | None = None                   # 브랜드가 신제품이라 표시했는가
     promo: bool = False                          # 행사/할인 상품 (신제품 아님)
+    nonfood: bool = False                        # 굿즈·생활용품. 먹는 게 아니라 따로 관리한다
     url: str = ""                                # 브랜드 사이트의 이 상품 페이지.
                                                  # 없으면 SITES 의 브랜드 메뉴 URL 로 떨어진다
     brand_type: str = ""                         # 레지스트리에서 채운다. 어댑터는 비워둔다
@@ -207,6 +252,8 @@ class Item:
         d["key"] = self.key
         d["brand_type"], d["brand_sub"] = kind(self.brand)
         d["url"] = self.url or site(self.brand)
+        # 어댑터가 따로 표시하지 않았으면 이름·분류로 판정한다.
+        d["nonfood"] = self.nonfood or is_nonfood(self.name, self.category)
         return d
 
 
