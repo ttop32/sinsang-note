@@ -85,12 +85,16 @@ STALE = 90
 # 팔도 라면 46종·스시로 '이달의 한정메뉴' 46종처럼 한 브랜드가 비슷한 걸
 # 수십 개 올리는 경우를 막는 장치지, 그 브랜드를 벌주는 게 아니다.
 # 전체는 /b/<브랜드>/ 에서 볼 수 있다.
-PER_BRAND = 12
+PER_BRAND = 0
 
 # 첫 화면에 그리는 최대 개수. 전량(2,600건+)을 한 장에 그리면 1MB 를 넘어가고
 # 브랜드가 늘수록 감당이 안 된다. 이 사이트의 용건은 '신제품'이라 최신순 앞쪽이
 # 대부분의 가치를 갖는다. 전량은 data/products.json 에 그대로 남는다.
-SHOW = 300
+# 홈에 그릴 카드 수. 0 이면 제한 없음.
+# 전에 300 으로 잘랐는데 "전체 1,237건" 이라고 써놓고 300장만 보여주는 게
+# 사용자한테 거짓말로 읽혔다. 다 그린다 — 이미지가 지연 로딩이라 첫 화면
+# 비용은 거의 같고, 끝까지 내려본 사람에게 나머지를 숨길 이유가 없다.
+SHOW = 0
 
 # 브랜드 하나에서 하루에 이만큼 넘게 새로 등장하면 신제품 출시가 아니라
 # 우리 쪽이 바뀐 것으로 본다(수집 범위 상향, 파서 개선, 중복 키 규칙 변경).
@@ -234,7 +238,8 @@ def main() -> None:
     # 비운다 — 기준선이 막아야 할 건 '우리가 처음 본 날'이라는 추측이지
     # 브랜드가 직접 찍어준 날짜가 아니다.
     new_today = [r for r in fresh if shown_date(r) == today]
-    print(f"총 {len(rows)}건 / 신제품 {len(listed)}건 (홈 {min(len(fresh), SHOW)}장,"
+    home = min(len(fresh), SHOW) if SHOW else len(fresh)
+    print(f"총 {len(rows)}건 / 신제품 {len(listed)}건 (홈 {home}장,"
           f" 오늘 {len(new_today)}건) / 굿즈 {len(listed_goods)}건 / 사라짐 {len(gone)}건")
     render(fresh, new_today, total=len(listed))
 
@@ -350,7 +355,14 @@ def _set_base(name: str) -> str:
     return name
 
 def cap_per_brand(rows: list) -> list:
-    """브랜드별 상한을 적용한다. 날짜순으로 이미 정렬돼 있어 최근 것부터 남는다."""
+    """브랜드별 상한. 0 이면 상한 없음.
+
+    한때 40, 그다음 12 였는데 운영자가 풀라고 했다. 상한이 있으면 화면 숫자와
+    실제 건수가 갈라지고, 그 차이를 설명하는 문장을 푸터에 계속 덧붙이게 된다.
+    다 보여주고 고르는 건 사용자가 한다.
+    """
+    if not PER_BRAND:
+        return rows
     seen = collections.Counter()
     out = []
     for r in rows:
@@ -623,9 +635,9 @@ def render(rows: list, new_today: list, total: int = 0) -> None:
     둘을 구분해야 푸터가 거짓말을 안 한다 — 상한이 헤드라인 숫자까지 줄이면
     '신제품 329건' 이라고 써놓고 실제로는 1,403건의 페이지가 있게 된다.
     """
-    # 숫자는 화면에 실제로 있는 것만 센다. len(rows) 를 쓰면 SHOW 가 자른 뒤에도
-    # 483건이라고 써서, 끝까지 내려도 300장뿐인 화면이 거짓말을 한다.
-    shown = rows[:SHOW]
+    # 숫자는 화면에 실제로 있는 것만 센다. 전에 len(rows) 를 써서 "483건" 이라
+    # 써놓고 끝까지 내려도 300장뿐이던 적이 있다. 지금은 SHOW=0 이라 안 자른다.
+    shown = rows[:SHOW] if SHOW else rows
     more = len(rows) - len(shown)
     pcount = collections.Counter(primary_of(r) for r in shown)
     scount = collections.Counter(x for x in map(sub_of, shown) if x)
@@ -671,7 +683,10 @@ def render(rows: list, new_today: list, total: int = 0) -> None:
         f'<span class="bn">{n}</span>'
         for b, n in sorted(bcount.items(), key=lambda kv: (-kv[1], kv[0])))
     whole = total or len(rows)
-    count = (f"최근 {WINDOW}일 신제품 {whole}건 — 이 화면에 최신 {len(shown)}장"
+    # 숫자가 다르면 왜 다른지까지 말해야 한다. 전에는 "1,237건 — 이 화면에
+    # 360장" 이라고만 써서 나머지 877장이 어디 갔는지 알 수가 없었다.
+    count = (f"최근 {WINDOW}일 신제품 {whole}건 · "
+             f"브랜드마다 최신 {PER_BRAND}장씩 {len(shown)}장"
              if whole > len(shown) else f"최근 {WINDOW}일 신제품 {len(shown)}건")
     lead = (f"오늘 {len(new_today)}건" if new_today
             else f"최근 {WINDOW}일 신제품 {len(shown)}건")

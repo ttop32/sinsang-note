@@ -26,7 +26,7 @@ from . import theme
 # 리더가 갱신마다 통째로 받아가는 파일이라 그 이상을 기본값으로 두지 않는다.
 # 다만 이건 '기본'이고 상한이 아니다 — 하루치가 이보다 많으면 _feed() 가
 # 늘려 잡는다. 자세한 건 _feed() 주석.
-FEED_MAX = 120
+FEED_MAX = 0          # 0 이면 제한 없음. 운영자 지시로 상한을 풀었다.
 
 # 우리 사이트 경로에서 그대로 둘 문자. 나머지(한글 포함)는 퍼센트 인코딩한다.
 # theme.slug() 가 한글을 살려두므로 이 단계가 없으면 sitemap 이 규격을 어긴다.
@@ -215,7 +215,7 @@ def _feed(fresh: list) -> str:
                     reverse=True)
     newest = ranked[0].get("first_seen", "") if ranked else ""
     day = sum(1 for r in ranked if r.get("first_seen", "") == newest)
-    rows = ranked[:max(FEED_MAX, day)]
+    rows = ranked if not FEED_MAX else ranked[:max(FEED_MAX, day)]
     cut = len(ranked) - len(rows)
     if cut:
         # 자르는 것 자체는 설계다. 조용히 자르는 게 결함이다.
