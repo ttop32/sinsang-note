@@ -395,6 +395,13 @@ def is_fresh(r: dict, today: str, *, goods: bool = False) -> bool:
     # 적용하고, 어느 쪽 목록에 넣을지만 여기서 가른다.
     if bool(r.get("nonfood")) != goods:
         return False
+    # 다만 '굿즈' 는 카페·외식 브랜드가 내는 기념품이다 — 텀블러·키링·인형·볼펜.
+    # 편의점·제조사가 파는 전동칫솔·세제·스타킹·콘돔·핫팩은 먹는 게 아닌 건
+    # 맞지만 굿즈가 아니다. 그걸 '굿즈' 라고 불러놓으면 화면이 이상해진다.
+    # 분류 이름이 내용을 설명하지 못하면 그건 분류가 아니다. 그래서 그쪽은
+    # 굿즈 목록에도 안 올린다 — 신상노트는 먹는 것과 그 브랜드 굿즈를 모은다.
+    if goods and r.get("brand_type") not in ("카페", "프랜차이즈"):
+        return False
     d0 = date.fromisoformat(today)
     cutoff = (d0 - timedelta(days=WINDOW)).isoformat()
     stamped = r.get("released_at") or r.get("uploaded_at")
@@ -511,6 +518,11 @@ PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"),
 # 2단(세부). brand_sub 값이다. 화면에는 건수 많은 순으로 깔리고(아래 render),
 # 이 순서는 건수가 같을 때만 쓴다. 전에는 선언 순서 그대로 깔려서 2위인
 # 일식 40건이 8번째로 밀려 375px 화면 밖에 있었다.
+# 건수가 많아도 뒤로 미는 것들. 외식에서 일식·한식은 '오늘 뭐 새로 나왔나' 를
+# 보러 온 사람이 잘 안 고르는데 건수는 많아서 앞자리를 차지한다. 가로로 흐르는
+# 줄이라 앞자리가 곧 화면 안이다.
+DEMOTE = {"일식", "한식"}
+
 SUBS = ["커피", "베이커리", "아이스크림", "빙수", "도넛",
         "과자", "라면", "음료", "냉동식품", "조미료",
         "햄버거", "피자", "치킨",
@@ -607,7 +619,7 @@ def render(rows: list, new_today: list, total: int = 0) -> None:
         f'<button class="t s" data-s="{html.escape(k)}" aria-pressed="false">'
         f'{html.escape(k)}<span class="n">{scount[k]}</span></button>'
         for k in sorted((k for k in SUBS if scount.get(k)),
-                        key=lambda k: (-scount[k], SUBS.index(k))))
+                        key=lambda k: (k in DEMOTE, -scount[k], SUBS.index(k))))
 
     updated = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
     # 홈에서 /c/ 로 나가는 길이 하나도 없었다. SHOW 가 자른 분량과, 홈 칩에
@@ -740,13 +752,17 @@ document.addEventListener('click', e => {{
 }});
 
 function syncSub() {{
-  // 그 대분류에 실제로 있는 세부만 남긴다. 하나도 없으면 2단 줄을 숨긴다.
+  // 그 대분류에 실제로 있는 세부만 남기고 **숫자도 그 대분류 안에서 센다.**
+  // 전에는 숫자가 전체 기준이라 '가공식품 > 커피 95' 라고 써놓고 누르면
+  // 1건이 나왔다 — 95는 카페의 커피였다. 숫자와 필터의 범위가 달랐다.
   let any = false;
   for (const b of subBtns) {{
-    const has = cards.some(c => c.dataset.s === b.dataset.s
-                             && (!kind || c.dataset.p === kind));
-    b.hidden = !has;
-    if (has) any = true;
+    const n = cards.filter(c => c.dataset.s === b.dataset.s
+                             && (!kind || c.dataset.p === kind)).length;
+    const tag = b.querySelector('.n');
+    if (tag) tag.textContent = n;
+    b.hidden = !n;
+    if (n) any = true;
   }}
   // '전체' 에서는 숨긴다. 13칩 1,051px 중 676px 가 화면 밖인 데다 커피·라면·
   // 일식·햄버거가 뒤섞여 있어 고르는 데 도움이 안 된다.
