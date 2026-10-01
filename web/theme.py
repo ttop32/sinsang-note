@@ -5,10 +5,16 @@
 자기 본문만 만든다.
 """
 import html
+from urllib.parse import urlsplit
 
 SITE = "신상노트"
 TAGLINE = "편의점·카페·프랜차이즈 신제품 모아보기"
 BASE_URL = "https://ttop32.github.io/sinsang-note"
+
+# 사이트 루트. GitHub Pages 가 /sinsang-note/ 아래에 서빙한다. BASE_URL 에서
+# 끌어낸다 — 전에 collect 가 "/sinsang-note/" 를 따로 적어뒀는데, 주소가 바뀌면
+# 홈 한 장만 옛 접두를 달고 나머지 1,400 장은 멀쩡한 꼴이 된다.
+ROOT_PATH = urlsplit(BASE_URL).path.rstrip("/") + "/"
 
 # 게시 중단 요청 창구. CRAWLING-POLICY §6 이 "요청이 오면 바로 내린다" 고
 # 약속해 놓고 정작 사이트에 연락할 곳이 없었다. 공개 레포의 이슈가 실제로

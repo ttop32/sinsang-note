@@ -15,18 +15,19 @@ import pathlib
 import re
 import shutil
 from datetime import date
-from urllib.parse import quote, quote_plus, urlsplit
+from urllib.parse import quote, quote_plus
 
+import rules
+import taxonomy
 from collectors import base
 from web import theme
 
-# 유형 축. collect.SECTIONS 와 같은 순서지만 collect 를 import 하지 않는다 —
+# 유형 축. taxonomy.SECTIONS 와 같은 순서지만 taxonomy 를 쓴다 —
 # collect 가 나중에 web.pages 를 부르게 되면 순환 import 가 된다.
 def _kinds() -> tuple:
-    """유형 목록은 collect.SECTIONS 가 정본이다. 여기 따로 두면 어긋난다.
+    """유형 목록은 taxonomy.SECTIONS 가 정본이다. 여기 따로 두면 어긋난다.
     실제로 5종만 적어놔서 /c/디저트/ 같은 페이지가 없는데 상세가 링크했다."""
-    import collect
-    return tuple(k for _, k in collect.SECTIONS if k)
+    return tuple(k for _, k in taxonomy.SECTIONS if k)
 
 
 KINDS = _kinds()
@@ -34,8 +35,7 @@ KINDS = _kinds()
 # 상단 추천에 붙일 같은 브랜드 신제품 개수. 내부 링크가 SEO 의 절반이다.
 RELATED = 6
 
-# 사이트 루트. GitHub Pages 가 /sinsang-note/ 아래에 서빙한다.
-ROOT_PATH = urlsplit(theme.BASE_URL).path.rstrip("/") + "/"
+ROOT_PATH = theme.ROOT_PATH
 
 E = html.escape
 
@@ -69,7 +69,7 @@ h2.sec{margin:38px 0 0;font-size:16px;letter-spacing:-.01em}
 def _shown_name(r: dict) -> str:
     """화면에 쓸 상품명. 정본은 collectors.base.display_name 이다.
 
-    홈(collect.card)만 다듬은 이름을 쓰고 상세·브랜드·유형·피드는 POS 이름을
+    홈(home.card)만 다듬은 이름을 쓰고 상세·브랜드·유형·피드는 POS 이름을
     그대로 내보내고 있었다 — `CU 도)튀김순대떡볶이트리플` 이 475장의 <h1>·
     <title>·og:title 에 그대로 박혀 있었다. 같은 규칙이 두 곳에 있고 한쪽만
     고친 이 레포 최빈 결함의 네 번째다.
@@ -83,12 +83,11 @@ def _when(r: dict) -> str:
 
 
 def _shown_date(r: dict) -> str:
-    """화면에 찍을 날짜. 정본은 collect.shown_date 다 — 두 벌로 두면 어긋난다.
+    """화면에 찍을 날짜. 정본은 rules.shown_date 다 — 두 벌로 두면 어긋난다.
 
     기준선 상품의 first_seen 은 출시일이 아니라 '우리가 처음 본 날'이라 안 찍는다.
     """
-    import collect
-    return collect.shown_date(r)
+    return rules.shown_date(r)
 
 
 def _date_tag(r: dict) -> str:
@@ -109,9 +108,8 @@ def _kinds_of(r: dict) -> list:
     흩어져서 /c/카페/ 가 생성 목록에서 빠지고, 프루너가 색인된 그 주소를
     지워버린다. 실제로 /c/카페/ 와 /c/디저트/ 가 그렇게 죽었다.
     """
-    import collect
     out = []
-    for k in (collect.primary_of(r), r.get("brand_sub", "")):
+    for k in (taxonomy.primary_of(r), r.get("brand_sub", "")):
         if k and k not in out:
             out.append(k)
     return out
@@ -156,7 +154,7 @@ def _crumb(trail: list) -> str:
 
 
 def _card(r: dict) -> str:
-    """목록용 카드. collect.card() 와 같은 모양이되 통째로 링크가 된다."""
+    """목록용 카드. home.card() 와 같은 모양이되 통째로 링크가 된다."""
     sub = _kind(r)
     if r.get("image"):
         alt = f'{r["brand"]} {_shown_name(r)} 제품 이미지'
@@ -268,7 +266,7 @@ def _brand_link(r: dict) -> str:
     아예 없다(스시로 40·빽다방 11·메가 6·프랭크버거 3·할리스 1·파파존스 1).
     없는 걸 있는 척하지 않는 게 이 프로젝트의 계약이다.
 
-    🔴 판정은 문자열 비교가 아니라 base.site() 호출이다. collect.card() 와
+    🔴 판정은 문자열 비교가 아니라 base.site() 호출이다. home.card() 와
     같은 조건이어야 하고, 그래야 김밥천국처럼 대표 URL 에 해시만 붙은
     딥링크(`…/31#lg=…&slide=6`)가 '메뉴판뿐'으로 오분류되지 않는다.
     """
