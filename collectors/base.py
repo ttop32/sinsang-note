@@ -286,7 +286,12 @@ _ALCOHOL_RE = re.compile(r"막걸리(?!향|맛|풍미)")
 # 무알콜 표기가 있으면 주류가 아니다. '아사히스타일프리캔맥주' 처럼 이름에
 # 맥주가 들어가도 술이 아닌 것들이 있다.
 NONALCOHOL_MARKS = ("무알콜", "논알콜", "넌알콜", "비알콜",
-                    "무알코올", "논알코올", "넌알코올", "0.0")
+                    "무알코올", "논알코올", "넌알코올")
+
+# 도수 0.0 표기. 이 검사는 맨 앞에서 즉시 False 를 돌려주므로 오탐이 나면
+# 술이 그대로 화면에 올라간다 — 방향이 반대인 유일한 규칙이다. 그냥 "0.0" 을
+# 넣으면 '…10.0g' 같은 용량 표기에 걸려 주류 필터가 통째로 꺼진다.
+_ZERO_ABV = re.compile(r"(?<!\d)0\.0(?!\d)")
 
 
 # 제조사 자사 주류 브랜드. 이름만으로는 못 가르고 그 회사 상품일 때만 술이다.
@@ -294,18 +299,21 @@ NONALCOHOL_MARKS = ("무알콜", "논알콜", "넌알콜", "비알콜",
 # 와 할리스 '미니저그 (클라우드크림)' 을 문다. 브랜드를 묶으면 그게 안 걸린다.
 # 편의점이 파는 같은 제품은 제조사 접두가 붙어("롯데)클라우드…") 따로 잡힌다.
 ALCOHOL_BY_BRAND = {
-    "롯데칠성음료": ("클라우드", "처음처럼", "백화수복", "스카치블루", "순하리",
-                 "청하", "설중매", "마주앙", "충전소", "별빛"),
+    # 값은 정규식이다. '새로' 는 2글자라 그냥 넣으면 '새로나온…' 을 문다
+    # (브랜드 안으로 좁혀도 그렇다). 뒤에 한글이 붙으면 다른 말이므로 끊는다.
+    "롯데칠성음료": (r"클라우드", r"처음처럼", r"새로(?![가-힣])", r"백화수복",
+                 r"스카치블루", r"순하리", r"청하", r"설중매", r"마주앙",
+                 r"충전소", r"별빛"),
 }
 
 
 def is_alcohol(name: str, category: str = "", brand: str = "") -> bool:
     """술인가. 무알콜 표기가 있으면 이름에 '맥주' 가 들어가도 술이 아니다."""
-    if any(m in name for m in NONALCOHOL_MARKS):
+    if any(m in name for m in NONALCOHOL_MARKS) or _ZERO_ABV.search(name):
         return False
     if category in ALCOHOL_CATEGORIES:
         return True
-    if any(w in name for w in ALCOHOL_BY_BRAND.get(brand, ())):
+    if any(re.search(w, name) for w in ALCOHOL_BY_BRAND.get(brand, ())):
         return True
     if _ALCOHOL_RE.search(name):
         return True

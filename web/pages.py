@@ -12,6 +12,7 @@ all_rows 는 '이 브랜드 전체 메뉴 N건' 같은 맥락 숫자에만 쓴�
 import html
 import json
 import pathlib
+import shutil
 from datetime import date
 from urllib.parse import quote, urlsplit
 
@@ -453,11 +454,12 @@ def _sweep(out_dir: pathlib.Path, paths: list) -> None:
         for child in d.iterdir():
             f = child / "index.html"
             if child.is_dir() and f.is_file() and f.resolve() not in keep:
-                f.unlink()
-                # 디렉터리에 군더더기가 있으면 rmdir 이 터진다. 거기서 멈추면
-                # 이미 지운 앞쪽만 사라진 채로 끝난다 — 지나가고 나중에 알린다.
+                # 통째로 지운다. index.html 만 지우고 rmdir 하면 디렉터리에
+                # 군더더기가 하나라도 있을 때 터진다 — macOS 는 Finder 로 폴더를
+                # 열기만 해도 .DS_Store 를 만든다. 우리가 만든 디렉터리이고
+                # 안에 우리 생성물만 들어가는 자리라 통째로 지우는 게 맞다.
                 try:
-                    child.rmdir()
+                    shutil.rmtree(child)
                 except OSError:
                     leftover.append(str(child))
                 gone += 1
