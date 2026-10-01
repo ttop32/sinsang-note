@@ -1476,7 +1476,7 @@
    "key": "이마트24:롯데아사히)쇼쿠사이캔340ml*6입",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -1498,7 +1498,7 @@
    "key": "이마트24:롯데아사히)쇼쿠사이캔340ml",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -1586,7 +1586,7 @@
    "key": "이마트24:엠즈)삿포로겨울이야기500ML",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -2202,7 +2202,7 @@
    "key": "이마트24:롯데아사히)오리온더드래프트500ml",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -2224,7 +2224,7 @@
    "key": "이마트24:롯데아사히)오리온더드래프트500ml*6입",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -2862,7 +2862,7 @@
    "key": "이마트24:하이트)크로넨버그1664블랑캔330ml",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -2884,7 +2884,7 @@
    "key": "이마트24:하이트)크로넨버그1664로제500ml",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -4754,7 +4754,7 @@
    "key": "이마트24:칼스버그)칼스버그루나캔500ml",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -4908,7 +4908,7 @@
    "key": "이마트24:하이네켄)넌알콜330ml",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": true
+   "alcohol": false
   },
   {
    "brand": "이마트24",
@@ -4930,7 +4930,7 @@
    "key": "이마트24:하이네켄)넌알콜330ml*6입",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": true
+   "alcohol": false
   },
   {
    "brand": "이마트24",
@@ -4952,7 +4952,7 @@
    "key": "이마트24:하이네켄)넌알콜500ml",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": true
+   "alcohol": false
   },
   {
    "brand": "이마트24",
@@ -4974,7 +4974,7 @@
    "key": "이마트24:하이네켄)넌알콜500ml*6",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": true
+   "alcohol": false
   },
   {
    "brand": "이마트24",
@@ -8274,7 +8274,7 @@
    "key": "이마트24:오비)한맥355ml",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -8296,7 +8296,7 @@
    "key": "이마트24:오비)한맥500ml",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -8318,7 +8318,7 @@
    "key": "이마트24:오비)한맥500mlL*4",
    "first_seen": "2026-10-01",
    "baseline": true,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -25795,7 +25795,7 @@
    "first_seen": "2026-09-30",
    "baseline": true,
    "nonfood": false,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -26278,7 +26278,7 @@
    "first_seen": "2026-09-30",
    "baseline": true,
    "nonfood": false,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "이마트24",
@@ -68159,7 +68159,7 @@
    "first_seen": "2026-09-29",
    "baseline": true,
    "nonfood": false,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "세븐일레븐",
@@ -68688,7 +68688,7 @@
    "first_seen": "2026-09-29",
    "baseline": true,
    "nonfood": false,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "세븐일레븐",
@@ -68711,7 +68711,7 @@
    "first_seen": "2026-09-29",
    "baseline": true,
    "nonfood": false,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "세븐일레븐",
@@ -69125,7 +69125,7 @@
    "first_seen": "2026-09-29",
    "baseline": true,
    "nonfood": false,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "세븐일레븐",
@@ -133329,7 +133329,7 @@
    "first_seen": "2024-12-05",
    "baseline": true,
    "nonfood": false,
-   "alcohol": false
+   "alcohol": true
   },
   {
    "brand": "BBQ",

@@ -15,6 +15,7 @@ import pathlib
 from datetime import date
 from urllib.parse import quote, urlsplit
 
+from collectors import base
 from web import theme
 
 # 유형 축. collect.SECTIONS 와 같은 순서지만 collect 를 import 하지 않는다 —
@@ -117,7 +118,7 @@ def _card(r: dict) -> str:
         img = '<div class="ph"></div>'
     badge = '<span class="lb">NEW</span>' if r.get("is_new") else ""
     tags = "".join(f'<span class="lb lb2">{E(l)}</span>'
-                   for l in r.get("labels", []) if l)
+                   for l in base.shown_labels(r.get("labels")))
     when = _when(r)
     return (f'<a class="c" href="{_href(theme.product_path(r))}" data-g="{E(sub)}">{img}'
             f'<div class="b"><div class="m">{badge}{tags}'
@@ -166,7 +167,7 @@ def product_page(r: dict, siblings: list, neighbors: list) -> str:
 
     badge = '<span class="lb">NEW</span>' if r.get("is_new") else ""
     tags = "".join(f'<span class="lb lb2">{E(l)}</span>'
-                   for l in r.get("labels", []) if l)
+                   for l in base.shown_labels(r.get("labels")))
     chips = f'<div class="m">{badge}{tags}</div>' if (badge or tags) else ""
 
     # 없는 값은 줄 자체를 빼야 한다. "카테고리: -" 는 검색엔진에도 사람에게도 잡음이다.

@@ -271,14 +271,6 @@ def drop_sets(rows: list) -> list:
 
 _SET = re.compile(r"세트|콤보")
 
-# 카드에 안 보일 행사 라벨
-PROMO_LABELS = {"1+1", "2+1", "3+1", "1 + 1", "2 + 1", "3 + 1",
-                "할인", "증정", "세일", "특가"}
-
-# 브랜드가 준 NEW 계열 라벨. 우리 NEW 뱃지와 겹쳐 두 번 뜬다.
-DUP_LABELS = {"NEW", "New", "new", "신메뉴", "신상품", "신제품"}
-
-
 def cap_per_brand(rows: list) -> list:
     """브랜드별 상한을 적용한다. 날짜순으로 이미 정렬돼 있어 최근 것부터 남는다."""
     seen = collections.Counter()
@@ -334,7 +326,7 @@ def is_fresh(r: dict, today: str, *, goods: bool = False) -> bool:
 
     # 어댑터가 promo 를 안 채워도 라벨이 행사면 같은 취급한다. 단 브랜드가
     # 날짜를 준 경우는 '신제품 + 도입행사'일 수 있으니 날짜 판정에 맡긴다.
-    if not stamped and any(l in PROMO_LABELS for l in r.get("labels", [])):
+    if not stamped and any(l in base.PROMO_LABELS for l in r.get("labels", [])):
         return False
 
     # 브랜드가 '신제품 아님'이라고 말했으면 이미지 업로드 시각으로 뒤집지 않는다.
@@ -370,6 +362,11 @@ border:1px solid var(--line);background:var(--chip);color:var(--fg);min-height:4
 #q:focus{outline:none;border-color:var(--accent)}
 #sort{flex:none}
 .cnt{margin:10px 0 0;font-size:12px;color:var(--mut);min-height:16px}
+/* 푸터의 분류·업체 목록. 업체가 50곳 넘어서 그냥 흘리면 푸터가 화면을 덮는다. */
+.fl{margin:10px 0;line-height:2}
+.fl b{display:block;font-weight:600;color:var(--fg);margin-bottom:2px}
+.fl a{margin-right:2px}
+.bn{font-size:10px;color:var(--mut);margin:0 8px 0 2px}
 
 nav{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);
 margin:12px -16px 0;padding:10px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;
@@ -399,8 +396,11 @@ a.c:hover,a.c:focus-visible{border-color:var(--accent)}
 # 대분류는 4개로 묶고 세부 분류는 2단에서 고르게 한다.
 PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"), ("외식", "외식")]
 
-# 2단(세부). brand_sub 값이다. 프랜차이즈에만 있다.
-SUBS = ["과자", "라면", "햄버거", "피자", "치킨", "베이커리", "디저트",
+# 2단(세부). brand_sub 값이다. 화면에는 건수 많은 순으로 깔리고(아래 render),
+# 이 순서는 건수가 같을 때만 쓴다. 전에는 선언 순서 그대로 깔려서 2위인
+# 일식 40건이 8번째로 밀려 375px 화면 밖에 있었다.
+SUBS = ["커피", "베이커리", "아이스크림", "빙수", "도넛",
+        "과자", "라면", "햄버거", "피자", "치킨",
         "분식", "한식", "도시락", "일식", "샌드위치", "샐러드"]
 
 # web/pages.py 가 유형 페이지(/c/...)를 만들 때 쓰는 목록. 1단+2단을 합친다.
@@ -428,8 +428,7 @@ def card(r: dict) -> str:
     # 신상품 탭 91건 전부) 그대로 두면 신상 목록이 할인 목록처럼 읽힌다.
     # 행사 정보 자체는 data/products.json 과 상세 페이지에 남는다.
     tags = "".join(f'<span class="lb lb2">{e(l)}</span>'
-                   for l in r.get("labels", [])
-                   if l and l not in PROMO_LABELS and l not in DUP_LABELS)
+                   for l in base.shown_labels(r.get("labels")))
     # 카드를 누르면 브랜드의 그 상품 페이지로 간다. 우리가 정보를 붙들지 않고
     # 트래픽을 브랜드로 돌려주는 구조여야 한다.
     #
@@ -470,10 +469,13 @@ def render(rows: list, new_today: list) -> None:
         f'</button>'
         for i, (label, key) in enumerate(PRIMARY)
         if not key or pcount.get(key))
+    # 건수 많은 순. 가로로 흐르는 줄이라 화면 안에 드는 건 앞의 네댓 개뿐이고,
+    # 선언 순서대로 깔면 제일 볼 게 많은 분류가 화면 밖으로 밀린다.
     subs = "".join(
         f'<button class="t s" data-s="{html.escape(k)}" aria-pressed="false">'
         f'{html.escape(k)}<span class="n">{scount[k]}</span></button>'
-        for k in SUBS if scount.get(k))
+        for k in sorted((k for k in SUBS if scount.get(k)),
+                        key=lambda k: (-scount[k], SUBS.index(k))))
 
     updated = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d %H:%M")
     # 홈에서 /c/ 로 나가는 길이 하나도 없었다. SHOW 가 자른 분량과, 홈 칩에
@@ -485,6 +487,13 @@ def render(rows: list, new_today: list) -> None:
     klinks = " · ".join(
         f'<a href="{ROOT_PATH}{_t.kind_path(k)}">{html.escape(k)}</a>' for k in kinds)
     klinks += f' · <a href="{ROOT_PATH}{_t.kind_path("굿즈")}">굿즈</a>'
+    # 업체별로도 찾는다. /b/ 는 만들어만 놓고 사이트 어디서도 링크하지 않아
+    # 사이트맵으로만 닿을 수 있었다. 건수 많은 순, 이름순은 동점일 때만.
+    bcount = collections.Counter(r["brand"] for r in rows)
+    blinks = " · ".join(
+        f'<a href="{ROOT_PATH}{_t.brand_path(b)}">{html.escape(b)}</a>'
+        f'<span class="bn">{n}</span>'
+        for b, n in sorted(bcount.items(), key=lambda kv: (-kv[1], kv[0])))
     count = (f"최근 {WINDOW}일 신제품 {len(rows)}건 — 이 화면에 최신 {len(shown)}장"
              if more else f"최근 {WINDOW}일 신제품 {len(shown)}건")
     lead = (f"오늘 {len(new_today)}건" if new_today
@@ -518,8 +527,9 @@ def render(rows: list, new_today: list) -> None:
 {body}
 <p class="empty" id="noresult" hidden>찾는 제품이 없습니다.<br>다른 말로 검색해 보세요.</p>
 </main>
-<footer>마지막 갱신 {updated} · {count}<br>
-{klinks}<br>
+<footer>마지막 갱신 {updated} · {count}
+<div class="fl"><b>분류</b> {klinks}</div>
+<div class="fl"><b>업체</b> {blinks}</div>
 {theme.NOTICE}</footer>
 </div>
 <script>
