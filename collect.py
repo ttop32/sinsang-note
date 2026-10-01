@@ -31,7 +31,7 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
                         mega, pizza_domino, pizza_mrpizza, pizza_papajohns,
                         pizza_pizzahut,
                         seven, starbucks, toast_isaac)
-from collectors import gs25
+from collectors import gs25, lottechilsung
 
 # GS25 는 상품 카탈로그를 긁을 수 없다 — gs25.gsretail.com 은 전 경로가 본사
 # 브랜드 페이지로 리다이렉트되는 SPA 껍데기고, 카탈로그는 '우리동네GS' 앱 전용이다.
@@ -44,6 +44,7 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             burger_momstouch, burger_burgerking, burger_frankburger, # 햄버거
             burger_mcdonalds,
             maker_ottogi, maker_paldo, maker_orion,                  # 제조사(과자·라면)
+            lottechilsung,                                           # 제조사(음료)
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
             pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
@@ -403,7 +404,6 @@ a.c:hover,a.c:focus-visible{border-color:var(--accent)}
    카드(.c)에서 같은 사고가 났을 때 그쪽만 고치고 칩은 놔뒀다 — 그래서 2단
    칩이 지금껏 한 번도 안 숨겨졌고, 카페를 골라도 치킨·피자 칩이 남아 있었다. */
 .t[hidden]{display:none}          /* .c 의 display:flex 가 브라우저 기본 [hidden] 을 덮는다 */
-.c img{height:auto}               /* width/height 속성만으론 세로로 늘어난다 */
 .go{display:block;padding:0 11px 12px;font-size:11px;color:var(--accent);font-weight:600}
 .en{margin:0;font-size:11px;color:var(--mut)}
 """
@@ -419,7 +419,7 @@ PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"),
 # 이 순서는 건수가 같을 때만 쓴다. 전에는 선언 순서 그대로 깔려서 2위인
 # 일식 40건이 8번째로 밀려 375px 화면 밖에 있었다.
 SUBS = ["커피", "베이커리", "아이스크림", "빙수", "도넛",
-        "과자", "라면", "햄버거", "피자", "치킨",
+        "과자", "라면", "음료", "햄버거", "피자", "치킨",
         "분식", "한식", "도시락", "일식", "샌드위치", "샐러드"]
 
 # web/pages.py 가 유형 페이지(/c/...)를 만들 때 쓰는 목록. 1단+2단을 합친다.
@@ -669,7 +669,7 @@ let timer;
 q.addEventListener('input', () => {{
   clearTimeout(timer);
   timer = setTimeout(() => {{
-    words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    words = q.value.trim().toLowerCase().split(/\\s+/).filter(Boolean);
     apply();
   }}, 150);
 }});

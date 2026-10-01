@@ -38,7 +38,11 @@ footer{border-top:1px solid var(--line);padding:18px 0 40px;color:var(--mut);fon
 @media(min-width:900px){.g{grid-template-columns:repeat(4,1fr);gap:20px}}
 .c{background:var(--card);border:1px solid var(--line);border-radius:12px;
 overflow:hidden;display:flex;flex-direction:column;text-decoration:none}
-.c img,.ph{width:100%;aspect-ratio:1;object-fit:cover;background:var(--chip);display:block}
+/* height:auto 가 반드시 있어야 한다. <img width="400" height="400"> 의 presentational
+   hint 가 height:400px 로 들어와 aspect-ratio 를 이긴다. 전에 홈 CSS 에만 적어둬서
+   하위 647페이지 4,748장이 세로 400px 로 늘어나 있었다. 여기가 정본이다. */
+.c img,.ph{width:100%;height:auto;aspect-ratio:1;object-fit:cover;
+background:var(--chip);display:block}
 .b{padding:11px;display:flex;flex-direction:column;gap:3px;flex:1}
 .m{display:flex;gap:4px;align-items:center;flex-wrap:wrap;min-height:18px}
 .lb{font-size:10px;font-weight:700;padding:2px 5px;border-radius:4px;background:var(--accent);color:#fff}
