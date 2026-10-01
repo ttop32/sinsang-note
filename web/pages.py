@@ -65,8 +65,23 @@ def _when(r: dict) -> str:
 
 
 def _kind(r: dict) -> str:
-    """유형 축 값. 프랜차이즈는 세부분류, 나머지는 유형(collect 의 탭 기준과 같다)."""
+    """대표 유형 하나. 상세 페이지의 '이웃 상품' 처럼 한 값만 필요한 자리에 쓴다."""
     return r.get("brand_sub") or r.get("brand_type", "")
+
+
+def _kinds_of(r: dict) -> list:
+    """이 상품이 들어가는 유형 페이지 전부. 대분류와 세부분류 양쪽이다.
+
+    전에는 세부분류 하나만 썼다. 그러면 카페 상품이 전부 '커피'·'베이커리' 로
+    흩어져서 /c/카페/ 가 생성 목록에서 빠지고, 프루너가 색인된 그 주소를
+    지워버린다. 실제로 /c/카페/ 와 /c/디저트/ 가 그렇게 죽었다.
+    """
+    import collect
+    out = []
+    for k in (collect.primary_of(r), r.get("brand_sub", "")):
+        if k and k not in out:
+            out.append(k)
+    return out
 
 
 def _href(path: str) -> str:
@@ -273,6 +288,31 @@ def brand_page(brand: str, rows: list, total: int, today: date) -> str:
                       [(theme.SITE, ""), (brand, None)], note)
 
 
+# 더 이상 상품이 없는 유형. 분류를 다시 짜면서 비었는데, 검색엔진에 색인된
+# 주소라 그냥 지우면 들어온 사람이 404 를 본다. 정적 호스팅이라 301 을 못 보내니
+# 어디로 갔는지 적은 안내만 남긴다. noindex 를 달아 색인에서는 빠지게 한다.
+# 여기 적힌 유형은 프루너가 지우지 않는다(생성 목록에 들어가므로).
+RETIRED = {
+    "디저트": ["아이스크림", "도넛", "베이커리"],
+}
+
+
+def retired_page(kind: str, goes: list) -> str:
+    """빈 유형 안내. 들어온 사람을 대신 갈 곳으로 보낸다."""
+    links = " · ".join(
+        f'<a href="{_href(theme.kind_path(k))}">{E(k)}</a>' for k in goes)
+    # theme.head 의 extra 는 <style> 안으로 들어간다. meta 는 따로 앞에 붙인다.
+    head = ('<meta name="robots" content="noindex,follow">\n' + theme.head(
+        f"{kind} 신상 | {theme.SITE}",
+        f"{kind} 분류는 더 세분해서 {', '.join(goes)} 로 나눴습니다.",
+        "/" + theme.kind_path(kind)))
+    return _shell(head, (
+        f'<header><h1>{E(kind)}</h1>'
+        f'<p class="lead">{E(kind)} 분류는 더 세분해서 나눴습니다.</p></header>'
+        f'<main><p>{links}</p>'
+        f'<p><a href="{_href("")}">신제품 전체 보기</a></p></main>'))
+
+
 def kind_page(kind: str, rows: list, brands: list, today: date) -> str:
     """'편의점 신상' 같은 유형 검색어용."""
     ym = f"{today.year}년 {today.month}월"
@@ -316,8 +356,8 @@ def build(fresh: list, all_rows: list, out_dir: pathlib.Path,
     by_brand, by_kind = {}, {}
     for r in order:
         by_brand.setdefault(r["brand"], []).append(r)
-        if _kind(r):
-            by_kind.setdefault(_kind(r), []).append(r)
+        for k in _kinds_of(r):
+            by_kind.setdefault(k, []).append(r)
 
     total_by_brand = {}
     for r in all_rows:
@@ -343,6 +383,12 @@ def build(fresh: list, all_rows: list, out_dir: pathlib.Path,
         brands = sorted({r["brand"] for r in rows})
         paths.append(_write(out_dir, theme.kind_path(kind),
                             kind_page(kind, rows, brands, today)))
+
+    # 비워진 유형은 안내만 남긴다. paths 에 넣어야 프루너가 안 지운다.
+    for kind, goes in RETIRED.items():
+        if kind not in by_kind:
+            paths.append(_write(out_dir, theme.kind_path(kind),
+                                retired_page(kind, goes)))
 
     # 굿즈. 먹는 게 아니라 본 목록에서는 뺐지만 신제품인 건 맞아서 따로 모은다.
     # 상세도 같이 만든다 — 목록만 있고 상세가 없으면 카드가 메뉴판으로 떨어진다.

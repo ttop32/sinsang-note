@@ -378,7 +378,7 @@ scrollbar-width:none}
 nav::-webkit-scrollbar{display:none}
 .tw{display:flex;gap:6px;width:max-content}
 .t{appearance:none;-webkit-appearance:none;border:1px solid var(--line);background:var(--chip);
-color:var(--fg);font:inherit;font-size:14px;line-height:1;padding:0 14px;border-radius:999px;
+color:var(--fg);font:inherit;font-size:14px;line-height:1;padding:0 10px;border-radius:999px;
 cursor:pointer;white-space:nowrap;min-height:40px;display:inline-flex;align-items:center;gap:6px}
 .t.on{background:var(--accent);border-color:var(--accent);color:#fff}
 .t .n{font-size:12px;opacity:.7}
@@ -396,9 +396,12 @@ a.c:hover,a.c:focus-visible{border-color:var(--accent)}
 .en{margin:0;font-size:11px;color:var(--mut)}
 """
 
-# 1단 탭. 375px 화면에서는 탭이 몇 개든 4개까지만 보인다(칩 폭 실측). 그래서
-# 대분류는 4개로 묶고 세부 분류는 2단에서 고르게 한다.
-PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"), ("외식", "외식")]
+# 1단 탭. 375px 가용폭이 343px 인데 건수 배지를 달면 4탭도 이미 352px 로 넘친다
+# (건수가 2자리이던 시절 재놓은 "4개가 상한"이 3자리가 되면서 깨졌다).
+# 배지를 떼면 5탭 291px 로 들어가고, 6탭은 344px 라 한 픽셀 차로 안 된다.
+# 건수는 칩을 누르면 바로 아래 #cnt 가 말해주고 푸터가 총계를 적는다.
+PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"),
+           ("외식", "외식"), ("가공식품", "가공식품")]
 
 # 2단(세부). brand_sub 값이다. 화면에는 건수 많은 순으로 깔리고(아래 render),
 # 이 순서는 건수가 같을 때만 쓴다. 전에는 선언 순서 그대로 깔려서 2위인
@@ -408,7 +411,8 @@ SUBS = ["커피", "베이커리", "아이스크림", "빙수", "도넛",
         "분식", "한식", "도시락", "일식", "샌드위치", "샐러드"]
 
 # web/pages.py 가 유형 페이지(/c/...)를 만들 때 쓰는 목록. 1단+2단을 합친다.
-SECTIONS = [("전체", "")] + [(k, k) for k in ["편의점", "카페"] + SUBS]
+SECTIONS = ([("전체", "")]
+            + [(k, k) for k in ["편의점", "카페", "외식", "가공식품"] + SUBS])
 
 
 def primary_of(r: dict) -> str:
@@ -416,8 +420,11 @@ def primary_of(r: dict) -> str:
     t = r.get("brand_type", "")
     if t == "프랜차이즈":
         return "외식"
-    # 제조사 상품은 결국 편의점에서 산다. 1단을 5개로 늘리면 375px 폭이 깨진다.
-    return "편의점" if t == "제조사" else t
+    # 과자·라면·음료·냉동식품. 나머지 셋은 "어디서 파나" 축인데 이것만 "무엇인가"
+    # 축이다. 신라면 툼바는 편의점에서도 마트에서도 사니 "어디서" 로는 못 넣는다.
+    if t == "제조사":
+        return "가공식품"
+    return t
 
 
 def card(r: dict) -> str:
@@ -469,8 +476,7 @@ def render(rows: list, new_today: list) -> None:
     tabs = "".join(
         f'<button class="t{" on" if i == 0 else ""}" data-f="{html.escape(key)}"'
         f' aria-pressed="{"true" if i == 0 else "false"}">'
-        f'{html.escape(label)}<span class="n">{len(shown) if not key else pcount.get(key, 0)}</span>'
-        f'</button>'
+        f'{html.escape(label)}</button>'
         for i, (label, key) in enumerate(PRIMARY)
         if not key or pcount.get(key))
     # 건수 많은 순. 가로로 흐르는 줄이라 화면 안에 드는 건 앞의 네댓 개뿐이고,
@@ -554,20 +560,51 @@ cards.forEach((c, i) => {{
   c.dataset.b = (c.querySelector('.br') || {{}}).textContent || '';
 }});
 
-let kind = '', sub = '', term = '';
+let kind = '', sub = '', words = [];
 
 function apply() {{
   let n = 0;
   for (const c of cards) {{
     const ok = (!kind || c.dataset.p === kind)
             && (!sub  || c.dataset.s === sub)
-            && (!term || c.dataset.q.includes(term));
+            // 통째로 찾으면 '얼큰 우동'·'바닐라 라떼' 가 0건이 된다. 상품명은
+            // 붙여 쓰는데(얼큰우동) 사람은 띄어서 친다. 낱말마다 따로 본다.
+            && words.every(w => c.dataset.q.includes(w));
     c.hidden = !ok;
     if (ok) n++;
   }}
-  cnt.textContent = (kind || sub || term) ? n + '건' : '';
+  const filtering = kind || sub || words.length;
+  cnt.textContent = filtering ? n + '건' : '';
   empty.hidden = n > 0;
+  if (!n) showEmpty();
 }}
+
+// 0건일 때 무엇 때문인지 말해준다. 전에는 탭 조합 탓인데도 "다른 말로
+// 검색해 보세요" 라고 해서 엉뚱한 쪽을 가리켰다.
+function showEmpty() {{
+  const on = [];
+  if (kind) on.push(kind);
+  if (sub) on.push(sub);
+  if (words.length) on.push('\u2018' + words.join(' ') + '\u2019');
+  empty.innerHTML = on.length
+    ? on.join(' + ') + ' 에 해당하는 제품이 없습니다.'
+      + '<br><button type="button" class="t" id="reset">조건 모두 지우기</button>'
+    : '찾는 제품이 없습니다.<br>다른 말로 검색해 보세요.';
+}}
+
+function resetAll() {{
+  kind = ''; sub = ''; words = []; q.value = '';
+  priBtns.forEach((t, i) => {{
+    t.classList.toggle('on', i === 0);
+    t.setAttribute('aria-pressed', i === 0);
+  }});
+  subBtns.forEach(x => {{ x.classList.remove('on'); x.setAttribute('aria-pressed', 'false'); }});
+  syncSub(); apply();
+}}
+
+document.addEventListener('click', e => {{
+  if (e.target.id === 'reset') resetAll();
+}});
 
 function syncSub() {{
   // 그 대분류에 실제로 있는 세부만 남긴다. 하나도 없으면 2단 줄을 숨긴다.
@@ -607,7 +644,10 @@ subnav.addEventListener('click', e => {{
 let timer;
 q.addEventListener('input', () => {{
   clearTimeout(timer);
-  timer = setTimeout(() => {{ term = q.value.trim().toLowerCase(); apply(); }}, 150);
+  timer = setTimeout(() => {{
+    words = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+    apply();
+  }}, 150);
 }});
 
 sortBtn.addEventListener('click', () => {{

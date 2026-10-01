@@ -16,6 +16,8 @@
 | **WO-7** | Atom 피드 타임스탬프·건수 + RSS 링크 | P1 | SEO·피드 | `web/seo.py` |
 | **WO-8** | og:image 자체 생성 커버 | P1 | 자산 생성 | `web/assets.py` · `collect.py` |
 | **WO-9** | 라벨 필터를 홈·하위가 공유 (NEW 중복 934건) | **P0** | 수집 계약 + 페이지 생성 | `collectors/base.py` · `collect.py` · `web/pages.py` |
+| **WO-10** | 검색 — 띄어쓴 검색어 0건 + 0건 이유 안내 | **P0** | 웹 렌더 | `collect.py` (`<script>`) |
+| **WO-11** | 브랜드 인스타그램 링크 (핸들 수동 수집) | P2 | 수집 계약 + 페이지 생성 | `collectors/base.py` · `web/pages.py` |
 
 ### 🟢 2026-10-01 중간 실측 — 착수 전에 반드시 보라
 
@@ -34,6 +36,9 @@
 | **WO-7** 피드 | 🔴 미착수 | `<entry>` 50 · `<published>` **0** |
 | **WO-8** og | 🔴 미착수 | og:image 아직 파리바게뜨 CDN · `docs/og.png` 없음 |
 | **WO-9** 라벨 | 🔴 **미착수 · P0** | `NEW`+`NEW` 중복 **934건 / 137페이지**. 홈 0, 굿즈 38. 행사 라벨도 하위 124건 |
+| **WO-10** 검색 | 🔴 **미착수 · P0** | `바닐라 라떼`·`얼큰 우동` 등 **띄어쓴 검색어가 전부 0건**. 0건 이유도 안 알려줌 |
+| **WO-11** 인스타 | 🔴 미착수 · P2 | 핸들 추측 20개 중 **4개가 남의 개인 계정**. 수동 수집이 선행 |
+| 분류체계 개편 | 📄 `docs/TAXONOMY.md` | 1단 5개(+가공식품)·카페 2단 신설. **WO-6 이 선행.** 코디네이터가 직렬로 구현 |
 
 🔴 **`requirements.txt` 에 `Pillow==12.3.0` 이 추가됐다**(할리스 배지 작업자, `.venv` import 확인).
 WO-8 의 "Pillow 없음·설치 금지" 전제가 깨졌다. **그래도 콜라주 반려 결론은 그대로다** —
@@ -1129,6 +1134,165 @@ WO-9 는 `_card()`(119) 와 `product_page()`(168) 두 곳이라 **WO-4 와 `prod
 → **WO-4 와 같은 사람에게 주거나, WO-9 를 먼저 머지해라.**
 🟡 `collect.py` 는 `card()` + `is_fresh()` 두 곳. 트랙 A 와 머지 순서 조율 필요.
 🟢 `collectors/base.py` 는 WO-2 가 끝났으므로 지금은 비어 있다.
+
+---
+
+## WO-10 — 검색: 띄어쓴 검색어가 0건이 되는 문제 + 0건 이유 안내
+
+| | |
+|---|---|
+| **우선순위** | **P0** |
+| **담당 역할** | 웹 렌더 |
+| **선행조건** | §0-1 (W0) · 트랙 A(`collect.py:render()`) 와 직렬 |
+| **근거** | FEATURE-PLAN-2 §6 F12-1 · F12-2 (배포본에서 직접 쳐본 결과) |
+
+### 지금 상태 — 라이브에서 실제로 쳐봤다
+
+| 입력 | 결과 |
+|---|---|
+| `얼큰우동` | 🟢 1건 (`CJ)얼큰우동221g(큰컵)`) |
+| **`얼큰 우동`** | 🔴 **0건** |
+| `라떼` | 🟢 26건 |
+| **`바닐라 라떼`** | 🔴 **0건** |
+| `latte` / `Latte` | 🟢 13건 (영문명·대소문자 정상) |
+
+그리고 `라떼`(26건) 상태에서 **`외식` 탭을 누르면 0건**이 되는데,
+화면은 `찾는 제품이 없습니다. 다른 말로 검색해 보세요.` 라고 말한다.
+**검색어가 문제가 아니라 탭 조합이 문제인데 안내가 틀린 방향을 가리킨다.**
+
+### 변경 내용 — `collect.py` 의 `<script>` 블록
+
+🔴 **이 블록은 사이트를 한 번 죽인 자리다**(`subnav`·`subBtns`·`syncSub` 미선언).
+§0-2 대로 **`<script>` 를 통째로 다시 써라.**
+
+**① 검색어를 공백으로 쪼개 AND 로 찾는다.**
+
+```js
+// 지금:  (!term || c.dataset.q.includes(term))
+// 바꿈:  검색어를 공백으로 나눠 모든 토큰이 들어 있어야 한다
+let terms = [];                       // q.addEventListener 쪽에서 채운다
+terms = q.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
+// apply() 안:
+&& (!terms.length || terms.every(t => c.dataset.q.includes(t)))
+```
+`바닐라 라떼` → `['바닐라','라떼']` 둘 다 포함하는 카드.
+`얼큰 우동` → `CJ)얼큰우동221g(큰컵)` 이 `얼큰`·`우동` 둘 다 가지므로 걸린다.
+🟡 **OR 가 아니라 AND 다.** OR 로 하면 `바닐라 라떼` 가 라떼 전건을 끌어와 더 나빠진다.
+
+**② 0건일 때 걸린 조건을 말한다.**
+
+```
+"라떼"로 외식에서 찾은 결과가 없습니다
+[검색어 지우기]  [전체에서 보기]
+```
+- 조건이 검색어뿐이면 → `"라떼"로 찾은 결과가 없습니다` + `[검색어 지우기]`
+- 탭만이면 → 지금처럼(사실 이 경우는 빈 1단을 안 그리므로 거의 안 생긴다)
+- 둘 다면 → 위 문안 + 버튼 2개
+- 두 버튼은 **이미 있는 동작을 부르기만 한다** (`term=''` / `kind=''`, 그 뒤 `apply()`).
+  🔴 새 전역을 만들지 마라 — 2차 사고가 미선언 전역이었다.
+
+**③ 🟡 검색어 지우기 버튼은 `#noresult` 안에만 둔다.** 검색창 옆에 X 를 붙이면
+`.tools` 레이아웃(375px 에서 `#q` + `#sort` 가 딱 맞는다)이 깨진다.
+
+### 완료 판정 기준
+
+1. **띄어쓴 검색어가 걸린다.** 브라우저 콘솔에서:
+   ```js
+   const q=document.getElementById('q'),cards=[...document.querySelectorAll('.c')];
+   const s=async t=>{q.value=t;q.dispatchEvent(new Event('input'));
+     await new Promise(r=>setTimeout(r,250));return t+' → '+cards.filter(c=>!c.hidden).length;};
+   for(const t of ['얼큰우동','얼큰 우동','라떼','바닐라 라떼','latte','신라면 툼바'])console.log(await s(t));
+   ```
+   → `얼큰 우동` 과 `바닐라 라떼` 가 **1건 이상.** 0 이면 미완료.
+   → `얼큰우동`(붙여쓴 것)도 **여전히 1건.** 기존 동작이 깨지면 안 된다.
+2. **`브랜드에서 보기` 검색은 여전히 0건** (UI 문구 미색인 회귀 방지).
+3. **0건 안내가 조건을 말한다.** `라떼` 입력 → `외식` 탭 클릭 → 문구에 **`라떼` 와 `외식` 이 둘 다** 들어 있고 버튼 2개가 보인다.
+4. **버튼이 실제로 동작한다.** `[전체에서 보기]` → 26건 복귀, `[검색어 지우기]` → 99건(외식 전량).
+5. **§0-4 스모크 검사 `OK`** — 특히 JS 심볼 선언 검사. 그리고 **손 확인 3종 필수**(이 WO 가 바로 그 코드를 만진다).
+
+### 다른 지시서와 같은 파일을 건드리는가
+
+🔴 **WO-1 · WO-3 · WO-6 과 `collect.py:render()` 공유** — 트랙 A 에 넣어 직렬 처리.
+`<script>` 블록은 WO-10 단독 소유(WO-1/3/6 은 HTML·CSS 쪽이다).
+🟡 `TAXONOMY.md` 개편도 `render()` 를 만진다 — **코디네이터가 직렬로 쥐고 있으니 그쪽에 맞춰라.**
+
+---
+
+## WO-11 — 브랜드 인스타그램 링크 (핸들 수동 수집)
+
+| | |
+|---|---|
+| **우선순위** | **P2** |
+| **담당 역할** | 수집 계약 + 페이지 생성 |
+| **선행조건** | §0-1 (W0). **핸들 수집이 선행이고 그게 일의 대부분이다** |
+| **근거** | FEATURE-PLAN-2 §6 F11 |
+
+### 범위
+
+> **브랜드 페이지(`/b/<브랜드>/`)에만** 공식 인스타 프로필 링크 한 줄.
+> **상품 상세에는 넣지 않는다. 게시물을 가져오지 않는다. 임베드하지 않는다.**
+
+가져오기가 왜 전부 탈락인지는 FEATURE-PLAN-2 §6 F11-1 에 있다
+(해시태그 페이지는 **로그인 벽** — 직접 열어 확인).
+
+### 🔴 핸들을 추측하지 마라 — 20개 찍어 4개가 남의 개인 계정이었다
+
+| 결과 | 수 | 예 |
+|---|---:|---|
+| 맞음 | 6 | `cu_official` · `paikdabang` · `paris_baguette` · `baskinrobbinskorea` · `hollys_coffee` · `composecoffee` |
+| 없는 계정 | 8 | `7eleven_korea` · `megamgccoffee` · `dunkinkorea` · `sulbing_official` · `dominos_korea` · `momstouch_official` · `nongshim_kr` · `ottogi_official` |
+| 🔴 **남의 개인 계정** | **4** | `ediya_coffee`→**윤소연** · `bhc_chicken`→**임방환** · `bbq_chicken`→**Jazhari Johnson** · `orionworld`→**Ajay Kaundal** |
+| 다른 법인 | 1 | `emart24.official` → 프로필명 **"이마트"** |
+
+**적중률 30%. 실패의 20%가 일반인 계정으로 가는 링크다.**
+
+### 변경 내용
+
+1. **`collectors/base.py` 에 `INSTAGRAM = {브랜드: 핸들}` 상수.**
+   `SITES` 바로 아래, 같은 모양. **확인된 브랜드만 넣는다. 없으면 키를 만들지 않는다.**
+   주석에 위 표(추측 실패 4건)를 **금지 사례로** 남겨라 — 다음 사람이 또 규칙을 만들려 한다.
+2. **핸들 확인 절차 (브랜드 1곳당)**
+   - 브랜드 **공식 홈페이지 푸터**의 인스타 아이콘에서 핸들을 딴다. ← **이게 1순위다**
+   - 그 핸들로 `https://www.instagram.com/<handle>/` 를 **열어 프로필명이 그 브랜드인지 눈으로 본다**
+   - 둘 중 하나라도 안 되면 **그 브랜드는 넣지 않는다**
+   - 🔴 검색 결과·추측·"공식 같아 보임"으로 넣지 마라
+3. **`web/pages.py:brand_page()`** — `_list_page()` 의 `note` 줄 옆에 한 줄.
+   ```html
+   <a href="https://www.instagram.com/{handle}/" target="_blank" rel="noopener nofollow">
+   📷 {brand} 인스타그램 (@{handle}) →</a>
+   ```
+   **계정명을 그대로 보여준다** — 사용자가 어디로 가는지 알고 누른다.
+   `INSTAGRAM` 에 없는 브랜드는 **줄 자체를 출력하지 않는다.**
+
+### 완료 판정 기준
+
+1. **`INSTAGRAM` 의 모든 핸들이 실재하고 그 브랜드다.** 전건을 열어 프로필명을 확인한 목록을 완료 보고에 붙여라.
+   ```bash
+   cd /Users/swkim72/source/sinsang-note && ./.venv/bin/python - <<'EOF'
+   import sys; sys.path.insert(0,'.')
+   from collectors.base import INSTAGRAM, BRANDS
+   print('등록', len(INSTAGRAM), '/ 전체 브랜드', len(BRANDS))
+   bad=[b for b in INSTAGRAM if b not in BRANDS]
+   print('BRANDS 에 없는 브랜드 키:', bad or 'none')
+   for b,h in sorted(INSTAGRAM.items()): print(f'  {b:16s} https://www.instagram.com/{h}/')
+   EOF
+   ```
+   → `BRANDS 에 없는 브랜드 키` 가 `none`.
+2. **링크가 브랜드 페이지에만 있다.**
+   ```bash
+   grep -l 'instagram.com' docs/b/*/index.html | wc -l      # INSTAGRAM 등록 수와 같아야
+   grep -rl 'instagram.com' docs/p/ | wc -l                 # 0
+   grep -c 'instagram.com' docs/index.html                  # 0
+   ```
+3. **등록 안 된 브랜드 페이지에는 줄이 없다.** 빈 링크·`@undefined` 가 찍히면 미완료.
+4. **링크 속성** `target="_blank" rel="noopener nofollow"`.
+5. **§0-4 스모크 검사 `OK`** (홈 불변).
+
+### 다른 지시서와 같은 파일을 건드리는가
+
+🟡 **`web/pages.py` 를 WO-3(`_shell`) · WO-4(`product_page`) · WO-9(`_card`+`product_page`) 와 공유.**
+WO-11 은 `brand_page()` 라 **함수가 겹치지 않는다.** 그래도 같은 파일이니 머지 순서를 정해라.
+🟡 `collectors/base.py` 를 WO-2(완료) · WO-9 와 공유. WO-9 는 라벨 상수라 자리가 다르다.
 
 ---
 
