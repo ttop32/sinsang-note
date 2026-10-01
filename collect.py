@@ -61,6 +61,10 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
 # 셀렉터가 하나 깨지면 예외가 아니라 '조용한 부분수집'으로 끝나는 게 이 프로젝트의
 # 최대 리스크다. 0건 가드만으로는 절반이 날아가도 통과한다.
 FLOOR = 0.7
+# 급감 가드를 켜는 최소 규모. 메뉴가 서너 개뿐인 브랜드는 하나만 빠져도 30% 가
+# 줄어서 매번 가드에 걸린다 — 배스킨라빈스가 3 → 2건으로 걸렸고 어댑터는
+# 멀쩡했다. 비율 가드는 숫자가 어느 정도 있어야 뜻이 있다.
+FLOOR_MIN = 10
 
 # 브랜드가 신제품이라고 표시해주지 않는 곳은 날짜로 판단한다. 이 기간 안이면 신제품.
 # 21일은 너무 좁았다(113건). 60일이면 225건이고, 카페·프랜차이즈는 시즌 단위로
@@ -146,7 +150,7 @@ def main() -> None:
             if not items:
                 raise RuntimeError("0건 수집 — 파서가 깨졌을 가능성")
             before = sum(1 for p in prev.values() if p["brand"] in names)
-            if before and len(items) < before * FLOOR:
+            if before >= FLOOR_MIN and len(items) < before * FLOOR:
                 raise RuntimeError(
                     f"수집량 급감 {before} → {len(items)}건 — 부분수집 의심")
             print(f"{label}: {len(items)}건")
