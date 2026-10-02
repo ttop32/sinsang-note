@@ -4,6 +4,8 @@ import time
 
 import httpx
 
+import taxonomy
+
 # 공개 봇이니 신원을 밝힌다. 브라우저를 위장하면 사이트 운영자가 우리를 식별하거나
 # 연락하거나 선별 차단할 방법이 없다. robots.txt 의 UA별 규칙에도 매칭되지 않는다.
 UA = "sinsang-note/1.0 (+https://github.com/ttop32/sinsang-note)"
@@ -60,6 +62,12 @@ BRANDS = {
     "파파존스":    (FRANCHISE, "피자"),
     "도미노피자":  (FRANCHISE, "피자"),
     "굽네치킨":    (FRANCHISE, "치킨"),
+    "처갓집양념치킨": (FRANCHISE, "치킨"),
+    "푸라닭":      (FRANCHISE, "치킨"),
+    "부어치킨":    (FRANCHISE, "치킨"),
+    "또래오래":    (FRANCHISE, "치킨"),
+    "자담치킨":    (FRANCHISE, "치킨"),
+    "땅땅치킨":    (FRANCHISE, "치킨"),
     "프랭크버거":  (FRANCHISE, "햄버거"),
     "맥도날드":    (FRANCHISE, "햄버거"),
     "오뚜기":      (MAKER, "라면"),
@@ -69,7 +77,12 @@ BRANDS = {
     # 직영몰이라 남의 브랜드도 판다. 그래도 '제조사' 로 두는 건 1단 '가공식품' 이
     # 누가 만들었나가 아니라 무엇이냐 축이기 때문이다(TAXONOMY §3). 세부분류를
     # '음료' 가 아니라 '냉동식품' 으로 둔 근거는 collectors/fredit.py docstring.
-    "hy프레딧":    (MAKER, "냉동식품"),
+    # 제조사가 아니라 hy 의 쇼핑몰이다. 떡·치즈·세제·양말·펫푸드가 다 있어서
+    # 분류 하나로 못 찍는다 — 상품별 분류는 taxonomy.VENDOR_SUBS 가 옮긴다.
+    # 여기 적는 건 업체가 분류를 안 준 상품에 쓸 마지막 수단이고, 실측상
+    # 식재료가 제일 많다. 전에 '냉동식품' 이라 적어둔 탓에 105건이 통째로
+    # 냉동식품 칸에 들어갔다.
+    "hy프레딧":    (MAKER, "식재료"),
     "아워홈":      (MAKER, "냉동식품"),
     "동서식품":    (MAKER, "커피"),
     "샘표":        (MAKER, "조미료"),
@@ -100,6 +113,38 @@ BRANDS = {
     "죠스떡볶이":  (FRANCHISE, "분식"),
     "명랑핫도그":  (FRANCHISE, "분식"),
     "스시로":      (FRANCHISE, "일식"),
+    # ── 더본코리아 외식 브랜드 (collectors/theborn.py) ──────────────────
+    # theborn.co.kr/brand/representation/ 의 '대표 브랜드' 20개 중 빽다방을 뺀
+    # 19개다(빽다방은 cafe_paikdabang.py 담당). 2026-10-02 실측 목록이다.
+    # ⚠️ 이 19개는 **보도자료에만** 나온다. 브랜드 메뉴 사이트에는 신제품 신호가
+    #    하나도 없어서 메뉴판은 긁지 않는다(사유는 theborn.py docstring §2).
+    #    그래서 보도자료가 없는 브랜드는 0건이 정상이다 — 등록은 해 두되
+    #    '수집 실패'로 읽지 마라.
+    "빽보이피자":   (FRANCHISE, "피자"),
+    "역전우동0410": (FRANCHISE, "일식"),
+    "홍콩반점0410": (FRANCHISE, "중식"),
+    "리춘시장":     (FRANCHISE, "중식"),
+    "고투웍":       (FRANCHISE, "중식"),
+    "홍콩분식":     (FRANCHISE, "분식"),
+    "새마을식당":   (FRANCHISE, "한식"),
+    "한신포차":     (FRANCHISE, "한식"),
+    "백스비어":     (FRANCHISE, "한식"),
+    "제순식당":     (FRANCHISE, "한식"),
+    "백종원의쌈밥집": (FRANCHISE, "한식"),
+    "본가":         (FRANCHISE, "한식"),
+    "인생설렁탕":   (FRANCHISE, "한식"),
+    "막이오름":     (FRANCHISE, "한식"),
+    "돌배기집":     (FRANCHISE, "한식"),
+    "미정국수0410": (FRANCHISE, "한식"),
+    "성성식당":     (FRANCHISE, "한식"),
+    "연돈볼카츠":   (FRANCHISE, "도시락"),
+    # 🟠 롤링파스타만 세부분류를 비운다. 파스타는 taxonomy.SUBS 에 맞는 칸이
+    #    없다('양식'이 없다). 억지로 피자나 한식에 넣으면 칩을 누른 사람이
+    #    엉뚱한 걸 보게 된다. 비우면 2단 칩에는 안 뜨고 1단 '외식'·브랜드
+    #    페이지에는 그대로 뜬다. SUBS 에 '양식'을 넣는 건 레지스트리 바깥
+    #    (taxonomy.py)의 결정이라 여기서 하지 않는다.
+    "롤링파스타":   (FRANCHISE, ""),
+    "KFC":         (FRANCHISE, "치킨"),
     "에그드랍":    (FRANCHISE, "샌드위치"),
     "써브웨이":    (FRANCHISE, "샌드위치"),
     "샐러디":      (FRANCHISE, "샐러드"),
@@ -153,6 +198,19 @@ SITES = {
     "교촌치킨":     "https://www.kyochon.com/menu/chicken.asp",
     # /menu/new_p 의 _p 는 AJAX 조각 경로라 사람이 열면 에러 JSON 이 뜬다.
     "굽네치킨":     "https://www.goobne.co.kr/menu/menu_list",
+    # 상품 상세 페이지가 없는 브랜드다(카드에 <a> 자체가 없다). 이게 유일한 링크다.
+    "처갓집양념치킨": "https://cheogajip.co.kr/bbs/board.php?bo_table=allmenu",
+    # 상품별 주소(/menu/view.asp?idx=)가 Item.url 로 붙으므로 이건 폴백이다.
+    "푸라닭":       "https://www.puradakchicken.com/menu/product.asp",
+    # ⚠️ http 전용이다. 443 이 연결 리셋이라 https 로 못 바꾼다(chicken_boor.py 참고).
+    "부어치킨":     "http://www.boor.co.kr/menu/default.aspx?menu=ALL",
+    # 상품별 주소(board_view.php?board_seq=)가 Item.url 로 붙으므로 이건 폴백이다.
+    "또래오래":     "https://www.toreore.com/board/menu/board_list.php",
+    # 신메뉴 전용 페이지. 메뉴 게시판 3종은 Item.url 로 따로 붙는다.
+    "자담치킨":     "https://www.ejadam.co.kr/bbs/content.php?co_id=new_menu",
+    # /menu 가 302 로 가는 신메뉴 페이지. 번호(/menu01=추천메뉴)와 내비 순서가
+    # 어긋나는 사이트라 경로를 짐작하면 틀린다(chicken_ttangttang.py 참고).
+    "땅땅치킨":     "https://ttangttang.co.kr/menu",
     "피자헛":       "https://www.pizzahut.co.kr/menu",
     "미스터피자":   "https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu",
     "파파존스":     "https://pji.co.kr/menu/pizza",
@@ -202,6 +260,37 @@ SITES = {
     "아워홈":      "https://www.ourhome.co.kr/front/newsboardlist.do",
     "동서식품":    "https://www.dongsuh.co.kr/product/list/1",
     "샘표":        "https://www.sempio.com/news/press-release",
+    # ── 더본코리아 외식 브랜드 ─────────────────────────────────────────
+    # 상품별 주소(보도자료 기사)가 Item.url 로 붙으므로 이건 전부 폴백이다.
+    # 자체 도메인이 있으면 그 브랜드의 **메뉴 페이지**를, 없으면 theborn.co.kr 의
+    # 브랜드 소개 페이지를 쓴다. 주소에 한글이 그대로 들어가는 건 더본 쪽
+    # WordPress 슬러그가 한글이기 때문이다(브라우저가 알아서 인코딩한다).
+    "역전우동0410": "https://udon0410.com/menu/",
+    "미정국수0410": "https://www.0410noodle.com/menu/",
+    "롤링파스타":   "https://rolling-pasta.com/",
+    "한신포차":     "https://hanshinpocha.com/menu/",
+    "백스비어":     "https://paiksbeer.com/menu/",
+    "새마을식당":   "https://newmaul.com/sub/menu.php",
+    "백종원의쌈밥집": "https://ssambap.co.kr/menu/",
+    "돌배기집":     "https://dolbaegi.com/",
+    "본가":         "https://www.bornga.kr/",
+    # 아래는 자체 도메인이 없거나(빽보이피자·홍콩반점0410·연돈볼카츠·막이오름·
+    # 제순식당·고투웍·홍콩분식·성성식당) 도메인이 살아 있지 않아
+    # (인생설렁탕·리춘시장은 TLS 인증서가 호스트명과 안 맞고, licun8888.com 은
+    # https 로 열면 paikdabang.com 으로 떨어진다) 본사 브랜드 페이지로 보낸다.
+    "빽보이피자":   "https://www.theborn.co.kr/theborn_brand/빽보이피자/",
+    "홍콩반점0410": "https://www.theborn.co.kr/theborn_brand/홍콩반점2/",
+    "연돈볼카츠":   "https://www.theborn.co.kr/theborn_brand/연돈볼카츠/",
+    "막이오름":     "https://www.theborn.co.kr/theborn_brand/막이오름/",
+    "인생설렁탕":   "https://www.theborn.co.kr/theborn_brand/인생설렁탕/",
+    "리춘시장":     "https://www.theborn.co.kr/theborn_brand/리춘시장/",
+    "제순식당":     "https://www.theborn.co.kr/theborn_brand/제순식당/",
+    "고투웍":       "https://www.theborn.co.kr/theborn_brand/고투웍/",
+    "홍콩분식":     "https://www.theborn.co.kr/theborn_brand/홍콩분식/",
+    "성성식당":     "https://www.theborn.co.kr/theborn_brand/성성식당/",
+    # KFC 는 상품 카탈로그(/allmenu)가 클라이언트 렌더라 HTML 에 0건이다.
+    # 어댑터가 읽는 '신메뉴' 면이 사람에게도 가장 쓸모 있는 폴백이다.
+    "KFC":         "https://www.kfckorea.com/promotion/newMenu",
 }
 
 
@@ -602,7 +691,13 @@ def derive(d: dict, *, stored: bool = False) -> dict:
                 d.setdefault("by_adapter", []).append(k) if k not in d.get(
                     "by_adapter", []) else None
     said = set(d.get("by_adapter") or ())
-    d["nonfood"] = "nonfood" in said or is_nonfood(d["name"], cat)
+    # 업체가 준 분류가 제일 확실하다. 이름만 보는 is_nonfood 는 '실리만 양손
+    # 주방 가위'·'폴프랜즈 양말' 처럼 식품 같은 말이 하나도 안 든 것을 놓친다
+    # (hy프레딧 61건이 그랬다). 단어를 더 넣는 대신 업체 분류를 믿는다 —
+    # 단어 목록은 늘릴수록 '카스' 가 '카스테라' 를 지우는 사고가 난다.
+    d["nonfood"] = ("nonfood" in said
+                    or taxonomy.vendor_nonfood(d["brand"], cat)
+                    or is_nonfood(d["name"], cat))
     d["alcohol"] = "alcohol" in said or is_alcohol(d["name"], cat, d["brand"])
     # 우리 페이지는 https 라 http 이미지는 브라우저가 막는다(혼합 콘텐츠).
     # 빈 네모가 뜨느니 사진 없는 카드로 그리는 게 낫다. 에그드랍 73건이

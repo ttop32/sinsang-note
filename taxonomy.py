@@ -19,7 +19,7 @@ PRIMARY = [("전체", ""), ("편의점", "편의점"), ("카페", "카페"),
 # 건수가 많아도 뒤로 미는 것들. 외식에서 일식·한식은 '오늘 뭐 새로 나왔나' 를
 # 보러 온 사람이 잘 안 고르는데 건수는 많아서 앞자리를 차지한다. 가로로 흐르는
 # 줄이라 앞자리가 곧 화면 안이다.
-DEMOTE = {"일식", "한식"}
+DEMOTE = {"일식", "한식", "중식"}
 
 # 브랜드가 쓰는 말을 우리 분류로 옮기는 표. 김밥은 분식으로 합쳤다.
 SUB_ALIAS = {"김밥": "분식"}
@@ -37,13 +37,89 @@ SUBS = ["커피", "베이커리", "아이스크림", "빙수", "도넛",
         "즉석식", "디저트", "안주", "식재료",
         "과자", "라면", "음료", "냉동식품", "조미료",
         "햄버거", "피자", "치킨",
-        "분식", "한식", "도시락", "일식", "샌드위치", "샐러드"]
+        "분식", "한식", "도시락", "일식", "중식", "샌드위치", "샐러드"]
 
 # web/pages.py 가 유형 페이지(/c/...)를 만들 때 쓰는 목록. 1단+2단을 합친다.
 # 유형 페이지 목록. 1단 넷 + 2단 전부.
 SECTIONS = ([("전체", "")]
             + [(k, k) for k in ["편의점", "카페", "외식", "식품"]
                + list(SUBS)])
+
+
+# ── 업체 분류 ↔ 우리 분류 ────────────────────────────────────────────
+# 셋을 따로 관리한다.
+#   ① 업체가 자기 사이트에서 쓰는 말 — VENDOR_SUBS 의 키
+#   ② 우리 분류                      — SUBS
+#   ③ 둘을 잇는 표                   — VENDOR_SUBS 의 값
+#
+# 전에는 ①을 통째로 버리고 브랜드마다 우리 분류 하나(레지스트리의 brand_sub)로
+# 덮었다. 편의점 넷만 예외로 category 를 봤다. 그래서 쇼핑몰형 업체가 깨졌다 —
+# hy프레딧은 떡·치즈·세제·양말·전동칫솔·펫푸드가 다 들어 있는데 레지스트리가
+# '냉동식품' 한 칸으로 찍는 바람에 피죤 세탁조클리너가 식품 신상으로 떴다.
+# 업체는 상품마다 진짜 분류를 주고 있었다. 우리가 안 읽었을 뿐이다.
+#
+# 표에 없는 말은 조용히 넘기지 않는다 — 빌드할 때 unmapped() 가 세어서 찍는다.
+
+NONFOOD = "비식품"   # 우리 분류가 아니라 '식품이 아니니 빼라'는 표시
+
+VENDOR_SUBS = {
+    # hy프레딧은 제조사가 아니라 hy 의 쇼핑몰이다. 분류 10종을 실측해 붙였다.
+    "hy프레딧": {
+        "생활 · 주방용품": NONFOOD,   # 세제·양말·티슈·조리도구 42건, 식품 0건
+        "뷰티": NONFOOD,              # 핸드크림·앰플
+        "반려동물": NONFOOD,          # 펫푸드. 사람이 먹는 게 아니다
+        "베이커리 · 간식": "과자",
+        "식재료 · 반찬": "식재료",
+        "달걀 · 정육 · 수산": "식재료",
+        "건강 · 기능식품": "식재료",   # 도라지고·생강청·쌍화차
+        "발효유 · 유제품": "음료",     # 쿠퍼스·소이거트
+        "커피 · 차": "음료",
+        "생수 · 주스 · 음료": "음료",
+    },
+}
+
+# 한 상품이 분류 둘을 달고 오는 업체가 있다('뷰티 / 생활 · 주방용품').
+_VENDOR_SPLIT = " / "
+
+
+def vendor_sub(brand: str, category: str):
+    """업체가 준 말을 우리 분류로 옮긴다. 우리 분류 이름이거나 NONFOOD, 모르면 None.
+
+    분류를 둘 달고 오면 쪼개서 본다. 식품 쪽이 하나라도 있으면 그걸 쓰고,
+    전부 비식품일 때만 비식품으로 본다 — '발효유 · 유제품 / 베이커리 · 간식'
+    같은 건 어느 쪽이든 식품이라 앞의 것을 따른다.
+    """
+    table = VENDOR_SUBS.get(brand)
+    if not table or not category:
+        return None
+    seen = [table.get(part.strip()) for part in category.split(_VENDOR_SPLIT)]
+    for v in seen:
+        if v and v != NONFOOD:
+            return v
+    return NONFOOD if seen and all(v == NONFOOD for v in seen) else None
+
+
+def vendor_nonfood(brand: str, category: str) -> bool:
+    """업체 분류만으로 '식품이 아니다'가 확실한가."""
+    return vendor_sub(brand, category) == NONFOOD
+
+
+def unmapped(rows: list) -> list:
+    """표를 가진 업체인데 아직 안 옮긴 말. (브랜드, 업체분류, 건수) 로 돌려준다.
+
+    업체가 분류를 새로 만들거나 이름을 바꾸면 그 상품들이 brand_sub 로 조용히
+    떨어진다. 그게 hy프레딧이 통째로 '냉동식품' 이 된 경로였다. 세어서 보이게 한다.
+    """
+    import collections
+    miss = collections.Counter()
+    for r in rows:
+        brand = r.get("brand", "")
+        if brand not in VENDOR_SUBS:
+            continue
+        cat = r.get("category", "")
+        if cat and vendor_sub(brand, cat) is None:
+            miss[(brand, cat)] += 1
+    return [(b, c, n) for (b, c), n in miss.most_common()]
 
 
 def sub_of(r: dict) -> str:
@@ -56,6 +132,10 @@ def sub_of(r: dict) -> str:
     registry 의 brand_sub 은 안 건드린다 — 거기까지 바꾸면 /c/CU/ 유형
     페이지가 생겨 /b/CU/ 와 내용이 같은 주소가 둘이 된다.
     """
+    # 업체가 상품마다 분류를 주면 그게 제일 정확하다.
+    mapped = vendor_sub(r.get("brand", ""), r.get("category", ""))
+    if mapped and mapped != NONFOOD:
+        return mapped
     if r.get("brand_type") == "편의점":
         # 세 브랜드 사이트에서 받아온 실제 상품 분류를 쓴다(도시락·김밥·
         # 샌드위치·즉석식·과자·음료…). 전에는 category 가 '신상품'·'행사 상품'

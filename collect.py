@@ -30,7 +30,14 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
                         pizza_pizzahut,
                         seven, starbucks, toast_isaac)
 from collectors import dongsuh, fredit, gs25, lottechilsung, ourhome, sempio
+# 치킨 2차. 공정위 가맹점 수 상위에서 신제품 신호가 확인된 곳들
+# (근거는 notes/CANDIDATES-CHICKEN2.md).
+from collectors import (chicken_boor, chicken_cheogajip, chicken_jadam,
+                        chicken_puradak, chicken_toreore)
+# 더본코리아 외식 19브랜드(보도자료)와 KFC(브랜드 신메뉴 면).
+from collectors import kfc, theborn
 import rules
+import taxonomy
 from web import home
 
 # GS25 는 상품 카탈로그를 긁을 수 없다 — gs25.gsretail.com 은 전 경로가 본사
@@ -47,6 +54,8 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             lottechilsung, fredit, ourhome,             # 제조사(음료·냉동식품)
             dongsuh, sempio,                            # 제조사(커피·조미료)
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
+            chicken_cheogajip, chicken_puradak, chicken_jadam,
+            chicken_toreore, chicken_boor,
             pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
             toast_isaac, snack_kimbabcheonguk, snack_barunkim,       # 분식
@@ -54,6 +63,10 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             bakery_parisbaguette, bakery_napoleon, bakery_breadnco,  # 베이커리
             bakery_hongruijen, bakery_knotted, bakery_samsong,
             bon_if,                        # 본아이에프 8브랜드(한식·도시락·카페)
+            # 더본코리아 19브랜드. 브랜드 메뉴 사이트에는 신제품 신호가 없어서
+            # 본사 보도자료만 읽는다(GS25 와 같은 종류의 소스, 사유는
+            # collectors/theborn.py docstring §2). 빽다방은 cafe_paikdabang 담당.
+            theborn, kfc,
             sushi_sushiro, sandwich_eggdrop, sandwich_subway,        # 일식·샌드위치
             salad_salady]                                            # 샐러드
 # 롯데리아·빕스·GS25 는 뺀다. 사유는 base.BRANDS 주석 참고.
@@ -210,6 +223,11 @@ def main() -> None:
     shown = min(len(fresh), rules.SHOW) if rules.SHOW else len(fresh)
     print(f"총 {len(rows)}건 / 신제품 {len(listed)}건 (홈 {shown}장,"
           f" 오늘 {len(new_today)}건) / 굿즈 {len(listed_goods)}건 / 사라짐 {len(gone)}건")
+    # 업체가 분류를 새로 만들거나 이름을 바꾸면 그 상품들이 brand_sub 로 조용히
+    # 떨어진다. hy프레딧이 통째로 '냉동식품' 이 된 경로가 그거였다. 세어서 찍는다.
+    for brand, cat, n in taxonomy.unmapped(rows):
+        print(f"   ! {brand} 의 분류 '{cat}' 를 아직 안 옮겼다 ({n}건)")
+
     home.render(fresh, new_today, total=len(listed))
 
     # 개별 페이지·sitemap·아이콘. web.seo 가 collect 를 import 하므로 여기서 늦게 부른다.

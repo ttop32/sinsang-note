@@ -18,6 +18,7 @@ from datetime import date
 from urllib.parse import quote, quote_plus
 
 import rules
+import social
 import taxonomy
 from collectors import base
 from web import theme
@@ -61,6 +62,8 @@ dl.f dd{margin:0;word-break:keep-all}
 .yt a:hover{text-decoration:underline}
 h2.sec{margin:38px 0 0;font-size:16px;letter-spacing:-.01em}
 .more{margin:6px 0 0;font-size:13px;color:var(--mut)}
+/* 브랜드 공식 SNS. .more 바로 밑이라 같은 크기로 두고 색만 링크색이다. */
+.sns{margin:6px 0 0;font-size:13px;word-break:keep-all}
 """
 
 
@@ -385,8 +388,24 @@ def product_page(r: dict, siblings: list, neighbors: list) -> str:
 
 # ── 목록(브랜드·유형 공용) ─────────────────────────────────────────────
 
+def _social(brand: str) -> str:
+    """브랜드 공식 SNS 한 줄. 아는 게 없으면 빈 문자열 — 빈 자리를 두지 않는다.
+
+    핸들은 social.py 가 갖고 있고 전부 공식 사이트가 가리키는 것만 확인해 넣었다.
+    이름에서 유추한 것은 한 건도 없다(그랬다가 남의 개인 계정을 거는 사고가 난다).
+    바깥 링크라 기존 _brand_link 와 같은 rel 을 쓴다.
+    """
+    got = social.links(brand)
+    if not got:
+        return ""
+    body = " · ".join(f'<a href="{E(url)}" target="_blank" '
+                      f'rel="noopener nofollow">{E(name)}</a>' for name, url in got)
+    return f'<p class="sns">{body} &rarr;</p>'
+
+
 def _list_page(title: str, h1: str, lead: str, meta_desc: str,
-               path: str, rows: list, trail: list, note: str = "") -> str:
+               path: str, rows: list, trail: list, note: str = "",
+               out: str = "") -> str:
     ld = _ld({
         "@context": "https://schema.org", "@type": "ItemList",
         "name": h1, "numberOfItems": len(rows),
@@ -403,6 +422,7 @@ def _list_page(title: str, h1: str, lead: str, meta_desc: str,
     body = (f'{_crumb(trail)}'
             f'<header><h1>{E(h1)}</h1><p class="lead">{E(lead)}</p>'
             + (f'<p class="more">{E(note)}</p>' if note else "")
+            + (out or "")
             + f'</header>'
             f'<main class="g">{cards}</main>')
     return _shell(head, body)
@@ -419,7 +439,8 @@ def brand_page(brand: str, rows: list, total: int, today: date) -> str:
     note = f"{brand} 전체 메뉴 {total}건 중 최근 등록분입니다." if total else ""
     return _list_page(title, f"{brand} 신메뉴", lead, meta_desc,
                       theme.brand_path(brand), rows,
-                      [(theme.SITE, ""), (brand, None)], note)
+                      [(theme.SITE, ""), (brand, None)], note,
+                      out=_social(brand))
 
 
 # 더 이상 상품이 없는 유형. 분류를 다시 짜면서 비었는데, 검색엔진에 색인된
