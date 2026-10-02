@@ -73,6 +73,8 @@ a.c:hover,a.c:focus-visible{border-color:var(--accent)}
 .t[hidden]{display:none}          /* .c 의 display:flex 가 브라우저 기본 [hidden] 을 덮는다 */
 .go{display:block;padding:0 11px 12px;font-size:11px;color:var(--accent);font-weight:600}
 .en{margin:0;font-size:11px;color:var(--mut)}
+/* 주류 표시. NEW 와 같은 칩이되 색으로 구분한다. */
+.lb19{background:#8a1b1b}
 """
 
 
@@ -92,6 +94,11 @@ def card(r: dict) -> str:
            f' src="{e(r["image"])}" alt="{e(r["brand"])} {e(r["name"])}">'
            if r.get("image") else '<div class="ph" aria-hidden="true"></div>')
     badge = '<span class="lb">NEW</span>' if r.get("is_new") else ""
+    # 술은 보기만 해도 술인 줄 알아야 한다. 구매는 우리 쪽에서 일어나지 않지만
+    # 미성년자가 섞여 들어온 카드를 모르고 누르는 일은 없게 한다.
+    if r.get("alcohol"):
+        badge += '<span class="lb lb19">19</span>'
+
     # 1+1·2+1 은 뺀다. 편의점은 신상품에 도입 행사를 거의 항상 붙여서(세븐일레븐
     # 신상품 탭 91건 전부) 그대로 두면 신상 목록이 할인 목록처럼 읽힌다.
     # 행사 정보 자체는 data/products.json 과 상세 페이지에 남는다.

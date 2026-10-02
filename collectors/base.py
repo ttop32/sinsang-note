@@ -83,6 +83,9 @@ BRANDS = {
     # 식재료가 제일 많다. 전에 '냉동식품' 이라 적어둔 탓에 105건이 통째로
     # 냉동식품 칸에 들어갔다.
     "hy프레딧":    (MAKER, "식재료"),
+    # 주류 제조사 중 유일하게 넣을 수 있는 곳이다. 나머지 12곳은 성인 인증
+    # 게이트 뒤이거나 뉴스가 멈췄다(notes/CANDIDATES-ALCOHOL.md).
+    "하이트진로":  (MAKER, "주류"),
     "아워홈":      (MAKER, "냉동식품"),
     "동서식품":    (MAKER, "커피"),
     "샘표":        (MAKER, "조미료"),
@@ -130,7 +133,7 @@ BRANDS = {
     "한신포차":     (FRANCHISE, "한식"),
     "백스비어":     (FRANCHISE, "한식"),
     "제순식당":     (FRANCHISE, "한식"),
-    "백종원의쌈밥집": (FRANCHISE, "한식"),
+    "원조쌈밥집":   (FRANCHISE, "한식"),
     "본가":         (FRANCHISE, "한식"),
     "인생설렁탕":   (FRANCHISE, "한식"),
     "막이오름":     (FRANCHISE, "한식"),
@@ -254,6 +257,7 @@ SITES = {
     # 상품별 주소는 롯데칠성몰(mall.) 이라 Item.url 로 따로 붙는다. 이건 폴백이다.
     "롯데칠성음료": "https://company.lottechilsung.co.kr/kor/product/newprdt/list.do",
     # 상품별 주소(/product/detail?prdId=)가 Item.url 로 붙으므로 이건 폴백이다.
+    "하이트진로":  "https://www.hitejinro.com/socialmedia/press_list.asp",
     "hy프레딧":    "https://m.fredit.co.kr/product/main-tab-menu?keyword=main&ctgId=C10000001001",
     # 아워홈·샘표는 상품 목록 페이지가 없어 보도자료를 폴백으로 쓴다(GS25 선례).
     # 동서식품은 상품 목록이 있고 어댑터도 그쪽을 읽는다.
@@ -271,9 +275,11 @@ SITES = {
     "한신포차":     "https://hanshinpocha.com/menu/",
     "백스비어":     "https://paiksbeer.com/menu/",
     "새마을식당":   "https://newmaul.com/sub/menu.php",
-    "백종원의쌈밥집": "https://ssambap.co.kr/menu/",
+    "원조쌈밥집":   "https://ssambap.co.kr/menu/",
     "돌배기집":     "https://dolbaegi.com/",
-    "본가":         "https://www.bornga.kr/",
+    # bornga.kr 은 글로벌 라인 사이트라 메뉴가 영문이다. 국내 사람이 볼
+    # 자리는 본사 브랜드 페이지 쪽이다(메뉴 20건이 한글로 실려 있다).
+    "본가":         "https://www.theborn.co.kr/theborn_brand/본가/",
     # 아래는 자체 도메인이 없거나(빽보이피자·홍콩반점0410·연돈볼카츠·막이오름·
     # 제순식당·고투웍·홍콩분식·성성식당) 도메인이 살아 있지 않아
     # (인생설렁탕·리춘시장은 TLS 인증서가 호스트명과 안 맞고, licun8888.com 은
