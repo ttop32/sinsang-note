@@ -8,10 +8,13 @@
 지금 죽은 www 가 살아날 수도 있고 반대가 될 수도 있어 스타벅스처럼 후보를 순회한다.
 
 신제품 신호:
-  is_new  목록 카드의 <span class="flag"><img src="/new/images/icon_new.png"> 가 NEW 배지다.
-          96건 중 14건에만 붙어 있고 나머지 82건엔 flag 요소 자체가 없다. 브랜드가
-          배지를 선별해서 달고 있다는 뜻이라, 없으면 '신제품 아님'이 확인된 것으로 보고
-          False 를 준다.
+  is_new  목록 카드의 <span class="flag"> 안에 있는 **배지 그림**으로 본다.
+          ⚠️ flag 가 있다는 것만으로 세면 안 된다. 같은 자리에 배지가 두 종류
+          들어온다 — 2026-10-02 실측 `icon_signature.png` 6 / `icon_new.png` 1.
+          시그니처는 '간판 메뉴' 라 신상의 반대말에 가까운데, 전에 둘을 같이
+          세는 바람에 2013년부터 팔던 인절미설빙·팥인절미설빙이 신상으로
+          올라와 있었다. 그림을 확인하게 고친 뒤 96건 중 14 → 4건이다.
+          배지가 없으면 '신제품 아님'이 확인된 것으로 보고 False 를 준다.
   날짜    어디에도 없다. menu=166 같은 상세 링크의 번호는 등록 순번으로 보이지만
           날짜가 아니고 기준 시점도 알 수 없어 released_at/uploaded_at 둘 다 비워둔다.
           이미지 파일명도 product_small_ubriiie.png 처럼 난수라 단서가 없다.
@@ -79,6 +82,23 @@ def _live_host(c) -> str:
     raise RuntimeError(f"설빙 호스트 전부 사용 불가 ({last})") from None
 
 
+def _is_new(card) -> bool:
+    """NEW 배지인가. span.flag 가 있다는 것만으로는 안 된다.
+
+    같은 span.flag 안에 배지가 두 종류 들어온다 — 2026-10-02 실측에서
+    `icon_signature.png` 6개 / `icon_new.png` 1개였다. 시그니처는 '간판
+    메뉴' 라는 뜻이라 신상의 **반대말**에 가깝다. 그걸 NEW 로 세는 바람에
+    2013년부터 팔던 인절미설빙·팥인절미설빙이 신상으로 올라와 있었다.
+    배지 그림을 확인한다.
+    """
+    flag = card.css_first("span.flag img")
+    if flag is None:
+        return False
+    mark = (flag.attributes.get("src", "") + " "
+            + flag.attributes.get("alt", "")).lower()
+    return "new" in mark and "signature" not in mark
+
+
 def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
@@ -102,7 +122,7 @@ def fetch() -> list[Item]:
                     name=name,
                     image=_abs(host, img.attributes.get("src", "") if img else ""),
                     category=tp,
-                    is_new=bool(card.css_first("span.flag")),
+                    is_new=_is_new(card),
                     url=_view_url(host, card),
                 )
                 if it.key not in seen:
