@@ -32,9 +32,9 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
 from collectors import dongsuh, fredit, gs25, lottechilsung, ourhome, sempio
 # 과자·음료 제조사 2차(2026-10-02). 매출 순위 기준 전수 조사에서 나왔다 —
 # 근거와 순위표는 notes/MAKER-SNACK-DRINK.md, 브랜드별 함정은 각 docstring.
-from collectors import (maker_binggrae, maker_crown, maker_haitai,
-                        maker_hitejinrobev, maker_lottewellfood, maker_maeil,
-                        maker_samyang)
+from collectors import (maker_binggrae, maker_crown, maker_dongwonfnb,
+                        maker_haitai, maker_hitejinrobev, maker_lottewellfood,
+                        maker_maeil, maker_pulmuone, maker_sajo, maker_samyang)
 # 주류. 성인 인증 게이트가 없는 유일한 곳이다(notes/CANDIDATES-ALCOHOL.md).
 from collectors import alcohol_hitejinro
 # 한식 중위권. 공정위 가맹점 수 188~603위 구간(notes/CANDIDATES-KATSU-JPN-KOR.md).
@@ -76,8 +76,9 @@ from collectors import (japan_motoishi, japan_tokyogyudong, katsu_baeksojeong,
 #    브랜드당 연 1~4건이라 0건이 '수집 실패'가 아니다.
 #    더본코리아 계열(홍콩반점0410·리춘시장·고투웍)은 theborn 담당이라 뺐다.
 from collectors import (china_bobae, china_chunli, china_hongjjajang,
-                        china_jjambbonggwan, china_lahongbang, china_mimigwan,
-                        china_samsammara, china_sorimmara, china_tanghuo)
+                        china_jjambbong10101, china_jjambbonggwan,
+                        china_lahongbang, china_mimigwan, china_samsammara,
+                        china_sorimmara, china_tanghuo)
 import rules
 import taxonomy
 from web import home
@@ -99,6 +100,7 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             maker_haitai, maker_crown, maker_lottewellfood,   # 과자
             maker_samyang,                                    # 라면·스낵
             maker_binggrae, maker_maeil, maker_hitejinrobev,  # 음료
+            maker_pulmuone, maker_dongwonfnb, maker_sajo,     # 냉동·간편식
             alcohol_hitejinro,                          # 제조사(주류)
             korean_twozzim, korean_damgguk,             # 한식 중위권
             korean_yoogane, korean_obongzip,
@@ -138,7 +140,8 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             # (사유는 collectors/china_sorimmara.py docstring).
             china_tanghuo, china_chunli, china_bobae,
             china_sorimmara, china_lahongbang, china_jjambbonggwan,
-            china_hongjjajang, china_mimigwan, china_samsammara,
+            china_hongjjajang, china_mimigwan, china_jjambbong10101,
+            china_samsammara,
             salad_salady]                                            # 샐러드
 # 롯데리아·빕스·GS25 는 뺀다. 사유는 base.BRANDS 주석 참고.
 

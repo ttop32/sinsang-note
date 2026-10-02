@@ -225,6 +225,19 @@ PRODUCE = "농산물"      # 이 분류가 붙으면 수집에서 뺀다. 화면
 # 안 본다(_category 참고). 실측 20건은 전부 과일·채소 + 식재료 조합이다.
 PRODUCE_ONLY = PRODUCE_TAGS | {"식재료"}
 
+# 분류일 수가 없는 꼬리표. 원물인지 셀 때 **이것만** 빼고 나머지는 모르는 이름이어도
+# 전부 센다 — TAG_CATEGORY 에 있는 것만 세면 CU 가 새 분류 이름을 하나 붙이는 날
+# (['과일','컵과일'] 같은 것) 그게 안 세어져서 또 조용히 사라진다.
+# ⚠️ PB 이름(PBICK·405·득템·델라페)은 일부러 **안** 넣었다. 넣으면 PB 가 붙은
+# 상품이 원물로 몰려 조용히 사라질 수 있다. 안 넣으면 원물이 안 걸러질 뿐이라
+# (화면에 남는다) 틀리는 방향이 안전하다. 지금 #taglist 에는 행사 배지도 PB 도
+# 원물과 같이 붙은 사례가 0건이라 어느 쪽이든 결과는 20건으로 같다(실측).
+IGNORED_TAGS = frozenset({"1+1", "2+1"})
+
+# 생과일·채소로 걸러낸 건수의 실측 베이스라인. 아래 fetch 가 이 수치를 근거로
+# '거르기가 번져서 멀쩡한 상품까지 지우는' 사고를 막는다.
+MEASURED_PRODUCE = 20   # 2026-10-02, CU 666건 중
+
 # 전부 '생활용품' 한 값으로 모은다. ⚠️ base.NONFOOD_CATEGORIES 가 읽는 값이라
 # 더 좁은 이름(화장품·스타킹·문구류)으로 쪼개면 굿즈 필터가 깨진다.
 NONFOOD_TAGS = frozenset({
@@ -265,7 +278,7 @@ def _category(tags: list, main: str) -> str:
     # 본다. 먼저 보고 바로 반환하면 CU 가 가공품에 '과일'을 하나 더 붙이는 날
     # 그 상품이 말없이 사라진다 — ['과일','과즙음료'] 가 음료가 아니라 농산물이
     # 돼서 수집에서 빠진다. 지금은 공존 0건이지만 조용히 사라지는 길은 막는다.
-    narrow = {tag for tag, _ in TAG_CATEGORY if tag in t and tag not in _MAIN_TAGS}
+    narrow = t - _MAIN_TAGS - IGNORED_TAGS
     if (narrow & PRODUCE_TAGS) and narrow <= PRODUCE_ONLY:
         return PRODUCE
     for tag, cat in TAG_CATEGORY:
@@ -505,6 +518,13 @@ def fetch(known: dict | None = None) -> list[Item]:
         # 생과일·채소는 신제품이 아니다(PRODUCE_TAGS). 태그는 상세를 읽어야
         # 보이므로 여기서 뺀다 — 아래 이미지 HEAD 도 그만큼 덜 친다.
         raw = sum(1 for it in items if it.category == PRODUCE)
+        # 거르기가 번지면 멀쩡한 상품이 **말없이** 사라진다. 다른 가드와 같은
+        # 자리에서 드러낸다 — 실측 20건이라 세 배를 넘으면 규칙이 샌 것이다.
+        if raw > MEASURED_PRODUCE * 3:
+            raise ValueError(
+                f"CU 생과일·채소로 {raw}건이 걸렸다 "
+                f"(2026-10-02 실측 {MEASURED_PRODUCE}건). PRODUCE_TAGS 가 엉뚱한 "
+                f"상품까지 집고 있는지, CU 가 태그 이름을 바꿨는지 확인하라")
         if raw:
             items = [it for it in items if it.category != PRODUCE]
             print(f"  CU 생과일·채소 {raw}건 제외 (철마다 다시 올라오는 원물)")

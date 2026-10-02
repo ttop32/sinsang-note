@@ -1,4 +1,4 @@
-"""노브랜드 버거 — 신세계푸드 브랜드 홈 **1요청**에 전체 메뉴가 다 있다.
+"""노브랜드버거 — 신세계푸드 브랜드 홈 **1요청**에 전체 메뉴가 다 있다.
 
 `www.nobrandburger.com` 은 `https://www.shinsegaefood.com/nobrandburger/index.sf`
 로 리다이렉트된다. 그 한 장이 647KB SSR 이고 메뉴 55건이 통째로 들어 있다.
@@ -79,7 +79,7 @@ from selectolax.parser import HTMLParser
 from . import base
 from .base import Item
 
-BRAND = "노브랜드 버거"
+BRAND = "노브랜드버거"
 ROOT = "https://www.shinsegaefood.com"
 MENU_URL = ROOT + "/nobrandburger/index.sf"
 IMG_BASE = ROOT + "/uimages/"

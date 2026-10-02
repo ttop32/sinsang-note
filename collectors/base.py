@@ -122,6 +122,15 @@ BRANDS = {
     "빙그레":      (MAKER, "음료"),
     "매일유업":    (MAKER, "음료"),
     "하이트진로음료": (MAKER, "음료"),
+    # 같은 조사의 냉동·간편식 분. 셋 다 계열사가 섞여 들어와서 어댑터가
+    # 주어(회사명) 화이트리스트로 거른다 — 건기식·급식·펫푸드·제분은 뺀다.
+    #   풀무원     — 뉴스룸 '브랜드 뉴스' 탭(menu=312). ⚠️날짜가 `2026년 9월 23일`
+    #   동원F&B    — 보도자료. ⚠️1페이지 8건이 상한이다(2페이지가 Ajax)
+    #   사조대림   — 신제품 전용 게시판. 제목 접두 `[계열사]` 로 거른다
+    #                (⚠️CI 이미지의 alt 는 어긋난다 — 사조펫 글에 사조동아원 CI)
+    "풀무원":      (MAKER, "냉동식품"),
+    "동원F&B":     (MAKER, "냉동식품"),
+    "사조대림":    (MAKER, "냉동식품"),
     "배스킨라빈스": (CAFE, "아이스크림"),
     "던킨":        (CAFE, "도넛"),
     "이삭토스트":  (FRANCHISE, "샌드위치"),
@@ -214,6 +223,7 @@ BRANDS = {
     "짬뽕관":       (FRANCHISE, "중식"),   # 15위 62개
     "홍짜장":       (FRANCHISE, "중식"),   # 18위 58개
     "미미관마라탕": (FRANCHISE, "중식"),   # 25위 40개
+    "짬뽕10101":    (FRANCHISE, "중식"),   # 33위 29개
     "삼삼마라":     (FRANCHISE, "중식"),   # 94위 5개. 꼬리인데 신호가 깨끗하다
     "KFC":         (FRANCHISE, "치킨"),
     "에그드랍":    (FRANCHISE, "샌드위치"),
@@ -443,6 +453,11 @@ SITES = {
     "빙그레":      "https://www.bing.co.kr/news/news_announced",
     "매일유업":    "https://www.maeil.com/news/press.jsp",
     "하이트진로음료": "https://www.hitejinrobeverage.com/ko/community/news",
+    # 동원F&B 만 진짜 상품 카탈로그가 SSR 로 살아 있다(101KB). robots 가
+    # `/services/Product/` 를 명시 허용한다. 나머지 둘은 목록이 폴백이다.
+    "풀무원":      "https://news.pulmuone.co.kr/pulmuone/newsroom/listPulmuone.do?menu=312",
+    "동원F&B":     "https://www.dongwonfnb.com/services/Product/Product_List",
+    "사조대림":    "https://www.sajo.co.kr/2026/product/new_product.asp",
     # ── 더본코리아 외식 브랜드 ─────────────────────────────────────────
     # 상품별 주소(보도자료 기사)가 Item.url 로 붙으므로 이건 전부 폴백이다.
     # 자체 도메인이 있으면 그 브랜드의 **메뉴 페이지**를, 없으면 theborn.co.kr 의
@@ -491,6 +506,9 @@ SITES = {
     # 한 장짜리 랜딩에 메뉴 28건이 박혀 있다. 메뉴 섹션 앵커가 없어 루트로 보낸다.
     "홍짜장":       "https://hongjjajang.com/",
     "미미관마라탕": "https://mimimara.co.kr/16",
+    # 어댑터가 읽는 홍보자료(?c=184)는 2023-10 에 멈춰 글이 3건뿐이라,
+    # 사람이 열 자리로는 메뉴 소개(?c=186)가 낫다.
+    "짬뽕10101":    "https://goguryeofood.com/?c=186",
     # 한글 도메인 삼삼마라.com. 한 장짜리 사이트라 메뉴가 앵커(#doz_menu_19)다.
     "삼삼마라":     "https://xn--oi2bo7bt0ja.com/",
 }
