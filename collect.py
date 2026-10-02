@@ -53,6 +53,7 @@ from collectors import (maker_cj, maker_myunsarang, maker_nongshim,
 from collectors import maker_spcsamlip
 # 주류. 성인 인증 게이트가 없는 유일한 곳이다(notes/CANDIDATES-ALCOHOL.md).
 from collectors import cafe_angelinus, cafe_twosome
+from collectors import maker_harim
 from collectors import alcohol_hitejinro
 # 한식 중위권. 공정위 가맹점 수 188~603위 구간(notes/CANDIDATES-KATSU-JPN-KOR.md).
 from collectors import (korean_damgguk, korean_obongzip, korean_twozzim,
@@ -131,6 +132,7 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             maker_myunsarang,                                 # 냉동면·생면·육수
             maker_spcsamlip,                                  # 베이커리(양산빵)
             alcohol_hitejinro,                          # 제조사(주류)
+            maker_harim,                                # 제조사(육가공·식재료)
             korean_twozzim, korean_damgguk,             # 한식 중위권
             korean_yoogane, korean_obongzip,
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
@@ -222,7 +224,54 @@ def load_previous() -> dict:
     return out
 
 
+def orphans() -> list:
+    """어댑터 파일은 있는데 배선이 빠진 곳. (모듈, 사유) 목록.
+
+    새 브랜드 하나를 붙이려면 **네 곳**을 고쳐야 한다 — 위의 import, 아래
+    ADAPTERS, base.BRANDS, base.SITES. 하나만 빠뜨리면 파일이 멀쩡히 있는데
+    아무 일도 안 일어나고, 아무도 모른다.
+
+    실제로 한 날에 세 번 났다. SPC삼립은 파일·docstring·검증이 다 돼 있는데
+    세 곳 어디에도 없어서 죽은 채로 방치돼 있었고, 한식 4곳(두찜·담꾹·유가네·
+    오봉집)과 커피 2곳(투썸플레이스·엔제리너스)은 손으로 찾아 붙였다.
+
+    배선을 자동으로 만들지 않고 찾아내기만 하는 이유는, 어느 어댑터를 켤지는
+    사람이 정하는 게 맞아서다(롯데리아·빕스처럼 일부러 끈 것이 있다).
+    """
+    import importlib
+    out = []
+    live = {id(m) for m in ADAPTERS}
+    for f in sorted((ROOT / "collectors").glob("*.py")):
+        name = f.stem
+        if name in ("base", "__init__"):
+            continue
+        try:
+            mod = importlib.import_module(f"collectors.{name}")
+        except Exception as e:
+            out.append((name, f"import 실패 — {type(e).__name__}: {e}"))
+            continue
+        names = getattr(mod, "BRANDS", None) or (
+            [mod.BRAND] if hasattr(mod, "BRAND") else [])
+        if not names:
+            continue
+        for b in names:
+            if b not in base.BRANDS:
+                out.append((name, f"base.BRANDS 에 '{b}' 없음"))
+            elif not base.SITES.get(b):
+                out.append((name, f"base.SITES 에 '{b}' 없음"))
+        if id(mod) not in live:
+            out.append((name, "ADAPTERS 목록에 없음 — 수집이 안 돈다"))
+    return out
+
+
 def main() -> None:
+    # 배선이 빠진 어댑터부터 찍는다. 죽어 있는 걸 모르는 게 제일 나쁘다.
+    # 죽이지는 않는다 — 작업 중인 파일 하나 때문에 그날 수집 전체가 멎으면
+    # 그게 더 큰 손해다. 대신 맨 앞과 맨 뒤 두 번 찍어서 묻히지 않게 한다.
+    lost = orphans()
+    for name, why in lost:
+        print(f"!! collectors/{name}.py — {why}")
+
     today = date.today().isoformat()
     prev = load_previous()
     known_brands = {p["brand"] for p in prev.values()}
@@ -351,6 +400,8 @@ def main() -> None:
 
     # 데이터는 위에서 이미 썼다. 실패한 어댑터가 있으면 여기서 죽어 Actions 가 빨갛게 뜬다.
     # (워크플로의 커밋 스텝은 if: always() 라 부분 결과는 반영된다.)
+    if lost:
+        print(f"!! 배선이 빠진 어댑터 {len(lost)}건 — 위 '!!' 줄 참고")
     if errors:
         raise SystemExit("어댑터 실패:\n" + "\n".join(errors))
 

@@ -103,6 +103,8 @@ BRANDS = {
     # 주류 제조사 중 유일하게 넣을 수 있는 곳이다. 나머지 12곳은 성인 인증
     # 게이트 뒤이거나 뉴스가 멈췄다(notes/CANDIDATES-ALCOHOL.md).
     "하이트진로":  (MAKER, "주류"),
+    "하림":         (MAKER, "냉동식품"),
+    "하림산업":     (MAKER, "식재료"),
     "아워홈":      (MAKER, "냉동식품"),
     "동서식품":    (MAKER, "커피"),
     "샘표":        (MAKER, "조미료"),
@@ -497,6 +499,8 @@ SITES = {
     "롯데칠성음료": "https://company.lottechilsung.co.kr/kor/product/newprdt/list.do",
     # 상품별 주소(/product/detail?prdId=)가 Item.url 로 붙으므로 이건 폴백이다.
     "하이트진로":  "https://www.hitejinro.com/socialmedia/press_list.asp",
+    "하림":         "https://www.harim.com/main/?menu=52",
+    "하림산업":     "https://harimholdings.com/kr/sub/newsroom/newsroom.asp",
     "hy프레딧":    "https://m.fredit.co.kr/product/main-tab-menu?keyword=main&ctgId=C10000001001",
     # 아워홈·샘표는 상품 목록 페이지가 없어 보도자료를 폴백으로 쓴다(GS25 선례).
     # 동서식품은 상품 목록이 있고 어댑터도 그쪽을 읽는다.

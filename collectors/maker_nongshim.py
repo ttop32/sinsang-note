@@ -109,6 +109,7 @@ def _uploaded(src: str) -> str:
 def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
+    dropped: list[str] = []      # 시각 없는 옛 파일명 행. 아래 가드의 진단용.
     with base.client() as c:
         r = base.retry(lambda: c.get(LIST))
         r.raise_for_status()
@@ -162,13 +163,29 @@ def fetch() -> list[Item]:
             a = li.css_first(".btn a")
             src = (img.attributes.get("src") or "").strip() if img else ""
             href = (a.attributes.get("href") or "").strip() if a else ""
+            # 🔴 **옛 파일명(=시각 없음)은 버린다. 이 어댑터에서 제일 비싼 줄이다.**
+            # 이 면의 유일한 시간 신호가 사진 파일명의 epoch 다. 그게 없으면
+            # 그 행은 **시간에 놓을 수가 없는데**, `is_new=True` 만 달고 나가면
+            # `rules.is_fresh()` 의 '날짜 없는 is_new' 분기를 타고 **STALE(90일)
+            # 동안 무조건 화면에 오른다**. 설빙 인절미설빙과 같은 사고다.
+            # 2026-10-02 실측 — 이게 이론이 아니다:
+            #   `농심라면큰사발면` 사진이 `434_bowl.jpg`(옛 이름) 하나뿐이라
+            #   시각이 비었다. 농심라면은 1975년 제품을 **2025년 1월에 복각
+            #   재출시**한 것이라 이미 21개월 됐는데, 나머지 8건은 전부 60일
+            #   창 밖이라 떨어져서 **농심이 화면에 올리는 단 한 건이 이것**이었다.
+            # 옛 파일명은 사진을 옛 체계로 올렸다는 뜻이고, 이 면에서 그건
+            # 늙은 행의 표식이다. 틀린 걸 올리느니 놓치는 쪽이 이 레포 방침이다.
+            uploaded = _uploaded(src)
+            if not uploaded:
+                dropped.append(name)
+                continue
             it = Item(
                 brand=BRAND,
                 name=name,
                 desc=" ".join(h2.text().split()) if h2 else "",
                 image=src,
                 # 출시일이 아니라 사진 업로드 시각이다. released_at 에 넣지 마라.
-                uploaded_at=_uploaded(src),
+                uploaded_at=uploaded,
                 # 브랜드가 직접 관리하는 신제품 면이다. 내비 NEW 배지와도 맞는다.
                 is_new=True,
                 url=SITE + href if href.startswith("/") else (href or LIST),
@@ -176,4 +193,12 @@ def fetch() -> list[Item]:
             if it.key not in seen:
                 seen.add(it.key)
                 items.append(it)
+
+    # 파일명 체계가 통째로 바뀌면 위 가드가 전건을 버려 조용한 0건이 된다.
+    # 목록은 멀쩡한데(위 rows 가드를 통과했다) 상품이 하나도 안 남는 건 고장이다.
+    if not items:
+        raise ValueError(
+            f"농심 신제품 {len(rows)}행에서 사진 epoch 를 하나도 못 읽었다 "
+            f"(버린 행={dropped}) — 파일명 체계(`/<13자리>.jpg`)가 바뀌었는지 "
+            f"_STAMP 를 확인하라")
     return items
