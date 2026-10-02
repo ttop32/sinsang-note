@@ -32,14 +32,32 @@ MAX_CATEGORIES = 30  # 폭주 방지. 현재 8개.
 DELAY = 0.3          # 요청 간격(초)
 
 
+# 헤더가 없는 것과 우리 쪽이 죽은 것은 다르다. 앞은 정상이고(상시 메뉴는
+# Last-Modified 를 안 주는 경우가 많다 — 실측 59%) 뒤는 그날 수집이 통째로
+# 날짜를 잃는 사고다. 그런데 둘 다 빈 문자열로 끝나서 구분이 안 됐다.
+# 던진 횟수를 세어 두고 fetch 끝에서 본다.
+_HEAD_FAIL = 0
+_HEAD_FAIL_MAX = 0.3   # 이 비율을 넘게 던지면 우리 쪽 문제로 본다
+
+
+def _head_guard(tried: int) -> None:
+    """HEAD 가 너무 많이 터졌으면 조용히 넘어가지 않는다."""
+    if tried and _HEAD_FAIL / tried > _HEAD_FAIL_MAX:
+        raise RuntimeError(
+            f"이미지 HEAD {tried}건 중 {_HEAD_FAIL}건이 예외로 끝났다 "
+            "— 날짜를 통째로 잃는 상태라 수집을 실패로 본다")
+
+
 def _uploaded_at(client, img_url: str) -> str:
-    """이미지의 Last-Modified 를 날짜로. 실패하면 조용히 비운다."""
+    """이미지의 Last-Modified 를 날짜로. 헤더가 없으면 빈 문자열."""
+    global _HEAD_FAIL
     if not img_url:
         return ""
     try:
         r = client.head(img_url)
         lm = r.headers.get("last-modified", "")
     except Exception:
+        _HEAD_FAIL += 1
         return ""
     if not lm:
         return ""
@@ -92,4 +110,5 @@ def fetch() -> list[Item]:
         for it in items:
             time.sleep(DELAY / 2)
             it.uploaded_at = _uploaded_at(c, it.image)
+    _head_guard(sum(1 for it in items if it.image))
     return items
