@@ -2,3 +2,6 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# 조사 에이전트 임시 출력
+all_press.json
