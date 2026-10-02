@@ -32,6 +32,15 @@ border:1px solid var(--line);background:var(--chip);color:var(--fg);min-height:4
 -webkit-appearance:none;appearance:none}
 #q::placeholder{color:var(--mut)}
 #q:focus{outline:none;border-color:var(--accent)}
+/* 검색 추천. 입력칸 바로 아래 겹쳐 띄운다 — 자리를 차지하면 카드가 밀린다. */
+.qwrap{position:relative;flex:1;min-width:0;display:flex}
+#sug{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:8;margin:0;
+padding:4px;list-style:none;background:var(--bg);border:1px solid var(--line);
+border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,.12);max-height:46vh;overflow:auto}
+#sug li{padding:9px 12px;border-radius:8px;font-size:15px;cursor:pointer;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#sug li[aria-selected="true"],#sug li:hover{background:var(--chip)}
+#sug .k{float:right;margin-left:10px;font-size:12px;color:var(--mut)}
 #sort{flex:none}
 .cnt{margin:10px 0 0;font-size:12px;color:var(--mut);min-height:16px}
 /* 푸터의 분류·업체 목록. 업체가 50곳 넘어서 그냥 흘리면 푸터가 화면을 덮는다. */
@@ -214,8 +223,12 @@ def render(rows: list, new_today: list, total: int = 0) -> None:
 <a class="skip" href="#g">본문으로 건너뛰기</a>
 <header><h1>{SITE}</h1><p class="sub">{TAGLINE}</p><p class="lead">{lead}</p></header>
 <div class="tools">
-  <input id="q" type="search" placeholder="상품·브랜드 검색" aria-label="상품 또는 브랜드 검색"
-         autocomplete="off" enterkeyhint="search">
+  <div class="qwrap">
+    <input id="q" type="search" placeholder="상품·브랜드 검색" aria-label="상품 또는 브랜드 검색"
+           autocomplete="off" enterkeyhint="search" role="combobox"
+           aria-expanded="false" aria-controls="sug" aria-autocomplete="list">
+    <ul id="sug" role="listbox" aria-label="검색 추천" hidden></ul>
+  </div>
   <button id="sort" class="t" data-s="date" aria-label="정렬 바꾸기">최신순</button>
 </div>
 <nav aria-label="분류"><div class="tw">{tabs}</div></nav>
@@ -286,7 +299,7 @@ function showEmpty() {{
 }}
 
 function resetAll() {{
-  kind = ''; sub = ''; words = []; q.value = '';
+  kind = ''; sub = ''; words = []; q.value = ''; closeSug();
   priBtns.forEach((t, i) => {{
     t.classList.toggle('on', i === 0);
     t.setAttribute('aria-pressed', i === 0);
@@ -363,8 +376,107 @@ subnav.addEventListener('click', e => {{
   apply();
 }});
 
+// ── 검색 추천 ────────────────────────────────────────────────────
+// 낱말 목록을 따로 내려받지 않는다. 브랜드·분류·상품명이 이미 카드 안에
+// 다 있어서 DOM 에서 긁는다. 추천 때문에 늘어나는 바이트가 0 이다.
+//
+// 한국어는 띄어쓰기가 없어서 앞글자 일치로는 거의 안 걸린다('우동'으로
+// '얼큰우동'을 못 찾는다). 부분일치로 본다. 대신 앞에서 걸린 것을 위로
+// 올린다 — '라떼'를 치면 '라떼'로 시작하는 것이 먼저다.
+const sug = document.getElementById('sug');
+const VOCAB = (() => {{
+  const brands = new Map(), subs = new Map(), names = new Set();
+  for (const c of cards) {{
+    const b = c.dataset.b, k = c.dataset.s;
+    if (b) brands.set(b, (brands.get(b) || 0) + 1);
+    if (k) subs.set(k, (subs.get(k) || 0) + 1);
+    const h = c.querySelector('h2');
+    if (h) names.add(h.textContent.trim());
+  }}
+  const out = [];
+  for (const [t, n] of subs) out.push({{t: t, n: n, kind: '분류', rank: 0}});
+  for (const [t, n] of brands) out.push({{t: t, n: n, kind: '업체', rank: 1}});
+  for (const t of names) out.push({{t: t, n: 0, kind: '', rank: 2}});
+  return out;
+}})();
+
+let sugItems = [], sugAt = -1;
+const ESC = ch => ({{'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}}[ch]);
+
+function closeSug() {{
+  sug.hidden = true; sug.innerHTML = ''; sugItems = []; sugAt = -1;
+  q.setAttribute('aria-expanded', 'false');
+}}
+
+function showSug() {{
+  // 마지막 낱말만 본다. '커피 라'까지 쳤으면 '라'로 고른다.
+  const typed = q.value.toLowerCase();
+  const head = typed.replace(/[^ ]*$/, '');
+  const tail = typed.slice(head.length).trim();
+  if (!tail) return closeSug();
+  const hit = [];
+  for (const v of VOCAB) {{
+    const at = v.t.toLowerCase().indexOf(tail);
+    if (at < 0) continue;
+    if (v.t.toLowerCase() === typed.trim()) continue;   // 이미 다 친 것
+    hit.push({{v: v, at: at}});
+  }}
+  // 분류·업체 먼저, 그 다음 앞에서 걸린 것, 그 다음 건수 많은 것.
+  hit.sort((a, b) => a.v.rank - b.v.rank || a.at - b.at || b.v.n - a.v.n);
+  sugItems = hit.slice(0, 8).map(h => ({{text: head + h.v.t, label: h.v.t,
+                                        kind: h.v.kind, n: h.v.n}}));
+  if (!sugItems.length) return closeSug();
+  sug.innerHTML = sugItems.map((it, i) =>
+    '<li role="option" aria-selected="false" data-i="' + i + '">' +
+    (it.kind ? '<span class="k">' + it.kind + ' ' + it.n + '건</span>' : '') +
+    it.label.replace(/[&<>"]/g, ESC) + '</li>').join('');
+  sug.hidden = false; sugAt = -1;
+  q.setAttribute('aria-expanded', 'true');
+}}
+
+function markSug() {{
+  const lis = sug.children;
+  for (let i = 0; i < lis.length; i++)
+    lis[i].setAttribute('aria-selected', i === sugAt ? 'true' : 'false');
+  if (sugAt >= 0) lis[sugAt].scrollIntoView({{block: 'nearest'}});
+}}
+
+function takeSug(i) {{
+  if (!sugItems[i]) return;
+  q.value = sugItems[i].text;
+  closeSug();
+  words = q.value.trim().toLowerCase().split(' ').filter(Boolean);
+  apply();
+  q.focus();
+}}
+
+// click 이 아니라 mousedown 이다 — click 은 blur 뒤에 와서 목록이 이미 닫혀 있다.
+sug.addEventListener('mousedown', e => {{
+  const li = e.target.closest('li');
+  if (li) {{ e.preventDefault(); takeSug(+li.dataset.i); }}
+}});
+q.addEventListener('blur', () => setTimeout(closeSug, 120));
+q.addEventListener('focus', showSug);
+q.addEventListener('keydown', e => {{
+  if (sug.hidden) return;
+  if (e.key === 'ArrowDown') {{
+    e.preventDefault();
+    sugAt = sugAt + 1 >= sugItems.length ? -1 : sugAt + 1;
+    markSug();
+  }} else if (e.key === 'ArrowUp') {{
+    e.preventDefault();
+    sugAt = sugAt - 1 < -1 ? sugItems.length - 1 : sugAt - 1;
+    markSug();
+  }} else if (e.key === 'Enter' && sugAt >= 0) {{
+    e.preventDefault(); takeSug(sugAt);
+  }} else if (e.key === 'Escape') {{
+    closeSug();
+  }}
+}});
+
 let timer;
 q.addEventListener('input', () => {{
+  showSug();
   clearTimeout(timer);
   timer = setTimeout(() => {{
     words = q.value.trim().toLowerCase().split(/\\s+/).filter(Boolean);
