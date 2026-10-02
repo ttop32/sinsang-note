@@ -170,7 +170,10 @@ def fetch() -> list[Item]:
             if page > 1:
                 time.sleep(DELAY)
             rows = _rows(_get(c, {"com_board_id": BOARD_ID, "com_board_page": page}))
+            # 1페이지가 비면 마크업이 바뀐 것이다. 조용히 빈 목록을 돌려주지 않는다.
             if not rows:
+                if page == 1:
+                    raise RuntimeError(f"{NEWS} 1페이지에서 글을 못 찾았다. 마크업을 확인해라")
                 break
             for when, idx, short, desc in rows:
                 if when < floor:

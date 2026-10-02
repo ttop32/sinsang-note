@@ -145,7 +145,10 @@ def fetch() -> list[Item]:
                                                        "page": page}))
             r.raise_for_status()
             rows = _rows(r.text)
+            # 1페이지가 비면 마크업이 바뀐 것이다. 조용히 빈 목록을 돌려주지 않는다.
             if not rows:
+                if page == 1:
+                    raise RuntimeError(f"{LIST} 1페이지에서 글을 못 찾았다. 마크업을 확인해라")
                 break
             for wr_id, title in rows:
                 if any(w in title for w in _SKIP) or not _LAUNCH.search(title):

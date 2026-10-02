@@ -68,6 +68,8 @@ BRANDS = {
     "또래오래":    (FRANCHISE, "치킨"),
     "자담치킨":    (FRANCHISE, "치킨"),
     "땅땅치킨":    (FRANCHISE, "치킨"),
+    "페리카나":    (FRANCHISE, "치킨"),
+    "바른치킨":    (FRANCHISE, "치킨"),
     "프랭크버거":  (FRANCHISE, "햄버거"),
     "맥도날드":    (FRANCHISE, "햄버거"),
     "오뚜기":      (MAKER, "라면"),
@@ -124,6 +126,7 @@ BRANDS = {
     "토마토도시락": (FRANCHISE, "도시락"),
     "슬로우캘리":  (FRANCHISE, "샐러드"),
     "포케올데이":  (FRANCHISE, "샐러드"),
+    "삼첩분식":    (FRANCHISE, "분식"),
     "스시로":      (FRANCHISE, "일식"),
     # ── 더본코리아 외식 브랜드 ─────────────────────────────────────────
     # theborn.co.kr/brand/representation/ 의 '대표 브랜드' 20개 중 빽다방을 뺀
@@ -225,6 +228,10 @@ SITES = {
     # /menu 가 302 로 가는 신메뉴 페이지. 번호(/menu01=추천메뉴)와 내비 순서가
     # 어긋나는 사이트라 경로를 짐작하면 틀린다(chicken_ttangttang.py 참고).
     "땅땅치킨":     "https://ttangttang.co.kr/menu",
+    # 상품별 주소(/menu/detail?goodsNo=)가 Item.url 로 붙으므로 이건 폴백이다.
+    "페리카나":     "https://www.pelicana.co.kr/menu/list",
+    # 상품별 주소(/menu/view.php?board_id=)가 Item.url 로 붙으므로 이건 폴백이다.
+    "바른치킨":     "https://barunchicken.com/menu/index.php",
     "피자헛":       "https://www.pizzahut.co.kr/menu",
     "미스터피자":   "https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu",
     "파파존스":     "https://pji.co.kr/menu/pizza",
@@ -265,6 +272,8 @@ SITES = {
     # 수집은 /protein_poke·/rice_bowl·/side·/drink 에서 하지만, 사람이 여는
     # 메뉴 첫 장은 /poke 다. 링크의 용건은 브랜드로 트래픽을 돌려주는 것이다.
     "포케올데이":   "https://pokeallday.co.kr/poke",
+    # /bbs/board.php 쪽 게시판은 403 이다. content.php 가 열린 경로다.
+    "삼첩분식":     "https://samcheop.com/bbs/content.php?co_id=menu&tab=1",
     "매머드커피":   "https://mmthcoffee.com/sub/menu/new_list.php",
     "더벤티":       "https://theventi.co.kr/new2022/menu/all.html",
     "컴포즈커피":   "https://composecoffee.com/index1",
