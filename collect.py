@@ -34,15 +34,17 @@ from collectors import dongsuh, fredit, gs25, lottechilsung, ourhome, sempio
 from collectors import alcohol_hitejinro
 # 치킨 2차. 공정위 가맹점 수 상위에서 신제품 신호가 확인된 곳들
 # (근거는 notes/CANDIDATES-CHICKEN2.md).
-from collectors import (chicken_boor, chicken_cheogajip, chicken_jadam,
-                        chicken_puradak, chicken_toreore, chicken_ttangttang)
+from collectors import (chicken_barun, chicken_boor, chicken_cheogajip,
+                        chicken_jadam,
+                        chicken_pelicana, chicken_puradak, chicken_toreore,
+                        chicken_ttangttang)
 # 더본코리아 외식 브랜드(보도자료 18 + 한신포차)와 KFC(브랜드 신메뉴 면).
 from collectors import hanshinpocha, kfc, theborn
 # 분식 2차. 공정위 '분식' 업종 가맹점 수 상위에서 신제품 신호가 확인된 곳들.
 # 김밥·떡볶이·우동을 따로 떼지 않고 전부 '분식' 한 칸에 넣는다(공정위 업종과 같다).
 # salad_* 둘은 같은 조사에서 나온 샐러드 축이다. 근거는 notes/CANDIDATES-SNACK2.md.
 from collectors import (salad_pokeallday, salad_slowcali, snack_gimgane,
-                        snack_schoolfood, snack_yumsem)
+                        snack_samcheop, snack_schoolfood, snack_yumsem)
 import rules
 import taxonomy
 from web import home
@@ -64,11 +66,13 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
             chicken_cheogajip, chicken_puradak, chicken_jadam,
             chicken_toreore, chicken_boor, chicken_ttangttang,
+            chicken_pelicana, chicken_barun,
             pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
             toast_isaac, snack_kimbabcheonguk, snack_barunkim,       # 분식
             snack_jaws, snack_myungrang,
             snack_yumsem, snack_gimgane, snack_schoolfood,  # 분식 2차
+            snack_samcheop,
             salad_slowcali, salad_pokeallday,               # 샐러드 2차
             bakery_parisbaguette, bakery_napoleon, bakery_breadnco,  # 베이커리
             bakery_hongruijen, bakery_knotted, bakery_samsong,
@@ -223,6 +227,13 @@ def main() -> None:
 
     rules.untrust_bulk_dates(rows)                   # 사이트 개편 재발행분을 날짜에서 뺀다
     rules.undupe_display(rows)                       # 다듬다 같아진 이름은 원본으로
+    # 주소가 있다고 사진이 뜨는 건 아니다. 화면에 올릴 것만 실제로 때려 본다
+    # (전수 1,044장 중 7장이 404·끊긴 TLS 체인이었다). 자세한 건 rules 쪽 주석.
+    hid, back = rules.verify_images(rules.pick(rows, today, cap=False)
+                                    + rules.pick(rows, today, goods=True, cap=False))
+    if hid or back:
+        print(f"   사진 안 열리는 것 {hid}장 감춤 / 되살아난 것 {back}장")
+
     fresh = rules.pick(rows, today)                  # 홈 목록(브랜드 상한 적용)
     # 페이지는 상한 없이 만든다. 상한에 걸린 것도 /b/<브랜드>/ 와 검색으로 닿아야 한다.
     listed = rules.pick(rows, today, cap=False)

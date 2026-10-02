@@ -349,3 +349,64 @@ def is_fresh(r: dict, today: str, *, goods: bool = False) -> bool:
     if r.get("baseline"):
         return False
     return r.get("first_seen", "") >= cutoff
+
+
+# ── 죽은 사진 걸러내기 ────────────────────────────────────────────────
+# 주소가 있다고 사진이 뜨는 건 아니다. 2026-10-02 전수 실측에서 1,044장 중
+# 7장이 깨져 있었다 — 홍루이젠 4장은 CDN 이 404(본문은 HTML 70바이트)를
+# 돌려주고, 롯데칠성 3장은 서버가 중간 인증서를 안 보내 TLS 체인이 끊긴다.
+# 둘 다 브라우저에서도 똑같이 안 열린다.
+#
+# derive() 가 http:// 를 지우는 것과 같은 취지다 — 빈 네모가 뜨느니 사진 없는
+# 카드로 그린다. 다만 여기선 주소를 버리지 않고 image_src 에 넣어 둔다.
+# 그래야 서버가 고쳐졌을 때 다음 실행에서 되살아난다(한 번 빈 칸이 되면
+# 영영 못 돌아오는 게 더 나쁘다).
+IMG_WORKERS = 12      # 동시 요청 수. 1,035장에 30초쯤 걸린다.
+IMG_TIMEOUT = 20
+IMG_MIN = 500         # 이보다 작으면 사진이 아니라 에러 페이지다
+
+
+def verify_images(rows: list) -> tuple:
+    """화면에 올릴 사진이 실제로 열리는지 확인한다. (고친 수, 되살린 수).
+
+    브라우저와 같은 조건으로 본다 — 인증서 검증을 켜고, 통째로 받아서
+    Content-Type 과 크기를 확인한다. 404 를 200 처럼 흘려보내는 CDN 이 있어서
+    상태코드만 보면 안 되고, HTML 에러 페이지를 사진으로 세면 안 된다.
+    """
+    import concurrent.futures as cf
+
+    import httpx
+
+    todo = {}
+    for r in rows:
+        url = r.get("image") or r.get("image_src") or ""
+        if url:
+            todo.setdefault(url, []).append(r)
+    if not todo:
+        return 0, 0
+
+    def live(url: str) -> bool:
+        try:
+            with httpx.Client(timeout=IMG_TIMEOUT, follow_redirects=True,
+                              headers={"User-Agent": base.UA}) as c:
+                resp = c.get(url)
+                return (resp.status_code < 400
+                        and resp.headers.get("content-type", "").startswith("image")
+                        and len(resp.content) >= IMG_MIN)
+        except Exception:
+            return False
+
+    with cf.ThreadPoolExecutor(IMG_WORKERS) as ex:
+        ok = dict(zip(todo, ex.map(live, todo)))
+
+    hid = back = 0
+    for url, group in todo.items():
+        for r in group:
+            if ok[url]:
+                if not r.get("image"):
+                    r["image"], back = url, back + 1
+                r.pop("image_src", None)
+            elif r.get("image"):
+                r["image_src"], r["image"] = url, ""
+                hid += 1
+    return hid, back
