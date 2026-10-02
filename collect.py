@@ -36,8 +36,13 @@ from collectors import alcohol_hitejinro
 # (근거는 notes/CANDIDATES-CHICKEN2.md).
 from collectors import (chicken_boor, chicken_cheogajip, chicken_jadam,
                         chicken_puradak, chicken_toreore, chicken_ttangttang)
-# 더본코리아 외식 19브랜드(보도자료)와 KFC(브랜드 신메뉴 면).
+# 더본코리아 외식 브랜드(보도자료 18 + 한신포차)와 KFC(브랜드 신메뉴 면).
 from collectors import hanshinpocha, kfc, theborn
+# 분식 2차. 공정위 '분식' 업종 가맹점 수 상위에서 신제품 신호가 확인된 곳들.
+# 김밥·떡볶이·우동을 따로 떼지 않고 전부 '분식' 한 칸에 넣는다(공정위 업종과 같다).
+# salad_* 둘은 같은 조사에서 나온 샐러드 축이다. 근거는 notes/CANDIDATES-SNACK2.md.
+from collectors import (salad_pokeallday, salad_slowcali, snack_gimgane,
+                        snack_schoolfood, snack_yumsem)
 import rules
 import taxonomy
 from web import home
@@ -63,10 +68,12 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
             toast_isaac, snack_kimbabcheonguk, snack_barunkim,       # 분식
             snack_jaws, snack_myungrang,
+            snack_yumsem, snack_gimgane, snack_schoolfood,  # 분식 2차
+            salad_slowcali, salad_pokeallday,               # 샐러드 2차
             bakery_parisbaguette, bakery_napoleon, bakery_breadnco,  # 베이커리
             bakery_hongruijen, bakery_knotted, bakery_samsong,
             bon_if,                        # 본아이에프 8브랜드(한식·도시락·카페)
-            # 더본코리아 19브랜드. 브랜드 메뉴 사이트에는 신제품 신호가 없어서
+            # 더본코리아 18브랜드. 브랜드 메뉴 사이트에는 신제품 신호가 없어서
             # 본사 보도자료만 읽는다(GS25 와 같은 종류의 소스, 사유는
             # collectors/theborn.py docstring §2). 빽다방은 cafe_paikdabang 담당.
             theborn, kfc,

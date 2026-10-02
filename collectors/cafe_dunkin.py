@@ -10,6 +10,25 @@ Inertia.js 사이트라 HTML 최상단 엘리먼트의 data-page 속성에 페�
 '신제품' 칸에 든 것만 is_new=True 로 올리고, 나머지는 None 으로 둔 채
 collect 의 어제 대비 diff 에 맡긴다. 신제품 탭만 받으면 커피·음료 신제품은 영영 못 잡는다.
 
+**그 결과 같은 출시가 반으로 갈린다.** 도넛 쪽만 보이고 같은 날 같은 콜라보로 나온
+비도넛 쪽이 통째로 안 보인다. 2026-10-02 실측:
+  · `들기름 메밀 츄이스티 by 오스틴 강`(DONUT, 보임) ↔ `콘치즈 크로크무슈 by 오스틴 강`(FOOD, 안 보임)
+  · `학화 호도 먼치킨 세트(5개입)`(보임) ↔ 학화 라인 5종(안 보임). **세트는 보이는데 구성품이 안 보인다.**
+
+그래서 이미지 Last-Modified 로 같은 출시를 되붙인다(_regroup). ⚠️ **날짜만으로
+묶으면 안 된다.** 2026-09-15 묶음 8건은 신제품 1건(정통 보름달 도넛)에 블루베리
+머핀·퀸아망·올리브 치아바타 같은 **상시 베이커리 7건**이 같이 들어 있다. 그래서
+날짜가 같고 **이름까지 겹칠 때만** 묶는다 — 첫 낱말이 같거나(학화) 꼬리가
+통째로 같거나(by 오스틴 강). 첫 낱말은 맛·형태를 가리키는 흔한 말이면 안 쓴다
+(_GENERIC) — '초코'·'딸기'로 묶으면 메뉴판 절반이 한 묶음이 된다.
+215건 전수로 돌려 6건이 붙었고 상시 메뉴는 0건이었다.
+
+LM 은 묶는 데만 쓰는 게 아니라 **떨구는 데도 쓴다.** 날짜가 없으니 브랜드가
+'신제품' 칸에 넣어둔 채 안 내리면 영영 신상으로 남는다. 실제로 허니 바이츠
+(LM 2026-03-31)·말돈 소금우유 도넛(2026-04-21)이 반년째 떠 있었다. 신상으로
+표시한 것에만 LM 을 uploaded_at 에 넣어 STALE 가드에 걸리게 한다.
+⚠️ **전건에 넣으면 안 된다** — 그러면 상시 메뉴가 날짜만으로 창 안에 들어온다.
+
 **출시일이 없다.** 상품 레코드에 날짜 필드가 하나도 없고(id/TITLE/E_TITLE/카테고리/
 이미지/색상/TOP_YN/SEASON_MENU_DIV/SORTNUM 이 전부다).
 그래서 released_at 은 전부 빈 값이고 desc 도 받을 데가 없다. 가격 정보도 없다.
@@ -31,6 +50,7 @@ collect 의 어제 대비 diff 에 맡긴다. 신제품 탭만 받으면 커피�
 
 행사 표시는 메뉴에 없다. 프로모션은 별도 /event 영역이라 받지 않는다. promo 는 전부 False 다.
 """
+import email.utils as eu
 import json
 import time
 
@@ -63,6 +83,66 @@ def _rows(props: dict) -> list:
     """대분류에 따라 products 로 오기도 하고 productCats 로 오기도 한다."""
     box = props.get("products") or props.get("productCats") or {}
     return box.get("data") or []
+
+
+# 첫 낱말로 묶으면 안 되는 흔한 말. 맛·형태·온도를 가리키는 것들이다.
+_GENERIC = {"초코", "딸기", "커피", "우유", "치즈", "바나나", "생", "허니", "더블",
+            "아이스", "밀크", "바닐라", "카라멜", "녹차", "말차", "흑임자", "앙버터",
+            "오리지널", "클래식", "시즌", "신상", "쿠키", "도넛", "라떼", "크림",
+            "민트", "레몬", "사과", "포도", "(앳홈)"}
+_TAIL_MIN = 4     # 꼬리가 이보다 짧으면 우연이다
+
+
+def _lastmod(c, url: str) -> str:
+    """이미지가 서버에 올라간 날. 없으면 빈 문자열."""
+    if not url:
+        return ""
+    try:
+        s = base.retry(lambda: c.head(url)).headers.get("Last-Modified")
+        return eu.parsedate_to_datetime(s).date().isoformat() if s else ""
+    except Exception:
+        return ""
+
+
+def _tail(a: str, b: str) -> str:
+    """두 이름이 공유하는 꼬리. 낱말 하나짜리는 안 친다('by 오스틴 강'은 친다)."""
+    n = 0
+    while n < min(len(a), len(b)) and a[-1 - n] == b[-1 - n]:
+        n += 1
+    t = a[len(a) - n:].strip() if n else ""
+    return t if len(t) >= _TAIL_MIN and " " in t else ""
+
+
+def _regroup(items: list) -> None:
+    """같은 출시인데 도넛이 아니라서 빠진 것을 되붙인다. 제자리에서 고친다.
+
+    묶는 조건은 **날짜와 이름이 둘 다** 겹치는 것이다. 날짜만 보면 같은 날
+    올라온 상시 베이커리가 통째로 딸려 온다(위 docstring 의 2026-09-15 묶음).
+    """
+    with base.client() as c:
+        lm = {it.name: _lastmod(c, it.image) for it in items}
+    seeds = {}
+    for it in items:
+        if it.is_new and lm.get(it.name):
+            seeds.setdefault(lm[it.name], []).append(it.name)
+
+    for it in items:
+        day = lm.get(it.name, "")
+        if it.is_new:
+            # 브랜드가 '신제품' 칸에서 안 내린 묵은 것을 STALE 가드에 넘긴다.
+            if day:
+                it.uploaded_at = day
+            continue
+        if not day:
+            continue
+        head = it.name.split(" ")[0]
+        for sn in seeds.get(day, []):
+            same_head = (head == sn.split(" ")[0] and len(head) >= 2
+                         and head not in _GENERIC)
+            if same_head or _tail(it.name, sn):
+                it.is_new = True
+                it.uploaded_at = day
+                break
 
 
 def fetch() -> list[Item]:
@@ -109,4 +189,5 @@ def fetch() -> list[Item]:
                 # 거른 뒤가 아니라 거르기 전 개수로 본다(COFFEE 는 남의 것도 섞여 온다).
                 if len(raw) < PAGE_SIZE:
                     break
+    _regroup(items)
     return items

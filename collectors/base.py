@@ -115,14 +115,28 @@ BRANDS = {
     "바르다김선생": (FRANCHISE, "분식"),
     "죠스떡볶이":  (FRANCHISE, "분식"),
     "명랑핫도그":  (FRANCHISE, "분식"),
+    # 분식은 공정위 업종 분류를 따라 김밥·떡볶이·우동을 한 칸으로 묶는다.
+    # 화면에서 '김밥' 을 따로 떼면 김가네·얌샘김밥처럼 김밥집이면서 밥·분식을
+    # 같이 파는 곳이 두 칸에 걸쳐 앉는다.
+    "얌샘김밥":    (FRANCHISE, "분식"),
+    "김가네":      (FRANCHISE, "분식"),
+    "스쿨푸드":    (FRANCHISE, "분식"),
+    "토마토도시락": (FRANCHISE, "도시락"),
+    "슬로우캘리":  (FRANCHISE, "샐러드"),
+    "포케올데이":  (FRANCHISE, "샐러드"),
     "스시로":      (FRANCHISE, "일식"),
-    # ── 더본코리아 외식 브랜드 (collectors/theborn.py) ──────────────────
+    # ── 더본코리아 외식 브랜드 ─────────────────────────────────────────
     # theborn.co.kr/brand/representation/ 의 '대표 브랜드' 20개 중 빽다방을 뺀
     # 19개다(빽다방은 cafe_paikdabang.py 담당). 2026-10-02 실측 목록이다.
-    # ⚠️ 이 19개는 **보도자료에만** 나온다. 브랜드 메뉴 사이트에는 신제품 신호가
-    #    하나도 없어서 메뉴판은 긁지 않는다(사유는 theborn.py docstring §2).
-    #    그래서 보도자료가 없는 브랜드는 0건이 정상이다 — 등록은 해 두되
-    #    '수집 실패'로 읽지 마라.
+    # 담당 어댑터는 둘로 갈린다.
+    #   한신포차            collectors/hanshinpocha.py — 자기 사이트가 상품별
+    #                       날짜를 준다(RSS pubDate). 메뉴 52건을 그대로 받는다.
+    #   나머지 18개          collectors/theborn.py — **본사 보도자료에만** 나온다.
+    # ⚠️ 그 18개는 브랜드 메뉴 사이트에 신제품 신호가 하나도 없어서 메뉴판을
+    #    긁지 않는다(사유는 theborn.py docstring §2). 보도자료가 없는 브랜드는
+    #    0건이 정상이다 — 등록은 해 두되 '수집 실패'로 읽지 마라.
+    # ⚠️ 한 브랜드를 두 어댑터에 걸치지 마라. collect 는 어댑터 사이 중복 키를
+    #    걸러주지 않아서 같은 상품이 두 줄로 들어간다.
     "빽보이피자":   (FRANCHISE, "피자"),
     "역전우동0410": (FRANCHISE, "일식"),
     "홍콩반점0410": (FRANCHISE, "중식"),
@@ -141,12 +155,9 @@ BRANDS = {
     "미정국수0410": (FRANCHISE, "한식"),
     "성성식당":     (FRANCHISE, "한식"),
     "연돈볼카츠":   (FRANCHISE, "도시락"),
-    # 🟠 롤링파스타만 세부분류를 비운다. 파스타는 taxonomy.SUBS 에 맞는 칸이
-    #    없다('양식'이 없다). 억지로 피자나 한식에 넣으면 칩을 누른 사람이
-    #    엉뚱한 걸 보게 된다. 비우면 2단 칩에는 안 뜨고 1단 '외식'·브랜드
-    #    페이지에는 그대로 뜬다. SUBS 에 '양식'을 넣는 건 레지스트리 바깥
-    #    (taxonomy.py)의 결정이라 여기서 하지 않는다.
-    "롤링파스타":   (FRANCHISE, ""),
+    # 파스타다. taxonomy.SUBS 에 '양식' 칸을 새로 만들어 붙였다 —
+    # 전에는 맞는 칸이 없어서 비워뒀고 그러면 2단 칩에서만 안 보였다.
+    "롤링파스타":   (FRANCHISE, "양식"),
     "KFC":         (FRANCHISE, "치킨"),
     "에그드랍":    (FRANCHISE, "샌드위치"),
     "써브웨이":    (FRANCHISE, "샌드위치"),
@@ -242,6 +253,18 @@ SITES = {
     "바르다김선생": "https://teacherkim.co.kr/menu/list.html?bs=004001",
     "죠스떡볶이":   "https://jawsfood.co.kr/menu/menu.html",
     "명랑핫도그":   "https://myungranghotdog.com/menu/new",
+    # 상품별 주소(link 필드)가 Item.url 로 붙으므로 이건 폴백이다.
+    "얌샘김밥":     "https://yumsem.com/yumsem-gimbap/yumsem-basic/",
+    # 김가네는 상품 상세가 없다(카드가 href="#none" 인 JS 모달). 이게 유일한 링크다.
+    "김가네":       "https://www.gimgane.co.kr/board/index.php?board=menu_01&sca=newmenu",
+    # 스쿨푸드는 https 가 자체서명이라 http 로 건다. collectors/snack_schoolfood.py 참고.
+    "스쿨푸드":     "http://www.schoolfood.co.kr/menu/menu.html",
+    "토마토도시락": "https://www.tomatodosirak.co.kr/board/index.php?board=menu_01&sca=new",
+    # 슬로우캘리는 글별 주소가 Item.url 로 붙는다. 이건 폴백이다.
+    "슬로우캘리":   "https://www.slowcali.co.kr/bbs/board.php?bo_table=main_news",
+    # 수집은 /protein_poke·/rice_bowl·/side·/drink 에서 하지만, 사람이 여는
+    # 메뉴 첫 장은 /poke 다. 링크의 용건은 브랜드로 트래픽을 돌려주는 것이다.
+    "포케올데이":   "https://pokeallday.co.kr/poke",
     "매머드커피":   "https://mmthcoffee.com/sub/menu/new_list.php",
     "더벤티":       "https://theventi.co.kr/new2022/menu/all.html",
     "컴포즈커피":   "https://composecoffee.com/index1",
