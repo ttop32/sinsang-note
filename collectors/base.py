@@ -87,6 +87,7 @@ BRANDS = {
     "왓더버거":    (FRANCHISE, "햄버거"),
     "쉐이크쉑":    (FRANCHISE, "햄버거"),
     "파이브가이즈": (FRANCHISE, "햄버거"),
+    "버거운버거":  (FRANCHISE, "햄버거"),
     "오뚜기":      (MAKER, "라면"),
     "팔도":        (MAKER, "라면"),
     "오리온":      (MAKER, "과자"),
@@ -102,6 +103,21 @@ BRANDS = {
     "hy프레딧":    (MAKER, "식재료"),
     # 주류 제조사 중 유일하게 넣을 수 있는 곳이다. 나머지 12곳은 성인 인증
     # 게이트 뒤이거나 뉴스가 멈췄다(notes/CANDIDATES-ALCOHOL.md).
+    # 카페·디저트·분식 중위권. 가드(collect.orphans)가 잡아낸 미등록분이다.
+    "카페봄봄":     (FRANCHISE, "커피"),
+    "커피베이":     (FRANCHISE, "커피"),
+    "하이오커피":   (FRANCHISE, "커피"),
+    "카페만월경":   (FRANCHISE, "커피"),
+    "빙동댕":       (FRANCHISE, "빙수"),
+    "달롱도르":     (FRANCHISE, "디저트"),
+    "에밀리아젤라또": (FRANCHISE, "아이스크림"),
+    "타래퀸":       (FRANCHISE, "빙수"),
+    "33떡볶이":   (FRANCHISE, "분식"),
+    "병아리김밥":   (FRANCHISE, "분식"),
+    "김밥킹":       (FRANCHISE, "분식"),
+    "모락떡볶이":   (FRANCHISE, "분식"),
+    "태리로제떡볶이": (FRANCHISE, "분식"),
+    "떡군이네떡볶이": (FRANCHISE, "분식"),
     "하이트진로":  (MAKER, "주류"),
     "하림":         (MAKER, "냉동식품"),
     "하림산업":     (MAKER, "식재료"),
@@ -271,6 +287,10 @@ BRANDS = {
     "쉬즈베이글":  (FRANCHISE, "샌드위치"),
     "참토스트":    (FRANCHISE, "샌드위치"),
     "잇샌드":      (FRANCHISE, "샌드위치"),
+    # 공정위 등록명은 SSOJA 지만 사이트 자신은 쏘자토스트/SSOJATOAST 로 쓴다.
+    # 공정위 업종은 패스트푸드인데 실제로는 토스트·핫도그라 이삭토스트·참토스트와
+    # 같은 칸에 둔다.
+    "쏘자토스트":  (FRANCHISE, "샌드위치"),
     "지미존스":    (FRANCHISE, "샌드위치"),
     "샐러디":      (FRANCHISE, "샐러드"),
     # ── 돈까스 (2026-10-02 공정위 가맹점수 전수조사로 합류) ──────────────
@@ -458,6 +478,8 @@ SITES = {
     "참토스트":     "https://charmtoast.com/menu",
     # 상품별 주소(`?bo_table=menu&wr_id=`)가 Item.url 로 붙으므로 이건 폴백이다.
     "잇샌드":       "https://itsand.co.kr/board/bbs/board.php?bo_table=menu",
+    # 상품별 주소(/<칸>/?idx=)가 Item.url 로 붙으므로 이건 폴백이다.
+    "쏘자토스트":   "https://ssoja.co.kr/menu",
     "지미존스":     "https://www.jimmyjohns.co.kr/homepage/menu.php",
     "샐러디":       "https://salady.com/menu/list_1",
     # 돈까스 6곳. 상품별 주소가 Item.url 로 붙는 곳이 많아 대부분 폴백이다.
@@ -492,12 +514,28 @@ SITES = {
     # ⚠️ http 전용이다. 443 이 Connection refused 라 https 로 못 바꾼다.
     "쉐이크쉑":     "http://shakeshack.kr/sub/menu.jsp",
     "파이브가이즈": "https://www.fiveguys.co.kr/menu/",
+    # 카드에 <a> 가 없어 상품 상세가 없다. 이게 유일한 링크다.
+    "버거운버거":   "https://www.burgerunburger.com/menu",
     "오뚜기":       "https://www.otoki.com/pr/news?searchNewsCategory=PRESS",
     "팔도":         "https://www.paldofood.co.kr/product/noodle",
     "오리온":       "https://www.orionworld.com/board/list/87",
     # 상품별 주소는 롯데칠성몰(mall.) 이라 Item.url 로 따로 붙는다. 이건 폴백이다.
     "롯데칠성음료": "https://company.lottechilsung.co.kr/kor/product/newprdt/list.do",
     # 상품별 주소(/product/detail?prdId=)가 Item.url 로 붙으므로 이건 폴백이다.
+    "카페봄봄":     "https://cafebombom.co.kr",
+    "커피베이":     "https://www.coffeebay.com",
+    "하이오커피":   "https://hiocoffee.com",
+    "카페만월경":   "https://cafewhale.com",
+    "빙동댕":       "https://www.xn--hl1bno83x.kr",
+    "달롱도르":     "https://dallondor.com",
+    "에밀리아젤라또": "https://www.emiliagelato.co.kr",
+    "타래퀸":       "https://www.taraequeen.com",
+    "33떡볶이":   "https://33success100.co.kr",
+    "병아리김밥":   "https://chickgimbap.com",
+    "김밥킹":       "https://xn--4k0bn7xt5p.com",
+    "모락떡볶이":   "https://moraktteok.com/",
+    "태리로제떡볶이": "https://terryroze.com",
+    "떡군이네떡볶이": "https://xn--6e0b73ep0espx.com",
     "하이트진로":  "https://www.hitejinro.com/socialmedia/press_list.asp",
     "하림":         "https://www.harim.com/main/?menu=52",
     "하림산업":     "https://harimholdings.com/kr/sub/newsroom/newsroom.asp",

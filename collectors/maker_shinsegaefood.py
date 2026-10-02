@@ -108,6 +108,40 @@ _REPACK_HEAD = ("에디션", "라벨")
 _REPACK_MID = ("테마", "에디션", "라벨", "컬래버", "콜라보")
 _REPACK_NAME = ("에디션", "컬렉션", "한정판", "선물세트", "기획세트", "기획팩")
 
+# 🔴 **`N종` 을 버리지 않고 꼬리만 뗀다.** 오리온 규칙은 `N종` 이 들어간 제목을
+# 통째로 버리는데(따옴표 안이 상품이 아니라 라인 이름일 수 있어서), 신세계푸드는
+# 출시 기사의 **절반이 `N종 출시`** 라 그대로 두면 최근 3개월 수확이 **0건**이 된다.
+# 2026-10-02 실측 — 1~3페이지 27건에서 집은 상품이 0건이었고, 그렇게 죽은 것 중
+# 둘은 진짜 신제품이었다:
+#     신세계푸드 ‘보앤미’, 프리미엄 건강빵 5종 출시
+#     신세계푸드, 멜론 디저트 2종 출시
+# 사조·면사랑과 같은 판단이다(그쪽도 `N종 출시` 가 기본형이다).
+#
+# 대신 **따옴표 안만 쓰면 안 된다.** 따옴표가 브랜드·재료만 감싸는 제목이 있다:
+#     ‘보앤미’, 프리미엄 건강빵 5종 출시   → '보앤미' 는 브랜드다
+#     ‘골드키위’ 여름 케이크 2종 출시      → '골드키위' 는 재료다
+# 그래서 **첫 따옴표부터 동사 앞까지**를 통째로 잡고 따옴표 기호·`N종` 꼬리를 턴다
+# (따옴표가 없으면 주어를 뗀 머리 전체). 그러면 위 둘이 각각
+# `보앤미 프리미엄 건강빵`·`골드키위 여름 케이크` 로 제대로 나온다.
+_SUBJECT = re.compile(r"^.*?신세계푸드\s*,?\s*")
+_QUOTE_CHARS = re.compile(r"[‘’'`“”\"]")
+_COUNT_TAIL = re.compile(r"\s*\d+\s*종\s*$")
+
+# 통째로 잡으면 **판매 채널**이 이름 뒤에 붙어 온다. 실측 2건:
+#     ‘생과일 한가득 케이크’ **트레이더스 베이커리서** 출시
+#     ‘픽베이크 에그타르트’ **트레이더스 전용 제품으로** 출시
+# 상품명이 아니라 어디서 파는지다. 꼬리에서만 턴다 — 이름 가운데는 안 건드린다.
+_CHANNEL_TAIL = re.compile(
+    r"\s*(?:트레이더스|이마트|SSG|쓱닷컴|스타필드|자사몰|공식몰)"
+    r"(?:\s*\S*)*?\s*(?:베이커리서|전용\s*제품으로|에서|서|로|으로)?\s*$")
+
+# 통째로 잡은 머리가 **상품이 아니라 캠페인 문구**인 경우. 실측 1건:
+#     불황 속 ‘아는 맛’ 소비 트렌드 겨냥…가성비 디저트 2종 출시
+# `…` 가 남아 있으면 문장 두 개를 이어 붙인 것이고, `겨냥`·`트렌드` 는
+# 상품명에 안 쓰이는 말이다. ⚠️ `·` 도 넣는다 — 오리온 `_pick` 이 상품명에
+# `·` 가 들어가면 버리는 것과 같은 판단이다(둘을 이어 붙인 이름이라 못 쓴다).
+_NOT_A_NAME = ("겨냥", "트렌드", "…", "·")
+
 
 def _pick(title: str) -> str:
     """보도자료 제목에서 상품명을 뽑는다. 상품을 특정 못 하면 빈 문자열."""
@@ -119,7 +153,8 @@ def _pick(title: str) -> str:
     if any(w in t for w in ("노브랜드", "데블스도어")):
         return ""
     body = _HEAD.sub(" ", t)
-    if any(w in body for w in _SKIP) or _MULTI.search(body):
+    # ⚠️ `_MULTI`(N종)로 버리지 않는다. 사유는 _COUNT_TAIL 위 주석.
+    if any(w in body for w in _SKIP):
         return ""
     qs = list(_SINGLE.finditer(body))
     if len(qs) >= 2 and any(w in body[qs[-2].end():qs[-1].start()] for w in _REPACK_MID):
@@ -133,16 +168,23 @@ def _pick(title: str) -> str:
     quoted = None
     for m in _SINGLE.finditer(head):
         quoted = m
-    if not quoted or any(w in head[quoted.end():] for w in _BETWEEN):
+    if quoted:
+        if any(w in head[quoted.end():] for w in _BETWEEN):
+            return ""
+        if any(w in head[quoted.end():] for w in _INGREDIENT_MID):
+            return ""
+        if _BRAND_HEAD.search(head[:quoted.start()]):
+            return ""
+    # 따옴표가 있으면 **첫 따옴표부터** 동사 앞까지, 없으면 주어를 뗀 머리 전체.
+    firsts = list(_SINGLE.finditer(head))
+    seg = head[firsts[0].start():] if firsts else _SUBJECT.sub("", head)
+    name = _QUOTE_CHARS.sub("", seg)
+    name = _COUNT_TAIL.sub("", name.strip())
+    name = _CHANNEL_TAIL.sub("", name)
+    name = re.sub(r"\s*,\s*", " ", name).strip(" ,·∙!…")
+    if any(w in name for w in _NOT_A_NAME):
         return ""
-    if any(w in head[quoted.end():] for w in _INGREDIENT_MID):
-        return ""
-    if _BRAND_HEAD.search(head[:quoted.start()]):
-        return ""
-    if _TRAIL_SEP.match(head[quoted.end():]):
-        return ""
-    name = quoted.group(1).strip(" ,·∙")
-    if len(name) < 2 or any(c in name for c in "·∙&?!"):
+    if not (2 <= len(name) <= 40):
         return ""
     if any(w in name for w in _REPACK_NAME):
         return ""

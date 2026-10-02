@@ -20,8 +20,19 @@
   is_new  **`신메뉴` 가 독립 카테고리(JJ0024)다.** 거기 실린 건 4건
           (스모크 바비큐 풀드포크 / 스모크 과카몰리 풀드포크 / 각 세트).
           전 카테고리를 합친 상품 수에 견주면 한 줌이라 퀴즈노스 `new_icon`
-          (66건 전건에 붙어 가짜였다) 같은 종류가 아니다. 거기 실린 것만 True,
-          나머지는 False(에그드랍 category=NEW, 폴바셋 newIcon 과 같은 처분).
+          (66건 전건에 붙어 가짜였다) 같은 종류가 아니다.
+          🔴 **거기 실린 것만 True 로 올리고, 나머지는 False 가 아니라 None 이다.**
+          에그드랍 `category=NEW` 와 다른 처분인데 이유가 있다 — 에그드랍은 그
+          칸이 브랜드의 유일한 신메뉴 표시라 '안 담긴 건 신상이 아니다'가 성립하는데,
+          **이 브랜드는 새 라인을 전용 카테고리로 만들고 신메뉴 칸에는 안 넣는다**
+          (바로 아래 ⚠️ 항목). 그래서 False 로 단정하면 안 된다.
+          2026-10-02 실측에서 실제로 사고가 났다: `지미모닝` 8건이 2026-08-26
+          업로드(브랜드 공지도 "New 지미모닝 2026.08.27~")인데 신메뉴 칸에
+          없다는 이유로 `is_new=False` 가 붙었고, `rules.is_fresh` 가
+          "브랜드가 신제품 아니라고 했으면 업로드 시각으로 뒤집지 않는다"는
+          규칙에 따라 **8건을 통째로 화면에서 뺐다.** 아래 '두 신호를 둘 다
+          내보내고 어느 한쪽으로 다른 쪽을 덮어쓰지 않는다'는 서술과 코드가
+          어긋나 있었던 것이다. None 으로 바꿔 uploaded_at 이 살아나게 했다.
   uploaded_at  **이미지 Last-Modified.** 신메뉴 4건은 2026-06-19 이고 다른
           카테고리는 2025-06-26 / 2026-03-11 / 2026-04-21 / 2026-05-18 로 흩어져
           있다. 카테고리 구분과 업로드 시점이 독립적으로 맞는다.
@@ -48,8 +59,10 @@
 사진을 나중에 갈아끼운 흔적이라 Last-Modified 쪽만 쓴다.
 
 같은 상품이 여러 카테고리에 겹쳐 실린다(신메뉴 4건은 단품·세트에도 있다).
-먼저 만난 쪽을 남기되 **is_new 는 OR 로 합친다** — 신메뉴 칸을 먼저 돌므로
-순서가 바뀌어도 신제품 판정이 떨어지지 않는다(에그드랍 선례).
+먼저 만난 쪽을 남기되 **is_new 는 올리기만 한다**(신메뉴 칸에서 만났으면 True 로
+덮고, 그 밖에서 만난 것은 None 그대로 둔다). `or` 로 합치면 None 이 False 로
+깎여 위의 지미모닝 사고가 그대로 되살아난다. 신메뉴 칸을 먼저 돌므로 순서가
+바뀌어도 신제품 판정이 떨어지지 않는다(에그드랍 선례).
 
 세트(…세트, 세트 (11AM-2PM))는 promo 로 찍지 않는다. 거르는 건
 `collect.drop_sets()` 담당이다(이삭토스트 선례).
@@ -146,7 +159,9 @@ def fetch() -> list[Item]:
                 key = base.make_key(BRAND, name)
                 if key in by_key:
                     it = by_key[key]
-                    it.is_new = it.is_new or (label == NEW_LABEL)
+                    # `or` 를 쓰면 None 이 False 로 깎인다. 올리기만 한다.
+                    if label == NEW_LABEL:
+                        it.is_new = True
                     if not it.category and label != NEW_LABEL:
                         it.category = label
                     continue
@@ -158,7 +173,10 @@ def fetch() -> list[Item]:
                     image=f"{IMG_ROOT}{iid}_main.png" if iid else "",
                     # 신메뉴는 분류가 아니라 상태다. 분류는 다른 칸에서 채운다.
                     category="" if label == NEW_LABEL else label,
-                    is_new=(label == NEW_LABEL),
+                    # 신메뉴 칸이면 True, 아니면 **None(모름)** 이다. False 로
+                    # 단정하면 전용 카테고리로 나온 새 라인이 통째로 묻힌다
+                    # (docstring is_new 항목의 지미모닝 사고 참고).
+                    is_new=True if label == NEW_LABEL else None,
                     # 상세 주소가 없다(목록에서 모달을 띄운다). SITES 폴백으로 떨어진다.
                 )
                 by_key[key] = it
@@ -171,7 +189,7 @@ def fetch() -> list[Item]:
 
         # 사진을 올린 날이다. 출시일이 아니라 uploaded_at 에 넣는다.
         # 신메뉴부터 채워 상한에 걸려도 최근 것이 먼저 날짜를 갖게 한다.
-        for it in sorted(items, key=lambda x: not x.is_new)[:MAX_HEADS]:
+        for it in sorted(items, key=lambda x: x.is_new is not True)[:MAX_HEADS]:
             it.uploaded_at = _uploaded_at(c, it.image)
             time.sleep(HEAD_DELAY)
 

@@ -49,7 +49,13 @@ UTF-8 퍼센트 인코딩도 그대로 받는다(실측). httpx params 로 그�
      빈 값으로 조용히 떨어진다.
 
 ⚠️ **image 는 전건 빈 문자열이다.** 이미지 호스트가 같은 http 전용 서버라 https 로는
-못 받는다(이미지 경로만 https 로 HEAD 해도 똑같이 connection reset). 우리 페이지는
+못 받는다. 2026-10-02 리뷰에서 네 가지를 다시 때려 확인했다 —
+    https://www.boor.co.kr/menu/default.aspx?menu=ALL   ConnectError (reset by peer)
+    https://boor.co.kr/menu/default.aspx?menu=ALL       ConnectError (reset by peer)
+    https://www.boor.co.kr/uploads/products/맵쇼킹.png   ConnectError (reset by peer)
+    http://www.boor.co.kr/uploads/products/맵쇼킹.png    200 image/png 233,946B
+apex·www 둘 다 443 이 닫혀 있다. 인증서 문제가 아니라 포트가 안 열린 것이라
+verify 를 어떻게 만져도 길이 없다. 우리 페이지는
 https 라 http 이미지는 브라우저가 혼합 콘텐츠로 막고, base.derive() 도 `http://` 로
 시작하는 image 를 버린다. 그래서 http URL 을 넣어봐야 중간에 사라질 뿐이라
 **처음부터 빈 값으로 둔다**(에그드랍 선례, base.derive() 주석 참고). 443 이 열리면
@@ -144,14 +150,25 @@ def _page(client, category: str) -> list:
 
 
 def _released(client) -> dict:
-    """공지 목록의 '신메뉴 출시 <이름>' → 등록일. 같은 이름이면 가장 이른 날짜."""
+    """공지 목록의 '신메뉴 출시 <이름>' → 등록일. 같은 이름이면 가장 이른 날짜.
+
+    🔴 조용히 빈 사전을 돌려주지 않는다. 전에는 예외를 통째로 삼켰는데, 그러면
+    게시판이 죽거나 마크업이 바뀐 날 released_at 이 **6건 전부 사라지고도**
+    상품 건수는 57 그대로라 collect.py 의 0건 가드도 FLOOR 도 안 걸린다.
+    released_at 은 uploaded_at 보다 강한 신호라(Item docstring) 조용히 잃으면
+    안 된다. '글이 한 줄도 안 읽히면' 터뜨린다 — '출시 공지가 없다'(정상)와
+    '게시판을 못 읽었다'(사고)를 가르는 선이 거기다.
+    """
     out: dict = {}
-    try:
-        r = base.retry(lambda: client.get(NEWS, params={"BoardID": 1707}))
-        r.raise_for_status()
-    except Exception:
-        return out          # 공지는 보조 신호다. 못 받아도 수집은 계속한다
-    for tr in HTMLParser(r.text).css("tr.ntc_tr"):
+    r = base.retry(lambda: client.get(NEWS, params={"BoardID": 1707}))
+    r.raise_for_status()
+    rows = HTMLParser(r.text).css("tr.ntc_tr")
+    if not rows:
+        raise RuntimeError(
+            "부어치킨 공지 게시판이 비었다 — 'tr.ntc_tr' 가 안 걸린다. "
+            "출시일(released_at)의 유일한 출처라, 날아가도 상품 건수는 57 "
+            "그대로여서 아무도 못 알아챈다")
+    for tr in rows:
         subject = _text(tr, "td.c_subject")
         day = _text(tr, "td.c_day")
         m = _NOTICE.search(subject)
@@ -236,9 +253,21 @@ def fetch() -> list[Item]:
                     break
 
         # 출시일을 공지에서 못 받은 것만 이미지 업로드 시각으로 메운다.
+        tried = 0
         for it in items:
             if it.released_at:
                 continue
+            tried += 1
             time.sleep(IMG_DELAY)
             it.uploaded_at = _uploaded_at(c, origins.get(it.key, ""))
+
+    # 리사이저가 Last-Modified 를 안 준다는 함정(위 🔴) 때문에 원본 경로를 따로
+    # 조립해서 HEAD 한다. 그 조립이 깨지면 HEAD 가 전건 조용히 실패하고 날짜만
+    # 사라진다 — 건수는 57 그대로다. 가마치통닭·노랑통닭과 같은 가드다
+    # (실측상 HEAD 를 보낸 51건이 전부 날짜를 받는다).
+    dated = sum(1 for it in items if it.uploaded_at)
+    if dated * 2 < tried:
+        raise RuntimeError(
+            f"부어치킨 업로드일 {tried}건 중 {dated}건만 붙었다 — 원본 이미지 "
+            f"경로(_origin)나 Last-Modified 가 끊겼을 가능성")
     return items

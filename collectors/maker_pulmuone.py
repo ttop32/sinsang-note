@@ -135,6 +135,16 @@ _REPACK_HEAD = ("에디션", "라벨")
 _REPACK_MID = ("테마", "에디션", "라벨", "컬래버", "콜라보")
 _REPACK_NAME = ("에디션", "컬렉션", "한정판", "선물세트", "기획세트", "기획팩")
 
+# 🔴 **`N종` 을 버리지 않고 꼬리만 뗀다.** 오리온 규칙은 `N종` 이 들어간 제목을
+# 통째로 버린다(따옴표 안이 상품이 아니라 라인 이름일 수 있어서). 풀무원은
+# 따옴표 안이 **온전한 상품명**이라 그 걱정이 없는데, 버리면 진짜 신제품이 죽는다.
+# 2026-10-02 실측 — 6페이지 36건 중 본체·올가홀푸드 21건에서 이 규칙에 죽은 것:
+#     풀무원, ‘하루에 건강을 더하는 달걀’ 3종 출시…영양 강화 달걀 본격 확대
+#     올가홀푸드, 국산 원물 본연의 감칠맛 살린 ‘ORGA 저염 육수’ 2종 출시
+# 둘 다 진짜 신제품이고 따옴표 안이 그대로 상품명이다. 사조·면사랑·신세계푸드와
+# 같은 판단이다. **따옴표 안만 쓰는 건 그대로 두고** `N종` 꼬리만 턴다.
+_COUNT_TAIL = re.compile(r"\s*\d+\s*종\s*$")
+
 
 def _pick(title: str) -> str:
     """보도자료 제목에서 상품명을 뽑는다. 상품을 특정 못 하면 빈 문자열."""
@@ -145,7 +155,8 @@ def _pick(title: str) -> str:
     if any(w in m.group(1) for m in _HEAD.finditer(t) for w in _REPACK_HEAD):
         return ""
     body = _HEAD.sub(" ", t)
-    if any(w in body for w in _SKIP) or _MULTI.search(body):
+    # ⚠️ `_MULTI`(N종)로 버리지 않는다. 사유는 _COUNT_TAIL 위 주석.
+    if any(w in body for w in _SKIP):
         return ""
     qs = list(_SINGLE.finditer(body))
     if len(qs) >= 2 and any(w in body[qs[-2].end():qs[-1].start()] for w in _REPACK_MID):
@@ -163,7 +174,7 @@ def _pick(title: str) -> str:
         return ""
     if _TRAIL_SEP.match(head[quoted.end():]):
         return ""
-    name = quoted.group(1).strip(" ,·∙")
+    name = _COUNT_TAIL.sub("", quoted.group(1).strip()).strip(" ,·∙")
     if len(name) < 2 or any(c in name for c in "·∙&?!"):
         return ""
     if any(w in name for w in _REPACK_NAME):

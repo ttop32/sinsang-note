@@ -34,12 +34,27 @@ robots: https://www.lottewellfood.com/robots.txt → **404 + text/html, 본문 3
       얻은 정보를 사전승낙 없이 복사, 복제…할 수 없다"(회원 대상 조항).
       CRAWLING-POLICY.md §6-4 '약관이 금지' 칸에 해당한다. **운영자 판단이 필요하다.**
 
-⚠️⚠️ **이 브랜드는 `base.BRANDS`·`base.SITES` 양쪽에 등록돼 있지 않다.**
-지금은 `collect.ADAPTERS` 밖이라 아무 일도 안 일어나지만, 누가 ADAPTERS 에 한 줄
-추가하면 `Item.to_dict()` 가 `KeyError: "BRANDS 에 없는 브랜드: 롯데웰푸드"` 로 터지고
-브랜드가 통째로 실패한다. **ADAPTERS 에 넣기 전에 BRANDS·SITES 등록이 먼저다.**
-(지금 등록하라는 뜻이 아니다. 제외 상태는 위 robots 404·noindex·일괄 등록 날짜
- 세 가지로 타당하다고 검수에서 확인됐다 — notes/QA-REPORT.md §2-9.)
+🔴 **2026-10-02 — 등록했다. 아래 '제외' 서술은 뒤집혔다.**
+`base.BRANDS`·`base.SITES`·`collect.ADAPTERS` 세 곳에 전부 올렸다. 전에
+`notes/QA-REPORT.md` §2-9 가 "robots 404+HTML · noindex · 일괄 등록 날짜 세 가지로
+제외가 타당하다" 고 적었는데, 그중 둘이 해소됐다:
+  · **robots·약관 — 운영자가 "robots.txt·이용약관 제약은 무시한다" 고 승인했다**
+    (2026-10-02 과자·음료 제조사 라운드. 대신 UA 는 위장하지 않는다 —
+     `base.UA` 로 신원을 밝히고, 삭제 요청이 오면 다투지 말고 즉시 내린다.
+     base.BRANDS 의 이마트24·도미노피자·폴바셋·동서식품·샘표와 같은 칸이다).
+  · **일괄 등록 날짜 — 아래 `BULK` 규칙이 이미 처리하고 있다.** 같은 날짜가
+    `BULK` 건 이상이면 그 날짜를 `uploaded_at` 에만 넣고 `released_at` 은 비운다.
+    2026-10-02 실측에서 수집 4건이 **전부** `released_at` 이 빈 채로 나왔다 —
+    규칙이 설계대로 돌고 있다는 뜻이다.
+  · 남은 하나(`<meta name="robots" content="noindex, nofollow">`)는 **색인 거부지
+    크롤 금지가 아니다.** 그래서 막지 않는다.
+⚠️ 세부분류는 `(MAKER, "과자")` 로 등록했다. 롯데웰푸드는 과자·빙과·육가공·
+   간편식을 다 하는 종합사라 **한 칸으로는 어디를 골라도 일부가 어긋난다**
+   (실측: 4건 중 `일월정 흑마늘 삼계탕`·`파스퇴르 그릭` 2건이 과자가 아니다).
+   주력(빼빼로·몽쉘·가나)을 따라 '과자' 로 두었다. 정석은 `taxonomy.VENDOR_SUBS`
+   로 **상품별 분류**를 쓰는 것인데(hy프레딧 선례), **이 사이트는 보도자료만
+   주고 상품별 분류를 안 준다** — 그래서 지금은 못 쓴다.
+
 """
 import re
 import time
@@ -162,6 +177,15 @@ def fetch() -> list[Item]:
             r = base.retry(lambda: c.get(LIST, params={"page": page}))
             r.raise_for_status()
             page_rows = _rows(r.text)
+            # 셀렉터가 바뀌면 조용히 0건이 되는 게 제일 나쁘다. 1페이지는 반드시
+            # 기사가 와야 한다(수백 건짜리 보도자료 게시판이다).
+            # 2026-10-02 검수 지적 — 이 어댑터만 이 가드가 없어서, `_ROW` 정규식을
+            # 깨뜨리면(= 사이트 URL 체계 변경) 예외 없이 0건을 돌려줬다.
+            if page == 1 and not page_rows:
+                raise ValueError(
+                    f"롯데웰푸드 보도자료 1페이지가 비었다. {r.url} → "
+                    f"{len(r.content)}B — 목록 셀렉터(a[href^=/prcenter/news/] / "
+                    f".fnt-title-s2 / em)가 바뀌었는지 확인하라")
             if not page_rows:
                 break
             for row in page_rows:

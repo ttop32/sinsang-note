@@ -132,4 +132,15 @@ def fetch() -> list[Item]:
         for it in items:
             time.sleep(IMG_DELAY)
             it.uploaded_at = _uploaded_at(c, it.image)
+
+    # 🔴 '건수는 멀쩡한데 날짜만 사라진' 상태를 막는다. 이미지 호스트가
+    # Last-Modified 를 끊거나 경로가 바뀌면 HEAD 가 전건 조용히 실패하는데,
+    # 건수는 그대로라 collect.py 의 0건 가드도 FLOOR 도 통과한다. BBQ 의
+    # _head_guard·가마치통닭·노랑통닭과 같은 처분이다(실측 34/34 가 날짜를 받는다).
+    dated = sum(1 for it in items if it.uploaded_at)
+    if dated * 2 < len(items):
+        raise RuntimeError(
+            f"꾸브라꼬숯불치킨 업로드일 {len(items)}건 중 {dated}건만 붙었다 — 이미지 "
+            f"Last-Modified 가 끊겼거나 경로가 바뀌었을 가능성. 이 브랜드는 "
+            f"NEW 배지도 신메뉴 탭도 없어서 이게 유일한 신호다")
     return items

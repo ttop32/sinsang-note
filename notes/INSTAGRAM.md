@@ -575,12 +575,12 @@
 
 # 2026-10-02 보강 — 늘어난 브랜드 59곳
 
-위 조사는 `BRANDS` 가 58곳이던 2026-10-01 기준이다. 그 뒤 브랜드가 **149곳**으로 늘어
+위 조사는 `BRANDS` 가 58곳이던 2026-10-01 기준이다. 그 뒤 브랜드가 **171곳**으로 늘어
 (더본코리아 13곳·치킨 다수·중식·돈까스·일식·제과 대기업 등) 빠진 곳을 같은 방법으로 채웠다.
 유튜브 조사(`notes/YOUTUBE.md`)와 같은 날 같은 경로로 했다 — 공식 사이트가 가리키는 것만,
 전부 비로그인으로 열어 프로필명을 확인했다.
 
-**인스타 112곳 / 149곳 확보.**
+**인스타 128곳 / 171곳 확보.**
 
 ## 이번에 걸러낸 가짜·죽은 계정 — 전부 공식 사이트가 가리키던 것들
 
@@ -619,6 +619,7 @@
 | 브랜드 | 핸들 | 프로필명 | 팔로워 |
 |---|---|---|---:|
 | 60계 | `60chicken` | 60계치킨 | 3.6만 |
+| CJ제일제당 | `cjcheiljedang` | CJ제일제당 | 21.5만 |
 | KFC | `kfc_korea` | KFC Korea | 7만 |
 | 가마치통닭 | `gamachi_official` | 가마치 | 1.7만 |
 | 국수나무 | `noodletree_official` | 국수나무 공식 인스타그램 | 1.3만 |
@@ -626,6 +627,8 @@
 | 꾸브라꼬숯불치킨 | `kkubeu_home` | 꾸브라꼬숯불치킨 | 1.2만 |
 | 네네치킨 | `nenechicken_official` | 네네치킨 공식계정 | 2.2만 |
 | 노랑통닭 | `norangtongdak_official` | 노랑통닭 공식 인스타그램 | 3.1만 |
+| 노브랜드버거 | `nobrandburger.official` | 노브랜드 버거 | 17.3만 |
+| 농심 | `nongshim` | 농심 | 20.2만 |
 | 누구나홀딱반한닭 | `nuguna_banhandak` | 누구나홀딱반한닭 | 8,112 |
 | 동경에서먹었던규동 | `tokyokyudong` | 동경규동 공식 인스타그램 | 5,850 |
 | 동원F&B | `dongwonmall` | 동원몰 공식 인스타그램 | 3.8만 |
@@ -633,13 +636,16 @@
 | 땅땅치킨 | `ttangttang.chicken_new` | 땅땅치킨 | 681 |
 | 또래오래 | `toreore_official` | 또래오래 치킨 | 2.6만 |
 | 라홍방마라탕 | `lahongbang_official` | 라홍방 마라탕 KOREAN MALATANG | 7,641 |
+| 롯데리아 | `lotteria_kr` | 롯데리아 | 37.7만 |
 | 롯데웰푸드 | `lottewellfood_food` | 롯데웰푸드 \| 푸드채널 | 17.2만 |
 | 롯데칠성음료 | `lottechilsung` | 롯데칠성음료 | 5.9만 |
 | 매일유업 | `freshmaeil` | 매일유업(Maeil) | 14.5만 |
 | 멕시카나 | `mexicana_official` | 멕시카나 | 2.7만 |
+| 면사랑 | `noodlelovers.com_` | 면사랑 \| 면요리•간편식•레시피 | 10.2만 |
 | 미카도스시 | `mikadosushi_official` | 미카도스시 공식계정🍣 | 6,629 |
 | 바른치킨 | `barunchicken_official` | 바른치킨 공식 인스타그램 | 2.5만 |
 | 백소정 | `baeksojeong_official` | 백소정 공식 인스타그램 | 4,949 |
+| 버거운버거 | `burgerunburger_official` | 한입먹기 버거운버거 (BUB) 🍔 | 263 |
 | 보배반점 | `bobaebanjum_kr` | 보배반점 공식 인스타그램 | 1.2만 |
 | 부어치킨 | `boor_chicken` | 부어치킨 | 8,459 |
 | 브라운돈까스 | `browntonkatsu` | 브라운돈까스 | 1,139 |
@@ -649,27 +655,37 @@
 | 삼첩분식 | `samcheop__official` | 삼첩분식 | 9,572 |
 | 샘표 | `sempio.official` | 샘표우리맛연구중심 | 3.2만 |
 | 소림마라 | `sorimmara_official` | 소림마라 | 729 |
+| 쉐이크쉑 | `shakeshackkr` | Shake Shack Korea | 24.8만 |
+| 쉬즈베이글 | `shes_bagel_official` | 쉬즈베이글 커피 | 993 |
 | 스쿨푸드 | `schoolfood_official` | SCHOOLFOOD, 스쿨푸드 | 6,537 |
 | 슬로우캘리 | `slowcali_official` | 슬로우캘리 Slow,Cali | 8,852 |
+| 신세계푸드 | `shinsegaefood.official` | 신세계푸드 | 4.2만 |
 | 싸다김밥 | `ssadagb_official` | 싸다김밥 공식 인스타그램 | 7,642 |
+| 쏘자토스트 | `ssojatoast_official` | 쏘자토스트 | 967 |
 | 아워홈 | `ourhome.delicious` | 아워홈 | 4.2만 |
 | 얌샘김밥 | `yumsem_official` | 얌샘김밥 공식 인스타그램 | 2.3만 |
+| 왓더버거 | `what_the_burger` | 왓더버거 WHAT THE BURGER \| 성공창업 | 1.2만 |
 | 원할머니보쌈족발 | `wongrandma` | 원할머니 공식 인스타그램👵 | 1.3만 |
 | 자담치킨 | `jadamchicken_official` | 자담치킨 | 2.4만 |
+| 지미존스 | `jimmyjohns_korea` | 지미존스 코리아 | 3,073 |
 | 짬뽕10101 | `goguryeofood_official` | (주)고구려푸드 | 691 |
 | 짬뽕관 | `jjambbonggwan` | 짬뽕관 공식 계정 | 631 |
+| 참토스트 | `charmtoast_official` | 참토스트 공식 인스타그램 | 333 |
 | 처갓집양념치킨 | `cheogajip_go` | 처갓집양념치킨 공식 인스타그램 | 2,517 |
 | 춘리마라탕 | `chunlimalatang_official` | 춘리마라탕 공식계정 | 1,885 |
 | 치킨플러스 | `chickenplus__official` | 치킨플러스 | 3,192 |
 | 쿠우쿠우 | `qooqoo_official` | 쿠우쿠우 | 2.6만 |
 | 퀴즈노스 | `quiznoskorea` | 퀴즈노스 | 2.3만 |
 | 크라운제과 | `crownsns` | 크라운제과 | 5.3만 |
+| 탐앤탐스 | `tomntoms_coffee` | 탐앤탐스커피 | 2.7만 |
 | 탕화쿵푸마라탕 | `tanghuokungfu_korea` | 탕화쿵푸마라탕 공식 인스타그램 | 6,793 |
 | 토마토도시락 | `tomatodosirak_official` | 토마토도시락 공식 인스타그램 | 1만 |
+| 투썸플레이스 | `atwosomeplace_official` | 투썸플레이스 | 36.9만 |
 | 페리카나 | `pelicana1982` | 페리카나 | 2만 |
 | 포케올데이 | `pokeallday_official` | 포케올데이 Poke all day | 1.5만 |
 | 푸라닭 | `puradak_official` | 푸라닭 치킨 | 4.4만 |
 | 풀무원 | `pulmuone` | 풀무원 Pulmuone 공식 인스타그램 | 37.5만 |
+| 하림 | `harim_natural` | 하림자연실록 | 4.1만 |
 | 하이트진로음료 | `hitejinrobeverage_official` | 하이트진로음료 \| HJB 매거진 | 1.7만 |
 | 한솥 | `hansot_official` | 한솥도시락 | 15만 |
 | 해태제과식품 | `haitai_co` | 해태제과식품(주) | 8.5만 |
@@ -678,7 +694,7 @@
 | 홍짜장 | `2026_hongjjajang_official` | 홍짜장 | 23 |
 | 후라이드 참 잘하는집 | `good__fried` | 후라이드참잘하는집_후참잘_Official | 1.2만 |
 
-## 인스타 없음 (37곳)
+## 인스타 없음 (43곳)
 
 - **더본코리아 13곳** — 브랜드 페이지에 SNS 링크 0건. 본사 홈페이지가 거는 건
   `theborn_tasty`(본사)와 `paikscoffee_official`(빽다방)뿐이라 `고투웍`·`홍콩반점0410` 같은
@@ -690,6 +706,11 @@
   하루엔소쿠(`href="javascript:;"`)
 - **게시물 임베드만 있고 프로필 링크가 없다** — 담꾹
 - **가리킨 계정이 삭제됨** — 바르다김선생(`teacherkim_insta`)·모토이시(`motoishi.official`)
-- **자매 브랜드 계정만 있다** — 박가부대(`wongrandma`·`mori_shabu` 뿐)
+- **자매 브랜드 계정만 있다** — 박가부대(wonandone.co.kr 공용 푸터가 `wongrandma`·`mori_shabu` 만 선언) ·
+  엔제리너스(lotteeatz.com 공용 푸터가 롯데리아 계정만 선언)
 - **브랜드별 계정만 있고 회사 계정이 없다** — 하이트진로(참이슬·테라·켈리… 8개 중
   어느 하나를 "하이트진로"로 걸 수 없다. 유튜브는 `하이트진로 SNS` 목록에 회사 채널이 있어 넣었다)
+- **SPA 를 렌더해도 SNS 링크가 없다** — SPC삼립(장식용 Instagram 버튼만) · 블루샥
+- **인스타 피드 위젯의 API 주소만 있다** — 잇샌드
+- **글로벌(미국) 계정만 가리킨다** — 파이브가이즈(`instagram.com/fiveguys`). 한국 계정이 따로 없다
+- **지주사 사이트가 껍데기다** — 하림산업(`harimholdings.com` 43바이트)

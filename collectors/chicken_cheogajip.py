@@ -15,6 +15,11 @@ cheogajip.co.kr 은 그누보드 게시판을 메뉴판으로 쓴다. 메뉴판 
 주석이라 셀렉터로는 못 잡아서 `li.gall_li` 의 원본 HTML 에 정규식을 댄다.
 주석이 사라지면 category 만 비고 상품은 그대로 나온다 — 그 정도면 감수할 만하다.
 
+⚠️ **카드는 32장인데 상품은 30건이 정상이다.** `치킨치즈볼 골드`·`치킨치즈볼 레드`
+   가 각각 **글자까지 똑같이 두 번** 올라와 있어서 `seen` 이 뒤엣것을 버린다
+   (2026-10-02 실측). 가마치통닭의 47 → 45 와 같은 사정이다. 32 가 안 나온다고
+   파서를 의심하지 마라.
+
 🔴 **상세 페이지가 없다.** 카드 어디에도 `<a>` 가 없어서 눌러도 아무 데도 안 간다
 (2026-10-02 실측). 그래서 url 은 비우고 base.SITES 의 브랜드 메뉴판 폴백에 맡긴다.
 
@@ -169,4 +174,15 @@ def fetch() -> list[Item]:
         for it in items:
             time.sleep(IMG_DELAY)
             it.uploaded_at = _uploaded_at(c, it.image)
+
+    # 🔴 '건수는 멀쩡한데 날짜만 사라진' 상태를 막는다. 이미지 호스트가
+    # Last-Modified 를 끊거나 경로가 바뀌면 HEAD 가 전건 조용히 실패하는데,
+    # 건수는 그대로라 collect.py 의 0건 가드도 FLOOR 도 통과한다. BBQ 의
+    # _head_guard·가마치통닭·노랑통닭과 같은 처분이다(실측 30/30 이 날짜를 받는다).
+    dated = sum(1 for it in items if it.uploaded_at)
+    if dated * 2 < len(items):
+        raise RuntimeError(
+            f"처갓집양념치킨 업로드일 {len(items)}건 중 {dated}건만 붙었다 — 이미지 "
+            f"Last-Modified 가 끊겼거나 경로가 바뀌었을 가능성. 이 브랜드는 "
+            f"NEW 배지도 신메뉴 탭도 없어서 이게 유일한 날짜 신호다")
     return items

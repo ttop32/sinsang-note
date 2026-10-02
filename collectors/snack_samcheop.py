@@ -139,6 +139,13 @@ def fetch() -> list[Item]:
         # is_new 를 찍으면 엉뚱한 상품이 신상이 된다. 조용히 넘기지 않는다.
         raise ValueError(f"{BRAND}: 탭 {len(tabs)}개 ≠ 상품묶음 {len(groups)}개")
 
+    # ⚠️ 순서만 믿으면 안 된다. 브랜드가 탭 차례를 바꿔 '1첩 떡볶이' 가 앞으로
+    # 오는 순간 **기존 상품 7건이 조용히 전부 신상**이 된다(39건 중 18%라
+    # collect 의 급감 가드에도 0건 가드에도 안 걸린다). 이름을 확인한다.
+    if not any(w in tabs[NEW_TAB] for w in ("신메뉴", "New", "NEW")):
+        raise ValueError(
+            f"{BRAND}: 첫 탭이 신메뉴가 아니다 — '{tabs[NEW_TAB]}' (탭 순서 변경)")
+
     new_names = {(_norm(s.attributes.get("data-name") or ""))
                  for s in groups[NEW_TAB].css(".swiper_menu_slide")}
     new_names.discard("")

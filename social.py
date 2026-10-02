@@ -31,6 +31,7 @@
 INSTAGRAM = {
     "60계":               "60chicken",
     "BBQ":               "bbq_offi",
+    "CJ제일제당":            "cjcheiljedang",
     "CU":                "cu_official",
     "GS25":              "gs25_official",
     "KFC":               "kfc_korea",
@@ -48,7 +49,9 @@ INSTAGRAM = {
     "네네치킨":              "nenechicken_official",
     # 공식 사이트 schema.org 에 적힌 norangtongdak486 은 삭제된 계정이다.
     "노랑통닭":              "norangtongdak_official",
+    "노브랜드버거":            "nobrandburger.official",
     "노티드":               "cafeknotted_kr",
+    "농심":                "nongshim",
     "누구나홀딱반한닭":          "nuguna_banhandak",
     "더벤티":               "theventi_official",
     "던킨":                "dunkin_kr",
@@ -61,6 +64,7 @@ INSTAGRAM = {
     "땅땅치킨":              "ttangttang.chicken_new",
     "또래오래":              "toreore_official",
     "라홍방마라탕":            "lahongbang_official",
+    "롯데리아":              "lotteria_kr",
     "롯데웰푸드":             "lottewellfood_food",
     # 사이트가 "음료 인스타그램"이라고 이름 붙인 계정. 처음처럼·새로 같은 주류 계정은 따로 있다.
     "롯데칠성음료":            "lottechilsung",
@@ -71,6 +75,8 @@ INSTAGRAM = {
     "메가MGC커피":           "mega.mgc.coffee_official",
     "멕시카나":              "mexicana_official",
     "멘지":                "ramen_menji",
+    # 핸들 끝에 언더바가 붙고 중간에 `.com` 이 들어간다. 도메인이 아니라 핸들이다.
+    "면사랑":               "noodlelovers.com_",
     "명랑핫도그":             "myungranghotdog_official",
     # 핸들 끝에 언더바가 붙는다. 빼면 다른 계정이다.
     "미스터피자":             "mrpizza_official_",
@@ -78,6 +84,7 @@ INSTAGRAM = {
     "바른치킨":              "barunchicken_official",
     "배스킨라빈스":            "baskinrobbinskorea",
     "백소정":               "baeksojeong_official",
+    "버거운버거":             "burgerunburger_official",
     "버거킹":               "burgerkingkorea",
     # 공식 사이트 메뉴에 걸린 bobae__official 은 삭제된 계정이다. 이게 산 쪽.
     "보배반점":              "bobaebanjum_kr",
@@ -101,17 +108,22 @@ INSTAGRAM = {
     "샘표":                "sempio.official",
     "세븐일레븐":             "7elevenkorea",
     "소림마라":              "sorimmara_official",
+    "쉐이크쉑":              "shakeshackkr",
+    "쉬즈베이글":             "shes_bagel_official",
     "스시로":               "sushiro_korea",
     "스쿨푸드":              "schoolfood_official",
     "스타벅스":              "starbuckskorea",
     "슬로우캘리":             "slowcali_official",
+    "신세계푸드":             "shinsegaefood.official",
     "싸다김밥":              "ssadagb_official",
     "써브웨이":              "subwaykorea",
+    "쏘자토스트":             "ssojatoast_official",
     "아워홈":               "ourhome.delicious",
     "얌샘김밥":              "yumsem_official",
     "에그드랍":              "eggdrop.official",
     "오뚜기":               "otoki_daily",
     "오리온":               "orion_world",
+    "왓더버거":              "what_the_burger",
     "요거프레소":             "yogerpresso_official",
     "원할머니보쌈족발":          "wongrandma",
     "이디야커피":             "ediya.coffee",
@@ -121,9 +133,11 @@ INSTAGRAM = {
     "자담치킨":              "jadamchicken_official",
     # 언더바 두 개.
     "죠스떡볶이":             "jaws__official",
+    "지미존스":              "jimmyjohns_korea",
     # 계정 주체가 운영사 (주)고구려푸드다. 소개에 짬뽕10101 이 BRAND.1 로 적혀 있다.
     "짬뽕10101":           "goguryeofood_official",
     "짬뽕관":               "jjambbonggwan",
+    "참토스트":              "charmtoast_official",
     "처갓집양념치킨":           "cheogajip_go",
     "춘리마라탕":             "chunlimalatang_official",
     # 공식 사이트가 schema.org 에 적어둔 chickenplus 는 팔로워 12명짜리 남의 개인 계정이다.
@@ -134,8 +148,10 @@ INSTAGRAM = {
     "쿠우쿠우":              "qooqoo_official",
     "퀴즈노스":              "quiznoskorea",
     "크라운제과":             "crownsns",
+    "탐앤탐스":              "tomntoms_coffee",
     "탕화쿵푸마라탕":           "tanghuokungfu_korea",
     "토마토도시락":            "tomatodosirak_official",
+    "투썸플레이스":            "atwosomeplace_official",
     "파리바게뜨":             "parisbaguette_kr",
     "파파존스":              "papajohnskr",
     "팔도":                "paldofood",
@@ -147,6 +163,8 @@ INSTAGRAM = {
     # 핸들 끝에 언더바가 붙는다.
     "프랭크버거":             "frankburger_official_",
     "피자헛":               "pizzahutkorea",
+    # 계정 이름은 `하림자연실록`. 소개가 하림 공식이라고 밝힌다.
+    "하림":                "harim_natural",
     "하이트진로음료":           "hitejinrobeverage_official",
     "한솥":                "hansot_official",
     "할리스":               "official_hollys",
@@ -164,6 +182,8 @@ INSTAGRAM = {
 YOUTUBE = {
     "60계":               "60gye",
     "BBQ":               "bbq_offi",
+    # 채널 이름은 `제당슈만`. 푸터가 "유튜브 공식 채널"로 거는 쪽이다.
+    "CJ제일제당":            "CJCheilJedangOfficial",
     "CU":                "cu.official",
     "GS25":              "official_GS25",
     "KFC":               "kfckorea.official",
@@ -177,6 +197,7 @@ YOUTUBE = {
     "김가네":               "김가네-j5r",
     "네네치킨":              "네네치킨OFFICIAL",
     "노랑통닭":              "norang_tongdak",
+    "농심":                "nongshim",
     "누구나홀딱반한닭":          "Nuguna_banhandak",
     "더벤티":               "theventi_official",
     "던킨":                "DunkinDonutsKorea",
@@ -187,12 +208,15 @@ YOUTUBE = {
     "땅땅치킨":              "ttangttangchicken",
     "또래오래":              "toreore9292",
     "라홍방마라탕":            "lahongbang_official",
+    # 채널 이름은 `리아버거가게`.
+    "롯데리아":              "lotteriakorea",
     # 사이트가 "음료 공식 유튜브"라고 이름 붙인 채널. 주류·칠성레이블 채널은 따로 있다.
     "롯데칠성음료":            "Lotte7star",
     "맘스터치":              "momstouch6549",
     "매일유업":              "maeili2mo",
     "메가MGC커피":           "megamgccoffee",
     "멘지":                "Bonif_",
+    "면사랑":               "noodlelovers.official",
     "명랑핫도그":             "myungranghotdog",
     "모토이시":              "모토이시창업톡톡",
     "미소야":               "misoya_official",
@@ -218,9 +242,12 @@ YOUTUBE = {
     "샐러디":               "saladykorea",
     "샘표":                "sempioKorea",
     "세븐일레븐":             "7elevenkorea",
+    "쉐이크쉑":              "SHAKESHACKKOREA",
     "스시로":               "Sushiro_korea",
     "스타벅스":              "starbuckskorea",
     "슬로우캘리":             "Slowcali_official",
+    # 채널 이름은 `스프TV`.
+    "신세계푸드":             "SHINSEGAEFOOD.OFFICIAL",
     "싸다김밥":              "ssadagb",
     "써브웨이":              "Subwaykr",
     # 핸들 끝에 마침표가 하나 더 붙는다. 빼면 다른 주소가 된다.
@@ -236,6 +263,7 @@ YOUTUBE = {
     "이마트24":             "emart24_official",
     "이지브루잉커피":           "Bonif_",
     "자담치킨":              "jadamchicken_official",
+    "지미존스":              "jimmyjohns_korea",
     # 계정 주체가 운영사 (주)고구려푸드다. 소개에 짬뽕10101 이 BRAND.1 로 적혀 있다.
     "짬뽕10101":           "goguryeofood",
     "짬뽕관":               "jjambbonggwan",
@@ -245,6 +273,7 @@ YOUTUBE = {
     "퀴즈노스":              "quiznoskorea2559",
     "탕화쿵푸마라탕":           "tanghuokungfu",
     "토마토도시락":            "tomatodosirak_official",
+    "투썸플레이스":            "a_twosome_place",
     "파리바게뜨":             "loveparisbaguette",
     "파파존스":              "파파존스-z8d",
     "팔도":                "paldofood6295",
@@ -257,6 +286,8 @@ YOUTUBE = {
     "풀무원":               "pulmuone.official",
     "프랭크버거":             "Frankburger_official",
     "피자헛":               "enjoypizzahut",
+    # 언더바 두 개.
+    "하림":                "Harim__TV",
     "하이트진로":             "hitevideo",
     "하이트진로음료":           "hitejinrobeverage",
     "한솥":                "한솥도시락-e2r",

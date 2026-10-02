@@ -33,7 +33,7 @@
           (에그드랍 category=NEW, 폴바셋 newIcon 과 같은 처분).
   released_at  `data-idx` 10자리 앞 6자리가 YYMMDD 다. 62건 전부 유효한 과거
           날짜로 파싱되고 **미래 날짜가 하나도 없다**(최대 2026-09-07).
-          연도 분포는 2022년 48 / 2023년 2 / 2024년 2 / 2025년 4 / 2026년 10 이고,
+          연도 분포는 2022년 48 / 2023년 2 / 2024년 2 / 2025년 4 / 2026년 6 이고,
           2022-04 에 몰린 48건은 사이트를 새로 만들며 한꺼번에 넣은 흔적이다.
           **이삭토스트 `prdcode` 와 완전히 같은 규칙이고, 이미지 경로까지
           `/admin/data/product2/<코드>_R.jpg` 로 똑같다** — 같은 CMS 를 쓴다.
@@ -106,8 +106,9 @@ def _image(li) -> str:
 
 
 def fetch() -> list[Item]:
-    r = base.retry(lambda: base.client().get(URL))
-    r.raise_for_status()
+    with base.client() as c:
+        r = base.retry(lambda: c.get(URL))
+        r.raise_for_status()
     t = HTMLParser(r.text)
 
     secs = t.css("div.menuCont_in")
@@ -121,6 +122,13 @@ def fetch() -> list[Item]:
         cards = sec.css("li")
         if sid == NEW_SECTION and not cards:
             raise RuntimeError("퀴즈노스 신메뉴 칸: 상품 0건 — 구조가 바뀌었다")
+        # 아는 칸이 비면 그것도 드러낸다. 전체 0건 가드만으로는 한 칸이 통째로
+        # 빠져도 조용히 넘어간다 — 실측으로 `sandwich` 칸 하나를 비웠더니
+        # 62 → 4건이 **예외 없이** 돌아왔다. 일곱 칸이 전부 같은 `li` 마크업을
+        # 쓰니 한 칸만 0인 건 구조 변경이지 정상이 아니다.
+        if sid in SECTIONS and not cards:
+            raise RuntimeError(
+                f"퀴즈노스 {SECTIONS[sid]}({sid}): 상품 0건 — 구조가 바뀌었다")
 
         for li in cards:
             a = li.css_first("a")

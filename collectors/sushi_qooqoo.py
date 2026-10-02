@@ -73,6 +73,13 @@
 네비게이션(브랜드이야기/메뉴안내/매장찾기/창업/고객지원) 어디에도 없다.
 robots.txt 는 404. 그래서 요청 간격을 넉넉히 둔다.
 
+TLS: 평범하게 검증한다. 한때 이 어댑터가 `base.client(verify=False)` 로 열려
+있었는데(사유 주석도 없었다) 2026-10-02 재실측 결과 **끌 이유가 없었다** —
+리프 `CN=qooqoo.co.kr`(GoGetSSL RSA DV SSL CA 2, 2026-08-26~2027-03-12)가
+유효하고 체인도 멀쩡해서 `verify=True` 로 200 이 그대로 온다. 검증을 끄면
+중간자가 바꾼 기사 본문에서 상품명을 뽑아 공개 사이트에 싣게 된다.
+notes/CRAWLING-POLICY.md §6-1 이 금지하는 바로 그 경우라 되돌렸다.
+
 desc 는 비운다. 본문이 기사 전문이라 그대로 담으면 남의 기사를 통째로
 싣는 꼴이 된다(CRAWLING-POLICY §3-① 에서 제일 큰 리스크로 꼽은 항목).
 """
@@ -221,7 +228,7 @@ def _rows(html: str) -> list:
 def fetch() -> list[Item]:
     floor = (date.today() - timedelta(days=DAYS)).isoformat()
     cand, seen_id = [], set()
-    with base.client(verify=False) as c:
+    with base.client() as c:
         for page in range(1, MAX_PAGES + 1):
             r = base.retry(lambda: c.get(LIST, params={"bo_table": BO, "page": page}))
             r.raise_for_status()

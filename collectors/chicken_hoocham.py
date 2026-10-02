@@ -19,20 +19,47 @@
    상품이 아니다. 이름 대조를 안 하면 엉뚱한 상품에 날짜가 붙는다. 그래서
    **공지에서 상품을 만들지 않는다.** 공지는 이미 가진 상품의 날짜를 채울 때만 쓴다.
    `10월 후참잘 할인소식!` 같은 행사 공지도 같은 이유로 상품이 되지 않는다.
+   2026-10-02 전수 대조 결과(공지 16건 × 상품 33건) 붙은 건 청양먹태치킨 하나뿐이고
+   오매칭은 0건이었다. 전용앱 글에도 아무 상품이 안 붙는다 — 확인했다.
+   ⚠️ 남아 있는 구멍 하나: 2019년 글 `신메뉴 심쿵! 핫도그 출시~!` 는 상품명이
+      정확히 `핫도그` 인 상품이 생기면 걸린다(3글자라 MIN_MATCH 를 통과한다).
+      지금은 그런 상품이 없다. 생기면 2019년 날짜가 붙으므로, 메뉴에 `핫도그` 가
+      등장하면 이 줄을 다시 보라.
 
-② `uploaded_at` — 이미지 Last-Modified. (약함)
-   2026-10-02 실측으로 흩어지긴 한다 — 2026-05-21 ×2, 2025-10-14, 2023-12-01,
-   2024-01-16 묶음, 그리고 **2026-08-10**.
-   🔴 그 2026-08-10 이 함정이다. **`후라이드치킨`** — 이 브랜드에서 가장 오래된
-   기본 메뉴 — 이 전체에서 가장 최신 날짜를 달고 있다. 사진을 새로 찍어 갈아끼운
-   것이지 새로 나온 게 아니다. 이미지 mtime 은 업로드 시각이지 출시일이 아니라는
-   걸 이 브랜드가 교과서처럼 보여준다. 그래서 released_at 에는 절대 안 넣는다.
-   ①이 청양먹태치킨에 준 2026-05-21 과 그 상품의 이미지 mtime 이 정확히 같다는 게
-   그나마 이 신호를 믿을 근거인데, 반례(후라이드치킨)가 같이 있으니 거기까지다.
+② ~~`uploaded_at` — 이미지 Last-Modified~~ **쓰지 않는다. 비운다.**
+   🔴 처음엔 '약한 신호' 로 넣었다가 뺐다. **이 신호는 약한 게 아니라 틀렸다.**
+   2026-10-02 실측 33건 분포 —
+       2024-01-16 ×15(45%) · 2021-05-25 ×4 · 2026-05-21 ×3 · 2021-09-10 ×2 ·
+       2026-08-13 · 2026-08-10 · 2025-10-14 · 2023-12-01 … (12개 날짜)
+   덩어리 하나가 45% 인 것도 문제지만 진짜 문제는 **덩어리 밖**이다. 전체에서
+   가장 최신 축인 **2026-08-10 이 `후라이드치킨`** — 이 브랜드에서 가장 오래된
+   간판 메뉴 — 에 붙어 있고, **2026-08-13 은 `떡꼬치`** 다. 둘 다 사진을 새로
+   찍어 갈아끼운 것이지 새로 나온 게 아니다.
+   그대로 두면 `rules.is_fresh()` 의 날짜 창(60일)에 걸려 **후라이드치킨이
+   신상 목록에 올라간다.** 실제로 그 상태로 수집·배포됐다(2026-10-02 리뷰에서
+   재현). 이 서비스에서 제일 큰 거짓말이 메뉴판을 신상으로 내보내는 것이고,
+   그게 바로 이 두 줄이다.
+   `rules.untrust_bulk_dates()` 도 못 막는다 — 1건짜리 날짜라 묶음이 아니다.
+   그래서 **가짜 날짜보다 빈 날짜가 낫다**(네네치킨·누구나홀딱반한닭과 같은
+   처분). 이미지 HEAD 도 아예 보내지 않는다 — 쓰지 않을 값에 32요청을 쓸 이유가
+   없다.
+   🔴 "흩어지니까 쓸 만하다" 며 되살리지 마라. 흩어져 있는 게 문제가 아니라
+      **가장 최신 두 건이 가장 오래된 메뉴**라는 게 문제다. 반례가 신호 자체를
+      무효로 만든다.
 
-`is_new` 는 **전건 None** 이다. NEW 배지도 신메뉴 탭도 없다. 메뉴판 전체를 신상으로
-찍지 않는다. 날짜가 약하니 이 브랜드는 대체로 collect.py 의 '어제 없던 키가 오늘
-있다' diff 로 잡히게 된다. 그게 정직한 상태다.
+`is_new` 는 **전건 None** 이다. 마크업에는 NEW 배지도 신메뉴 탭도 없다.
+🔴 ⚠️ **다만 "이 브랜드엔 신제품 표시가 없다" 는 틀렸다 — 배지가 그림 안에 있다.**
+   2026-10-02 전수 확인: 썸네일 33장 중 `청양먹태치킨`(580×470, 좌상단 x≈150-280,
+   y≈95-205)에 **빨간 원형 `NEW` 스티커가 픽셀로 그려져** 있다. 마크업에는
+   흔적이 없다. 컴포즈커피가 똑같이 당한 경우다(배지가 썸네일에 구워져 있어
+   마크업만 믿은 어댑터가 0건을 냈다).
+   지금은 그 한 건을 ①(공지 2026-05-21)이 이미 잡고 있어서 실질 손해가 없지만,
+   **공지 없이 배지만 붙는 상품이 나오면 통째로 놓친다.** 이미지 배지 판독은
+   이 어댑터 범위 밖이라 여기서는 기록만 남긴다(notes/IMAGE-BADGES.md 후속).
+   거꾸로, 배지가 `후라이드치킨` 에는 **없다**는 사실이 위 ②의 판단을 뒷받침한다.
+
+메뉴판 전체를 신상으로 찍지 않는다. 날짜가 ① 한 건뿐이라 이 브랜드는 대체로
+collect.py 의 '어제 없던 키가 오늘 있다' diff 로 잡히게 된다. 그게 정직한 상태다.
 
 ⚠️ 이미지 주소에 `:443` 이 박혀 온다(superboard 공통). 떼어도 열린다.
 세트메뉴(ca_id=02) 7건은 그대로 싣고 분류에 '세트메뉴' 라고 적어 사람이 알아보게 둔다.
@@ -45,7 +72,6 @@ AhrefsBot·DotBot·ZoominfoBot 만 개별 차단하고 Yeti·NaverBot 은 허용
 import re
 import time
 
-from email.utils import parsedate_to_datetime
 from selectolax.parser import HTMLParser
 
 from . import base
@@ -59,7 +85,6 @@ MAX_CATEGORIES = 12   # 폭주 방지. 현재 3개.
 MAX_ITEMS = 200       # 폭주 방지. 현재 33건.
 MAX_NEWS_PAGES = 5    # 폭주 방지. 현재 2페이지(16건).
 DELAY = 0.5           # 목록 요청 간격(초)
-IMG_DELAY = 0.15      # 이미지 HEAD 간격(초)
 
 # 상품 한 건. 이미지와 이름이 형제가 아니라 거리를 둔 채로 붙어 있다.
 _ITEM = re.compile(
@@ -96,8 +121,17 @@ def _categories(html: str) -> list:
 
 
 def _news(client) -> list:
-    """소식 게시판에서 (제목, YYYY-MM-DD). 실패하면 빈 목록 — 보조 신호다."""
+    """소식 게시판에서 (제목, YYYY-MM-DD).
+
+    🔴 조용히 빈 목록을 돌려주지 않는다. 게시판이 죽거나 마크업이 바뀌면
+    released_at 이 전건 사라지는데, 상품 건수는 33 그대로라 collect.py 의
+    0건 가드도 FLOOR 도 안 걸린다. 이 브랜드가 가진 **유일한 출시일 신호**라
+    그 상태가 조용히 굳으면 아무도 못 알아챈다. 그래서 '글이 한 건도 안 읽히면'
+    터뜨린다 — '출시 공지가 없다'(정상일 수 있다)와 '게시판을 못 읽었다'(사고)를
+    가르는 선이 거기다.
+    """
     rows = []
+    posts = 0
     for pg in range(1, MAX_NEWS_PAGES + 1):
         try:
             time.sleep(DELAY)
@@ -116,8 +150,14 @@ def _news(client) -> list:
             m = re.match(r"(\d{2})\.(\d{2})\.(\d{2})$", info[0].text().strip())
             if m:
                 rows.append((title, f"20{m.group(1)}-{m.group(2)}-{m.group(3)}"))
+        posts += found
         if not found:
             break
+    if not posts:
+        raise RuntimeError(
+            "후참잘 소식 게시판에서 글을 한 건도 못 읽었다 — 'span.sbj' / "
+            "'ul.info li' 가 안 걸린다. 이 브랜드의 유일한 출시일 신호라, "
+            "날아가도 상품 건수는 그대로여서 아무도 못 알아챈다")
     return rows
 
 
@@ -129,17 +169,6 @@ def _released(name: str, news: list) -> str:
     hits = [d for title, d in news
             if any(k in title for k in _LAUNCH) and flat in _flat(title)]
     return min(hits) if hits else ""
-
-
-def _uploaded_at(client, img_url: str) -> str:
-    """이미지의 Last-Modified 를 날짜로. 실패하면 조용히 비운다."""
-    if not img_url:
-        return ""
-    try:
-        lm = client.head(img_url).headers.get("last-modified", "")
-        return parsedate_to_datetime(lm).date().isoformat() if lm else ""
-    except Exception:
-        return ""
 
 
 def fetch() -> list[Item]:
@@ -175,7 +204,12 @@ def fetch() -> list[Item]:
                     category=cate,
                     # 브랜드가 공지에 적어준 등록일. 없으면 비운다.
                     released_at=_released(name, news),
-                    # NEW 배지도 신메뉴 탭도 없다. 모르는 건 모른다고 둔다.
+                    # 🔴 이미지 Last-Modified 는 쓰지 않는다. 가장 최신 두 건이
+                    # 후라이드치킨·떡꼬치(둘 다 사진만 갈아끼운 간판 메뉴)라
+                    # 그대로 쓰면 메뉴판이 신상으로 올라간다(docstring ②).
+                    uploaded_at="",
+                    # 마크업에는 NEW 배지도 신메뉴 탭도 없다. 모르는 건 모른다고
+                    # 둔다. (썸네일 그림 안에는 배지가 있다 — docstring 참고)
                     is_new=None,
                     promo=False,
                     url=f"{SITE}{path}?ca_id={cid}",
@@ -189,11 +223,5 @@ def fetch() -> list[Item]:
 
         if not items:
             raise RuntimeError("상품 목록이 비었다 — 셀렉터가 깨졌을 가능성")
-
-        # released_at 이 찬 건은 더 강한 신호를 이미 들고 있다. HEAD 를 아낀다.
-        for it in items:
-            if it.released_at:
-                continue
-            time.sleep(IMG_DELAY)
-            it.uploaded_at = _uploaded_at(c, it.image)
+    # 이미지 HEAD 는 보내지 않는다. 받아봐야 쓰지 않을 값이다(docstring ②).
     return items

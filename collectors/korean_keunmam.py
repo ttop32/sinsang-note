@@ -4,11 +4,14 @@
 
 `/html/menu.html` 한 장이 전체 메뉴를 SSR 로 담고 있다. 쿠키·세션·JS 불필요.
 탭이 7개(신메뉴·순대국·요리류·순대류·세트메뉴·철판볶음·전골)이고 전부 같은
-HTML 안에 `div.tab-panel` 로 들어 있다. **1요청에 카드 30장**(중복 제거 24건).
+HTML 안에 `div.tab-panel` 로 들어 있다. **1요청에 카드 30장**(중복 제거 25건).
+⚠️ 2026-10-02 재실측으로 24 → 25 로 고쳤다. 전에 적혀 있던 24건은 틀린 수였다.
 
 신제품 신호가 둘이고 서로 맞물린다. 2026-10-02 실측:
   is_new  카드 썸네일 위에 배지 이미지가 붙는다(`alt="new"`/`"best"`/`"tip"`/`"season"`).
-          `new` 배지가 카드 30장 중 10장, 중복을 턴 24건 중 **5건**에 붙어 있다.
+          `new` 배지가 카드 30장 중 10장, 중복을 턴 25건 중 **5건**에 붙어 있다
+          (초계 찰면·누룽지 녹두 삼계탕·부추 백순대 철판볶음·통마늘 양념
+           순대 철판볶음·부추고기순대).
   교차검증 `#tab-new`('신메뉴' 탭)에 실린 5건이 **new 배지 5건과 정확히 같은 집합**이다.
           세븐일레븐 '신상품' 탭처럼 분류만 다르고 목록은 같은 가짜가 아니다 —
           나머지 6개 탭 25장 중 new 배지는 신메뉴 상품이 겹쳐 실린 5장뿐이고,
@@ -57,7 +60,7 @@ BRAND = "큰맘할매순대국"
 HOST = "https://www.keunmam.co.kr"
 URL = HOST + "/html/menu.html"
 DELAY = 0.6          # 이미지 HEAD 간격(초)
-MAX_HEADS = 60       # 폭주 방지. 현재 24건.
+MAX_HEADS = 60       # 폭주 방지. 현재 25건.
 
 # 탭 id → 화면에 쓰는 분류명. '신메뉴' 는 판매채널이라 분류로 쓰지 않는다.
 NEW_TAB = "tab-new"
@@ -107,8 +110,9 @@ def _uploaded_at(c, img: str) -> str:
 
 
 def fetch() -> list[Item]:
-    r = base.retry(lambda: base.client().get(URL))
-    r.raise_for_status()
+    with base.client() as c:
+        r = base.retry(lambda: c.get(URL))
+        r.raise_for_status()
     t = HTMLParser(r.text)
 
     panes = t.css("div.tab-panel")
@@ -122,6 +126,14 @@ def fetch() -> list[Item]:
         cards = pane.css("article.menu-card")
         if pid == NEW_TAB and not cards:
             raise RuntimeError("큰맘할매순대국 신메뉴 탭: 상품 0건 — 구조가 바뀌었다")
+        # 아는 탭이 비면 그것도 드러낸다. 전체 0건 가드만 두면 한 탭이 통째로
+        # 빠져도 조용히 지나간다 — 실측으로 순대국 탭 하나를 비웠더니 25 → 21건
+        # 으로 예외 없이 끝났고, 감소폭이 16%라 collect.FLOOR(30%)에도 안 걸린다.
+        # 다른 탭들이 전부 같은 `article.menu-card` 를 쓰니 한 탭만 0인 건
+        # 구조 변경이지 정상이 아니다(하루엔소쿠·홍익돈까스·유가네와 같은 선).
+        if pid in TABS and not cards:
+            raise RuntimeError(
+                f"큰맘할매순대국 {TABS[pid]}({pid}): 상품 0건 — 구조가 바뀌었다")
 
         for card in cards:
             h3 = card.css_first("h3")
@@ -157,7 +169,7 @@ def fetch() -> list[Item]:
             by_key[key] = it
             items.append(it)
 
-    # 날짜는 이미지 헤더에만 있다. 카드 수만큼 HEAD 를 친다(현재 24회).
+    # 날짜는 이미지 헤더에만 있다. 카드 수만큼 HEAD 를 친다(현재 25회).
     with base.client() as c:
         for it in items[:MAX_HEADS]:
             it.uploaded_at = _uploaded_at(c, it.image)

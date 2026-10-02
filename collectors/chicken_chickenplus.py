@@ -128,4 +128,15 @@ def fetch() -> list[Item]:
 
         if not items:
             raise RuntimeError("상품이 하나도 안 나왔다 — 셀렉터가 깨졌을 가능성")
+
+    # 🔴 CDN 경로 모양이 바뀌면(`/thumbnail/<8자리>/` 가 아니게 되면) _IMG 가
+    # 날짜를 못 뽑고, 그러면 이 브랜드는 **신호가 하나도 없는 상태**가 된다.
+    # 건수는 39 그대로라 collect.py 의 0건 가드도 FLOOR 도 안 걸려서 조용히 굳는다.
+    # 노랑통닭·가마치통닭과 같은 가드다(실측 39/39 가 날짜를 받는다).
+    dated = sum(1 for it in items if it.uploaded_at)
+    if dated * 2 < len(items):
+        raise RuntimeError(
+            f"치킨플러스 업로드일 {len(items)}건 중 {dated}건만 붙었다 — "
+            f"CDN 경로(cdn.imweb.me/thumbnail/<YYYYMMDD>/)가 바뀌었을 가능성. "
+            f"이 브랜드의 유일한 신제품 신호다")
     return items

@@ -63,6 +63,12 @@ MAX_PAGES 로 한 번 더 막는다.
 뒤쪽 빈 파라미터는 목록 복귀용이라 상품과 무관하다. idx 만 떼어 깔끔한
 `/menu/view.asp?idx=238` 로 조립한다(실제로 그 상품 상세가 열리는 걸 확인했다).
 
+⚠️ **주문 채널(배달/홀/포장)은 labels 에 담지 않는다.** 카드에 `div.g_circle
+p.circle` 로 들어 있어서 한때 labels 로 옮겼는데, **88건 전부가 셋 다 달고 있어서**
+목록의 모든 카드에 "배달 홀 포장" 이 똑같이 찍혔다. base.shown_labels() 는 행사·NEW
+중복만 걸러서 이걸 안 막는다. 다른 어댑터가 labels 에 넣는 건 NEW·BEST·한정·매운맛
+처럼 **상품끼리 갈리는** 표시뿐이다. 전건에 붙는 건 라벨이 아니라 배경이다.
+
 가격은 목록에 없고 상세에만 있다. Item 에 자리가 없어 받지 않는다.
 세트·행사·이벤트 공지는 이 목록에 없다. '윙콤보'·'플래터'·'내.완.반' 은 구성 자체가
 하나의 상품이고 할인이 아니라서 promo 는 전건 False 다. 세트 변형을 접는 건
@@ -134,6 +140,7 @@ def _page(client, sermode: str, page: int) -> list:
 def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
+    new_badges = 0
     with base.client() as c:
         for sermode, category in LISTS:
             for page in range(1, MAX_PAGES + 1):
@@ -154,9 +161,8 @@ def fetch() -> list[Item]:
                     link = card.css_first("a[href^='view.asp?idx=']")
                     idx = _IDX.search(link.attributes.get("href", "")) if link else None
                     is_new, labels = _badges(card)
-                    # 주문 가능한 채널(배달/홀/포장). 상품 성격을 말해주는 정보라 담는다.
-                    labels += [ch for p in card.css("div.g_circle p.circle")
-                               if (ch := " ".join(p.text().split()))]
+                    if is_new:
+                        new_badges += 1
 
                     it = Item(
                         brand=BRAND,
@@ -188,7 +194,28 @@ def fetch() -> list[Item]:
         if not items:
             raise RuntimeError("메뉴 목록이 비었다 — 셀렉터가 깨졌을 가능성")
 
+        # 🔴 배지만 사라지는 경로를 막는다. 파일명이 `img_new.png` 에서 한 글자만
+        # 바뀌어도 `_badges()` 는 그걸 매운맛 배지로 흘려보내고(alt 로 떨어진다)
+        # is_new 가 전건 None 이 된다. 그때도 건수는 88 그대로라 collect.py 의
+        # 0건 가드도 FLOOR 도 통과하고 "푸라닭은 신제품이 없다"가 조용히 굳는다.
+        # 네네치킨·또래오래·노랑통닭과 같은 처분이다. 브랜드가 정말로 NEW 를 다
+        # 내린 날에도 터지는데, 그 오탐은 감수한다.
+        if not new_badges:
+            raise RuntimeError(
+                "푸라닭 NEW 배지가 0건 — 'div.min_area img[src*=img_new]' 가 "
+                "안 걸린다. 이 브랜드의 신제품 신호라, 날아가도 건수는 그대로여서 "
+                "아무도 못 알아챈다")
+
         for it in items:
             time.sleep(IMG_DELAY)
             it.uploaded_at = _uploaded_at(c, it.image)
+
+    # 두 번째 신호(이미지 Last-Modified)도 같은 이유로 지킨다. 이미지 호스트가
+    # 헤더를 끊거나 경로가 바뀌면 HEAD 가 전건 조용히 실패해 날짜가 통째로
+    # 사라진다 — 가마치통닭·노랑통닭과 같은 가드다(실측 88/88 이 날짜를 받는다).
+    dated = sum(1 for it in items if it.uploaded_at)
+    if dated * 2 < len(items):
+        raise RuntimeError(
+            f"푸라닭 업로드일 {len(items)}건 중 {dated}건만 붙었다 — 이미지 "
+            f"Last-Modified 가 끊겼거나 경로가 바뀌었을 가능성")
     return items

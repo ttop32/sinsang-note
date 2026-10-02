@@ -477,6 +477,15 @@ tabMenuData 탭0(전체) = 8개
 셋 다 지금 `fetch()` 가 정상 동작하는 걸 확인했으므로(각 72/45/47건) **다음 수집부터 자동으로 들어온다.**
 어댑터 문제가 아니라 타이밍 문제다. 들어오면 치킨은 **1,208건 / 23브랜드**(KFC 포함)가 된다.
 
+**배선 누락(orphan)은 아니다.** 2026-10-03 에 추가된 `collect.orphans()` 로 확인했다 —
+`base.BRANDS`·`base.SITES`·`collect.ADAPTERS` 셋 중 하나가 빠지면 어댑터가 조용히 안 도는데,
+치킨 22개는 **orphan 0건**이다(같은 시점 레포 전체 orphan 28건은 다른 업종 작업분이다).
+
+```
+./.venv/bin/python -c "import sys;sys.path.insert(0,'.');import collect;[print(n,'—',w) for n,w in collect.orphans()]"
+→ chicken_* 0건
+```
+
 배포본 기준 브랜드별 건수와 `is_new` 수는 아래와 같다. `is_new=0` 인 브랜드는 배지·탭이 없어
 날짜와 전날 대비 diff 로만 판정되는 곳이다(§2 의 '신상 신호' 칸 참고).
 

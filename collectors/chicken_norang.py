@@ -23,16 +23,26 @@
    쓰지 마라.
 
 ────────────────────────────────────────────────────────────────────────
-TLS — 구형 DH 파라미터. 검증을 끄지 않고 **암호군 기준만** 낮춘다.
+TLS — 구형 DH 파라미터. 검증을 끄지 않고 **암호군 기준만** 한 칸 낮춘다.
 ────────────────────────────────────────────────────────────────────────
 기본 컨텍스트로는 핸드셰이크 자체가 안 된다.
 
     httpx 기본        → ConnectError [SSL: DH_KEY_TOO_SMALL] dh key too small
 
-서버가 1024비트급 DH 파라미터를 쓴다. OpenSSS 3 의 기본 보안수준(SECLEVEL=2)이
+서버가 1024비트급 DH 파라미터를 쓴다. OpenSSL 3 의 기본 보안수준(SECLEVEL=2)이
 그걸 거절하는 것이고, **인증서는 멀쩡하다**(위 SAN 확인). 그래서
-`ctx.set_ciphers("DEFAULT@SECLEVEL=0")` 로 **암호군 기준만** 내리고
+`ctx.set_ciphers("DEFAULT@SECLEVEL=1")` 로 **암호군 기준만** 한 단계 내리고
 호스트명·서명·만료 검증은 전부 켠 채로 둔다.
+
+🔴 **0 이 아니라 1 이다.** 처음엔 SECLEVEL=0 으로 적었는데 실측해 보니
+   **1 로도 그대로 붙는다**(2026-10-02 재측정, 아래 표). 둘 다 되면 덜 푼 쪽을
+   쓴다 — 0 은 보안수준 정책을 통째로 끄는 값이라 1024비트 미만 키·MD5/SHA1
+   서명·RC4 까지 같이 받아주고, 1 은 DH 하한을 2048→1024 로 내리는 것뿐이다.
+   이 서버에 필요한 건 딱 그 한 칸이다.
+
+       SECLEVEL=2  ConnectError [SSL: DH_KEY_TOO_SMALL]
+       SECLEVEL=1  200 (49,281B)   ← 이걸 쓴다
+       SECLEVEL=0  200 (49,281B)   필요 없는 완화
 
 🔴 `verify=False` 는 쓰지 않는다. notes/CRAWLING-POLICY.md §6-1 이 명시적으로
    금지한다. §6-1 은 "중간인증서 보충은 다른 이야기(허용)" 라고 적어 뒀는데,
@@ -41,13 +51,19 @@ TLS — 구형 DH 파라미터. 검증을 끄지 않고 **암호군 기준만** 
    중간자가 응답을 바꾸면 여전히 서명·호스트명에서 걸린다. 선례는
    `collectors/chicken_toreore.py`(중간인증서 보충)·`collectors/lottechilsung.py` 다.
    `http://` 폴백도 못 쓴다 — 이 호스트는 평문 경로가 없다.
+   ⚠️ §6-1 이 명시적으로 허락한 범위를 넘으므로 운영자 승인이 필요한 항목이다.
+      승인이 안 나면 이 브랜드를 빼는 쪽이 맞다 — 몰래 더 풀지 마라.
 
-보충한 컨텍스트로 실측했고 검증은 켜진 채 돈다(2026-10-02):
+완화한 컨텍스트로 실측했고 검증은 켜진 채 돈다(2026-10-02 재측정, SECLEVEL=1):
 
-    norangtongdak.co.kr        200
-    wrong.host.badssl.com      실패  Hostname mismatch
-    self-signed.badssl.com     실패  self-signed certificate
-    expired.badssl.com         실패  certificate has expired
+    norangtongdak.co.kr          200
+    wrong.host.badssl.com        실패  Hostname mismatch
+    self-signed.badssl.com       실패  self-signed certificate
+    expired.badssl.com           실패  certificate has expired
+    sha1-intermediate.badssl.com 실패  unable to get local issuer certificate
+
+같은 네 줄이 SECLEVEL=0 에서도 똑같이 막힌다. 즉 0 으로 내려서 **더 얻는 건 없고**
+받아주는 약한 암호·서명만 늘어난다. 그래서 1 로 고정한다.
 
 ⚠️ 이미지도 같은 호스트라 같은 컨텍스트가 그대로 적용된다.
 
@@ -140,6 +156,9 @@ LISTS = [
 ]
 
 DELAY = 0.5      # 목록 요청 간격(초). 요청이 2번뿐이다.
+# OpenSSL 보안수준. 기본 2 는 이 서버의 1024비트 DH 를 거절한다. 1 이면 붙는다 —
+# 0 으로 더 내리지 마라(실측상 얻는 게 없다, docstring 참고).
+SECLEVEL = 1
 MAX_ITEMS = 200  # 폭주 방지. 현재 47건.
 
 KST = timezone(timedelta(hours=9))
@@ -157,7 +176,9 @@ def _ssl_context() -> ssl.SSLContext:
     check_hostname·verify_mode 는 기본값 그대로다(docstring 실측 참고).
     """
     ctx = ssl.create_default_context(cafile=certifi.where())
-    ctx.set_ciphers("DEFAULT@SECLEVEL=0")
+    # 0 이 아니라 1 이다. 1 로도 붙는 걸 실측했고(docstring 표), 0 은 필요 없는
+    # 완화라 MD5/SHA1 서명·RC4·1024비트 미만 키까지 같이 받아주게 된다.
+    ctx.set_ciphers(f"DEFAULT@SECLEVEL={SECLEVEL}")
     return ctx
 
 

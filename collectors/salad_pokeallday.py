@@ -60,6 +60,26 @@ TLS·이미지 모두 https 다. 이용약관은 사이트에서 찾지 못했�
 같은 날짜로 들어오면 그건 출시일이 아니라 이관일이다(얌샘김밥 2023-11-23 62건과
 같은 자국).
 
+## ⚠️ `uploaded_at` 을 채우면 자기 배지가 60일 창에 깎인다 — 알고 쓰는 것이다
+
+`rules.is_fresh` 는 `is_new=True` 라도 날짜가 **있으면** 60일 창을 적용하고,
+없으면 `first_seen + STALE(90일)` 까지 띄운다. 그래서 날짜를 채운 대가로
+2026-10-02 기준 NEW 5건 중 **2건만 화면에 오른다**(2026-08-03 두 건).
+2026-06-30·2026-04-28 세 건은 창 밖이라 빠진다.
+
+**이게 맞다고 본다.** 날짜를 비우면 다섯 건 다 뜨지만, 그건 반년 전 상품을
+"최근 60일"이라고 써 둔 화면에 올리는 것이다. 다른 브랜드에서 2013년 간판
+메뉴에 배지가 계속 달려 있던 사고가 있었고, 이 레포는 그걸 날짜로 깎는 쪽을
+택했다. 배지만 믿고 싶으면 `uploaded_at` 을 비우면 되는데 **그러면 안 된다.**
+
+## ⚠️ 온도 표기가 접히면서 배지를 잃을 뻔했다
+
+`base._SIZE` 가 괄호 안의 `HOT`·`ICE` 를 털기 때문에 `/drink` 에서 두 쌍이
+같은 키가 된다 — `아메리카노 (Hot)`/`(Ice)`, `카페라떼(ICE)`/(핫 쪽). 36 → 35 가
+여기서 난다. 그런데 **`카페라떼` 는 NEW 가 붙은 ICE 가 DOM 에서 먼저 와서
+우연히 살아남았다.** 브랜드가 HOT 을 위로 올리면 그 배지가 조용히 사라진다.
+그래서 접을 때 **배지 가진 쪽이 이기게** 한다.
+
 상품별 주소는 **없다.** 카드 링크가 전부 `href="#"` 이고 `data-srl` 만 있는
 JS 모달이다. `url` 을 비워 `base.SITES` 폴백에 맡긴다. 가격은 사이트에 없다.
 """
@@ -101,7 +121,7 @@ def _uploaded_at(src: str) -> str:
 
 def fetch() -> list[Item]:
     items: list[Item] = []
-    keys = set()
+    seen: dict = {}   # key → items 안의 자리. 배지 가진 쪽이 이기게 한다.
     with base.client() as c:
         for category, path in PAGES:
             r = base.retry(lambda: c.get(ROOT + path))
@@ -128,10 +148,14 @@ def fetch() -> list[Item]:
                     # 상품별 주소가 없다(전부 href="#" 인 JS 모달).
                     url="",
                 )
-                if it.key in keys:
-                    continue
-                keys.add(it.key)
-                items.append(it)
+                old = seen.get(it.key)
+                if old is None:
+                    seen[it.key] = len(items)
+                    items.append(it)
+                elif it.is_new and not items[old].is_new:
+                    # 같은 상품의 다른 온도 표기가 접힌다(아래 ⚠️). 배지가
+                    # 늦게 온 쪽에만 붙어 있으면 그쪽으로 바꿔 끼운다.
+                    items[old] = it
 
     # 이 브랜드의 신호는 배지 하나뿐이다(날짜가 없다). `div.new_badge` 가
     # 안 잡히면 건수는 35 그대로라 collect 의 0건·급감 가드에 안 걸리고,

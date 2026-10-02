@@ -74,9 +74,18 @@ def _text(node, sel) -> str:
 
 
 def _badges(card) -> list:
-    """`.type_txt` 안의 배지. 지금 관측되는 값은 new 와 best 둘뿐이다."""
-    return [t for t in (" ".join(s.text().split())
-                        for s in card.css(".type_txt span")) if t]
+    """`.type_txt` 안의 배지. 지금 관측되는 값은 new 와 best 둘뿐이다.
+
+    ⚠️ **요소가 아니라 글자를 읽는다.** `.type_txt` 자체는 81건 전부에 있어서
+    존재만 세면 81/81 전수가 된다. 다른 브랜드에서 `span.flag` 존재만 보고
+    세다가 10년 된 간판 메뉴가 신상으로 올라간 사고가 같은 날 있었다.
+
+    사이트는 소문자(`new`·`best`)로 쓰는데 **대문자로 올린다.** 같은 레포의
+    김가네·싸다김밥·죠스떡볶이가 전부 `NEW`/`BEST` 라, 그대로 두면 화면 칩에
+    `best` 와 `BEST` 가 같이 뜬다(`base.shown_labels` 는 NEW 계열만 걸러낸다).
+    """
+    return [t.upper() for t in (" ".join(s.text().split())
+                                for s in card.css(".type_txt span")) if t]
 
 
 def fetch() -> list[Item]:
@@ -105,8 +114,9 @@ def fetch() -> list[Item]:
                 image=img.attributes.get("src", "") if img else "",
                 labels=labels,
                 category=category,
-                # new 배지만 True. 배지 없음은 '아니다'가 아니라 '모른다'다.
-                is_new=True if "new" in labels else None,
+                # NEW 배지만 True(BEST 13건과 글자로 가른다). 배지 없음은
+                # '아니다'가 아니라 '모른다'다.
+                is_new=True if "NEW" in labels else None,
                 # 상품별 주소가 없다(카드 <a> 에 href 자체가 없다).
                 url="",
             )

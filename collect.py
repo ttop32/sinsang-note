@@ -35,9 +35,10 @@ from collectors import dongsuh, fredit, gs25, lottechilsung, ourhome, sempio
 # 순위표와 불가 사유는 notes/CANDIDATES-BURGER-CAFE3.md.
 # 롯데리아는 1차에서 robots 로 접었던 곳이다 — 운영자 판단으로 무시하되 UA 는
 # 위장하지 않고, 주문 플로우가 아니라 브랜드 메뉴 면(/brand/ria)만 읽는다.
-from collectors import (burger_fiveguys, burger_lotteria, burger_nobrand,
-                        burger_shakeshack, burger_whattheburger,
-                        cafe_blushaak, cafe_tomntoms)
+from collectors import (burger_burgerunburger, burger_fiveguys,
+                        burger_lotteria, burger_nobrand, burger_shakeshack,
+                        burger_whattheburger, cafe_blushaak, cafe_tomntoms,
+                        toast_ssoja)
 # 과자·음료 제조사 2차(2026-10-02). 매출 순위 기준 전수 조사에서 나왔다 —
 # 근거와 순위표는 notes/MAKER-SNACK-DRINK.md, 브랜드별 함정은 각 docstring.
 from collectors import (maker_binggrae, maker_crown, maker_dongwonfnb,
@@ -54,6 +55,21 @@ from collectors import maker_spcsamlip
 # 주류. 성인 인증 게이트가 없는 유일한 곳이다(notes/CANDIDATES-ALCOHOL.md).
 from collectors import cafe_angelinus, cafe_twosome
 from collectors import maker_harim
+# 카페·디저트·분식 중위권 14곳. 배선 가드가 잡아낸 미등록분.
+from collectors import (cafe_bombom,
+                        cafe_coffeebay,
+                        cafe_hio,
+                        cafe_manwolkyung,
+                        dessert_bingdongdaeng,
+                        dessert_dallondor,
+                        dessert_emiliagelato,
+                        dessert_taraequeen,
+                        snack_33tteok,
+                        snack_chickgimbap,
+                        snack_gimbapking,
+                        snack_morak,
+                        snack_terryroze,
+                        snack_tteokgoon)
 from collectors import alcohol_hitejinro
 # 한식 중위권. 공정위 가맹점 수 188~603위 구간(notes/CANDIDATES-KATSU-JPN-KOR.md).
 from collectors import (korean_damgguk, korean_obongzip, korean_twozzim,
@@ -115,7 +131,7 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             burger_momstouch, burger_burgerking, burger_frankburger, # 햄버거
             burger_mcdonalds,
             burger_lotteria, burger_nobrand, burger_whattheburger,   # 햄버거 2차
-            burger_shakeshack, burger_fiveguys,
+            burger_shakeshack, burger_fiveguys, burger_burgerunburger,
             cafe_tomntoms, cafe_blushaak,                            # 카페 2차
             maker_ottogi, maker_paldo, maker_orion,                  # 제조사(과자·라면)
             lottechilsung, fredit, ourhome,             # 제조사(음료·냉동식품)
@@ -133,6 +149,13 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             maker_spcsamlip,                                  # 베이커리(양산빵)
             alcohol_hitejinro,                          # 제조사(주류)
             maker_harim,                                # 제조사(육가공·식재료)
+            cafe_bombom, cafe_coffeebay, cafe_hio,      # 카페 중위권
+            cafe_manwolkyung,
+            dessert_bingdongdaeng, dessert_dallondor,   # 디저트·빙수
+            dessert_emiliagelato, dessert_taraequeen,
+            snack_33tteok, snack_chickgimbap,           # 분식 중위권
+            snack_gimbapking, snack_morak,
+            snack_terryroze, snack_tteokgoon,
             korean_twozzim, korean_damgguk,             # 한식 중위권
             korean_yoogane, korean_obongzip,
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
@@ -161,7 +184,7 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             hanshinpocha,
             sushi_sushiro, sandwich_eggdrop, sandwich_subway,        # 일식·샌드위치
             sandwich_quiznos, sandwich_shesbagel, sandwich_itsand,   # 샌드위치 2차
-            sandwich_jimmyjohns, toast_charmtoast,
+            sandwich_jimmyjohns, toast_charmtoast, toast_ssoja,
             katsu_baeksojeong, katsu_misoya, katsu_ginzaryoko,       # 돈까스(→일식)
             katsu_haruensoku, katsu_hongik, katsu_brown,
             sushi_qooqoo, sushi_mikado,                              # 일식 2차
