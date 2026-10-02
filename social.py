@@ -121,6 +121,8 @@ INSTAGRAM = {
     "자담치킨":              "jadamchicken_official",
     # 언더바 두 개.
     "죠스떡볶이":             "jaws__official",
+    # 계정 주체가 운영사 (주)고구려푸드다. 소개에 짬뽕10101 이 BRAND.1 로 적혀 있다.
+    "짬뽕10101":           "goguryeofood_official",
     "짬뽕관":               "jjambbonggwan",
     "처갓집양념치킨":           "cheogajip_go",
     "춘리마라탕":             "chunlimalatang_official",
@@ -234,6 +236,8 @@ YOUTUBE = {
     "이마트24":             "emart24_official",
     "이지브루잉커피":           "Bonif_",
     "자담치킨":              "jadamchicken_official",
+    # 계정 주체가 운영사 (주)고구려푸드다. 소개에 짬뽕10101 이 BRAND.1 로 적혀 있다.
+    "짬뽕10101":           "goguryeofood",
     "짬뽕관":               "jjambbonggwan",
     # 채널 이름이 브랜드명과 다르다. 커피빈 공식 사이트 푸터가 가리키는 채널이 이것뿐이다.
     "커피빈":               "커피빈유통실험실",

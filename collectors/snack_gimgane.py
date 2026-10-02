@@ -47,6 +47,11 @@
 밖에 **살아 있어서** 설명은 그쪽에서만 가져온다.
 
 ### 토마토도시락 — 진짜 상품별 NEW 배지
+⚠️ **같은 `.labels` 칸에 `best` 가 같이 들어온다**(2026-10-02 실측 전체 108건에서
+`span.best` 39건 · `span.new` 3건). `.labels span` 이 있다고 세면 **42건이 전부
+신상이 된다.** 반드시 `span.new` 로 좁혀야 한다 — 다른 브랜드에서 `span.flag`
+존재만 보고 세다가 10년 된 메뉴가 신상으로 올라간 사고가 같은 날 있었다.
+
 `<div class="labels"><span class="new">` 가 **카테고리를 가리지 않고 따라다닌다.**
 2026-10-01 실측: 전체 110건 중 3건(`돈불튀김`·`돈불김치볶음밥`·`치킨스테이크덮밥`),
 `sca=7`(덮밥) 10건 중 1건, `sca=3`(기본도시락) 17건 중 1건. 신메뉴 탭에만
@@ -262,8 +267,14 @@ def _tomato() -> list[Item]:
             brand="토마토도시락",
             name=name,
             image=_bg_image(card, ".menu_img"),
+            # best 가 같은 칸에 들어온다. 클래스로 갈라 라벨에도 남긴다.
+            # 김가네 쪽은 alt 가 대문자(NEW/BEST)로 온다. 한 파일에서 표기가
+            # 갈리면 화면에 'best' 와 'BEST' 가 같이 뜬다. 대문자로 맞춘다.
+            labels=[cls.upper() for cls in ("new", "best")
+                    if card.css_first(f".labels span.{cls}")],
             category=names.get(i, ""),
             # 카테고리를 가리지 않고 따라다니는 상품별 배지다(위 실측 참고).
+            # ⚠️ `.labels span` 이 아니라 `span.new` 다 — best 39건이 섞인다.
             is_new=True if card.css_first(".labels span.new") else None,
             url=TOMATO + href if href.startswith("/") else href,
         )

@@ -30,12 +30,29 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
                         pizza_pizzahut,
                         seven, starbucks, toast_isaac)
 from collectors import dongsuh, fredit, gs25, lottechilsung, ourhome, sempio
+# 햄버거·카페 전수 조사 2차(2026-10-02). 공정위 패스트푸드·커피·음료 업종의
+# 가맹점 수 순위를 위에서부터 훑어 아직 없던 곳만 붙였다.
+# 순위표와 불가 사유는 notes/CANDIDATES-BURGER-CAFE3.md.
+# 롯데리아는 1차에서 robots 로 접었던 곳이다 — 운영자 판단으로 무시하되 UA 는
+# 위장하지 않고, 주문 플로우가 아니라 브랜드 메뉴 면(/brand/ria)만 읽는다.
+from collectors import (burger_fiveguys, burger_lotteria, burger_nobrand,
+                        burger_shakeshack, burger_whattheburger,
+                        cafe_blushaak, cafe_tomntoms)
 # 과자·음료 제조사 2차(2026-10-02). 매출 순위 기준 전수 조사에서 나왔다 —
 # 근거와 순위표는 notes/MAKER-SNACK-DRINK.md, 브랜드별 함정은 각 docstring.
 from collectors import (maker_binggrae, maker_crown, maker_dongwonfnb,
                         maker_haitai, maker_hitejinrobev, maker_lottewellfood,
                         maker_maeil, maker_pulmuone, maker_sajo, maker_samyang)
+# 라면·냉동식품·냉동피자 전수 조사(2026-10-02). 순위표는
+# notes/CANDIDATES-RAMEN-FROZEN.md. 농심·CJ 는 1차가 robots 로 접었던 곳이다.
+from collectors import (maker_cj, maker_myunsarang, maker_nongshim,
+                        maker_shinsegaefood)
+# SPC삼립. 같은 라운드에서 파일만 만들어진 채 등록이 빠져 있었다 — 2차가
+# `/brand/bakery` 한 경로만 보고 "신제품 신호 없음" 으로 접었는데 보도자료
+# JSON API 가 열려 있고 출시 밀도가 이번 조사 1위(120건 중 81건)다.
+from collectors import maker_spcsamlip
 # 주류. 성인 인증 게이트가 없는 유일한 곳이다(notes/CANDIDATES-ALCOHOL.md).
+from collectors import cafe_angelinus, cafe_twosome
 from collectors import alcohol_hitejinro
 # 한식 중위권. 공정위 가맹점 수 188~603위 구간(notes/CANDIDATES-KATSU-JPN-KOR.md).
 from collectors import (korean_damgguk, korean_obongzip, korean_twozzim,
@@ -66,8 +83,10 @@ from collectors import (salad_pokeallday, salad_slowcali,
 from collectors import (japan_motoishi, japan_tokyogyudong, katsu_baeksojeong,
                         katsu_brown, katsu_ginzaryoko, katsu_haruensoku,
                         katsu_hongik, katsu_misoya, korean_hansot,
-                        korean_keunmam, korean_wonandone, sandwich_quiznos,
-                        sushi_mikado, sushi_qooqoo)
+                        korean_keunmam, korean_wonandone, sandwich_itsand,
+                        sandwich_jimmyjohns, sandwich_quiznos,
+                        sandwich_shesbagel, sushi_mikado, sushi_qooqoo,
+                        toast_charmtoast)
 # 중식. 공정위 `중식` 업종 가맹점 수 전수(99개 브랜드)를 훑어 신제품 신호가
 # 실재하는 곳만 골랐다. 근거와 순위표는 notes/CANDIDATES-CHINESE.md.
 # ⚠️ 이 업종은 **메뉴판을 긁지 않는다.** 상위권 다수가 마라탕 브랜드인데
@@ -90,9 +109,13 @@ from web import home
 ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             cafe_coffeebean, cafe_paulbassett, cafe_yogerpresso,
             cafe_mammoth, cafe_theventi, cafe_compose, cafe_hollys,
+            cafe_twosome, cafe_angelinus,
             cu, seven, emart24, gs25,                                # 편의점
             burger_momstouch, burger_burgerking, burger_frankburger, # 햄버거
             burger_mcdonalds,
+            burger_lotteria, burger_nobrand, burger_whattheburger,   # 햄버거 2차
+            burger_shakeshack, burger_fiveguys,
+            cafe_tomntoms, cafe_blushaak,                            # 카페 2차
             maker_ottogi, maker_paldo, maker_orion,                  # 제조사(과자·라면)
             lottechilsung, fredit, ourhome,             # 제조사(음료·냉동식품)
             dongsuh, sempio,                            # 제조사(커피·조미료)
@@ -101,6 +124,12 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             maker_samyang,                                    # 라면·스낵
             maker_binggrae, maker_maeil, maker_hitejinrobev,  # 음료
             maker_pulmuone, maker_dongwonfnb, maker_sajo,     # 냉동·간편식
+            # 라면·냉동식품·냉동피자 전수 조사분. 농심만 신제품 면(배지+이미지
+            # epoch)이고 나머지 둘은 보도자료형이다.
+            maker_nongshim,                                   # 라면
+            maker_cj, maker_shinsegaefood,                    # 냉동·간편식·냉동피자
+            maker_myunsarang,                                 # 냉동면·생면·육수
+            maker_spcsamlip,                                  # 베이커리(양산빵)
             alcohol_hitejinro,                          # 제조사(주류)
             korean_twozzim, korean_damgguk,             # 한식 중위권
             korean_yoogane, korean_obongzip,
@@ -129,7 +158,8 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             # 그래서 theborn 에서 빼고 따로 둔다 — 겹치면 키가 두 번 담긴다.
             hanshinpocha,
             sushi_sushiro, sandwich_eggdrop, sandwich_subway,        # 일식·샌드위치
-            sandwich_quiznos,
+            sandwich_quiznos, sandwich_shesbagel, sandwich_itsand,   # 샌드위치 2차
+            sandwich_jimmyjohns, toast_charmtoast,
             katsu_baeksojeong, katsu_misoya, katsu_ginzaryoko,       # 돈까스(→일식)
             katsu_haruensoku, katsu_hongik, katsu_brown,
             sushi_qooqoo, sushi_mikado,                              # 일식 2차

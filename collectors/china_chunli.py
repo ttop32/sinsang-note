@@ -61,7 +61,9 @@ from .base import Item
 BRAND = "춘리마라탕"
 SITE = "https://chunlimalatang.com"
 API = SITE + "/wp-json/wp/v2/chunli_news"
-DAYS = 300
+DAYS = 540           # 중식은 신메뉴가 연 1~4건이라 300일이면 브랜드 페이지가 빈다.
+                     # 화면 노출은 rules.WINDOW(60일)가 따로 자르므로 넓혀도
+                     # '오래된 게 신상으로 뜨는' 일은 없다(짬뽕관 어댑터와 맞췄다).
 DELAY = 2.0
 
 # 상품 기사인가. 이 말이 없으면 보지 않는다.

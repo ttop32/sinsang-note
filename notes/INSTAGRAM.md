@@ -191,6 +191,8 @@
 - **결과**: **instagram 링크 0건.** 외부 SNS 는 `blog.naver.com/ilovemirim`(네이버 블로그) 하나뿐.
   나머지 외부 링크는 롯데칠성몰·채용·IR·ISMS 인증 확인 등.
 - → **없음.** (소비자 브랜드 계정이 따로 있을 수는 있으나 **공식 사이트가 가리키지 않으므로 쓰지 않는다.**)
+- 🔴 **2026-10-02 정정: 없음이 아니었다.** `SITES` 주소를 httpx 로 다시 받아보니
+  푸터에 라벨 붙은 SNS 목록이 있다 → `lottechilsung`. 아래 "2026-10-02 보강" 참고.
 
 ### hy프레딧 — `hy.official.kr` 🟠 **확인됐지만 브랜드 전용 계정이 아니다**
 - **출처**: `m.fredit.co.kr` 의 SNS 링크
@@ -419,7 +421,7 @@
 | 24 | 오뚜기 | `otoki_daily` | ✅ | 오뚜기 | 16.5만 |
 | 25 | 팔도 | `paldofood` | ✅ | 팔도 | 22만 |
 | 26 | 오리온 | `orion_world` | ✅ | 오리온 | 13.7만 |
-| 27 | 롯데칠성음료 | — | ⚪ 없음 | | |
+| 27 | 롯데칠성음료 | `lottechilsung` | 🔴 정정 | 롯데칠성음료 | 5.9만 |
 | 28 | hy프레딧 | `hy.official.kr` | 🟠 조건부 | hy(한국야쿠르트) | 7.3만 |
 | 29 | 배스킨라빈스 | `baskinrobbinskorea` | ✅ | 배스킨라빈스🍦 | 74.7만 |
 | 30 | 던킨 | `dunkin_kr` | ✅ | 던킨 | 42.6만 |
@@ -568,3 +570,126 @@
 하지만 **이 기능을 위해 이 조사를 또 하라면 말리겠다.** 들인 품 대비 사용자가 얻는 게 작다.
 같은 품을 F12-1(`얼큰 우동` 띄어쓰기 검색 전멸, 🔴)에 쓰는 게 **사용자에게 훨씬 큰 값**이다.
 검색이 0건 나오는 건 사이트를 못 쓰게 만들지만, 인스타 링크가 없는 건 아무도 모른다.
+
+---
+
+# 2026-10-02 보강 — 늘어난 브랜드 59곳
+
+위 조사는 `BRANDS` 가 58곳이던 2026-10-01 기준이다. 그 뒤 브랜드가 **149곳**으로 늘어
+(더본코리아 13곳·치킨 다수·중식·돈까스·일식·제과 대기업 등) 빠진 곳을 같은 방법으로 채웠다.
+유튜브 조사(`notes/YOUTUBE.md`)와 같은 날 같은 경로로 했다 — 공식 사이트가 가리키는 것만,
+전부 비로그인으로 열어 프로필명을 확인했다.
+
+**인스타 112곳 / 149곳 확보.**
+
+## 이번에 걸러낸 가짜·죽은 계정 — 전부 공식 사이트가 가리키던 것들
+
+| 브랜드 | 공식 사이트가 가리킨 핸들 | 열어본 결과 | 실제 정답 |
+|---|---|---|---|
+| 치킨플러스 | `chickenplus` (**schema.org `sameAs`**) | 🔴 **`waranon` — 팔로워 12명 개인 계정** | `chickenplus__official` (푸터 아이콘 쪽) |
+| 노랑통닭 | `norangtongdak486` (**schema.org `sameAs`**) | 🔴 삭제됨 | `norangtongdak_official` (퀵메뉴 쪽) |
+| 땅땅치킨 | `ttangttangchicken_official` | 🔴 삭제됨 | `ttangttang.chicken_new` |
+| 보배반점 | `bobae__official` (메뉴 nav) | 🔴 삭제됨 | `bobaebanjum_kr` (schema.org 쪽) |
+| 모토이시 | `motoishi.official` | 🔴 삭제됨 | **없음** |
+
+🔴 **`schema.org/sameAs` 가 푸터 아이콘보다 믿을 만한 게 아니다.** 치킨플러스와 노랑통닭은
+`sameAs` 쪽이 틀렸고 아이콘 쪽이 맞았다. 보배반점은 반대였다.
+**한쪽만 보고 끝내면 안 되고, 어차피 열어봐야 안다.**
+
+## 브랜드 전용이 아닌데 넣은 것 (hy프레딧과 같은 판단)
+
+| 브랜드 | 핸들 | 계정 주체 | 비고 |
+|---|---|---|---|
+| 동원F&B | `dongwonmall` | **동원몰**(자사몰) | 공식 사이트 인스타 아이콘이 가리키는 유일한 계정 |
+| 사조대림 | `sajogroup` | **사조그룹**(모회사) | 사조 사이트가 가리키는 유일한 계정 |
+| 짬뽕10101 | `goguryeofood_official` | **(주)고구려푸드**(운영사) | 소개에 `BRAND.1 고구려짬뽕10101` |
+| 샘표 | `sempio.official` | 샘표우리맛연구중심 | 샘표 공식 계정 맞다 |
+
+## 1차 조사 정정 — 롯데칠성음료는 "없음"이 아니었다
+
+위 표에서 롯데칠성음료를 ⚪없음으로 적었는데, 그때 `SITES` 의
+`/kor/product/newprdt/list.do` 가 TLS 체인 오류로 안 열려 브라우저로 **메인만** 봤던 탓이다.
+이번에 그 주소를 직접 받아보니 **푸터에 라벨 붙은 SNS 목록이 있다**:
+`음료 인스타그램`(`lottechilsung`)·`처음처럼`·`새로`·`크러시`·`청하`·`칠성레이블`.
+`schema.org` 의 `sameAs` 도 `instagram.com/lottechilsung` 을 선언한다.
+수집이 **음료 신제품**을 보므로 `lottechilsung`(롯데칠성음료 / 5.9만) 을 넣었다.
+
+## 추가한 핸들 (2026-10-02)
+
+| 브랜드 | 핸들 | 프로필명 | 팔로워 |
+|---|---|---|---:|
+| 60계 | `60chicken` | 60계치킨 | 3.6만 |
+| KFC | `kfc_korea` | KFC Korea | 7만 |
+| 가마치통닭 | `gamachi_official` | 가마치 | 1.7만 |
+| 국수나무 | `noodletree_official` | 국수나무 공식 인스타그램 | 1.3만 |
+| 김가네 | `gimgane_official` | 김가네 | 2.3만 |
+| 꾸브라꼬숯불치킨 | `kkubeu_home` | 꾸브라꼬숯불치킨 | 1.2만 |
+| 네네치킨 | `nenechicken_official` | 네네치킨 공식계정 | 2.2만 |
+| 노랑통닭 | `norangtongdak_official` | 노랑통닭 공식 인스타그램 | 3.1만 |
+| 누구나홀딱반한닭 | `nuguna_banhandak` | 누구나홀딱반한닭 | 8,112 |
+| 동경에서먹었던규동 | `tokyokyudong` | 동경규동 공식 인스타그램 | 5,850 |
+| 동원F&B | `dongwonmall` | 동원몰 공식 인스타그램 | 3.8만 |
+| 두찜 | `twozzim` | 두찜 공식 계정 | 1.6만 |
+| 땅땅치킨 | `ttangttang.chicken_new` | 땅땅치킨 | 681 |
+| 또래오래 | `toreore_official` | 또래오래 치킨 | 2.6만 |
+| 라홍방마라탕 | `lahongbang_official` | 라홍방 마라탕 KOREAN MALATANG | 7,641 |
+| 롯데웰푸드 | `lottewellfood_food` | 롯데웰푸드 \| 푸드채널 | 17.2만 |
+| 롯데칠성음료 | `lottechilsung` | 롯데칠성음료 | 5.9만 |
+| 매일유업 | `freshmaeil` | 매일유업(Maeil) | 14.5만 |
+| 멕시카나 | `mexicana_official` | 멕시카나 | 2.7만 |
+| 미카도스시 | `mikadosushi_official` | 미카도스시 공식계정🍣 | 6,629 |
+| 바른치킨 | `barunchicken_official` | 바른치킨 공식 인스타그램 | 2.5만 |
+| 백소정 | `baeksojeong_official` | 백소정 공식 인스타그램 | 4,949 |
+| 보배반점 | `bobaebanjum_kr` | 보배반점 공식 인스타그램 | 1.2만 |
+| 부어치킨 | `boor_chicken` | 부어치킨 | 8,459 |
+| 브라운돈까스 | `browntonkatsu` | 브라운돈까스 | 1,139 |
+| 빙그레 | `binggraekorea` | 빙그레 | 26.6만 |
+| 사조대림 | `sajogroup` | 사조그룹 | 1.2만 |
+| 삼양식품 | `samyangfoods` | 삼양식품 | 11.1만 |
+| 삼첩분식 | `samcheop__official` | 삼첩분식 | 9,572 |
+| 샘표 | `sempio.official` | 샘표우리맛연구중심 | 3.2만 |
+| 소림마라 | `sorimmara_official` | 소림마라 | 729 |
+| 스쿨푸드 | `schoolfood_official` | SCHOOLFOOD, 스쿨푸드 | 6,537 |
+| 슬로우캘리 | `slowcali_official` | 슬로우캘리 Slow,Cali | 8,852 |
+| 싸다김밥 | `ssadagb_official` | 싸다김밥 공식 인스타그램 | 7,642 |
+| 아워홈 | `ourhome.delicious` | 아워홈 | 4.2만 |
+| 얌샘김밥 | `yumsem_official` | 얌샘김밥 공식 인스타그램 | 2.3만 |
+| 원할머니보쌈족발 | `wongrandma` | 원할머니 공식 인스타그램👵 | 1.3만 |
+| 자담치킨 | `jadamchicken_official` | 자담치킨 | 2.4만 |
+| 짬뽕10101 | `goguryeofood_official` | (주)고구려푸드 | 691 |
+| 짬뽕관 | `jjambbonggwan` | 짬뽕관 공식 계정 | 631 |
+| 처갓집양념치킨 | `cheogajip_go` | 처갓집양념치킨 공식 인스타그램 | 2,517 |
+| 춘리마라탕 | `chunlimalatang_official` | 춘리마라탕 공식계정 | 1,885 |
+| 치킨플러스 | `chickenplus__official` | 치킨플러스 | 3,192 |
+| 쿠우쿠우 | `qooqoo_official` | 쿠우쿠우 | 2.6만 |
+| 퀴즈노스 | `quiznoskorea` | 퀴즈노스 | 2.3만 |
+| 크라운제과 | `crownsns` | 크라운제과 | 5.3만 |
+| 탕화쿵푸마라탕 | `tanghuokungfu_korea` | 탕화쿵푸마라탕 공식 인스타그램 | 6,793 |
+| 토마토도시락 | `tomatodosirak_official` | 토마토도시락 공식 인스타그램 | 1만 |
+| 페리카나 | `pelicana1982` | 페리카나 | 2만 |
+| 포케올데이 | `pokeallday_official` | 포케올데이 Poke all day | 1.5만 |
+| 푸라닭 | `puradak_official` | 푸라닭 치킨 | 4.4만 |
+| 풀무원 | `pulmuone` | 풀무원 Pulmuone 공식 인스타그램 | 37.5만 |
+| 하이트진로음료 | `hitejinrobeverage_official` | 하이트진로음료 \| HJB 매거진 | 1.7만 |
+| 한솥 | `hansot_official` | 한솥도시락 | 15만 |
+| 해태제과식품 | `haitai_co` | 해태제과식품(주) | 8.5만 |
+| 호식이두마리치킨 | `hosigi1999` | 호식이두마리치킨 공식 인스타그램 | 5만 |
+| 홍익돈까스 | `hongikdonkatsu_official` | (프로필명 비어 있음 / 소개 `정통 경양식 돈까스 전문`) | 2,305 |
+| 홍짜장 | `2026_hongjjajang_official` | 홍짜장 | 23 |
+| 후라이드 참 잘하는집 | `good__fried` | 후라이드참잘하는집_후참잘_Official | 1.2만 |
+
+## 인스타 없음 (37곳)
+
+- **더본코리아 13곳** — 브랜드 페이지에 SNS 링크 0건. 본사 홈페이지가 거는 건
+  `theborn_tasty`(본사)와 `paikscoffee_official`(빽다방)뿐이라 `고투웍`·`홍콩반점0410` 같은
+  개별 브랜드에 걸 수 없다. (고투웍·리춘시장·막이오름·본가·빽보이피자·성성식당·연돈볼카츠·
+  인생설렁탕·제순식당·홍콩반점0410·홍콩분식·새마을식당·백스비어)
+- **SNS 링크 자체가 없다** — 긴자료코·돌배기집·동서식품·롤링파스타·미미관마라탕·
+  미정국수0410·삼삼마라·역전우동0410·오봉집·원조쌈밥집·유가네·한신포차·설빙·애플꼬마김밥·미소야
+- **아이콘은 있는데 주소가 비어 있다** — 김밥천국(`instagram.com/`)·큰맘할매순대국(`href=""`)·
+  하루엔소쿠(`href="javascript:;"`)
+- **게시물 임베드만 있고 프로필 링크가 없다** — 담꾹
+- **가리킨 계정이 삭제됨** — 바르다김선생(`teacherkim_insta`)·모토이시(`motoishi.official`)
+- **자매 브랜드 계정만 있다** — 박가부대(`wongrandma`·`mori_shabu` 뿐)
+- **브랜드별 계정만 있고 회사 계정이 없다** — 하이트진로(참이슬·테라·켈리… 8개 중
+  어느 하나를 "하이트진로"로 걸 수 없다. 유튜브는 `하이트진로 SNS` 목록에 회사 채널이 있어 넣었다)

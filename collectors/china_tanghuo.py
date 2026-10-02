@@ -48,6 +48,10 @@
 봉사활동·창업박람회·MOU 다. 그래도 날짜가 정확하고 브랜드가 직접 '출시'라고 말한
 건이라 신뢰도는 높다. 가맹점 492개짜리 1위 브랜드를 아예 비워두는 것보다 낫다.
 
+🔴 **이 사이트는 Cafe24 일일 트래픽 한도에 자주 걸린다.** 한도를 넘기면 상태코드
+   **200** 으로 "Access is temporarily restricted" 안내 페이지가 온다(15KB).
+   `_get()` 이 그걸 잡아 전용 메시지로 터뜨린다 — 자세한 건 그 docstring 참고.
+
 robots: `tanghuokungfu.co.kr/robots.txt` → **404 인데 본문이 HTML** 이다(사이트
         공통 오류 페이지). 파일이 없는 것이므로 제한은 없다. 단 허용도 아니라서
         요청 간격을 2.5초로 길게 잡는다(죠스떡볶이 선례).
@@ -70,8 +74,14 @@ SITE = "https://tanghuokungfu.co.kr"
 NEWS = SITE + "/default/brand/tidings/news.php"
 BOARD_ID = "13"      # NEWS 게시판. 공지사항은 다른 php 파일이라 id 를 안 쓴다
 MAX_PAGES = 4        # 한 페이지 5건. 2026-10-02 기준 4페이지면 약 2년치다
-DAYS = 300
+DAYS = 540           # 중식은 신메뉴가 연 1~4건이라 300일이면 브랜드 페이지가 빈다.
+                     # 화면 노출은 rules.WINDOW(60일)가 따로 자르므로 넓혀도
+                     # '오래된 게 신상으로 뜨는' 일은 없다(짬뽕관 어댑터와 맞췄다).
 DELAY = 2.5          # robots.txt 가 없다. 허용도 금지도 아니니 간격을 길게 잡는다
+
+# Cafe24 일일 트래픽 한도 차단 페이지의 표식. 상태코드가 200 이라 본문으로만 안다.
+# 한글이 EUC-KR 로 깨져 오는 자리라 영문 문장을 쓴다(그쪽은 안 깨진다).
+_BLOCKED = "Access is temporarily restricted"
 
 # 목록 단계 1차 거르기. 잘린 제목·요약에서도 판정이 안 뒤집히는 말만 넣는다.
 # 본판정은 상세의 온전한 제목으로 _names() 가 한다.
@@ -109,10 +119,29 @@ def _date(s: str) -> str:
 
 
 def _get(c, params: dict) -> str:
-    """EUC-KR 페이지를 받아 문자열로. 헤더가 charset 을 안 줘서 직접 벗긴다."""
+    """EUC-KR 페이지를 받아 문자열로. 헤더가 charset 을 안 줘서 직접 벗긴다.
+
+    🔴 **일일 트래픽 한도 차단을 여기서 잡는다.** 이 사이트는 Cafe24 호스팅이고
+    한도를 넘기면 **상태코드 200 으로** 차단 안내 페이지를 돌려준다
+    ("This site is currently unavailable" / "Access is temporarily restricted.
+    Please try again shortly, or from tomorrow onward"). 15KB 짜리라 크기로도
+    구분이 안 되고, raise_for_status() 로도 안 걸린다. 그대로 두면 파싱이 0행을
+    내놓고 "마크업이 바뀌었다"는 엉뚱한 메시지가 뜬다 — 2026-10-02 실제로 그랬다.
+    (`notes/CANDIDATES-WESTERN.md` 가 2026-09-30 에 이 브랜드를 '확인 못 함' 으로
+     남긴 것도 같은 차단이었다. 같은 함정에 두 번 걸린 셈이다.)
+
+    사유가 다르면 대응도 다르다 — 마크업 변경은 코드를 고쳐야 하고, 트래픽 차단은
+    내일 다시 돌리면 된다. 그래서 메시지를 갈라 둔다. collect 는 어느 쪽이든
+    이 브랜드만 실패로 두고 이전 수집분을 유지한다.
+    """
     r = base.retry(lambda: c.get(NEWS, params=params))
     r.raise_for_status()
-    return r.content.decode("euc-kr", "replace")
+    html = r.content.decode("euc-kr", "replace")
+    if _BLOCKED in html:
+        raise RuntimeError(
+            "탕화쿵푸: Cafe24 일일 트래픽 한도에 걸렸다(200 으로 차단 안내가 온다). "
+            "마크업 문제가 아니다. 내일 다시 돌려라")
+    return html
 
 
 def _rows(html: str) -> list:

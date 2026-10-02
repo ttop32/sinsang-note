@@ -82,6 +82,11 @@ BRANDS = {
     "노랑통닭":    (FRANCHISE, "치킨"),
     "프랭크버거":  (FRANCHISE, "햄버거"),
     "맥도날드":    (FRANCHISE, "햄버거"),
+    "롯데리아":    (FRANCHISE, "햄버거"),
+    "노브랜드버거": (FRANCHISE, "햄버거"),
+    "왓더버거":    (FRANCHISE, "햄버거"),
+    "쉐이크쉑":    (FRANCHISE, "햄버거"),
+    "파이브가이즈": (FRANCHISE, "햄버거"),
     "오뚜기":      (MAKER, "라면"),
     "팔도":        (MAKER, "라면"),
     "오리온":      (MAKER, "과자"),
@@ -131,6 +136,34 @@ BRANDS = {
     "풀무원":      (MAKER, "냉동식품"),
     "동원F&B":     (MAKER, "냉동식품"),
     "사조대림":    (MAKER, "냉동식품"),
+    # SPC삼립 — 보도자료 JSON API(`/api/public/press-releases`). 2차가
+    # `/brand/bakery` 한 경로만 보고 "신제품 신호 없음" 으로 접었는데,
+    # **출시 밀도가 이번 조사 1위**다(120건 중 81건이 출시 기사, 68%).
+    # ⚠️세부분류가 '과자' 가 아니라 '베이커리' 인 이유: 삼립은 빵·호빵·떡이
+    #   중심이고 과자(파삭칩·누네띠네)는 그중 일부다(어댑터 docstring).
+    "SPC삼립":     (MAKER, "베이커리"),
+    # ── 라면·냉동식품·냉동피자 전수 조사(2026-10-02) ───────────────────
+    # 순위표·불가 사유는 notes/CANDIDATES-RAMEN-FROZEN.md.
+    #   농심      — 라면 점유율 1위. 본사 보도자료는 **죽어 있어서**(브라우저로
+    #               열어도 목록이 빈 화면) 브랜드관 신제품 면을 읽는다. 날짜가
+    #               없어 이미지 파일명의 epoch 를 uploaded_at 에 넣는다.
+    #   CJ제일제당 — 냉동·간편식 1위. 보도자료 밀도가 낮다(3개월 2건)
+    #   신세계푸드 — 이마트 피자(냉동피자) 축의 유일한 국내 소스. 3개월 1~2건
+    # ⚠️ 농심·CJ 는 1차 조사가 'robots 전면차단' 으로 접었던 곳이다. 운영자
+    #    판단으로 수집하되 **UA 위장은 하지 않는다**. 삭제 요청이 오면 즉시 내린다
+    #    (이마트24·도미노피자와 같은 칸).
+    # ⚠️ 냉동피자는 `피자` 가 아니라 `냉동식품` 으로 둔다. `피자` 칸은 도미노·
+    #    피자헛 같은 **외식** 프랜차이즈가 쓰고 있고, brand_sub 는 상품별이 아니라
+    #    브랜드 단위라서 냉동피자 전업사가 없는 지금 구조로는 종합식품사를
+    #    통째로 `피자` 로 찍게 된다. 근거는 위 노트 §냉동피자 분류.
+    "농심":        (MAKER, "라면"),
+    "CJ제일제당":  (MAKER, "냉동식품"),
+    "신세계푸드":  (MAKER, "냉동식품"),
+    # 면·소스 전문기업. **라면 제조사가 아니다** — 국내 라면은 농심 55.5% ·
+    # 오뚜기 21.1% · 삼양식품 12.1% · 팔도 8.6% 로 상위 4사가 97.3% 이고 넷 다
+    # 이미 붙어 있다. 면사랑은 그 바깥의 냉동면·생면·밀키트·육수 축이라
+    # '라면' 이 아니라 '냉동식품' 으로 둔다.
+    "면사랑":      (MAKER, "냉동식품"),
     "배스킨라빈스": (CAFE, "아이스크림"),
     "던킨":        (CAFE, "도넛"),
     "이삭토스트":  (FRANCHISE, "샌드위치"),
@@ -152,7 +185,11 @@ BRANDS = {
     "매머드커피":  (CAFE, "커피"),
     "더벤티":      (CAFE, "커피"),
     "컴포즈커피":  (CAFE, "커피"),
+    "투썸플레이스": (FRANCHISE, "커피"),
+    "엔제리너스":   (FRANCHISE, "커피"),
     "할리스":      (CAFE, "커피"),
+    "탐앤탐스":    (CAFE, "커피"),
+    "블루샥":      (CAFE, "커피"),
     "김밥천국":    (FRANCHISE, "분식"),
     "바르다김선생": (FRANCHISE, "분식"),
     "죠스떡볶이":  (FRANCHISE, "분식"),
@@ -229,6 +266,10 @@ BRANDS = {
     "에그드랍":    (FRANCHISE, "샌드위치"),
     "써브웨이":    (FRANCHISE, "샌드위치"),
     "퀴즈노스":    (FRANCHISE, "샌드위치"),
+    "쉬즈베이글":  (FRANCHISE, "샌드위치"),
+    "참토스트":    (FRANCHISE, "샌드위치"),
+    "잇샌드":      (FRANCHISE, "샌드위치"),
+    "지미존스":    (FRANCHISE, "샌드위치"),
     "샐러디":      (FRANCHISE, "샐러드"),
     # ── 돈까스 (2026-10-02 공정위 가맹점수 전수조사로 합류) ──────────────
     # 돈까스는 '일식' 으로 넣는다. 공정위 업종 분류에서도 돈까스 전문점 다수가
@@ -273,18 +314,17 @@ BRANDS = {
     #               절 안에 있어 보도자료실에 걸리는지 애매하다. 크롤러 금지 없음.
     #
     # 등록하지 않는 곳:
-    #   롯데리아 — lotteeatz.com/robots.txt 가 알려진 봇 티어 외 모든 UA 를
-    #              Disallow: / 로 차단한다. 뚫으려면 UA 를 위장해야 하는데,
-    #              그건 대법원 2021도1533 이 정보통신망 침입죄 근거로 든 행위다.
     #   빕스     — robots.txt 가 Googlebot·NaverBot 외 전면 차단
     #
     # GS25 는 2026-10-01 에 등록했다. 상품 목록은 여전히 수집 불가다 —
     # gs25.gsretail.com 이 전 경로 본사 SPA 로 리다이렉트되고, 앱(우리동네GS)의 웹 짝인
     # m.woodongs.com 에도 상품 라우트가 없다. 대신 본사 보도자료에서 오뚜기·오리온과
     # 같은 방식으로 신제품만 뽑는다. 자세한 근거는 collectors/gs25.py docstring 참고.
-    # 롯데리아는 등록하지 않는다. lotteeatz.com/robots.txt 가 알려진 봇 티어 외
-    # 모든 UA 를 Disallow: / 로 막는다. 우리 UA 는 어느 티어에도 없어 전 경로 금지다.
-    # 다른 호스트로 우회하는 건 신원을 밝히는 이 프로젝트 방침에 어긋난다.
+    # 롯데리아는 2026-10-02 에 등록했다. lotteeatz.com/robots.txt 는 여전히 알려진 봇
+    # 티어 외 모든 UA 를 Disallow: / 로 막지만, **운영자 판단으로 robots 를 무시**하기로
+    # 했다(UA 는 위장하지 않고 sinsang-note 그대로 밝힌다). 수집하는 곳은 주문 플로우가
+    # 아니라 브랜드 메뉴 면 /brand/ria 다 — 매장코드·세트·할인·품절이 섞이지 않는다.
+    # 근거는 collectors/burger_lotteria.py docstring 참고.
 }
 
 
@@ -401,12 +441,22 @@ SITES = {
     "매머드커피":   "https://mmthcoffee.com/sub/menu/new_list.php",
     "더벤티":       "https://theventi.co.kr/new2022/menu/all.html",
     "컴포즈커피":   "https://composecoffee.com/index1",
+    "투썸플레이스": "https://www.twosome.co.kr/mn/menuList.do",
+    "엔제리너스":   "https://www.angelinus.com/menu/menu_list.asp",
     "할리스":       "https://www.hollys.co.kr/menu/espresso.do",
+    # SPA 라 사람이 여는 주소는 /menu 다. 어댑터는 그 뒤의 내부 API 를 쓴다.
+    "탐앤탐스":     "https://www.tomntoms.com/menu",
+    "블루샥":       "https://www.blushaak.co.kr/menu",
     "스시로":       "https://www.sushiro.co.kr/pm",
     "에그드랍":     "http://www.eggdrop.co.kr/menu/list.php?category=NEW",
     "써브웨이":     "https://www.subway.co.kr/menuList/sandwich",
     # https 가 자체서명이라 평문 http 뿐이다. 근거는 collectors/sandwich_quiznos.py docstring.
     "퀴즈노스":     "http://quiznos.co.kr/menu/menu.php",
+    "쉬즈베이글":   "https://shesbagel.com/toastandbread",
+    "참토스트":     "https://charmtoast.com/menu",
+    # 상품별 주소(`?bo_table=menu&wr_id=`)가 Item.url 로 붙으므로 이건 폴백이다.
+    "잇샌드":       "https://itsand.co.kr/board/bbs/board.php?bo_table=menu",
+    "지미존스":     "https://www.jimmyjohns.co.kr/homepage/menu.php",
     "샐러디":       "https://salady.com/menu/list_1",
     # 돈까스 6곳. 상품별 주소가 Item.url 로 붙는 곳이 많아 대부분 폴백이다.
     "백소정":       "https://baeksojeong.com/35",
@@ -431,6 +481,15 @@ SITES = {
     "원할머니보쌈족발": "https://wonandone.co.kr/bossam/menu.asp",
     "박가부대":     "https://wonandone.co.kr/parkga/menu.asp",
     "맥도날드":     "https://www.mcdonalds.co.kr/kor/menu/burger",
+    # 롯데GRS 통합몰 안의 롯데리아 전용 브랜드 메뉴 면. /brand/lotteria 는 404 다.
+    "롯데리아":     "https://www.lotteeatz.com/brand/ria",
+    # www.nobrandburger.com 이 여기로 리다이렉트된다.
+    "노브랜드버거": "https://www.shinsegaefood.com/nobrandburger/index.sf",
+    # 상품별 주소(이벤트 글)가 Item.url 로 붙으므로 이건 폴백이다.
+    "왓더버거":     "https://whattheburger.co.kr/page.php?p_id=menu",
+    # ⚠️ http 전용이다. 443 이 Connection refused 라 https 로 못 바꾼다.
+    "쉐이크쉑":     "http://shakeshack.kr/sub/menu.jsp",
+    "파이브가이즈": "https://www.fiveguys.co.kr/menu/",
     "오뚜기":       "https://www.otoki.com/pr/news?searchNewsCategory=PRESS",
     "팔도":         "https://www.paldofood.co.kr/product/noodle",
     "오리온":       "https://www.orionworld.com/board/list/87",
@@ -458,6 +517,16 @@ SITES = {
     "풀무원":      "https://news.pulmuone.co.kr/pulmuone/newsroom/listPulmuone.do?menu=312",
     "동원F&B":     "https://www.dongwonfnb.com/services/Product/Product_List",
     "사조대림":    "https://www.sajo.co.kr/2026/product/new_product.asp",
+    # 상품별 상세(/now/pr/{id})가 Item.url 로 붙으므로 이건 폴백이다.
+    "SPC삼립":     "https://www.spcsamlip.co.kr/now/pr",
+    # 농심만 진짜 신제품 면이라 어댑터가 읽는 주소를 그대로 쓴다. 나머지 둘은
+    # 보도자료 목록이 폴백이다(기사별 주소는 Item.url 로 따로 붙는다).
+    # ⚠️ 신세계푸드는 어댑터가 XHR(/company/pr/response/…)을 읽지만, 사람이 열
+    #    주소는 그게 아니다 — 사람이 보는 면을 적는다.
+    "농심":        "https://brand.nongshim.com/new_product/index",
+    "CJ제일제당":  "https://www.cj.co.kr/kr/newsroom/pressreleases",
+    "신세계푸드":  "https://www.shinsegaefood.com/company/pr/news_list.sf",
+    "면사랑":      "https://www.noodlelovers.com/site/main/archive/post/category/news",
     # ── 더본코리아 외식 브랜드 ─────────────────────────────────────────
     # 상품별 주소(보도자료 기사)가 Item.url 로 붙으므로 이건 전부 폴백이다.
     # 자체 도메인이 있으면 그 브랜드의 **메뉴 페이지**를, 없으면 theborn.co.kr 의

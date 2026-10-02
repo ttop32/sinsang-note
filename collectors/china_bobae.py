@@ -28,9 +28,12 @@ SSR 로 내려주긴 하는데 **NEW 배지도 날짜도 없다.** 짜장면·�
 한쪽에만 있는 건 버린다. 이 게시판은 따옴표를 아주 자주 쓰는데 그 안이
 '보배그린하트'(사회공헌), '마켓보배'(스마트스토어), '2026 올해의 브랜드 대상'(수상),
 '빵빵이와 옥지의 중식야차'(프로모션 협업) 처럼 **상품이 아닌 경우가 대부분**이다.
-최근 3페이지(≈48건)를 돌려 남은 건 **3건**이다 — 크림짬뽕(2026-09-15, HMR),
-바질크림짬뽕·마라크림짬뽕(2026-04-27, 매장 신메뉴). 전건 본문을 열어 실제 제품이
-맞는지 확인했다(오집 0건). 같은 제품을 다른 매체가 쓴 중복 기사도 걸러진다.
+최근 3페이지 24건을 돌려 **필터 통과 4건 → 상품 5건**이 남는다 — 크림짬뽕
+(2026-09-15, HMR), 전복중화냉면·전복냉짬뽕(2026-06-01, 여름 한정), 바질크림짬뽕·
+마라크림짬뽕(2026-04-27). 전건 본문을 열어 실제 제품이 맞는지 확인했다(오집 0건).
+같은 제품을 다른 매체가 쓴 중복 기사도 걸러진다.
+탈락한 20건 제목도 전부 눈으로 읽었다 — 매장 오픈·수상·사회공헌·스마트스토어
+개편·사내 공모전이라 전부 올바른 탈락이다.
 
 ⚠️ **'크림짬뽕' 은 매장 메뉴가 아니라 간편식(HMR)이다.** 마이셰프와 공동개발해
    컬리에서 단독 판매하는 550g 냉동식품이다. 그래도 담는 이유는, 이 프로젝트가
@@ -63,7 +66,9 @@ BRAND = "보배반점"
 SITE = "https://bobaebanjum.co.kr"
 LIST = SITE + "/community/news.php"
 MAX_PAGES = 3        # 한 페이지 16건. 3페이지면 1년 반쯤 된다
-DAYS = 300
+DAYS = 540           # 중식은 신메뉴가 연 1~4건이라 300일이면 브랜드 페이지가 빈다.
+                     # 화면 노출은 rules.WINDOW(60일)가 따로 자르므로 넓혀도
+                     # '오래된 게 신상으로 뜨는' 일은 없다(짬뽕관 어댑터와 맞췄다).
 DELAY = 2.2
 
 # 상품 기사인가. 이 말이 없으면 상세를 받지 않는다.
@@ -82,6 +87,25 @@ _NOT_PRODUCT = ("보배그린하트", "마켓보배", "대상", "브랜드", "�
 
 _IMG = re.compile(r"url\(\s*['\"]?(https://[^'\")]+)")
 
+# 🔴 제목이 상품명을 안 부르는 기사가 있다. 2026-06-01 실측:
+#   제목 `보배반점, 완도산 전복 활용한 여름 한정 메뉴 출시...지역 상생 프로젝트 추진`
+#   본문 `신메뉴는 ‘전복중화냉면’과 ‘전복냉짬뽕’ 2종으로 구성됐다.`
+# 제목에 이름이 없으니 '본문 인용 ∩ 제목' 규칙으로는 **두 상품을 통째로 잃는다.**
+# 그렇다고 교차검증을 풀면 '보배그린하트'·'마켓보배' 같은 비상품이 들어온다.
+#
+# 그래서 **제목이 따옴표로 아무 상품도 부르지 않을 때만** 범위를 넓힌다. 그때
+# 본문에서 믿는 자리는 '신메뉴/신제품' 이 들어간 **그 문장 안의 따옴표**뿐이다.
+# 문장 경계는 마침표로 끊는다 — 문서 전체를 보면 "‘보배그린하트’ 캠페인" 같은
+# 다른 문단의 따옴표가 섞인다.
+_SENTENCE = re.compile(r"[^.!?]*$")
+_NEW_WORD = ("신메뉴", "신제품", "새롭게", "선보")
+
+
+def _in_new_sentence(body: str, pos: int) -> bool:
+    """`body[pos]` 의 따옴표가 '신메뉴' 를 말하는 문장 안에 있는가."""
+    head = _SENTENCE.search(body[:pos]).group(0)[-120:]
+    return any(w in head for w in _NEW_WORD)
+
 
 def _text(node) -> str:
     return " ".join(node.text().split()) if node else ""
@@ -96,11 +120,18 @@ def _date(s: str) -> str:
 
 
 def _names(title: str, body: str) -> list:
-    """제목과 본문을 교차검증해 상품명을 뽑는다. 못 고르면 빈 목록."""
+    """제목과 본문을 교차검증해 상품명을 뽑는다. 못 고르면 빈 목록.
+
+    기본은 **본문 인용 ∩ 제목**이다. 다만 제목이 상품명을 아예 안 부르는 기사가
+    있어서(아래 _SENTENCE 주석) 그때만 범위를 넓힌다.
+    """
     t = " ".join(title.split()).replace("[보도기사]", " ")
     if any(w in t for w in _SKIP) or not _LAUNCH.search(t):
         return []
     flat = t.replace(" ", "")
+    # 제목이 따옴표로 상품을 부르지 않으면 교차검증할 대상이 없다. 그때만
+    # 본문의 '신메뉴 문장' 으로 넓힌다(_SENTENCE 주석 참고).
+    loose = not _QUOTED.search(t)
     out, seen = [], set()
     for m in _QUOTED.finditer(body):
         name = m.group(1).strip(" ,·∙")
@@ -113,8 +144,11 @@ def _names(title: str, body: str) -> list:
             continue
         if any(w in name for w in _NOT_PRODUCT):
             continue
-        if name.replace(" ", "") not in flat or name in seen:
+        if name in seen:
             continue
+        if name.replace(" ", "") not in flat:
+            if not (loose and _in_new_sentence(body, m.start())):
+                continue
         seen.add(name)
         out.append(name)
     return out

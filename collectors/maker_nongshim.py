@@ -85,6 +85,10 @@ SITE = "https://brand.nongshim.com"
 LIST = SITE + "/new_product/index"
 DELAY = 10.0        # robots 가 Crawl-delay: 10 을 선언한다. 경로를 늘리면 지켜라.
 
+# 배지 비율 가드의 상한. 전체 상품의 이만큼을 넘게 '신제품' 이라고 하면 그건
+# 신호가 아니라 장식이다 — 아래 fetch() 의 가드 주석 참고.
+MAX_NEW_RATIO = 0.6
+
 # 사진 파일명의 13자리 epoch(ms). `1781829117013.jpg` 꼴.
 _STAMP = re.compile(r"/(\d{13})\.[A-Za-z]{3,4}(?:\?|$)")
 
@@ -118,6 +122,35 @@ def fetch() -> list[Item]:
                 f"농심 신제품 목록이 비었다. {r.url} → {len(r.content)}B — "
                 f"목록 셀렉터(.newProductList li / h1 / .img img)가 "
                 f"바뀌었는지 확인하라")
+
+        # ── 배지 비율 가드 ────────────────────────────────────────────
+        # **배지는 존재가 아니라 비율로 믿어야 한다.** 이 레포가 같은 종류로
+        # 세 번 데였다:
+        #   설빙     `span.flag` 에 시그니처 배지가 섞여 오는데 존재만 보고 다
+        #            세서 2013년부터 팔던 인절미설빙이 신상이 됐다(14 → 4건)
+        #   퀴즈노스  NEW 가 66건 **전부**에 붙어 있었다 = 신호가 아니라 장식
+        #   컴포즈    배지가 썸네일 **그림 안에 합성**돼 HTML 엔 0건. 200건
+        #            수집하고 노출 0건이었다(0 → 16건)
+        # 농심은 같은 페이지 내비가 전 상품 목록이라 분모를 바로 셀 수 있다.
+        # 2026-10-02 실측: 내비 97개 중 NEW 8개 = **8.2%**, 신제품 목록 9건(9.3%).
+        # 두 신호가 서로를 받쳐 준다. 어느 쪽이 0% 가 되거나 과반을 넘으면
+        # 신호가 깨진 것이므로 조용히 넘기지 않고 터뜨린다.
+        nav = doc.css(".sub-item a")
+        badged = [a for a in nav if a.css_first("img.new")]
+        if nav and not badged:
+            raise ValueError(
+                f"농심 내비 NEW 배지가 {len(nav)}개 중 0개다. 배지 셀렉터"
+                f"(.sub-item a img.new)가 바뀌었거나 배지가 그림 안으로 들어갔는지"
+                f" 확인하라 — 컴포즈 선례. 신제품 목록은 {len(rows)}행이다")
+        if nav and len(badged) > len(nav) * MAX_NEW_RATIO:
+            raise ValueError(
+                f"농심 내비 NEW 배지가 {len(nav)}개 중 {len(badged)}개"
+                f"({len(badged) / len(nav):.0%})다. 과반이 신제품일 수는 없다 —"
+                f" 배지가 장식으로 바뀌었는지 확인하라(퀴즈노스 선례: 66건 전부)")
+        if len(rows) > len(nav) * MAX_NEW_RATIO >= 1:
+            raise ValueError(
+                f"농심 신제품 목록이 {len(rows)}행인데 전 상품이 {len(nav)}개뿐이다."
+                f" 신제품 면이 전체 카탈로그로 바뀌었는지 확인하라")
 
         for li in rows:
             h1 = li.css_first("h1")
