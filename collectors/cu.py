@@ -221,6 +221,9 @@ TAG_CATEGORY = (
 # 없어서 넣으면 진짜 신상을 같이 떨어뜨린다. 남는 오탐 2건은 알고 두는 것이다.
 PRODUCE_TAGS = frozenset({"과일", "채소"})
 PRODUCE = "농산물"      # 이 분류가 붙으면 수집에서 뺀다. 화면엔 안 나간다.
+# 원물에 같이 붙어도 되는 태그. 이것 말고 좁은 태그가 하나라도 더 있으면 원물로
+# 안 본다(_category 참고). 실측 20건은 전부 과일·채소 + 식재료 조합이다.
+PRODUCE_ONLY = PRODUCE_TAGS | {"식재료"}
 
 # 전부 '생활용품' 한 값으로 모은다. ⚠️ base.NONFOOD_CATEGORIES 가 읽는 값이라
 # 더 좁은 이름(화장품·스타킹·문구류)으로 쪼개면 굿즈 필터가 깨진다.
@@ -243,7 +246,9 @@ MAIN_FALLBACK = {"과자류": "과자"}
 # 태그에서 나올 수 있는 분류 값 전체. 캐시한 값이 아직 쓸 만한지 판정하는 데 쓴다.
 # '식재료' 는 뺀다 — 과일·채소가 예전엔 그 값으로 저장됐다. 캐시를 태우면 위
 # PRODUCE_TAGS 거르기가 **이미 받아둔 농산물에는 영영 안 걸린다**(상세를 다시
-# 안 읽으니 태그를 못 본다). 2026-10-02 실측으로 늘어나는 건 식재료 36건/일뿐이다.
+# 안 읽으니 태그를 못 본다). 2026-10-02 실측으로 상세 요청이 하루 **46건** 는다
+# (남은 식재료 26건 + 매일 다시 받아서 버리는 농산물 20건 — 농산물은 수집에서
+# 빠지니 products.json 에 안 남고, 그래서 캐시가 영영 안 생긴다. 알고 두는 비용이다).
 RESOLVED_CATEGORIES = frozenset(
     [cat for _, cat in TAG_CATEGORY if cat != "식재료"] + ["생활용품"])
 
@@ -256,7 +261,12 @@ def _category(tags: list, main: str) -> str:
     도시락이 이긴다(순서가 고정이 아니라 ['간편식사','도시락'] 로도 온다).
     """
     t = set(tags)
-    if t & PRODUCE_TAGS:                   # 생과일·채소. fetch 가 여기서 걸러낸다
+    # 생과일·채소(fetch 가 여기서 걸러낸다). **좁은 태그가 그것뿐일 때만** 원물로
+    # 본다. 먼저 보고 바로 반환하면 CU 가 가공품에 '과일'을 하나 더 붙이는 날
+    # 그 상품이 말없이 사라진다 — ['과일','과즙음료'] 가 음료가 아니라 농산물이
+    # 돼서 수집에서 빠진다. 지금은 공존 0건이지만 조용히 사라지는 길은 막는다.
+    narrow = {tag for tag, _ in TAG_CATEGORY if tag in t and tag not in _MAIN_TAGS}
+    if (narrow & PRODUCE_TAGS) and narrow <= PRODUCE_ONLY:
         return PRODUCE
     for tag, cat in TAG_CATEGORY:
         if tag in t and tag not in _MAIN_TAGS:
@@ -360,7 +370,14 @@ def _fill_desc(client, items: list, gd_by_key: dict, known: dict) -> tuple:
         tree = HTMLParser(r.text)
         it.desc = " ".join(" ".join(n.text().split())
                            for n in tree.css(".prodExplain li")).strip()
-        tags = [" ".join(n.text().split()) for n in tree.css("ul.prodTag li")]
+        # ⚠️ 'ul.prodTag' 로만 고르면 안 된다. 상세 하단 '카테고리 베스트 상품'
+        # 블록에 같은 클래스가 또 있어서 **옆 상품의 태그와 1+1·2+1 행사 라벨**
+        # 까지 딸려 온다. 20건 표본에서 12건이 달랐다 —
+        # 서주)포도젤로바 는 ['2+1','아이스크림','1+1','2+1','2+1','2+1'] 이고
+        # 행사 라벨이 맨 앞이다. 아래 분류 표는 '먼저 걸리는 것' 을 쓰므로
+        # 그 순서가 그대로 판정에 끼어든다. 자기 태그는 #taglist 하나다.
+        tags = [" ".join(n.text().split())
+                for n in tree.css("ul.prodTag#taglist li")]
         tags = [t for t in tags if t]
         if tags:
             it.category = _category(tags, it.category)
@@ -483,7 +500,7 @@ def fetch(known: dict | None = None) -> list[Item]:
             raise ValueError(
                 f"CU {len(items)}건 전부 상세에서 분류 태그를 못 읽었다 "
                 f"(2026-10-01 실측은 619건 전건이 풀렸다). "
-                f"view.do 의 'ul.prodTag li' 가 바뀌었는지 확인하라")
+                f"view.do 의 'ul.prodTag#taglist li' 가 바뀌었는지 확인하라")
 
         # 생과일·채소는 신제품이 아니다(PRODUCE_TAGS). 태그는 상세를 읽어야
         # 보이므로 여기서 뺀다 — 아래 이미지 HEAD 도 그만큼 덜 친다.
