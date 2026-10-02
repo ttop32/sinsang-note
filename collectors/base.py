@@ -70,6 +70,16 @@ BRANDS = {
     "땅땅치킨":    (FRANCHISE, "치킨"),
     "페리카나":    (FRANCHISE, "치킨"),
     "바른치킨":    (FRANCHISE, "치킨"),
+    "누구나홀딱반한닭": (FRANCHISE, "치킨"),
+    "후라이드 참 잘하는집": (FRANCHISE, "치킨"),
+    "꾸브라꼬숯불치킨": (FRANCHISE, "치킨"),
+    "치킨플러스":  (FRANCHISE, "치킨"),
+    "멕시카나":    (FRANCHISE, "치킨"),
+    "호식이두마리치킨": (FRANCHISE, "치킨"),
+    "60계":       (FRANCHISE, "치킨"),
+    "네네치킨":    (FRANCHISE, "치킨"),
+    "가마치통닭":  (FRANCHISE, "치킨"),
+    "노랑통닭":    (FRANCHISE, "치킨"),
     "프랭크버거":  (FRANCHISE, "햄버거"),
     "맥도날드":    (FRANCHISE, "햄버거"),
     "오뚜기":      (MAKER, "라면"),
@@ -91,6 +101,27 @@ BRANDS = {
     "아워홈":      (MAKER, "냉동식품"),
     "동서식품":    (MAKER, "커피"),
     "샘표":        (MAKER, "조미료"),
+    # 2026-10-02 추가. 과자·음료 제조사 전수 조사(notes/MAKER-SNACK-DRINK.md)에서
+    # 나온 분이다. 전부 보도자료형(오리온 계보)이고, 신상 판정 근거와 함정은
+    # 각 어댑터 docstring 에 적혀 있다.
+    #   해태제과식품 — 뉴스 JSON API. 제품 API 의 createdDttm·productNewIconYn 은
+    #                 일괄등록·늙은 배지라 안 쓴다
+    #   크라운제과   — 보도자료(날짜) + 제품 카탈로그(사진). ⚠️1페이지 10.8MB
+    #   롯데웰푸드   — 등록일이 일괄이라 released_at 을 비우고 uploaded_at 만 쓴다.
+    #                 전엔 robots 404+HTML·noindex·약관 때문에 뺐는데,
+    #                 운영자가 robots·약관 제약 무시를 승인해 등록한다
+    #   삼양식품     — 보도자료 '제품뉴스' 탭(035002). 사진 없음(상세가 base64)
+    #   빙그레       — 보도자료. 사진은 상세에서 한 장
+    #   매일유업     — 보도자료 11건뿐(게시판 초기화). ⚠️robots 에 `*` 그룹 없음
+    #   하이트진로음료 — 무알코올·생수·탄산 자회사. 사진 없음(상세가 JS).
+    #                   ⚠️테라 제로·하이트제로(논알코올 맥주)는 어댑터가 뺀다
+    "해태제과식품": (MAKER, "과자"),
+    "크라운제과":  (MAKER, "과자"),
+    "롯데웰푸드":  (MAKER, "과자"),
+    "삼양식품":    (MAKER, "라면"),
+    "빙그레":      (MAKER, "음료"),
+    "매일유업":    (MAKER, "음료"),
+    "하이트진로음료": (MAKER, "음료"),
     "배스킨라빈스": (CAFE, "아이스크림"),
     "던킨":        (CAFE, "도넛"),
     "이삭토스트":  (FRANCHISE, "샌드위치"),
@@ -127,6 +158,9 @@ BRANDS = {
     "슬로우캘리":  (FRANCHISE, "샐러드"),
     "포케올데이":  (FRANCHISE, "샐러드"),
     "삼첩분식":    (FRANCHISE, "분식"),
+    "국수나무":    (FRANCHISE, "분식"),
+    "애플꼬마김밥": (FRANCHISE, "분식"),
+    "싸다김밥":    (FRANCHISE, "분식"),
     "스시로":      (FRANCHISE, "일식"),
     # ── 더본코리아 외식 브랜드 ─────────────────────────────────────────
     # theborn.co.kr/brand/representation/ 의 '대표 브랜드' 20개 중 빽다방을 뺀
@@ -161,10 +195,58 @@ BRANDS = {
     # 파스타다. taxonomy.SUBS 에 '양식' 칸을 새로 만들어 붙였다 —
     # 전에는 맞는 칸이 없어서 비워뒀고 그러면 2단 칩에서만 안 보였다.
     "롤링파스타":   (FRANCHISE, "양식"),
+    # ── 중식 (2026-10-02 공정위 가맹점수 전수조사로 합류) ────────────────
+    # 공정위 `중식`(C1) 등록 313개 / 가맹점 5개 이상 99개를 가맹점 수 순으로
+    # 전수 훑었다. 근거와 전체 순위표는 notes/CANDIDATES-CHINESE.md.
+    # 더본코리아 계열(홍콩반점0410·리춘시장·고투웍)은 위 더본 블록에 이미 있다.
+    #
+    # ⚠️ **중식은 메뉴판을 긁으면 안 되는 업종이다.** 상위권 상당수가 마라탕
+    #    브랜드인데 그쪽 '메뉴 페이지'는 상품이 아니라 **탕에 넣는 재료 목록**
+    #    (청경채·분모자·팽이버섯…)이다. 긁으면 재료 70~80개가 전부 '신상'이
+    #    된다. 그래서 대부분 **보도자료·공지 게시판**에서 날짜와 함께 뽑는다
+    #    (GS25·오뚜기·오리온과 같은 방식).
+    # ⚠️ 수집량이 브랜드당 **연 1~4건**으로 적다. 0건이 '수집 실패'가 아니다.
+    "탕화쿵푸마라탕": (FRANCHISE, "중식"),   # 1위 492개
+    "춘리마라탕":   (FRANCHISE, "중식"),   # 3위 202개
+    "보배반점":     (FRANCHISE, "중식"),   # 4위 198개
+    "소림마라":     (FRANCHISE, "중식"),   # 6위 137개
+    "라홍방마라탕": (FRANCHISE, "중식"),   # 8위 129개
+    "짬뽕관":       (FRANCHISE, "중식"),   # 15위 62개
+    "홍짜장":       (FRANCHISE, "중식"),   # 18위 58개
+    "미미관마라탕": (FRANCHISE, "중식"),   # 25위 40개
+    "삼삼마라":     (FRANCHISE, "중식"),   # 94위 5개. 꼬리인데 신호가 깨끗하다
     "KFC":         (FRANCHISE, "치킨"),
     "에그드랍":    (FRANCHISE, "샌드위치"),
     "써브웨이":    (FRANCHISE, "샌드위치"),
+    "퀴즈노스":    (FRANCHISE, "샌드위치"),
     "샐러디":      (FRANCHISE, "샐러드"),
+    # ── 돈까스 (2026-10-02 공정위 가맹점수 전수조사로 합류) ──────────────
+    # 돈까스는 '일식' 으로 넣는다. 공정위 업종 분류에서도 돈까스 전문점 다수가
+    # `일식` 에 등록돼 있고(백소정·하루엔소쿠·유미카츠·카츠백…), 나머지가
+    # `서양식`·`기타 외식`·`분식` 으로 흩어져 있어 공정위 칸을 그대로 쓰면
+    # 같은 업종이 네 칸으로 쪼개진다. 화면에서 찾는 자리는 한 곳이어야 한다.
+    "백소정":      (FRANCHISE, "일식"),
+    "미소야":      (FRANCHISE, "일식"),
+    "긴자료코":    (FRANCHISE, "일식"),
+    "하루엔소쿠":  (FRANCHISE, "일식"),
+    "홍익돈까스":  (FRANCHISE, "일식"),
+    "브라운돈까스": (FRANCHISE, "일식"),
+    # ── 일식 (돈까스 외) ──────────────────────────────────────────────
+    "쿠우쿠우":    (FRANCHISE, "일식"),
+    "미카도스시":  (FRANCHISE, "일식"),
+    "모토이시":    (FRANCHISE, "일식"),
+    "동경에서먹었던규동": (FRANCHISE, "일식"),
+    # ── 한식 ─────────────────────────────────────────────────────────
+    # 한솥만 '도시락' 이다. 공정위 업종은 `한식` 이지만 파는 게 도시락이고
+    # 본도시락·토마토도시락과 같은 칸에 있어야 사용자가 찾는다.
+    "한솥":        (FRANCHISE, "도시락"),
+    "두찜":        (FRANCHISE, "한식"),
+    "담꾹":        (FRANCHISE, "한식"),
+    "유가네":      (FRANCHISE, "한식"),
+    "오봉집":      (FRANCHISE, "한식"),
+    "큰맘할매순대국": (FRANCHISE, "한식"),
+    "원할머니보쌈족발": (FRANCHISE, "한식"),
+    "박가부대":    (FRANCHISE, "한식"),
     # 아래 셋은 robots.txt 는 허용하지만 이용약관이 수집·복제를 금지한다.
     # 운영자 판단으로 수집하되, 삭제 요청이 오면 다투지 말고 즉시 내린다.
     #   이마트24  — 약관 제8조 ⑧ "크롤러, 매크로 프로그램, 스파이더, 스크래퍼 등… 수집"
@@ -174,6 +256,9 @@ BRANDS = {
     #               없이 복제·전송·출판·배포… 영리목적으로 이용하여서는 안 됩니다".
     #               크롤러·스크래퍼 금지 조항은 없다. 제2조가 '이용자' 를 회원으로
     #               정의하고 '영리목적' 단서가 붙어 그대로 걸리는지는 애매하다.
+    #   가마치통닭 — 약관 제10호 "회사의 승인 없이 회사 인터넷 사이트의 서비스 정보
+    #               또는 개인정보를 복제 또는 유통시키거나 상업적으로 이용". 단 그
+    #               조항이 '회원의 의무' 절 안이라 비회원 크롤러에 걸리는지는 애매하다.
     #   샘표      — 같은 성격의 복제·배포 제한. 단 그 조항이 '새미네부엌 커뮤니티'
     #               절 안에 있어 보도자료실에 걸리는지 애매하다. 크롤러 금지 없음.
     #
@@ -232,6 +317,29 @@ SITES = {
     "페리카나":     "https://www.pelicana.co.kr/menu/list",
     # 상품별 주소(/menu/view.php?board_id=)가 Item.url 로 붙으므로 이건 폴백이다.
     "바른치킨":     "https://barunchicken.com/menu/index.php",
+    # 상품 팝업(/popup/product_view?wm_id=)이 Item.url 로 붙으므로 이건 폴백이다.
+    "누구나홀딱반한닭": "https://www.nuguna-banhandak.co.kr/product/list?ca_id=01",
+    "후라이드 참 잘하는집": "https://www.hoocham.com/menu/menu1?ca_id=01",
+    # 최상위는 브랜드/창업 포털 스플래시라 메뉴 페이지를 직접 건다.
+    "꾸브라꼬숯불치킨": "https://kkubeurakko.com/menu-1/",
+    # 상품별 주소(?bmode=view&idx=)가 Item.url 로 붙으므로 이건 폴백이다.
+    "치킨플러스":   "https://chickenplus.co.kr/CHICKEN",
+    # 대문(mexicana.co.kr)은 /intro.asp 인트로로 떨어진다. 메뉴는 여기다.
+    # 상품별 페이지가 없어(카드에 <a> 가 없다) 이게 유일한 링크다.
+    "멕시카나":     "https://www.mexicana.co.kr/menu/product.asp",
+    # ⚠️ 도메인이 대표번호다 — hosigi.co.kr 가 아니다. 수집은 /chicken·/parts·
+    # /side 에서 하지만(/menu 는 3건이 빠져 있다) 사람이 여는 전체 면은 /menu 다.
+    "호식이두마리치킨": "https://www.9922.co.kr/menu",
+    # ⚠️ 60ke.co.kr 는 NXDOMAIN, 60ke.com 은 주차 페이지다.
+    # 상세가 href 없는 JS 팝업이라 이게 유일한 링크다.
+    "60계":        "https://60chicken.co.kr/bbs/content.php?co_id=menu",
+    # 상품별 주소(/home_menu_detail.asp?no=)가 Item.url 로 붙으므로 이건 폴백이다.
+    "네네치킨":     "https://nenechicken.com/home_menu.asp",
+    # 상품별 주소(/b/menu/<wr_id>)가 Item.url 로 붙으므로 이건 폴백이다.
+    "가마치통닭":   "https://www.gamachi.co.kr/b/menu",
+    # ⚠️ .com 은 남의 빈 호스트다(collectors/chicken_norang.py 참고).
+    # apex 는 브랜드/창업 두 장짜리 스플래시라 메뉴 첫 장을 쓴다.
+    "노랑통닭":     "https://norangtongdak.co.kr/menu/chicken_list.html",
     "피자헛":       "https://www.pizzahut.co.kr/menu",
     "미스터피자":   "https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu",
     "파파존스":     "https://pji.co.kr/menu/pizza",
@@ -274,6 +382,12 @@ SITES = {
     "포케올데이":   "https://pokeallday.co.kr/poke",
     # /bbs/board.php 쪽 게시판은 403 이다. content.php 가 열린 경로다.
     "삼첩분식":     "https://samcheop.com/bbs/content.php?co_id=menu&tab=1",
+    # 글별 주소가 Item.url 로 붙는다. 이건 폴백이고, 메뉴 쪽을 건다.
+    "국수나무":     "https://www.namuya.co.kr/food/food.php",
+    # 글별 주소가 Item.url 로 붙는다. 이건 폴백이고 메뉴 쪽을 건다.
+    "애플꼬마김밥": "https://apple-food.co.kr/bbs/board.php?bo_table=menu",
+    # ssadagimbab.co.kr 은 NXDOMAIN 이다. 사는 건 ssadagb.com 쪽이다.
+    "싸다김밥":     "https://www.ssadagb.com/menu/list?cate_no=23",
     "매머드커피":   "https://mmthcoffee.com/sub/menu/new_list.php",
     "더벤티":       "https://theventi.co.kr/new2022/menu/all.html",
     "컴포즈커피":   "https://composecoffee.com/index1",
@@ -281,7 +395,31 @@ SITES = {
     "스시로":       "https://www.sushiro.co.kr/pm",
     "에그드랍":     "http://www.eggdrop.co.kr/menu/list.php?category=NEW",
     "써브웨이":     "https://www.subway.co.kr/menuList/sandwich",
+    # https 가 자체서명이라 평문 http 뿐이다. 근거는 collectors/sandwich_quiznos.py docstring.
+    "퀴즈노스":     "http://quiznos.co.kr/menu/menu.php",
     "샐러디":       "https://salady.com/menu/list_1",
+    # 돈까스 6곳. 상품별 주소가 Item.url 로 붙는 곳이 많아 대부분 폴백이다.
+    "백소정":       "https://baeksojeong.com/35",
+    "미소야":       "https://www.misoya.co.kr/menu",
+    "긴자료코":     "https://ginzaryoko.co.kr/signature-menu-list/signature.view",
+    "하루엔소쿠":   "https://haruensoku.co.kr/",
+    "홍익돈까스":   "https://www.hongikdonkatsu.com/menu",
+    "브라운돈까스": "https://browntonkatsu.com/sub/menu6.php",
+    # 일식 4곳. 넷 다 글별 주소가 Item.url 로 붙으므로 이건 폴백이다.
+    # 쿠우쿠우만 상품 목록 페이지가 없어 '신메뉴 소개' 페이지를 폴백으로 둔다(GS25 선례).
+    "쿠우쿠우":     "https://www.qooqoo.co.kr/page/?pid=newMenu",
+    "미카도스시":   "https://www.mikadosushi.co.kr/bbs/board.php?bo_table=menu",
+    "모토이시":     "https://motoishi.co.kr/introduce-menu/main-menu.php",
+    "동경에서먹었던규동": "https://tokyo-gyudong.com/menu",
+    # 한식 4곳. 큰맘할매순대국·원앤원 둘은 상품 상세 페이지가 아예 없어 폴백이 본 링크다.
+    "한솥":         "https://www.hsd.co.kr/menu/menu_list",
+    "두찜":        "https://twozzim.com/bbs/content.php?co_id=menu",
+    "담꾹":        "https://www.damgguk.com/recipe/menus/",
+    "유가네":      "https://www.yoogane.co.kr/menu/menu.html",
+    "오봉집":      "https://www.obongzip.com/mainmenu",
+    "큰맘할매순대국": "https://www.keunmam.co.kr/html/menu.html",
+    "원할머니보쌈족발": "https://wonandone.co.kr/bossam/menu.asp",
+    "박가부대":     "https://wonandone.co.kr/parkga/menu.asp",
     "맥도날드":     "https://www.mcdonalds.co.kr/kor/menu/burger",
     "오뚜기":       "https://www.otoki.com/pr/news?searchNewsCategory=PRESS",
     "팔도":         "https://www.paldofood.co.kr/product/noodle",
@@ -296,6 +434,15 @@ SITES = {
     "아워홈":      "https://www.ourhome.co.kr/front/newsboardlist.do",
     "동서식품":    "https://www.dongsuh.co.kr/product/list/1",
     "샘표":        "https://www.sempio.com/news/press-release",
+    # 상품별 주소가 Item.url 로 붙는 곳은 이게 폴백이다. 해태·삼양·하이트진로음료는
+    # 상세가 SPA 셸이거나 사진이 없어 목록 주소를 그대로 쓴다.
+    "해태제과식품": "https://www.ht.co.kr/sweet/news",
+    "크라운제과":  "https://www.crown.co.kr/product/index?searchCateCd=1478063307",
+    "롯데웰푸드":  "https://www.lottewellfood.com/prcenter/news",
+    "삼양식품":    "https://www.samyangfoods.com/kor/publicity/press/list.do?searchCateCd=035002",
+    "빙그레":      "https://www.bing.co.kr/news/news_announced",
+    "매일유업":    "https://www.maeil.com/news/press.jsp",
+    "하이트진로음료": "https://www.hitejinrobeverage.com/ko/community/news",
     # ── 더본코리아 외식 브랜드 ─────────────────────────────────────────
     # 상품별 주소(보도자료 기사)가 Item.url 로 붙으므로 이건 전부 폴백이다.
     # 자체 도메인이 있으면 그 브랜드의 **메뉴 페이지**를, 없으면 theborn.co.kr 의
@@ -329,6 +476,23 @@ SITES = {
     # KFC 는 상품 카탈로그(/allmenu)가 클라이언트 렌더라 HTML 에 0건이다.
     # 어댑터가 읽는 '신메뉴' 면이 사람에게도 가장 쓸모 있는 폴백이다.
     "KFC":         "https://www.kfckorea.com/promotion/newMenu",
+    # ── 중식 ─────────────────────────────────────────────────────────
+    # 상품별 주소(보도자료·공지 상세)는 Item.url 로 붙으므로 이건 폴백이다.
+    # 어댑터가 메뉴 페이지를 '안 읽는' 브랜드도 링크는 메뉴 쪽으로 보낸다 —
+    # 사람이 누르면 재료 목록이라도 그 브랜드를 보는 자리가 맞다.
+    "탕화쿵푸마라탕": "https://tanghuokungfu.co.kr/default/brand/menu/menu.php",
+    "춘리마라탕":   "https://chunlimalatang.com/menu/",
+    "보배반점":     "https://bobaebanjum.co.kr/menu/main.php",
+    "소림마라":     "https://sorimmara.co.kr/html/menu.html",
+    "라홍방마라탕": "https://www.lahongbang.com/page.php?p_id=menu",
+    # 한글 도메인 짬뽕관.com. 신메뉴 글별 주소가 Item.url 로 붙으므로 폴백이다.
+    # 사람이 열 자리는 공지 목록보다 메뉴판이다(NEW 배지가 거기 있다).
+    "짬뽕관":       "https://www.xn--zb0bq16amwh.com/menu",
+    # 한 장짜리 랜딩에 메뉴 28건이 박혀 있다. 메뉴 섹션 앵커가 없어 루트로 보낸다.
+    "홍짜장":       "https://hongjjajang.com/",
+    "미미관마라탕": "https://mimimara.co.kr/16",
+    # 한글 도메인 삼삼마라.com. 한 장짜리 사이트라 메뉴가 앵커(#doz_menu_19)다.
+    "삼삼마라":     "https://xn--oi2bo7bt0ja.com/",
 }
 
 

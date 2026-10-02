@@ -30,12 +30,24 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
                         pizza_pizzahut,
                         seven, starbucks, toast_isaac)
 from collectors import dongsuh, fredit, gs25, lottechilsung, ourhome, sempio
+# 과자·음료 제조사 2차(2026-10-02). 매출 순위 기준 전수 조사에서 나왔다 —
+# 근거와 순위표는 notes/MAKER-SNACK-DRINK.md, 브랜드별 함정은 각 docstring.
+from collectors import (maker_binggrae, maker_crown, maker_haitai,
+                        maker_hitejinrobev, maker_lottewellfood, maker_maeil,
+                        maker_samyang)
 # 주류. 성인 인증 게이트가 없는 유일한 곳이다(notes/CANDIDATES-ALCOHOL.md).
 from collectors import alcohol_hitejinro
+# 한식 중위권. 공정위 가맹점 수 188~603위 구간(notes/CANDIDATES-KATSU-JPN-KOR.md).
+from collectors import (korean_damgguk, korean_obongzip, korean_twozzim,
+                        korean_yoogane)
 # 치킨 2차. 공정위 가맹점 수 상위에서 신제품 신호가 확인된 곳들
 # (근거는 notes/CANDIDATES-CHICKEN2.md).
-from collectors import (chicken_barun, chicken_boor, chicken_cheogajip,
-                        chicken_jadam,
+from collectors import (chicken_60chicken, chicken_barun, chicken_boor,
+                        chicken_cheogajip,
+                        chicken_chickenplus, chicken_hoocham, chicken_jadam,
+                        chicken_gamachi, chicken_kkubeurakko, chicken_mexicana,
+                        chicken_hosigi, chicken_nene, chicken_norang,
+                        chicken_nuguna,
                         chicken_pelicana, chicken_puradak, chicken_toreore,
                         chicken_ttangttang)
 # 더본코리아 외식 브랜드(보도자료 18 + 한신포차)와 KFC(브랜드 신메뉴 면).
@@ -43,8 +55,29 @@ from collectors import hanshinpocha, kfc, theborn
 # 분식 2차. 공정위 '분식' 업종 가맹점 수 상위에서 신제품 신호가 확인된 곳들.
 # 김밥·떡볶이·우동을 따로 떼지 않고 전부 '분식' 한 칸에 넣는다(공정위 업종과 같다).
 # salad_* 둘은 같은 조사에서 나온 샐러드 축이다. 근거는 notes/CANDIDATES-SNACK2.md.
-from collectors import (salad_pokeallday, salad_slowcali, snack_gimgane,
-                        snack_samcheop, snack_schoolfood, snack_yumsem)
+from collectors import (salad_pokeallday, salad_slowcali,
+                        snack_applefood, snack_gimgane,
+                        snack_namuya, snack_samcheop, snack_schoolfood,
+                        snack_ssada, snack_yumsem)
+# 돈까스·일식·한식·샌드위치 2차. 공정위 가맹점 수 상위를 전수로 훑어 신제품
+# 신호가 실재하는 곳만 골랐다. 근거는 notes/CANDIDATES-KATSU-JPN-KOR.md.
+# 돈까스는 공정위 업종이 일식·서양식·기타외식·분식으로 흩어져 있어 전부
+# '일식' 한 칸에 모았다(사유는 base.BRANDS 주석).
+from collectors import (japan_motoishi, japan_tokyogyudong, katsu_baeksojeong,
+                        katsu_brown, katsu_ginzaryoko, katsu_haruensoku,
+                        katsu_hongik, katsu_misoya, korean_hansot,
+                        korean_keunmam, korean_wonandone, sandwich_quiznos,
+                        sushi_mikado, sushi_qooqoo)
+# 중식. 공정위 `중식` 업종 가맹점 수 전수(99개 브랜드)를 훑어 신제품 신호가
+# 실재하는 곳만 골랐다. 근거와 순위표는 notes/CANDIDATES-CHINESE.md.
+# ⚠️ 이 업종은 **메뉴판을 긁지 않는다.** 상위권 다수가 마라탕 브랜드인데
+#    그쪽 메뉴 페이지는 상품이 아니라 탕에 넣는 재료 목록이다. 그래서
+#    대부분 보도자료·공지 게시판에서 날짜와 함께 뽑는다(GS25 와 같은 방식).
+#    브랜드당 연 1~4건이라 0건이 '수집 실패'가 아니다.
+#    더본코리아 계열(홍콩반점0410·리춘시장·고투웍)은 theborn 담당이라 뺐다.
+from collectors import (china_bobae, china_chunli, china_hongjjajang,
+                        china_jjambbonggwan, china_lahongbang, china_mimigwan,
+                        china_samsammara, china_sorimmara, china_tanghuo)
 import rules
 import taxonomy
 from web import home
@@ -62,17 +95,26 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             maker_ottogi, maker_paldo, maker_orion,                  # 제조사(과자·라면)
             lottechilsung, fredit, ourhome,             # 제조사(음료·냉동식품)
             dongsuh, sempio,                            # 제조사(커피·조미료)
+            # 과자·음료 제조사 2차. 전부 보도자료형(오리온 계보)이다.
+            maker_haitai, maker_crown, maker_lottewellfood,   # 과자
+            maker_samyang,                                    # 라면·스낵
+            maker_binggrae, maker_maeil, maker_hitejinrobev,  # 음료
             alcohol_hitejinro,                          # 제조사(주류)
+            korean_twozzim, korean_damgguk,             # 한식 중위권
+            korean_yoogane, korean_obongzip,
             chicken_bbq, chicken_bhc, chicken_kyochon, chicken_goobne,  # 치킨
             chicken_cheogajip, chicken_puradak, chicken_jadam,
             chicken_toreore, chicken_boor, chicken_ttangttang,
-            chicken_pelicana, chicken_barun,
+            chicken_pelicana, chicken_barun, chicken_nuguna, chicken_hoocham,
+            chicken_kkubeurakko, chicken_chickenplus,
+            chicken_mexicana, chicken_hosigi, chicken_60chicken,
+            chicken_nene, chicken_gamachi, chicken_norang,
             pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
             toast_isaac, snack_kimbabcheonguk, snack_barunkim,       # 분식
             snack_jaws, snack_myungrang,
             snack_yumsem, snack_gimgane, snack_schoolfood,  # 분식 2차
-            snack_samcheop,
+            snack_samcheop, snack_namuya, snack_applefood, snack_ssada,
             salad_slowcali, salad_pokeallday,               # 샐러드 2차
             bakery_parisbaguette, bakery_napoleon, bakery_breadnco,  # 베이커리
             bakery_hongruijen, bakery_knotted, bakery_samsong,
@@ -85,6 +127,18 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             # 그래서 theborn 에서 빼고 따로 둔다 — 겹치면 키가 두 번 담긴다.
             hanshinpocha,
             sushi_sushiro, sandwich_eggdrop, sandwich_subway,        # 일식·샌드위치
+            sandwich_quiznos,
+            katsu_baeksojeong, katsu_misoya, katsu_ginzaryoko,       # 돈까스(→일식)
+            katsu_haruensoku, katsu_hongik, katsu_brown,
+            sushi_qooqoo, sushi_mikado,                              # 일식 2차
+            japan_motoishi, japan_tokyogyudong,
+            korean_hansot, korean_keunmam, korean_wonandone,         # 한식 2차
+            # 중식. 보도자료·공지 게시판형 5 + 메뉴 NEW 배지형 1(소림마라).
+            # 소림마라는 배지가 2023년에 멈춰 있어 화면에 0건이 정상이다
+            # (사유는 collectors/china_sorimmara.py docstring).
+            china_tanghuo, china_chunli, china_bobae,
+            china_sorimmara, china_lahongbang, china_jjambbonggwan,
+            china_hongjjajang, china_mimigwan, china_samsammara,
             salad_salady]                                            # 샐러드
 # 롯데리아·빕스·GS25 는 뺀다. 사유는 base.BRANDS 주석 참고.
 

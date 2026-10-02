@@ -133,7 +133,10 @@ _SKIP = ("돌파", "완판", "누적", "성료", "수상", "선정", "채용", "
          "경연", "시상", "간담회", "개최", "스폰서", "리뉴얼", "실적",
          "매진", "진행", "참가", "참여", "전개", "지원", "프로젝트",
          # 크라운 실측 추가분. 지주의 메세나·행사 축이다.
-         "국악", "조각", "창신제", "한음", "공연", "축제", "대회", "출간",
+         # ⚠️ `조각` 두 글자로 넣지 마라 — '조각케이크'·'조각치즈' 같은 상품명을
+         #    문다. 메세나 기사는 전부 주어가 '크라운해태' 라 `_HOLDING` 이
+         #    이미 잡으므로, 여기선 좁은 형태만 둔다.
+         "국악", "조각전", "조각가", "창신제", "한음", "공연", "축제", "대회", "출간",
          # 국내 출시가 아닌 건 화면에 올리면 거짓이 된다.
          "日", "美", "글로벌", "수출", "해외")
 _BETWEEN = ("협업", "컬래버", "콜라보", "브랜드", "메뉴", "에디션", "테마", "전용 앱")
@@ -205,6 +208,12 @@ def _flat(s: str) -> str:
 def _abs_image(src: str) -> str:
     """상품 사진 주소. 파일명에 한글·공백이 들어 있어 퍼센트 인코딩이 필요하다.
 
+    ⚠️ **`/upload/` 로 시작하는 것만 받는다.** 그러지 않으면 `li.item` 안의 첫
+       `<img>` 가 **'NEW' 배지 아이콘**(`/resources/image/web/common/img_tag_new.png?2`)
+       이라 상품 사진 대신 배지가 담긴다. 2026-10-02 에 실제로 그렇게 나가서
+       5건 중 3건의 이미지가 404 로 돌아왔다(아래 `?2` 함정과 겹쳐서).
+    ⚠️ **쿼리(`?2`)를 인코딩하면 안 된다.** `quote()` 에 통째로 넘기면 `?` 가
+       `%3F` 가 돼 서버가 파일명의 일부로 읽고 404 를 준다. 경로만 인코딩한다.
     ⚠️ `data:` 로 시작하면 버린다. 보도자료 썸네일이 전부 인라인 base64 인데
        `base.derive()` 는 `http://` 만 거르므로 여기서 막지 않으면 수백 KB 짜리
        문자열이 products.json 에 박힌다.
@@ -214,7 +223,10 @@ def _abs_image(src: str) -> str:
         return ""
     if src.startswith("http"):
         return src if src.startswith("https://") else ""
-    return SITE + quote(src)
+    if not src.startswith("/upload/"):
+        return ""          # NEW 배지·레이아웃 아이콘. 상품 사진이 아니다.
+    path, sep, query = src.partition("?")
+    return SITE + quote(path) + (sep + query if sep else "")
 
 
 def _product_images(c) -> dict:
@@ -231,11 +243,15 @@ def _product_images(c) -> dict:
         r.raise_for_status()
         for node in HTMLParser(r.text).css("li.item"):
             strong = node.css_first("strong")
-            img = node.css_first("img")
             if not strong:
                 continue
             name = " ".join(strong.text().split())
-            url = _abs_image(img.attributes.get("src") if img else "")
+            # 첫 img 가 'NEW' 배지일 수 있다. 상품 사진(/upload/)을 찾아 쓴다.
+            url = ""
+            for img in node.css("img"):
+                url = _abs_image(img.attributes.get("src") or "")
+                if url:
+                    break
             if name and url:
                 out.setdefault(_flat(name), url)
     if not out:

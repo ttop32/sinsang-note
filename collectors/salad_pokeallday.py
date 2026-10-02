@@ -132,4 +132,11 @@ def fetch() -> list[Item]:
                     continue
                 keys.add(it.key)
                 items.append(it)
+
+    # 이 브랜드의 신호는 배지 하나뿐이다(날짜가 없다). `div.new_badge` 가
+    # 안 잡히면 건수는 35 그대로라 collect 의 0건·급감 가드에 안 걸리고,
+    # 화면에서만 조용히 '신상 없는 브랜드' 가 된다. 로그에 이유를 남긴다.
+    if items and not any(i.is_new for i in items):
+        print(f"[{BRAND}] new_badge 가 0건이다 — 배지가 사라진 건지 "
+              f"선택자가 깨진 건지 확인해야 한다")
     return items
