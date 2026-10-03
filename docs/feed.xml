@@ -5,7 +5,7 @@
  <id>https://ttop32.github.io/sinsang-note/</id>
  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/"/>
  <link rel="self" type="application/atom+xml" href="https://ttop32.github.io/sinsang-note/feed.xml"/>
- <updated>2026-10-03T08:04:26Z</updated>
+ <updated>2026-10-03T08:15:26Z</updated>
  <author><name>신상노트</name></author>
  <rights>상품 정보와 이미지의 저작권은 각 브랜드에 있습니다.</rights>
  <entry>
@@ -584,32 +584,35 @@
  <entry>
   <title>쑥인절미 빙수</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EC%91%A5%EC%9D%B8%EC%A0%88%EB%AF%B8-%EB%B9%99%EC%88%98/"/>
+  <link rel="enclosure" type="image/png" href="https://static.wixstatic.com/media/28b05a_c9cc28df78ab423a848535972c4b9c7a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EC%91%A5%EC%9D%B8%EC%A0%88%EB%AF%B8%EB%B9%99%EC%88%98_%EB%B0%B0%EB%8B%AC%EC%95%B1.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EC%91%A5%EC%9D%B8%EC%A0%88%EB%AF%B8-%EB%B9%99%EC%88%98/</id>
   <updated>2026-10-03T00:00:00Z</updated>
   <author><name>빙동댕</name></author>
   <category term="빙동댕"/>
   <summary type="text">쑥과 인절미가 포근하게 어우러지는 쫀득고소한 매력 가득한 빙수</summary>
-  <content type="html">&lt;p&gt;쑥과 인절미가 포근하게 어우러지는 쫀득고소한 매력 가득한 빙수&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://static.wixstatic.com/media/28b05a_c9cc28df78ab423a848535972c4b9c7a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EC%91%A5%EC%9D%B8%EC%A0%88%EB%AF%B8%EB%B9%99%EC%88%98_%EB%B0%B0%EB%8B%AC%EC%95%B1.png&quot; alt=&quot;쑥인절미 빙수&quot;&gt;&lt;/p&gt;&lt;p&gt;쑥과 인절미가 포근하게 어우러지는 쫀득고소한 매력 가득한 빙수&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>망고왔자몽 요거트</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD-%EC%9A%94%EA%B1%B0%ED%8A%B8/"/>
+  <link rel="enclosure" type="image/png" href="https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD-%EC%9A%94%EA%B1%B0%ED%8A%B8/</id>
   <updated>2026-10-03T00:00:00Z</updated>
   <author><name>빙동댕</name></author>
   <category term="빙동댕"/>
   <summary type="text">망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력</summary>
-  <content type="html">&lt;p&gt;망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png&quot; alt=&quot;망고왔자몽 요거트&quot;&gt;&lt;/p&gt;&lt;p&gt;망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>망고왔자몽</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD/"/>
+  <link rel="enclosure" type="image/png" href="https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD/</id>
   <updated>2026-10-03T00:00:00Z</updated>
   <author><name>빙동댕</name></author>
   <category term="빙동댕"/>
   <summary type="text">망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력</summary>
-  <content type="html">&lt;p&gt;망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png&quot; alt=&quot;망고왔자몽&quot;&gt;&lt;/p&gt;&lt;p&gt;망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>프응 야생화 꿀 토마토 주스</title>
@@ -1745,142 +1748,156 @@
  <entry>
   <title>치킨 마요 덮밥</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%B9%98%ED%82%A8-%EB%A7%88%EC%9A%94-%EB%8D%AE%EB%B0%A5/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/ceabe0dc3b8b4245.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%B9%98%ED%82%A8-%EB%A7%88%EC%9A%94-%EB%8D%AE%EB%B0%A5/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">스쿨푸드 시그니처 마요소스의 깊고 부드러운 맛이 살아있는 치킨 마요 덮밥</summary>
-  <content type="html">&lt;p&gt;스쿨푸드 시그니처 마요소스의 깊고 부드러운 맛이 살아있는 치킨 마요 덮밥&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/ceabe0dc3b8b4245.webp&quot; alt=&quot;치킨 마요 덮밥&quot;&gt;&lt;/p&gt;&lt;p&gt;스쿨푸드 시그니처 마요소스의 깊고 부드러운 맛이 살아있는 치킨 마요 덮밥&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>치즈스틱</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%B9%98%EC%A6%88%EC%8A%A4%ED%8B%B1/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/3bef326379bb7981.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%B9%98%EC%A6%88%EC%8A%A4%ED%8B%B1/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">한입 가득 모짜렐라 치즈가 쭉 늘어나는 쌀가루 치즈스틱</summary>
-  <content type="html">&lt;p&gt;한입 가득 모짜렐라 치즈가 쭉 늘어나는 쌀가루 치즈스틱&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/3bef326379bb7981.webp&quot; alt=&quot;치즈스틱&quot;&gt;&lt;/p&gt;&lt;p&gt;한입 가득 모짜렐라 치즈가 쭉 늘어나는 쌀가루 치즈스틱&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>치즈돈까스</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%B9%98%EC%A6%88%EB%8F%88%EA%B9%8C%EC%8A%A4/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/755d069b98130e94.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%B9%98%EC%A6%88%EB%8F%88%EA%B9%8C%EC%8A%A4/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">바삭하게 튀겨낸 돈까스 속에 고소한 치즈를 가득 담은 치즈돈까스</summary>
-  <content type="html">&lt;p&gt;바삭하게 튀겨낸 돈까스 속에 고소한 치즈를 가득 담은 치즈돈까스&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/755d069b98130e94.webp&quot; alt=&quot;치즈돈까스&quot;&gt;&lt;/p&gt;&lt;p&gt;바삭하게 튀겨낸 돈까스 속에 고소한 치즈를 가득 담은 치즈돈까스&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>치즈 길떡 돈까스</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%B9%98%EC%A6%88-%EA%B8%B8%EB%96%A1-%EB%8F%88%EA%B9%8C%EC%8A%A4/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/a5e9fd0881ba8548.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%B9%98%EC%A6%88-%EA%B8%B8%EB%96%A1-%EB%8F%88%EA%B9%8C%EC%8A%A4/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">매운 떡볶이와 고소한 치즈, 바삭한 돈까스의 완벽한 조합</summary>
-  <content type="html">&lt;p&gt;매운 떡볶이와 고소한 치즈, 바삭한 돈까스의 완벽한 조합&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/a5e9fd0881ba8548.webp&quot; alt=&quot;치즈 길떡 돈까스&quot;&gt;&lt;/p&gt;&lt;p&gt;매운 떡볶이와 고소한 치즈, 바삭한 돈까스의 완벽한 조합&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>짱아치 충무마리</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%A7%B1%EC%95%84%EC%B9%98-%EC%B6%A9%EB%AC%B4%EB%A7%88%EB%A6%AC/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/be2ee0a3efe18b1c.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%A7%B1%EC%95%84%EC%B9%98-%EC%B6%A9%EB%AC%B4%EB%A7%88%EB%A6%AC/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">오징어·어묵·짱아치가 완성하는 충무의 삼합</summary>
-  <content type="html">&lt;p&gt;오징어·어묵·짱아치가 완성하는 충무의 삼합&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/be2ee0a3efe18b1c.webp&quot; alt=&quot;짱아치 충무마리&quot;&gt;&lt;/p&gt;&lt;p&gt;오징어·어묵·짱아치가 완성하는 충무의 삼합&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>전복마리</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%A0%84%EB%B3%B5%EB%A7%88%EB%A6%AC/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/292354a2a66cb78b.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%A0%84%EB%B3%B5%EB%A7%88%EB%A6%AC/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">간장소스에 졸인 전복과 짱아치로 맛을 낸 마리</summary>
-  <content type="html">&lt;p&gt;간장소스에 졸인 전복과 짱아치로 맛을 낸 마리&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/292354a2a66cb78b.webp&quot; alt=&quot;전복마리&quot;&gt;&lt;/p&gt;&lt;p&gt;간장소스에 졸인 전복과 짱아치로 맛을 낸 마리&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>전복 계란 마리</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%A0%84%EB%B3%B5-%EA%B3%84%EB%9E%80-%EB%A7%88%EB%A6%AC/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/56a85d6aa8e498e2.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%A0%84%EB%B3%B5-%EA%B3%84%EB%9E%80-%EB%A7%88%EB%A6%AC/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">간장소스에 졸인 전복과 짱아치로 맛을 내 계란옷을 입힌 마리</summary>
-  <content type="html">&lt;p&gt;간장소스에 졸인 전복과 짱아치로 맛을 내 계란옷을 입힌 마리&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/56a85d6aa8e498e2.webp&quot; alt=&quot;전복 계란 마리&quot;&gt;&lt;/p&gt;&lt;p&gt;간장소스에 졸인 전복과 짱아치로 맛을 내 계란옷을 입힌 마리&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>어간장 들기름 막국수</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%96%B4%EA%B0%84%EC%9E%A5-%EB%93%A4%EA%B8%B0%EB%A6%84-%EB%A7%89%EA%B5%AD%EC%88%98/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/6eb18401f825faed.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%96%B4%EA%B0%84%EC%9E%A5-%EB%93%A4%EA%B8%B0%EB%A6%84-%EB%A7%89%EA%B5%AD%EC%88%98/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">고소한 들기름과 감칠맛 가득한 제주 어간장을 베이스로 만든 메밀 막국수</summary>
-  <content type="html">&lt;p&gt;고소한 들기름과 감칠맛 가득한 제주 어간장을 베이스로 만든 메밀 막국수&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/6eb18401f825faed.webp&quot; alt=&quot;어간장 들기름 막국수&quot;&gt;&lt;/p&gt;&lt;p&gt;고소한 들기름과 감칠맛 가득한 제주 어간장을 베이스로 만든 메밀 막국수&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>소불고기 덮밥</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%86%8C%EB%B6%88%EA%B3%A0%EA%B8%B0-%EB%8D%AE%EB%B0%A5/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/aad80c342ac8fae0.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%86%8C%EB%B6%88%EA%B3%A0%EA%B8%B0-%EB%8D%AE%EB%B0%A5/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">달짝지근한 특제 소스로 볶아낸 부드러운 소불고기를 따뜻한 밥 위에 푸짐하게 담은 덮밥</summary>
-  <content type="html">&lt;p&gt;달짝지근한 특제 소스로 볶아낸 부드러운 소불고기를 따뜻한 밥 위에 푸짐하게 담은 덮밥&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/aad80c342ac8fae0.webp&quot; alt=&quot;소불고기 덮밥&quot;&gt;&lt;/p&gt;&lt;p&gt;달짝지근한 특제 소스로 볶아낸 부드러운 소불고기를 따뜻한 밥 위에 푸짐하게 담은 덮밥&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>새우튀김 냉우동</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%83%88%EC%9A%B0%ED%8A%80%EA%B9%80-%EB%83%89%EC%9A%B0%EB%8F%99/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/b46ba20335c9fc4e.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EC%83%88%EC%9A%B0%ED%8A%80%EA%B9%80-%EB%83%89%EC%9A%B0%EB%8F%99/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">달콤짭짤한 국물에 고소한 새우튀김을 함께 먹는 시원한 냉우동</summary>
-  <content type="html">&lt;p&gt;달콤짭짤한 국물에 고소한 새우튀김을 함께 먹는 시원한 냉우동&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/b46ba20335c9fc4e.webp&quot; alt=&quot;새우튀김 냉우동&quot;&gt;&lt;/p&gt;&lt;p&gt;달콤짭짤한 국물에 고소한 새우튀김을 함께 먹는 시원한 냉우동&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>모둠튀김</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EB%AA%A8%EB%91%A0%ED%8A%80%EA%B9%80/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/f2dce688ea134d21.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EB%AA%A8%EB%91%A0%ED%8A%80%EA%B9%80/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">바삭한 해물야채튀김, 만두 2종, 김말이, 오징어튀김을 한 번에 즐기는 푸짐한 모둠 튀김(8pcs)</summary>
-  <content type="html">&lt;p&gt;바삭한 해물야채튀김, 만두 2종, 김말이, 오징어튀김을 한 번에 즐기는 푸짐한 모둠 튀김(8pcs)&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/f2dce688ea134d21.webp&quot; alt=&quot;모둠튀김&quot;&gt;&lt;/p&gt;&lt;p&gt;바삭한 해물야채튀김, 만두 2종, 김말이, 오징어튀김을 한 번에 즐기는 푸짐한 모둠 튀김(8pcs)&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>마라떡볶이</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EB%A7%88%EB%9D%BC%EB%96%A1%EB%B3%B6%EC%9D%B4/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/6c5f0bc99a93d641.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EB%A7%88%EB%9D%BC%EB%96%A1%EB%B3%B6%EC%9D%B4/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">마라의 얼얼한 감칠맛을 담은 떡볶이! 다양한 토핑을 추가해 더욱 든든하게!</summary>
-  <content type="html">&lt;p&gt;마라의 얼얼한 감칠맛을 담은 떡볶이! 다양한 토핑을 추가해 더욱 든든하게!&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/6c5f0bc99a93d641.webp&quot; alt=&quot;마라떡볶이&quot;&gt;&lt;/p&gt;&lt;p&gt;마라의 얼얼한 감칠맛을 담은 떡볶이! 다양한 토핑을 추가해 더욱 든든하게!&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>들기름 순대야채볶음</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EB%93%A4%EA%B8%B0%EB%A6%84-%EC%88%9C%EB%8C%80%EC%95%BC%EC%B1%84%EB%B3%B6%EC%9D%8C/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/03593d47e5c26066.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EB%93%A4%EA%B8%B0%EB%A6%84-%EC%88%9C%EB%8C%80%EC%95%BC%EC%B1%84%EB%B3%B6%EC%9D%8C/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">양배추와 당근의 아삭한 식감, 깻잎의 향긋함과 고소한 들기름의 풍미가 어우러진 순대볶음</summary>
-  <content type="html">&lt;p&gt;양배추와 당근의 아삭한 식감, 깻잎의 향긋함과 고소한 들기름의 풍미가 어우러진 순대볶음&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/03593d47e5c26066.webp&quot; alt=&quot;들기름 순대야채볶음&quot;&gt;&lt;/p&gt;&lt;p&gt;양배추와 당근의 아삭한 식감, 깻잎의 향긋함과 고소한 들기름의 풍미가 어우러진 순대볶음&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>고구마튀김</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EA%B3%A0%EA%B5%AC%EB%A7%88%ED%8A%80%EA%B9%80/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/3ec2dd08dafed184.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8A%A4%EC%BF%A8%ED%91%B8%EB%93%9C-%EA%B3%A0%EA%B5%AC%EB%A7%88%ED%8A%80%EA%B9%80/</id>
   <updated>2026-10-02T00:00:00Z</updated>
   <author><name>스쿨푸드</name></author>
   <category term="스쿨푸드"/>
   <summary type="text">달콤한 고구마를 쫀득한 겉피로 감싸 노릇하게 튀겨낸 고구마튀김</summary>
-  <content type="html">&lt;p&gt;달콤한 고구마를 쫀득한 겉피로 감싸 노릇하게 튀겨낸 고구마튀김&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/3ec2dd08dafed184.webp&quot; alt=&quot;고구마튀김&quot;&gt;&lt;/p&gt;&lt;p&gt;달콤한 고구마를 쫀득한 겉피로 감싸 노릇하게 튀겨낸 고구마튀김&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>토쿠네타８관 셋트</title>
@@ -2511,13 +2528,14 @@
  <entry>
   <title>숯불치킨 샌드위치</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%80%B4%EC%A6%88%EB%85%B8%EC%8A%A4-%EC%88%AF%EB%B6%88%EC%B9%98%ED%82%A8-%EC%83%8C%EB%93%9C%EC%9C%84%EC%B9%98/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/fcb56be51829fae7.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%80%B4%EC%A6%88%EB%85%B8%EC%8A%A4-%EC%88%AF%EB%B6%88%EC%B9%98%ED%82%A8-%EC%83%8C%EB%93%9C%EC%9C%84%EC%B9%98/</id>
   <published>2026-09-07T00:00:00Z</published>
   <updated>2026-09-07T00:00:00Z</updated>
   <author><name>퀴즈노스</name></author>
   <category term="퀴즈노스"/>
   <summary type="text">퀴즈노스 신제품 숯불치킨 샌드위치</summary>
-  <content type="html">&lt;p&gt;퀴즈노스 신제품 숯불치킨 샌드위치&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/fcb56be51829fae7.webp&quot; alt=&quot;숯불치킨 샌드위치&quot;&gt;&lt;/p&gt;&lt;p&gt;퀴즈노스 신제품 숯불치킨 샌드위치&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>일품진로 하이볼 선물세트</title>
@@ -2652,24 +2670,26 @@
  <entry>
   <title>터키 더블 아보카도</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%80%B4%EC%A6%88%EB%85%B8%EC%8A%A4-%ED%84%B0%ED%82%A4-%EB%8D%94%EB%B8%94-%EC%95%84%EB%B3%B4%EC%B9%B4%EB%8F%84/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/b7e9d73ccd19d52d.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%80%B4%EC%A6%88%EB%85%B8%EC%8A%A4-%ED%84%B0%ED%82%A4-%EB%8D%94%EB%B8%94-%EC%95%84%EB%B3%B4%EC%B9%B4%EB%8F%84/</id>
   <published>2026-08-10T00:00:00Z</published>
   <updated>2026-08-10T00:00:00Z</updated>
   <author><name>퀴즈노스</name></author>
   <category term="퀴즈노스"/>
   <summary type="text">퀴즈노스 신제품 터키 더블 아보카도</summary>
-  <content type="html">&lt;p&gt;퀴즈노스 신제품 터키 더블 아보카도&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/b7e9d73ccd19d52d.webp&quot; alt=&quot;터키 더블 아보카도&quot;&gt;&lt;/p&gt;&lt;p&gt;퀴즈노스 신제품 터키 더블 아보카도&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>치폴레 터키</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%80%B4%EC%A6%88%EB%85%B8%EC%8A%A4-%EC%B9%98%ED%8F%B4%EB%A0%88-%ED%84%B0%ED%82%A4/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/4d3e314ec3f148d0.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%80%B4%EC%A6%88%EB%85%B8%EC%8A%A4-%EC%B9%98%ED%8F%B4%EB%A0%88-%ED%84%B0%ED%82%A4/</id>
   <published>2026-08-10T00:00:00Z</published>
   <updated>2026-08-10T00:00:00Z</updated>
   <author><name>퀴즈노스</name></author>
   <category term="퀴즈노스"/>
   <summary type="text">퀴즈노스 신제품 치폴레 터키</summary>
-  <content type="html">&lt;p&gt;퀴즈노스 신제품 치폴레 터키&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/4d3e314ec3f148d0.webp&quot; alt=&quot;치폴레 터키&quot;&gt;&lt;/p&gt;&lt;p&gt;퀴즈노스 신제품 치폴레 터키&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>청양 고추 간장 치킨</title>
@@ -2909,57 +2929,62 @@
  <entry>
   <title>피치레몬에이드</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%89%90%EC%9D%B4%ED%81%AC%EC%89%91-%ED%94%BC%EC%B9%98%EB%A0%88%EB%AA%AC%EC%97%90%EC%9D%B4%EB%93%9C/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/2da3266fc884c0ea.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%89%90%EC%9D%B4%ED%81%AC%EC%89%91-%ED%94%BC%EC%B9%98%EB%A0%88%EB%AA%AC%EC%97%90%EC%9D%B4%EB%93%9C/</id>
   <published>2026-10-01T00:00:00Z</published>
   <updated>2026-10-01T00:00:00Z</updated>
   <author><name>쉐이크쉑</name></author>
   <category term="쉐이크쉑"/>
   <summary type="text">상큼한 레몬과 달콤한 복숭아가 어우러진 산뜻한 피치 레몬에이드</summary>
-  <content type="html">&lt;p&gt;상큼한 레몬과 달콤한 복숭아가 어우러진 산뜻한 피치 레몬에이드&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/2da3266fc884c0ea.webp&quot; alt=&quot;피치레몬에이드&quot;&gt;&lt;/p&gt;&lt;p&gt;상큼한 레몬과 달콤한 복숭아가 어우러진 산뜻한 피치 레몬에이드&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>스모어 쉐이크</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%89%90%EC%9D%B4%ED%81%AC%EC%89%91-%EC%8A%A4%EB%AA%A8%EC%96%B4-%EC%89%90%EC%9D%B4%ED%81%AC/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/8af2b0a2a4f33054.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%89%90%EC%9D%B4%ED%81%AC%EC%89%91-%EC%8A%A4%EB%AA%A8%EC%96%B4-%EC%89%90%EC%9D%B4%ED%81%AC/</id>
   <published>2026-10-01T00:00:00Z</published>
   <updated>2026-10-01T00:00:00Z</updated>
   <author><name>쉐이크쉑</name></author>
   <category term="쉐이크쉑"/>
   <summary type="text">바닐라와 초콜릿 커스터드에 시나몬 로투스 크럼블을 블렌딩하고 휘핑크림과 미니 마시멜로우를 올린 시즌 한정 쉐이크</summary>
-  <content type="html">&lt;p&gt;바닐라와 초콜릿 커스터드에 시나몬 로투스 크럼블을 블렌딩하고 휘핑크림과 미니 마시멜로우를 올린 시즌 한정 쉐이크&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/8af2b0a2a4f33054.webp&quot; alt=&quot;스모어 쉐이크&quot;&gt;&lt;/p&gt;&lt;p&gt;바닐라와 초콜릿 커스터드에 시나몬 로투스 크럼블을 블렌딩하고 휘핑크림과 미니 마시멜로우를 올린 시즌 한정 쉐이크&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>쉑하우스 바비큐 프라이</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%89%90%EC%9D%B4%ED%81%AC%EC%89%91-%EC%89%91%ED%95%98%EC%9A%B0%EC%8A%A4-%EB%B0%94%EB%B9%84%ED%81%90-%ED%94%84%EB%9D%BC%EC%9D%B4/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/cbfff1dcc38b614e.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%89%90%EC%9D%B4%ED%81%AC%EC%89%91-%EC%89%91%ED%95%98%EC%9A%B0%EC%8A%A4-%EB%B0%94%EB%B9%84%ED%81%90-%ED%94%84%EB%9D%BC%EC%9D%B4/</id>
   <published>2026-10-01T00:00:00Z</published>
   <updated>2026-10-01T00:00:00Z</updated>
   <author><name>쉐이크쉑</name></author>
   <category term="쉐이크쉑"/>
   <summary type="text">시그니처 치즈 소스와 스모키 BBQ 소스에 훈연 베이컨 찹을 더한 시즌 한정 프라이</summary>
-  <content type="html">&lt;p&gt;시그니처 치즈 소스와 스모키 BBQ 소스에 훈연 베이컨 찹을 더한 시즌 한정 프라이&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/cbfff1dcc38b614e.webp&quot; alt=&quot;쉑하우스 바비큐 프라이&quot;&gt;&lt;/p&gt;&lt;p&gt;시그니처 치즈 소스와 스모키 BBQ 소스에 훈연 베이컨 찹을 더한 시즌 한정 프라이&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>쉑하우스 바비큐 치킨</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%89%90%EC%9D%B4%ED%81%AC%EC%89%91-%EC%89%91%ED%95%98%EC%9A%B0%EC%8A%A4-%EB%B0%94%EB%B9%84%ED%81%90-%EC%B9%98%ED%82%A8/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/9d7ca66223cc24b8.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%89%90%EC%9D%B4%ED%81%AC%EC%89%91-%EC%89%91%ED%95%98%EC%9A%B0%EC%8A%A4-%EB%B0%94%EB%B9%84%ED%81%90-%EC%B9%98%ED%82%A8/</id>
   <published>2026-10-01T00:00:00Z</published>
   <updated>2026-10-01T00:00:00Z</updated>
   <author><name>쉐이크쉑</name></author>
   <category term="쉐이크쉑"/>
   <summary type="text">바삭한 치킨 패티에 스모키 BBQ 소스와 훈연 베이컨을 더해 깊은 풍미를 완성한 시즌 한정 버거</summary>
-  <content type="html">&lt;p&gt;바삭한 치킨 패티에 스모키 BBQ 소스와 훈연 베이컨을 더해 깊은 풍미를 완성한 시즌 한정 버거&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/9d7ca66223cc24b8.webp&quot; alt=&quot;쉑하우스 바비큐 치킨&quot;&gt;&lt;/p&gt;&lt;p&gt;바삭한 치킨 패티에 스모키 BBQ 소스와 훈연 베이컨을 더해 깊은 풍미를 완성한 시즌 한정 버거&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>쉑하우스 바비큐 버거</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%89%90%EC%9D%B4%ED%81%AC%EC%89%91-%EC%89%91%ED%95%98%EC%9A%B0%EC%8A%A4-%EB%B0%94%EB%B9%84%ED%81%90-%EB%B2%84%EA%B1%B0/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/a2f9e1714a6c519b.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%89%90%EC%9D%B4%ED%81%AC%EC%89%91-%EC%89%91%ED%95%98%EC%9A%B0%EC%8A%A4-%EB%B0%94%EB%B9%84%ED%81%90-%EB%B2%84%EA%B1%B0/</id>
   <published>2026-10-01T00:00:00Z</published>
   <updated>2026-10-01T00:00:00Z</updated>
   <author><name>쉐이크쉑</name></author>
   <category term="쉐이크쉑"/>
   <summary type="text">육즙 가득한 비프 패티에 스모키 BBQ 소스와 훈연 베이컨을 더해 깊은 풍미를 완성한 시즌 한정 버거</summary>
-  <content type="html">&lt;p&gt;육즙 가득한 비프 패티에 스모키 BBQ 소스와 훈연 베이컨을 더해 깊은 풍미를 완성한 시즌 한정 버거&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/a2f9e1714a6c519b.webp&quot; alt=&quot;쉑하우스 바비큐 버거&quot;&gt;&lt;/p&gt;&lt;p&gt;육즙 가득한 비프 패티에 스모키 BBQ 소스와 훈연 베이컨을 더해 깊은 풍미를 완성한 시즌 한정 버거&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>콘짜렐라 허니갈릭</title>
@@ -4728,42 +4753,46 @@
  <entry>
   <title>케일 사과주스</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%97%90%EA%B7%B8%EB%93%9C%EB%9E%8D-%EC%BC%80%EC%9D%BC-%EC%82%AC%EA%B3%BC%EC%A3%BC%EC%8A%A4/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/ad2429b86e7c7e8d.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%97%90%EA%B7%B8%EB%93%9C%EB%9E%8D-%EC%BC%80%EC%9D%BC-%EC%82%AC%EA%B3%BC%EC%A3%BC%EC%8A%A4/</id>
   <updated>2026-09-30T00:00:00Z</updated>
   <author><name>에그드랍</name></author>
   <category term="에그드랍"/>
   <summary type="text">케일에 사과의 달콤함을 더해 시원하고 가볍게 즐기는 그린주스</summary>
-  <content type="html">&lt;p&gt;케일에 사과의 달콤함을 더해 시원하고 가볍게 즐기는 그린주스&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/ad2429b86e7c7e8d.webp&quot; alt=&quot;케일 사과주스&quot;&gt;&lt;/p&gt;&lt;p&gt;케일에 사과의 달콤함을 더해 시원하고 가볍게 즐기는 그린주스&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>아보가든 브런치</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%97%90%EA%B7%B8%EB%93%9C%EB%9E%8D-%EC%95%84%EB%B3%B4%EA%B0%80%EB%93%A0-%EB%B8%8C%EB%9F%B0%EC%B9%98/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/0e93af7fc2170e90.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%97%90%EA%B7%B8%EB%93%9C%EB%9E%8D-%EC%95%84%EB%B3%B4%EA%B0%80%EB%93%A0-%EB%B8%8C%EB%9F%B0%EC%B9%98/</id>
   <updated>2026-09-30T00:00:00Z</updated>
   <author><name>에그드랍</name></author>
   <category term="에그드랍"/>
   <summary type="text">맛있게 즐기며 건강까지 챙기는, 요즘 딱 필요한 브런치예요</summary>
-  <content type="html">&lt;p&gt;맛있게 즐기며 건강까지 챙기는, 요즘 딱 필요한 브런치예요&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/0e93af7fc2170e90.webp&quot; alt=&quot;아보가든 브런치&quot;&gt;&lt;/p&gt;&lt;p&gt;맛있게 즐기며 건강까지 챙기는, 요즘 딱 필요한 브런치예요&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>아메리칸 브런치</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%97%90%EA%B7%B8%EB%93%9C%EB%9E%8D-%EC%95%84%EB%A9%94%EB%A6%AC%EC%B9%B8-%EB%B8%8C%EB%9F%B0%EC%B9%98/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/0cdfcdbe659e67ee.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%97%90%EA%B7%B8%EB%93%9C%EB%9E%8D-%EC%95%84%EB%A9%94%EB%A6%AC%EC%B9%B8-%EB%B8%8C%EB%9F%B0%EC%B9%98/</id>
   <updated>2026-09-30T00:00:00Z</updated>
   <author><name>에그드랍</name></author>
   <category term="에그드랍"/>
   <summary type="text">한 입 먹는 순간 여긴 지금 뉴욕 브런치 카페</summary>
-  <content type="html">&lt;p&gt;한 입 먹는 순간 여긴 지금 뉴욕 브런치 카페&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/0cdfcdbe659e67ee.webp&quot; alt=&quot;아메리칸 브런치&quot;&gt;&lt;/p&gt;&lt;p&gt;한 입 먹는 순간 여긴 지금 뉴욕 브런치 카페&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>굿모닝 브런치</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%97%90%EA%B7%B8%EB%93%9C%EB%9E%8D-%EA%B5%BF%EB%AA%A8%EB%8B%9D-%EB%B8%8C%EB%9F%B0%EC%B9%98/"/>
+  <link rel="enclosure" type="image/webp" href="https://ttop32.github.io/sinsang-note/i/eb4e062df2799998.webp"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%97%90%EA%B7%B8%EB%93%9C%EB%9E%8D-%EA%B5%BF%EB%AA%A8%EB%8B%9D-%EB%B8%8C%EB%9F%B0%EC%B9%98/</id>
   <updated>2026-09-30T00:00:00Z</updated>
   <author><name>에그드랍</name></author>
   <category term="에그드랍"/>
   <summary type="text">Good morning~ 오늘의 계획은 든든한 아침 챙기기</summary>
-  <content type="html">&lt;p&gt;Good morning~ 오늘의 계획은 든든한 아침 챙기기&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/eb4e062df2799998.webp&quot; alt=&quot;굿모닝 브런치&quot;&gt;&lt;/p&gt;&lt;p&gt;Good morning~ 오늘의 계획은 든든한 아침 챙기기&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>홍게다리살 카니미소</title>

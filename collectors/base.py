@@ -1127,10 +1127,15 @@ def derive(d: dict, *, stored: bool = False) -> dict:
             d[k] = ""
 
     # 우리 페이지는 https 라 http 이미지는 브라우저가 막는다(혼합 콘텐츠).
-    # 빈 네모가 뜨느니 사진 없는 카드로 그리는 게 낫다. 에그드랍 73건이
-    # 그랬다 — 인증서가 2025-05-27 에 만료돼 https 로는 아예 안 열린다.
+    # 빈 네모가 뜨느니 사진 없는 카드로 그리는 게 낫다.
+    #
+    # ⚠️ 주소를 **버리지 말고 image_src 에 옮긴다.** 전에는 그냥 지웠는데,
+    # 그러면 되살릴 길이 없어진다. 에그드랍 73·퀴즈노스 62·쉐이크쉑 52·
+    # 스쿨푸드 81건이 그렇게 사진 없는 카드가 됐다 — 그 호스트들은 https 를
+    # 아예 안 열어서(ConnectError) 주소만 바꿔선 안 되고, 받아서 우리 쪽에
+    # 두는 수밖에 없다. rules.mirror_images 가 image_src 를 보고 그 일을 한다.
     if d["image"].startswith("http://"):
-        d["image"] = ""
+        d["image_src"], d["image"] = d["image"], ""
     return d
 
 

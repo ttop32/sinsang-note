@@ -1514,7 +1514,8 @@
    "key": "쉐이크쉑:쉑버거",
    "display": "쉑버거",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/burger_241126_shackburger.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1536,7 +1537,8 @@
    "key": "쉐이크쉑:스모크쉑",
    "display": "스모크쉑",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/burger_241126_smokeshack.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1558,7 +1560,8 @@
    "key": "쉐이크쉑:슈룸버거",
    "display": "슈룸 버거",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/burger_shroomburger.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1580,7 +1583,8 @@
    "key": "쉐이크쉑:쉑스택",
    "display": "쉑 스택",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/burger_shackstack.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1602,7 +1606,8 @@
    "key": "쉐이크쉑:햄버거",
    "display": "햄버거",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/burger_hamburger.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1624,7 +1629,8 @@
    "key": "쉐이크쉑:치킨쉑",
    "display": "치킨 쉑",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/chicken_chickenshack.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1646,7 +1652,8 @@
    "key": "쉐이크쉑:치킨바이트",
    "display": "치킨 바이트",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/chicken_chickenbites.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1668,7 +1675,8 @@
    "key": "쉐이크쉑:프라이",
    "display": "프라이",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/side_fries.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1690,7 +1698,8 @@
    "key": "쉐이크쉑:치즈프라이",
    "display": "치즈 프라이",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/side_cheesefries.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1712,7 +1721,8 @@
    "key": "쉐이크쉑:쉐이크",
    "display": "쉐이크",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/custard_shakes.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1734,7 +1744,8 @@
    "key": "쉐이크쉑:플로트",
    "display": "플로트",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/custard_floats.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1756,7 +1767,8 @@
    "key": "쉐이크쉑:컵&콘",
    "display": "컵 & 콘",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/custard_cupncones.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1778,7 +1790,8 @@
    "key": "쉐이크쉑:쉑어택",
    "display": "쉑 어택",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/concretes_shackattack.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1800,7 +1813,8 @@
    "key": "쉐이크쉑:쉑-포가토",
    "display": "쉑-포가토",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/concretes-shackffogato.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1822,7 +1836,8 @@
    "key": "쉐이크쉑:인절미타임",
    "display": "인절미 타임",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/concretes-injeolmi.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1844,7 +1859,8 @@
    "key": "쉐이크쉑:하쿠나바나나",
    "display": "하쿠나 바나나",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/concretes_yeouido.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1866,7 +1882,8 @@
    "key": "쉐이크쉑:선샤인스쿱",
    "display": "선샤인 스쿱",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/concretes-nowon.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1888,7 +1905,8 @@
    "key": "쉐이크쉑:플라이미투더쉑",
    "display": "플라이 미 투 더 쉑",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/concretes-flymetotheshack.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1910,7 +1928,8 @@
    "key": "쉐이크쉑:부산스트리트",
    "display": "부산 스트리트",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/concretes-busanstreet.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1932,7 +1951,8 @@
    "key": "쉐이크쉑:사과가대구르르",
    "display": "사과가 대구르르",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/concretes_dagurrapple.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1954,7 +1974,8 @@
    "key": "쉐이크쉑:대전밤밤",
    "display": "대전 밤 밤",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/concretes-daejeon.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1976,7 +1997,8 @@
    "key": "쉐이크쉑:호두삼거리",
    "display": "호두 삼거리",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/concretes-hodusamgeori.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -1998,7 +2020,8 @@
    "key": "쉐이크쉑:레몬에이드",
    "display": "레몬에이드",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/drink_lemonade.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -2020,7 +2043,8 @@
    "key": "쉐이크쉑:아이스티",
    "display": "아이스 티",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/drink_icedtea.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -2042,7 +2066,8 @@
    "key": "쉐이크쉑:피프티/피프티",
    "display": "피프티/피프티",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/drink_fiftyfifty.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -2064,7 +2089,8 @@
    "key": "쉐이크쉑:탄산음료",
    "display": "탄산음료",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/drink_soda.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -2086,7 +2112,8 @@
    "key": "쉐이크쉑:핫티",
    "display": "핫 티",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/drinks-hottea.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -2108,7 +2135,8 @@
    "key": "쉐이크쉑:쉑커피",
    "display": "쉑 커피",
    "first_seen": "2026-10-03",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/drink_coffee.jpg"
   },
   {
    "brand": "파이브가이즈",
@@ -54450,7 +54478,7 @@
    "name": "쑥인절미 빙수",
    "name_en": "",
    "desc": "쑥과 인절미가 포근하게 어우러지는 쫀득고소한 매력 가득한 빙수",
-   "image": "",
+   "image": "https://static.wixstatic.com/media/28b05a_c9cc28df78ab423a848535972c4b9c7a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EC%91%A5%EC%9D%B8%EC%A0%88%EB%AF%B8%EB%B9%99%EC%88%98_%EB%B0%B0%EB%8B%AC%EC%95%B1.png",
    "labels": [],
    "category": "",
    "uploaded_at": "",
@@ -54465,15 +54493,14 @@
    "key": "빙동댕:쑥인절미빙수",
    "display": "쑥인절미 빙수",
    "first_seen": "2026-10-03",
-   "baseline": true,
-   "image_src": "https://static.wixstatic.com/media/28b05a_c9cc28df78ab423a848535972c4b9c7a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EC%91%A5%EC%9D%B8%EC%A0%88%EB%AF%B8%EB%B9%99%EC%88%98_%EB%B0%B0%EB%8B%AC%EC%95%B1.png"
+   "baseline": true
   },
   {
    "brand": "빙동댕",
    "name": "망고왔자몽",
    "name_en": "",
    "desc": "망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력",
-   "image": "",
+   "image": "https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png",
    "labels": [],
    "category": "",
    "uploaded_at": "",
@@ -54488,15 +54515,14 @@
    "key": "빙동댕:망고왔자몽",
    "display": "망고왔자몽",
    "first_seen": "2026-10-03",
-   "baseline": true,
-   "image_src": "https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png"
+   "baseline": true
   },
   {
    "brand": "빙동댕",
    "name": "망고왔자몽 요거트",
    "name_en": "",
    "desc": "망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력",
-   "image": "",
+   "image": "https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png",
    "labels": [],
    "category": "",
    "uploaded_at": "",
@@ -54511,8 +54537,7 @@
    "key": "빙동댕:망고왔자몽요거트",
    "display": "망고왔자몽 요거트",
    "first_seen": "2026-10-03",
-   "baseline": true,
-   "image_src": "https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png"
+   "baseline": true
   },
   {
    "brand": "달롱도르",
@@ -75348,7 +75373,7 @@
    "name": "짱아치 충무마리",
    "name_en": "",
    "desc": "오징어·어묵·짱아치가 완성하는 충무의 삼합",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/be2ee0a3efe18b1c.webp",
    "labels": [
     "NEW"
    ],
@@ -75365,14 +75390,15 @@
    "key": "스쿨푸드:짱아치충무마리",
    "display": "짱아치 충무마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_OMcteyKH_20260120082502.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "전복 계란 마리",
    "name_en": "",
    "desc": "간장소스에 졸인 전복과 짱아치로 맛을 내 계란옷을 입힌 마리",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/56a85d6aa8e498e2.webp",
    "labels": [
     "NEW"
    ],
@@ -75389,14 +75415,15 @@
    "key": "스쿨푸드:전복계란마리",
    "display": "전복 계란 마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_ulp3ZESy_20260120082444.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "전복마리",
    "name_en": "",
    "desc": "간장소스에 졸인 전복과 짱아치로 맛을 낸 마리",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/292354a2a66cb78b.webp",
    "labels": [
     "NEW"
    ],
@@ -75413,7 +75440,8 @@
    "key": "스쿨푸드:전복마리",
    "display": "전복마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_g2TV9UiY_20260120082358.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75435,7 +75463,8 @@
    "key": "스쿨푸드:모짜레드통새우계란마리",
    "display": "모짜레드 통새우 계란 마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_reMUn5CA_20221114045056.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75457,7 +75486,8 @@
    "key": "스쿨푸드:모짜렐라통새우계란마리",
    "display": "모짜렐라 통새우 계란 마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_4TMwmSG1_20200717033245.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75481,7 +75511,8 @@
    "key": "스쿨푸드:모짜렐라스팸계란마리",
    "display": "모짜렐라 스팸 계란 마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_41HX5yaK_20200612023832.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75505,7 +75536,8 @@
    "key": "스쿨푸드:스패니쉬오징어먹물마리",
    "display": "스패니쉬 오징어 먹물 마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_nrHeQY5G_20200612023806.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75527,7 +75559,8 @@
    "key": "스쿨푸드:톡톡날치알마리",
    "display": "톡톡 날치알 마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_o7msck3d_20200612023730.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75549,7 +75582,8 @@
    "key": "스쿨푸드:등심돈까스마리",
    "display": "등심 돈까스 마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_2lRuXVH0_20200612022919.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75571,7 +75605,8 @@
    "key": "스쿨푸드:통새우마리",
    "display": "통새우마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_U584l6oL_20200612022856.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75593,7 +75628,8 @@
    "key": "스쿨푸드:김치마리",
    "display": "김치마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_XcWA4ty0_20200610061510.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75615,7 +75651,8 @@
    "key": "스쿨푸드:고추멸치마리",
    "display": "고추멸치마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_I0ocPufX_20200610061453.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75637,7 +75674,8 @@
    "key": "스쿨푸드:베이컨마늘마리",
    "display": "베이컨마늘마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_eSUVKTd6_20200610061433.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75659,7 +75697,8 @@
    "key": "스쿨푸드:참치마리",
    "display": "참치마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_Z9hOKQjb_20200610061409.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75681,7 +75720,8 @@
    "key": "스쿨푸드:멸치마리",
    "display": "멸치마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_XkqE50As_20200610061319.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75705,14 +75745,15 @@
    "key": "스쿨푸드:오리지널스팸마리",
    "display": "오리지널 스팸마리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_fdkAOXhU_20200610061254.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "마라떡볶이",
    "name_en": "",
    "desc": "마라의 얼얼한 감칠맛을 담은 떡볶이! 다양한 토핑을 추가해 더욱 든든하게!",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/6c5f0bc99a93d641.webp",
    "labels": [
     "NEW"
    ],
@@ -75729,14 +75770,15 @@
    "key": "스쿨푸드:마라떡볶이",
    "display": "마라떡볶이",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_lUrkszTX_20260827095918.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "치즈 길떡 돈까스",
    "name_en": "",
    "desc": "매운 떡볶이와 고소한 치즈, 바삭한 돈까스의 완벽한 조합",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/a5e9fd0881ba8548.webp",
    "labels": [
     "NEW"
    ],
@@ -75753,7 +75795,8 @@
    "key": "스쿨푸드:치즈길떡돈까스",
    "display": "치즈 길떡 돈까스",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_mi0uNRQp_20260804094037.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75775,7 +75818,8 @@
    "key": "스쿨푸드:차돌떡볶이",
    "display": "차돌 떡볶이",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_9WBKGZ4I_20250708082936.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75797,7 +75841,8 @@
    "key": "스쿨푸드:먹물까르보나라파스타떡볶이",
    "display": "먹물 까르보나라 파스타 떡볶이",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_i3MphCf7_20250708082904.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75819,7 +75864,8 @@
    "key": "스쿨푸드:학교앞떡볶이",
    "display": "학교 앞 떡볶이",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_YbhQwV2q_20240705044250.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75843,7 +75889,8 @@
    "key": "스쿨푸드:길거리표떡볶이",
    "display": "길거리표 떡볶이",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_RLBWzVNe_20200610061020.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75867,7 +75914,8 @@
    "key": "스쿨푸드:쟁반국떡",
    "display": "쟁반국떡",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_IlRCEMAV_20200610060955.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75891,7 +75939,8 @@
    "key": "스쿨푸드:까르보나라파스타떡볶이",
    "display": "까르보나라 파스타 떡볶이",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_jlJnroVH_20250417010122.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75913,7 +75962,8 @@
    "key": "스쿨푸드:떡순이모둠",
    "display": "떡순이모둠",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_mM7fJ3DA_20200610060809.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75937,7 +75987,8 @@
    "key": "스쿨푸드:매운까르보나라파스타떡볶이",
    "display": "매운 까르보나라 파스타 떡볶이",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_iRw3b9kH_20250417010138.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -75959,14 +76010,15 @@
    "key": "스쿨푸드:쏘이까르보나라파스타떡볶이",
    "display": "쏘이 까르보나라 파스타 떡볶이",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_cNioJze2_20250417010146.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "치즈돈까스",
    "name_en": "",
    "desc": "바삭하게 튀겨낸 돈까스 속에 고소한 치즈를 가득 담은 치즈돈까스",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/755d069b98130e94.webp",
    "labels": [
     "NEW"
    ],
@@ -75983,14 +76035,15 @@
    "key": "스쿨푸드:치즈돈까스",
    "display": "치즈돈까스",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_wKHkpDuy_20260528090925.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "소불고기 덮밥",
    "name_en": "",
    "desc": "달짝지근한 특제 소스로 볶아낸 부드러운 소불고기를 따뜻한 밥 위에 푸짐하게 담은 덮밥",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/aad80c342ac8fae0.webp",
    "labels": [
     "NEW"
    ],
@@ -76007,14 +76060,15 @@
    "key": "스쿨푸드:소불고기덮밥",
    "display": "소불고기 덮밥",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_wmUpau09_20260528090730.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "치킨 마요 덮밥",
    "name_en": "",
    "desc": "스쿨푸드 시그니처 마요소스의 깊고 부드러운 맛이 살아있는 치킨 마요 덮밥",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/ceabe0dc3b8b4245.webp",
    "labels": [
     "NEW"
    ],
@@ -76031,7 +76085,8 @@
    "key": "스쿨푸드:치킨마요덮밥",
    "display": "치킨 마요 덮밥",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_1GcM0qW8_20260528090641.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76053,7 +76108,8 @@
    "key": "스쿨푸드:함바그스테이크",
    "display": "함바그 스테이크",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_3y08bjfJ_20250708083126.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76075,7 +76131,8 @@
    "key": "스쿨푸드:로스카츠",
    "display": "로스카츠",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_vVljDX3Z_20250708083033.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76097,7 +76154,8 @@
    "key": "스쿨푸드:오리지널스팸필라프",
    "display": "오리지널 스팸 필라프",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_n2She0OM_20250417010541.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76119,7 +76177,8 @@
    "key": "스쿨푸드:베이컨오므라이스",
    "display": "베이컨 오므라이스",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_gT3ACe1Q_20230914113353.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76141,7 +76200,8 @@
    "key": "스쿨푸드:제육덮밥",
    "display": "제육덮밥",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_rfqyD73c_20250417010156.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76165,7 +76225,8 @@
    "key": "스쿨푸드:장조림버터비빔밥",
    "display": "장조림 버터비빔밥",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_FCJglXHI_20200611013143.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76187,7 +76248,8 @@
    "key": "스쿨푸드:대창구이덮밥",
    "display": "대창구이덮밥",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_iZqTe2fb_20200610060516.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76209,7 +76271,8 @@
    "key": "스쿨푸드:부산어묵탕",
    "display": "부산어묵탕",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_vPSkLA0l_20200610060408.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76233,7 +76296,8 @@
    "key": "스쿨푸드:옛날김치볶음밥",
    "display": "옛날 김치볶음밥",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_adNsh7f5_20200610060344.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76255,7 +76319,8 @@
    "key": "스쿨푸드:김치콩나물국밥",
    "display": "김치 콩나물국밥",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_ld2uoT5A_20200610060319.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76279,7 +76344,8 @@
    "key": "스쿨푸드:이태원부대국밥",
    "display": "이태원 부대국밥",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_UdMYXwBi_20200610060257.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76303,7 +76369,8 @@
    "key": "스쿨푸드:돼지목살김치찜",
    "display": "돼지목살 김치찜",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_91ebZBQS_20200610060228.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76325,7 +76392,8 @@
    "key": "스쿨푸드:스쿨푸드돈까스",
    "display": "스쿨푸드 돈까스",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_glGnVfJd_20200610060104.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76347,14 +76415,15 @@
    "key": "스쿨푸드:돼지양념왕구이덮밥",
    "display": "돼지양념 왕구이 덮밥",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_EOjqydQo_20200610060023.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "새우튀김 냉우동",
    "name_en": "",
    "desc": "달콤짭짤한 국물에 고소한 새우튀김을 함께 먹는 시원한 냉우동",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/b46ba20335c9fc4e.webp",
    "labels": [
     "NEW"
    ],
@@ -76371,14 +76440,15 @@
    "key": "스쿨푸드:새우튀김냉우동",
    "display": "새우튀김 냉우동",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_ynWX3sig_20260804094508.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "어간장 들기름 막국수",
    "name_en": "",
    "desc": "고소한 들기름과 감칠맛 가득한 제주 어간장을 베이스로 만든 메밀 막국수",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/6eb18401f825faed.webp",
    "labels": [
     "NEW"
    ],
@@ -76395,7 +76465,8 @@
    "key": "스쿨푸드:어간장들기름막국수",
    "display": "어간장 들기름 막국수",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_mG5kVr2p_20260528090856.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76417,7 +76488,8 @@
    "key": "스쿨푸드:짱아치라면",
    "display": "짱아치라면",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_peSgcW2B_20250417012304.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76439,7 +76511,8 @@
    "key": "스쿨푸드:열무막국수",
    "display": "열무 막국수",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_cfa2rqiw_20240612081048.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76461,7 +76534,8 @@
    "key": "스쿨푸드:에비텐비빔우동",
    "display": "에비텐 비빔우동",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_gTRI4fPt_20230512042607.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76483,7 +76557,8 @@
    "key": "스쿨푸드:소고기얼큰쌀국수",
    "display": "소고기 얼큰 쌀국수",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_W5RpVlH0_20230321101331.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76505,7 +76580,8 @@
    "key": "스쿨푸드:매운물비빔냉면",
    "display": "매운 물비빔냉면",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2109384731_r7cWHvxG_20210826101210.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76529,7 +76605,8 @@
    "key": "스쿨푸드:듬뿍야채쫄면",
    "display": "듬뿍야채쫄면",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_fc05iZ3g_20200610055638.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76551,7 +76628,8 @@
    "key": "스쿨푸드:쉬림프팟타이",
    "display": "쉬림프 팟타이",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_d1XRyuJO_20200610055809.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76573,7 +76651,8 @@
    "key": "스쿨푸드:부산어묵우동",
    "display": "부산어묵우동",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_m3kyBO2T_20200610055746.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76595,7 +76674,8 @@
    "key": "스쿨푸드:해물야채튀김우동",
    "display": "해물야채튀김우동",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_p1RjIUYX_20200610055725.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76617,7 +76697,8 @@
    "key": "스쿨푸드:김치콩나물우동",
    "display": "김치 콩나물 우동",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_VEURsY2G_20200611013225.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76639,7 +76720,8 @@
    "key": "스쿨푸드:신비비빔냉면",
    "display": "신비 비빔냉면",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_9iJP5j2t_20200610055609.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76661,7 +76743,8 @@
    "key": "스쿨푸드:신김치말이국수",
    "display": "신김치말이국수",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_muUHpLBS_20200610055538.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76683,7 +76766,8 @@
    "key": "스쿨푸드:신김치비빔국수",
    "display": "신김치 비빔국수",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_k6TBwCK5_20200610055506.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76705,7 +76789,8 @@
    "key": "스쿨푸드:어간장육감쫄면",
    "display": "어간장 육감쫄면",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_hofFR5gj_20200610055440.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76727,7 +76812,8 @@
    "key": "스쿨푸드:신비물냉면",
    "display": "신비 물냉면",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_ktKd0iVG_20200610055414.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76749,7 +76835,8 @@
    "key": "스쿨푸드:새우튀김냉소바",
    "display": "새우튀김 냉소바",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_c0FAfjpS_20200611013259.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76771,14 +76858,15 @@
    "key": "스쿨푸드:소고기쌀국수",
    "display": "소고기 쌀국수",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_90jthQ7e_20200610055257.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "고구마튀김",
    "name_en": "",
    "desc": "달콤한 고구마를 쫀득한 겉피로 감싸 노릇하게 튀겨낸 고구마튀김",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/3ec2dd08dafed184.webp",
    "labels": [
     "NEW"
    ],
@@ -76795,14 +76883,15 @@
    "key": "스쿨푸드:고구마튀김",
    "display": "고구마튀김",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_o9GVU8Zh_20260827100343.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "치즈스틱",
    "name_en": "",
    "desc": "한입 가득 모짜렐라 치즈가 쭉 늘어나는 쌀가루 치즈스틱",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/3bef326379bb7981.webp",
    "labels": [
     "NEW"
    ],
@@ -76819,14 +76908,15 @@
    "key": "스쿨푸드:치즈스틱",
    "display": "치즈스틱",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_Zi7RlTom_20260827100138.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "들기름 순대야채볶음",
    "name_en": "",
    "desc": "양배추와 당근의 아삭한 식감, 깻잎의 향긋함과 고소한 들기름의 풍미가 어우러진 순대볶음",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/03593d47e5c26066.webp",
    "labels": [
     "NEW"
    ],
@@ -76843,14 +76933,15 @@
    "key": "스쿨푸드:들기름순대야채볶음",
    "display": "들기름 순대야채볶음",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_n9VRaTtE_20260528091013.jpg"
   },
   {
    "brand": "스쿨푸드",
    "name": "모둠튀김",
    "name_en": "",
    "desc": "바삭한 해물야채튀김, 만두 2종, 김말이, 오징어튀김을 한 번에 즐기는 푸짐한 모둠 튀김(8pcs)",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/f2dce688ea134d21.webp",
    "labels": [
     "NEW"
    ],
@@ -76867,7 +76958,8 @@
    "key": "스쿨푸드:모둠튀김",
    "display": "모둠튀김",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_uB8tJD4K_20260120082530.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76889,7 +76981,8 @@
    "key": "스쿨푸드:마요소스",
    "display": "마요소스",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_yKQPI4Hu_20250604085739.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76911,7 +77004,8 @@
    "key": "스쿨푸드:양념범벅오징어튀김",
    "display": "양념범벅 오징어튀김",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_MVhiw5cf_20240109033343.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76933,7 +77027,8 @@
    "key": "스쿨푸드:양념범벅순대",
    "display": "양념범벅 순대",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_MTUcArfo_20250417010230.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76955,7 +77050,8 @@
    "key": "스쿨푸드:쫀득고구마치즈볼",
    "display": "쫀득고구마치즈볼",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_ZecpNn9T_20250417010221.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76977,7 +77073,8 @@
    "key": "스쿨푸드:양념범벅김말이",
    "display": "양념범벅 김말이",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_Njxvro34_20210421113042.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -76999,7 +77096,8 @@
    "key": "스쿨푸드:오징어튀김",
    "display": "오징어튀김",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_8XyYFQHt_20210421113013.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -77021,7 +77119,8 @@
    "key": "스쿨푸드:매콤달콤소떡꼬치",
    "display": "매콤달콤소떡꼬치",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_M3be6WCS_20200610054516.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -77045,7 +77144,8 @@
    "key": "스쿨푸드:양념범벅야끼만두",
    "display": "양념범벅 야끼만두",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_HD1fegWP_20200610055027.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -77067,7 +77167,8 @@
    "key": "스쿨푸드:셀프주먹밥",
    "display": "셀프 주먹밥",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_l6FGihmq_20200610055003.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -77089,7 +77190,8 @@
    "key": "스쿨푸드:통통김말이",
    "display": "통통김말이",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_4chnWLF8_20200610054934.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -77111,7 +77213,8 @@
    "key": "스쿨푸드:군만두",
    "display": "군만두",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_IVeWp2ug_20200610054811.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -77133,7 +77236,8 @@
    "key": "스쿨푸드:순대",
    "display": "순대",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_u169SGjC_20250417010208.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -77155,7 +77259,8 @@
    "key": "스쿨푸드:고구마치즈스틱",
    "display": "고구마 치즈스틱",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_4AzKsr2N_20200610054853.jpg"
   },
   {
    "brand": "스쿨푸드",
@@ -77177,7 +77282,8 @@
    "key": "스쿨푸드:오도독매콤짱아치",
    "display": "오도독매콤 짱아치",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.schoolfood.co.kr/upload/product/2034410747_dkJ87ghR_20200610054332.jpg"
   },
   {
    "brand": "삼첩분식",
@@ -81118,7 +81224,7 @@
    "name": "숯불치킨 샌드위치",
    "name_en": "",
    "desc": "",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/fcb56be51829fae7.webp",
    "labels": [],
    "category": "샌드위치",
    "uploaded_at": "",
@@ -81133,14 +81239,15 @@
    "key": "퀴즈노스:숯불치킨샌드위치",
    "display": "숯불치킨 샌드위치",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2609070001_R.jpg"
   },
   {
    "brand": "퀴즈노스",
    "name": "터키 더블 아보카도",
    "name_en": "Turkey Double Avocado",
    "desc": "",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/b7e9d73ccd19d52d.webp",
    "labels": [],
    "category": "샌드위치",
    "uploaded_at": "",
@@ -81155,14 +81262,15 @@
    "key": "퀴즈노스:터키더블아보카도",
    "display": "터키 더블 아보카도",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2608100002_R.jpg"
   },
   {
    "brand": "퀴즈노스",
    "name": "치폴레 터키",
    "name_en": "Chipotle Turkey",
    "desc": "",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/4d3e314ec3f148d0.webp",
    "labels": [],
    "category": "샌드위치",
    "uploaded_at": "",
@@ -81177,7 +81285,8 @@
    "key": "퀴즈노스:치폴레터키",
    "display": "치폴레 터키",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2608100001_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81199,7 +81308,8 @@
    "key": "퀴즈노스:한우불고기",
    "display": "한우 불고기",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2604280001_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81221,7 +81331,8 @@
    "key": "퀴즈노스:트레디셔널",
    "display": "트레디셔널",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150009_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81243,7 +81354,8 @@
    "key": "퀴즈노스:B.L.T.",
    "display": "B.L.T.",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150014_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81265,7 +81377,8 @@
    "key": "퀴즈노스:이탈리안",
    "display": "이탈리안",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150008_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81287,7 +81400,8 @@
    "key": "퀴즈노스:햄&치즈",
    "display": "햄 & 치즈",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150010_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81309,7 +81423,8 @@
    "key": "퀴즈노스:에그마요칠리",
    "display": "에그 마요 칠리",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150022_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81331,7 +81446,8 @@
    "key": "퀴즈노스:바질카프레제",
    "display": "바질 카프레제",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2603020001_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81353,7 +81469,8 @@
    "key": "퀴즈노스:코리안트레디셔널",
    "display": "코리안 트레디셔널",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204290005_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81375,7 +81492,8 @@
    "key": "퀴즈노스:크레이지핫치킨",
    "display": "크레이지 핫 치킨",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150016_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81397,7 +81515,8 @@
    "key": "퀴즈노스:골든갈릭불고기",
    "display": "골든 갈릭 불고기",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2511030001_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81419,7 +81538,8 @@
    "key": "퀴즈노스:치킨까르보나라",
    "display": "치킨 까르보나라",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150015_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81441,7 +81561,8 @@
    "key": "퀴즈노스:치킨베이컨랜치",
    "display": "치킨 베이컨 랜치",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204290006_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81463,7 +81584,8 @@
    "key": "퀴즈노스:허니머스타드치킨",
    "display": "허니 머스타드 치킨",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150012_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81485,7 +81607,8 @@
    "key": "퀴즈노스:치킨아보카도",
    "display": "치킨 아보카도",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150019_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81507,7 +81630,8 @@
    "key": "퀴즈노스:더블치즈스테이크",
    "display": "더블 치즈 스테이크",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150013_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81529,7 +81653,8 @@
    "key": "퀴즈노스:블랙앵거스&트러플스테이크",
    "display": "블랙 앵거스 & 트러플 스테이크",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150017_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81551,7 +81676,8 @@
    "key": "퀴즈노스:필리치즈스테이크",
    "display": "필리 치즈 스테이크",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2309010001_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81573,7 +81699,8 @@
    "key": "퀴즈노스:리코타베지&아보카도",
    "display": "리코타 베지 & 아보카도",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150011_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81595,7 +81722,8 @@
    "key": "퀴즈노스:플렉스스테이크",
    "display": "플렉스 스테이크",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150021_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81617,7 +81745,8 @@
    "key": "퀴즈노스:치폴레슈림프",
    "display": "치폴레 슈림프",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150007_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81639,7 +81768,8 @@
    "key": "퀴즈노스:치킨샐러드",
    "display": "치킨 샐러드",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204130014_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81661,7 +81791,8 @@
    "key": "퀴즈노스:허니리코타치즈샐러드",
    "display": "허니 리코타 치즈 샐러드",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204130016_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81683,7 +81814,8 @@
    "key": "퀴즈노스:클래식콥샐러드",
    "display": "클래식 콥 샐러드",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204290003_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81705,7 +81837,8 @@
    "key": "퀴즈노스:슈림프샐러드",
    "display": "슈림프 샐러드",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204290004_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81727,7 +81860,8 @@
    "key": "퀴즈노스:플렉스스테이크샐러드",
    "display": "플렉스 스테이크 샐러드",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204130017_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81749,7 +81883,8 @@
    "key": "퀴즈노스:클래식피자",
    "display": "클래식 피자",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150001_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81771,7 +81906,8 @@
    "key": "퀴즈노스:치킨까르보나라피자",
    "display": "치킨 까르보나라 피자",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204150003_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81793,7 +81929,8 @@
    "key": "퀴즈노스:크리미머쉬룸수프",
    "display": "크리미 머쉬룸 수프",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2309010002_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81815,7 +81952,8 @@
    "key": "퀴즈노스:포테이토베이컨수프",
    "display": "포테이토 베이컨 수프",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2206030004_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81837,7 +81975,8 @@
    "key": "퀴즈노스:프레쉬콘수프",
    "display": "프레쉬 콘 수프",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2503040001_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -81859,7 +81998,8 @@
    "key": "퀴즈노스:미니해쉬브라운",
    "display": "미니 해쉬 브라운",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2603020002_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81881,7 +82021,8 @@
    "key": "퀴즈노스:오븐웨지포테이토",
    "display": "오븐 웨지 포테이토",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2205240006_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81903,7 +82044,8 @@
    "key": "퀴즈노스:핫아메리카노",
    "display": "핫 아메리카노",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204140018_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81925,7 +82067,8 @@
    "key": "퀴즈노스:아이스아메리카노",
    "display": "아이스 아메리카노",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204140017_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81947,7 +82090,8 @@
    "key": "퀴즈노스:카페라떼",
    "display": "카페라떼",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204140016_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81969,7 +82113,8 @@
    "key": "퀴즈노스:아이스카페라떼",
    "display": "아이스 카페라떼",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204140015_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -81991,7 +82136,8 @@
    "key": "퀴즈노스:카페모카",
    "display": "카페 모카",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204140013_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82013,7 +82159,8 @@
    "key": "퀴즈노스:아이스카페모카",
    "display": "아이스 카페 모카",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204290008_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82035,7 +82182,8 @@
    "key": "퀴즈노스:바닐라라떼",
    "display": "바닐라 라떼",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204290007_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82057,7 +82205,8 @@
    "key": "퀴즈노스:아이스바닐라라떼",
    "display": "아이스 바닐라 라떼",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204290009_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82079,7 +82228,8 @@
    "key": "퀴즈노스:자몽에이드",
    "display": "자몽에이드",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204140009_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82101,7 +82251,8 @@
    "key": "퀴즈노스:레몬에이드",
    "display": "레몬에이드",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204140011_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82123,7 +82274,8 @@
    "key": "퀴즈노스:복숭아아이스티",
    "display": "복숭아 아이스티",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204140006_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82145,7 +82297,8 @@
    "key": "퀴즈노스:핫레몬생강티",
    "display": "핫 레몬 생강티",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2503040002_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -82167,7 +82320,8 @@
    "key": "퀴즈노스:아이스레몬생강티",
    "display": "아이스 레몬 생강티",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2503040003_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -82189,7 +82343,8 @@
    "key": "퀴즈노스:핫꿀유자티",
    "display": "핫 꿀 유자티",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2402150002_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82211,7 +82366,8 @@
    "key": "퀴즈노스:아이스꿀유자티",
    "display": "아이스 꿀 유자티",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2402150001_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82233,7 +82389,8 @@
    "key": "퀴즈노스:핫초코",
    "display": "핫 초코",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204140001_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82255,7 +82412,8 @@
    "key": "퀴즈노스:아이스초코",
    "display": "아이스 초코",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204290011_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82277,7 +82435,8 @@
    "key": "퀴즈노스:우유",
    "display": "우유",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204140008_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82299,7 +82458,8 @@
    "key": "퀴즈노스:소다",
    "display": "소다",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2204290012_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82321,7 +82481,8 @@
    "key": "퀴즈노스:밀박스(샌드위치19종중택1)",
    "display": "밀박스 (샌드위치 19종 중 택1)",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2205240002_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82343,7 +82504,8 @@
    "key": "퀴즈노스:케이터링",
    "display": "케이터링",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2205200002_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -82365,7 +82527,8 @@
    "key": "퀴즈노스:모닝콤보(베지에그체다)",
    "display": "모닝 콤보 (베지 에그 체다)",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2205250014_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -82387,7 +82550,8 @@
    "key": "퀴즈노스:모닝콤보(햄에그체다)",
    "display": "모닝 콤보 (햄 에그 체다)",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2205250013_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -82409,7 +82573,8 @@
    "key": "퀴즈노스:모닝콤보(미니스프추가)",
    "display": "모닝 콤보 (미니 스프 추가)",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2205250011_R.jpg"
   },
   {
    "brand": "퀴즈노스",
@@ -82431,7 +82596,8 @@
    "key": "퀴즈노스:런치콤보(트레디셔널)",
    "display": "런치 콤보 (트레디셔널)",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2205250008_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -82453,7 +82619,8 @@
    "key": "퀴즈노스:런치콤보(이탈리안)",
    "display": "런치 콤보 (이탈리안)",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2205250007_R.png"
   },
   {
    "brand": "퀴즈노스",
@@ -82475,7 +82642,8 @@
    "key": "퀴즈노스:런치콤보(B.L.T.)",
    "display": "런치 콤보 (B.L.T.)",
    "first_seen": "2026-10-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://quiznos.co.kr/admin/data/product2/2205250006_R.png"
   },
   {
    "brand": "긴자료코",
@@ -85172,7 +85340,7 @@
    "name": "쉑하우스 바비큐 버거",
    "name_en": "Shackhouse BBQ Burger",
    "desc": "육즙 가득한 비프 패티에 스모키 BBQ 소스와 훈연 베이컨을 더해 깊은 풍미를 완성한 시즌 한정 버거",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/a2f9e1714a6c519b.webp",
    "labels": [
     "시즌 한정"
    ],
@@ -85189,14 +85357,15 @@
    "key": "쉐이크쉑:쉑하우스바비큐버거",
    "display": "쉑하우스 바비큐 버거",
    "first_seen": "2026-10-01",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/burger_261001.jpg"
   },
   {
    "brand": "쉐이크쉑",
    "name": "쉑하우스 바비큐 치킨",
    "name_en": "Shackhouse BBQ Chicken",
    "desc": "바삭한 치킨 패티에 스모키 BBQ 소스와 훈연 베이컨을 더해 깊은 풍미를 완성한 시즌 한정 버거",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/9d7ca66223cc24b8.webp",
    "labels": [
     "시즌 한정"
    ],
@@ -85213,14 +85382,15 @@
    "key": "쉐이크쉑:쉑하우스바비큐치킨",
    "display": "쉑하우스 바비큐 치킨",
    "first_seen": "2026-10-01",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/chicken_261001.jpg"
   },
   {
    "brand": "쉐이크쉑",
    "name": "쉑하우스 바비큐 프라이",
    "name_en": "Shackhouse BBQ Fries",
    "desc": "시그니처 치즈 소스와 스모키 BBQ 소스에 훈연 베이컨 찹을 더한 시즌 한정 프라이",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/cbfff1dcc38b614e.webp",
    "labels": [
     "시즌 한정"
    ],
@@ -85237,14 +85407,15 @@
    "key": "쉐이크쉑:쉑하우스바비큐프라이",
    "display": "쉑하우스 바비큐 프라이",
    "first_seen": "2026-10-01",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/fries_261001.jpg"
   },
   {
    "brand": "쉐이크쉑",
    "name": "스모어 쉐이크",
    "name_en": "S'mores Shake",
    "desc": "바닐라와 초콜릿 커스터드에 시나몬 로투스 크럼블을 블렌딩하고 휘핑크림과 미니 마시멜로우를 올린 시즌 한정 쉐이크",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/8af2b0a2a4f33054.webp",
    "labels": [
     "시즌 한정"
    ],
@@ -85261,14 +85432,15 @@
    "key": "쉐이크쉑:스모어쉐이크",
    "display": "스모어 쉐이크",
    "first_seen": "2026-10-01",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/custard_261001.jpg"
   },
   {
    "brand": "쉐이크쉑",
    "name": "피치레몬에이드",
    "name_en": "Peach Lemonade",
    "desc": "상큼한 레몬과 달콤한 복숭아가 어우러진 산뜻한 피치 레몬에이드",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/2da3266fc884c0ea.webp",
    "labels": [
     "시즌 한정"
    ],
@@ -85285,7 +85457,8 @@
    "key": "쉐이크쉑:피치레몬에이드",
    "display": "피치레몬에이드",
    "first_seen": "2026-10-01",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/drink_261001.jpg"
   },
   {
    "brand": "카페인중독",
@@ -152242,7 +152415,7 @@
    "name": "케일 사과주스",
    "name_en": "Kale Apple Juice",
    "desc": "케일에 사과의 달콤함을 더해 시원하고 가볍게 즐기는 그린주스",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/ad2429b86e7c7e8d.webp",
    "labels": [],
    "category": "DRINK, COFFEE",
    "uploaded_at": "",
@@ -152257,14 +152430,15 @@
    "key": "에그드랍:케일사과주스",
    "display": "케일 사과주스",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1767686588.png"
   },
   {
    "brand": "에그드랍",
    "name": "굿모닝 브런치",
    "name_en": "Good Morning Brunch",
    "desc": "Good morning~ 오늘의 계획은 든든한 아침 챙기기",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/eb4e062df2799998.webp",
    "labels": [],
    "category": "BRUNCH",
    "uploaded_at": "",
@@ -152279,7 +152453,8 @@
    "key": "에그드랍:굿모닝브런치",
    "display": "굿모닝 브런치",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1765515582.png"
   },
   {
    "brand": "에그드랍",
@@ -152301,14 +152476,15 @@
    "key": "에그드랍:굿모닝브런치세트",
    "display": "굿모닝 브런치 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1765515675.png"
   },
   {
    "brand": "에그드랍",
    "name": "아메리칸 브런치",
    "name_en": "American Brunch",
    "desc": "한 입 먹는 순간 여긴 지금 뉴욕 브런치 카페",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/0cdfcdbe659e67ee.webp",
    "labels": [],
    "category": "BRUNCH",
    "uploaded_at": "",
@@ -152323,7 +152499,8 @@
    "key": "에그드랍:아메리칸브런치",
    "display": "아메리칸 브런치",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796274433.png"
   },
   {
    "brand": "에그드랍",
@@ -152345,14 +152522,15 @@
    "key": "에그드랍:아메리칸브런치세트",
    "display": "아메리칸 브런치 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796274468.png"
   },
   {
    "brand": "에그드랍",
    "name": "아보가든 브런치",
    "name_en": "Avocado Garden Brunch",
    "desc": "맛있게 즐기며 건강까지 챙기는, 요즘 딱 필요한 브런치예요",
-   "image": "",
+   "image": "https://ttop32.github.io/sinsang-note/i/0e93af7fc2170e90.webp",
    "labels": [],
    "category": "BRUNCH",
    "uploaded_at": "",
@@ -152367,7 +152545,8 @@
    "key": "에그드랍:아보가든브런치",
    "display": "아보가든 브런치",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1765515499.png"
   },
   {
    "brand": "에그드랍",
@@ -152389,7 +152568,8 @@
    "key": "에그드랍:아보가든브런치세트",
    "display": "아보가든 브런치 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1765515646.png"
   },
   {
    "brand": "에그드랍",
@@ -152411,7 +152591,8 @@
    "key": "에그드랍:미스터에그세트",
    "display": "미스터에그 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796260098.png"
   },
   {
    "brand": "에그드랍",
@@ -152433,7 +152614,8 @@
    "key": "에그드랍:아메리칸햄치즈세트",
    "display": "아메리칸 햄 치즈 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796260109.png"
   },
   {
    "brand": "에그드랍",
@@ -152455,7 +152637,8 @@
    "key": "에그드랍:베이컨더블치즈세트",
    "display": "베이컨 더블 치즈 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796260118.png"
   },
   {
    "brand": "에그드랍",
@@ -152477,7 +152660,8 @@
    "key": "에그드랍:햄앤치즈프렌치토스트세트",
    "display": "햄 앤 치즈 프렌치 토스트 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796260147.png"
   },
   {
    "brand": "에그드랍",
@@ -152499,7 +152683,8 @@
    "key": "에그드랍:갈릭베이컨치즈세트",
    "display": "갈릭 베이컨 치즈 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796260134.png"
   },
   {
    "brand": "에그드랍",
@@ -152521,7 +152706,8 @@
    "key": "에그드랍:아보홀릭세트",
    "display": "아보홀릭 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796260723.png"
   },
   {
    "brand": "에그드랍",
@@ -152543,7 +152729,8 @@
    "key": "에그드랍:비프데리야끼세트",
    "display": "비프 데리야끼 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796260689.png"
   },
   {
    "brand": "에그드랍",
@@ -152565,7 +152752,8 @@
    "key": "에그드랍:베이컨딥치즈번세트",
    "display": "베이컨 딥 치즈 번 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796260188.png"
   },
   {
    "brand": "에그드랍",
@@ -152587,7 +152775,8 @@
    "key": "에그드랍:클럽샌드위치세트",
    "display": "클럽샌드위치 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796260183.png"
   },
   {
    "brand": "에그드랍",
@@ -152609,7 +152798,8 @@
    "key": "에그드랍:치킨클럽샌드위치세트",
    "display": "치킨클럽샌드위치 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796260176.png"
   },
   {
    "brand": "에그드랍",
@@ -152631,7 +152821,8 @@
    "key": "에그드랍:햄앤치즈길거리토스트세트",
    "display": "햄 앤 치즈 길거리 토스트 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796262083.png"
   },
   {
    "brand": "에그드랍",
@@ -152653,7 +152844,8 @@
    "key": "에그드랍:아보베이컨길거리토스트세트",
    "display": "아보 베이컨 길거리 토스트 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796262069.png"
   },
   {
    "brand": "에그드랍",
@@ -152675,7 +152867,8 @@
    "key": "에그드랍:비프앤치즈길거리토스트세트",
    "display": "비프 앤 치즈 길거리 토스트 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796260477.png"
   },
   {
    "brand": "에그드랍",
@@ -152697,7 +152890,8 @@
    "key": "에그드랍:샌드위치&해쉬&반했드랍2인세트",
    "display": "샌드위치 & 해쉬 & 반했드랍 2인 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796263386.png"
   },
   {
    "brand": "에그드랍",
@@ -152719,7 +152913,8 @@
    "key": "에그드랍:햄치즈베이글세트",
    "display": "햄 치즈 베이글 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796267255.png"
   },
   {
    "brand": "에그드랍",
@@ -152741,7 +152936,8 @@
    "key": "에그드랍:BLT베이글세트",
    "display": "BLT 베이글 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796267197.png"
   },
   {
    "brand": "에그드랍",
@@ -152763,7 +152959,8 @@
    "key": "에그드랍:에그햄치즈디럭스세트",
    "display": "에그 햄 치즈 디럭스 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796267136.png"
   },
   {
    "brand": "에그드랍",
@@ -152785,7 +152982,8 @@
    "key": "에그드랍:에그BLT디럭스세트",
    "display": "에그 BLT 디럭스 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796267031.png"
   },
   {
    "brand": "에그드랍",
@@ -152807,7 +153005,8 @@
    "key": "에그드랍:에그베이컨디럭스세트",
    "display": "에그 베이컨 디럭스 세트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796266902.png"
   },
   {
    "brand": "에그드랍",
@@ -152829,7 +153028,8 @@
    "key": "에그드랍:스팸치즈에그샌드위치",
    "display": "스팸 치즈 에그 샌드위치",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1780451541.png"
   },
   {
    "brand": "에그드랍",
@@ -152851,7 +153051,8 @@
    "key": "에그드랍:미스터에그",
    "display": "미스터 에그",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1670082549.png"
   },
   {
    "brand": "에그드랍",
@@ -152873,7 +153074,8 @@
    "key": "에그드랍:아메리칸햄치즈",
    "display": "아메리칸 햄 치즈",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1683201491.png"
   },
   {
    "brand": "에그드랍",
@@ -152895,7 +153097,8 @@
    "key": "에그드랍:베이컨더블치즈",
    "display": "베이컨 더블 치즈",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1670086136.png"
   },
   {
    "brand": "에그드랍",
@@ -152917,7 +153120,8 @@
    "key": "에그드랍:햄앤치즈프렌치토스트",
    "display": "햄 앤 치즈 프렌치토스트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1670087301.png"
   },
   {
    "brand": "에그드랍",
@@ -152939,7 +153143,8 @@
    "key": "에그드랍:갈릭베이컨치즈",
    "display": "갈릭 베이컨 치즈",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1670087161.png"
   },
   {
    "brand": "에그드랍",
@@ -152961,7 +153166,8 @@
    "key": "에그드랍:아보홀릭",
    "display": "아보홀릭",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1670087410.png"
   },
   {
    "brand": "에그드랍",
@@ -152983,7 +153189,8 @@
    "key": "에그드랍:비프데리야끼",
    "display": "비프 데리야끼",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1670086304.png"
   },
   {
    "brand": "에그드랍",
@@ -153005,7 +153212,8 @@
    "key": "에그드랍:베이컨딥치즈번",
    "display": "베이컨 딥 치즈 번",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1670087532.png"
   },
   {
    "brand": "에그드랍",
@@ -153027,7 +153235,8 @@
    "key": "에그드랍:클럽샌드위치",
    "display": "클럽샌드위치",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1683793522.png"
   },
   {
    "brand": "에그드랍",
@@ -153049,7 +153258,8 @@
    "key": "에그드랍:치킨클럽샌드위치",
    "display": "치킨 클럽샌드위치",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1683792694.png"
   },
   {
    "brand": "에그드랍",
@@ -153071,7 +153281,8 @@
    "key": "에그드랍:햄앤치즈길거리토스트",
    "display": "햄 앤 치즈 길거리 토스트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1646441297.png"
   },
   {
    "brand": "에그드랍",
@@ -153093,7 +153304,8 @@
    "key": "에그드랍:아보베이컨길거리토스트",
    "display": "아보 베이컨 길거리 토스트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1699234360.png"
   },
   {
    "brand": "에그드랍",
@@ -153115,7 +153327,8 @@
    "key": "에그드랍:비프앤치즈길거리토스트",
    "display": "비프 앤 치즈 길거리 토스트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1699234057.png"
   },
   {
    "brand": "에그드랍",
@@ -153137,7 +153350,8 @@
    "key": "에그드랍:브리오슈",
    "display": "브리오슈",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1691474628.png"
   },
   {
    "brand": "에그드랍",
@@ -153159,7 +153373,8 @@
    "key": "에그드랍:갈릭버터",
    "display": "갈릭버터",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1691475791.png"
   },
   {
    "brand": "에그드랍",
@@ -153181,7 +153396,8 @@
    "key": "에그드랍:프렌치토스트",
    "display": "프렌치 토스트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1691476222.png"
   },
   {
    "brand": "에그드랍",
@@ -153203,7 +153419,8 @@
    "key": "에그드랍:딸기피넛샌드",
    "display": "딸기피넛 샌드",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1770368493.png"
   },
   {
    "brand": "에그드랍",
@@ -153225,7 +153442,8 @@
    "key": "에그드랍:딸기크림프렌치토스트",
    "display": "딸기크림 프렌치 토스트",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1770368578.png"
   },
   {
    "brand": "에그드랍",
@@ -153247,7 +153465,8 @@
    "key": "에그드랍:햄치즈갈릭샌드",
    "display": "햄 치즈 갈릭 샌드",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1770368302.png"
   },
   {
    "brand": "에그드랍",
@@ -153269,7 +153488,8 @@
    "key": "에그드랍:햄치즈베이글",
    "display": "햄 치즈 베이글",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1814576757.png"
   },
   {
    "brand": "에그드랍",
@@ -153291,7 +153511,8 @@
    "key": "에그드랍:BLT베이글",
    "display": "BLT 베이글",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1814576618.png"
   },
   {
    "brand": "에그드랍",
@@ -153313,7 +153534,8 @@
    "key": "에그드랍:에그햄치즈디럭스",
    "display": "에그 햄 치즈 디럭스",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1814577208.png"
   },
   {
    "brand": "에그드랍",
@@ -153335,7 +153557,8 @@
    "key": "에그드랍:에그BLT디럭스",
    "display": "에그 BLT 디럭스",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1814577029.png"
   },
   {
    "brand": "에그드랍",
@@ -153357,7 +153580,8 @@
    "key": "에그드랍:에그베이컨디럭스",
    "display": "에그 베이컨 디럭스",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1814576314.png"
   },
   {
    "brand": "에그드랍",
@@ -153379,7 +153603,8 @@
    "key": "에그드랍:해쉬브라운",
    "display": "해쉬브라운",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1702000787.png"
   },
   {
    "brand": "에그드랍",
@@ -153401,7 +153626,8 @@
    "key": "에그드랍:베이컨체다해쉬브라운",
    "display": "베이컨 체다 해쉬브라운",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1702000970.png"
   },
   {
    "brand": "에그드랍",
@@ -153423,7 +153649,8 @@
    "key": "에그드랍:콘마요해쉬브라운",
    "display": "콘 마요 해쉬브라운",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796256728.png"
   },
   {
    "brand": "에그드랍",
@@ -153445,7 +153672,8 @@
    "key": "에그드랍:반했드랍반숙란",
    "display": "반했드랍 반숙란",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1686479563.png"
   },
   {
    "brand": "에그드랍",
@@ -153467,7 +153695,8 @@
    "key": "에그드랍:딸기잼",
    "display": "딸기잼",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1675513054.png"
   },
   {
    "brand": "에그드랍",
@@ -153489,7 +153718,8 @@
    "key": "에그드랍:케찹",
    "display": "케찹",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793693632.png"
   },
   {
    "brand": "에그드랍",
@@ -153511,7 +153741,8 @@
    "key": "에그드랍:랜치드레싱",
    "display": "랜치 드레싱",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793693504.png"
   },
   {
    "brand": "에그드랍",
@@ -153533,7 +153764,8 @@
    "key": "에그드랍:크림치즈",
    "display": "크림 치즈",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793693446.png"
   },
   {
    "brand": "에그드랍",
@@ -153555,7 +153787,8 @@
    "key": "에그드랍:레몬에이드",
    "display": "레몬 에이드",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793691574.png"
   },
   {
    "brand": "에그드랍",
@@ -153577,7 +153810,8 @@
    "key": "에그드랍:자몽에이드",
    "display": "자몽 에이드",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793691666.png"
   },
   {
    "brand": "에그드랍",
@@ -153599,7 +153833,8 @@
    "key": "에그드랍:오렌지썬라이즈",
    "display": "오렌지 썬라이즈",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793691997.png"
   },
   {
    "brand": "에그드랍",
@@ -153621,7 +153856,8 @@
    "key": "에그드랍:100%착즙수박주스",
    "display": "100% 착즙 수박 주스",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1775369874.png"
   },
   {
    "brand": "에그드랍",
@@ -153643,7 +153879,8 @@
    "key": "에그드랍:100%착즙사과주스",
    "display": "100% 착즙 사과 주스",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1775369752.png"
   },
   {
    "brand": "에그드랍",
@@ -153665,7 +153902,8 @@
    "key": "에그드랍:100%착즙오렌지주스",
    "display": "100% 착즙 오렌지 주스",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793691989.png"
   },
   {
    "brand": "에그드랍",
@@ -153687,7 +153925,8 @@
    "key": "에그드랍:100%착즙블러드오렌지주스",
    "display": "100% 착즙 블러드 오렌지 주스",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793691977.png"
   },
   {
    "brand": "에그드랍",
@@ -153709,7 +153948,8 @@
    "key": "에그드랍:핑크딸기라떼",
    "display": "핑크딸기라떼",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1777782550.png"
   },
   {
    "brand": "에그드랍",
@@ -153731,7 +153971,8 @@
    "key": "에그드랍:제주말차라떼(ICE/HOT)",
    "display": "제주말차라떼 (ICE/HOT)",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1796274283.png"
   },
   {
    "brand": "에그드랍",
@@ -153753,7 +153994,8 @@
    "key": "에그드랍:신선한우유(ICE/HOT)",
    "display": "신선한 우유 (ICE/HOT)",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793690293.png"
   },
   {
    "brand": "에그드랍",
@@ -153775,7 +154017,8 @@
    "key": "에그드랍:아메리카노(ICE/HOT)",
    "display": "아메리카노 (ICE/HOT)",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793689599.png"
   },
   {
    "brand": "에그드랍",
@@ -153797,7 +154040,8 @@
    "key": "에그드랍:카페라떼(ICE/HOT)",
    "display": "카페라떼 (ICE/HOT)",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793689809.png"
   },
   {
    "brand": "에그드랍",
@@ -153819,7 +154063,8 @@
    "key": "에그드랍:바닐라라떼(ICE/HOT)",
    "display": "바닐라라떼 (ICE/HOT)",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793689981.png"
   },
   {
    "brand": "에그드랍",
@@ -153841,7 +154086,8 @@
    "key": "에그드랍:밀크초콜릿(ICE/HOT)",
    "display": "밀크 초콜릿 (ICE/HOT)",
    "first_seen": "2026-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://www.eggdrop.co.kr/upload/menu/1793690388.png"
   },
   {
    "brand": "써브웨이",
@@ -211386,7 +211632,8 @@
    "key": "쉐이크쉑:핫도그",
    "display": "핫 도그",
    "first_seen": "2026-04-29",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/dog_260429_01.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -211408,7 +211655,8 @@
    "key": "쉐이크쉑:쉑마이스터도그",
    "display": "쉑마이스터 도그",
    "first_seen": "2026-04-29",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/dog_260429_02.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -211430,7 +211678,8 @@
    "key": "쉐이크쉑:베이컨체다도그",
    "display": "베이컨 체다 도그",
    "first_seen": "2026-04-29",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/dog_260429_03.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -211452,7 +211701,8 @@
    "key": "쉐이크쉑:스모크도그",
    "display": "스모크 도그",
    "first_seen": "2026-04-29",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/dog_260429_04.jpg"
   },
   {
    "brand": "파리바게뜨",
@@ -214696,7 +214946,8 @@
    "key": "쉐이크쉑:쉬림프쉑",
    "display": "쉬림프 쉑",
    "first_seen": "2026-04-10",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/burger_260410.jpg"
   },
   {
    "brand": "파리바게뜨",
@@ -218331,7 +218582,8 @@
    "key": "쉐이크쉑:어니언링",
    "display": "어니언링",
    "first_seen": "2026-03-06",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/fries_260306_02.jpg"
   },
   {
    "brand": "투썸플레이스",
@@ -229051,7 +229303,8 @@
    "key": "쉐이크쉑:스몰베이컨치즈프라이",
    "display": "스몰 베이컨 치즈 프라이",
    "first_seen": "2025-12-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/fries_251202.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -229073,7 +229326,8 @@
    "key": "쉐이크쉑:콜드브루",
    "display": "콜드브루",
    "first_seen": "2025-12-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/drink_251202_01.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -229095,7 +229349,8 @@
    "key": "쉐이크쉑:콜드브루라떼",
    "display": "콜드브루 라떼",
    "first_seen": "2025-12-02",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/drink_251202_02.jpg"
   },
   {
    "brand": "본설렁탕",
@@ -245229,7 +245484,8 @@
    "key": "쉐이크쉑:더불고기쉑",
    "display": "더 불고기 쉑",
    "first_seen": "2025-08-14",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/burger_250814.jpg"
   },
   {
    "brand": "스타벅스",
@@ -250807,7 +251063,8 @@
    "key": "쉐이크쉑:흑임자크런치",
    "display": "흑임자 크런치",
    "first_seen": "2025-06-04",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/concretes_250604.jpg"
   },
   {
    "brand": "노티드",
@@ -258307,7 +258564,8 @@
    "key": "쉐이크쉑:체리페퍼프라이",
    "display": "체리 페퍼 프라이",
    "first_seen": "2025-03-17",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/side_250317.jpg"
   },
   {
    "brand": "투썸플레이스",
@@ -271273,7 +271531,8 @@
    "key": "쉐이크쉑:쉑마이스터버거",
    "display": "쉑마이스터 버거",
    "first_seen": "2024-09-30",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/burger_240930.jpg"
   },
   {
    "brand": "한솥",
@@ -275622,7 +275881,8 @@
    "key": "쉐이크쉑:쉑라떼",
    "display": "쉑 라떼",
    "first_seen": "2024-06-13",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/custard_240613.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -275644,7 +275904,8 @@
    "key": "쉐이크쉑:웨이크업쉑",
    "display": "웨이크업 쉑",
    "first_seen": "2024-06-13",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/breakfast_240613_01.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -275666,7 +275927,8 @@
    "key": "쉐이크쉑:브렉퍼스트토츠",
    "display": "브렉퍼스트 토츠",
    "first_seen": "2024-06-13",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/breakfast_240613_02.jpg"
   },
   {
    "brand": "메가MGC커피",
@@ -284908,7 +285170,8 @@
    "key": "쉐이크쉑:핫치킨",
    "display": "핫 치킨",
    "first_seen": "2023-11-01",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/chicken_231101.jpg"
   },
   {
    "brand": "이마트24",
@@ -289882,7 +290145,8 @@
    "key": "쉐이크쉑:베이컨에그앤치즈",
    "display": "베이컨 에그 앤 치즈",
    "first_seen": "2023-08-17",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/breakfast_230817_01.jpg"
   },
   {
    "brand": "쉐이크쉑",
@@ -289904,7 +290168,8 @@
    "key": "쉐이크쉑:에그앤치즈",
    "display": "에그 앤 치즈",
    "first_seen": "2023-08-17",
-   "baseline": true
+   "baseline": true,
+   "image_src": "http://shakeshack.kr/resources/images/menu/breakfast_230817_02.jpg"
   },
   {
    "brand": "이디야커피",

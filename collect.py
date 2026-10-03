@@ -126,7 +126,7 @@ from collectors import (china_bobae, china_chunli, china_hongjjajang,
                         china_sorimmara, china_tanghuo)
 import rules
 import taxonomy
-from web import home
+from web import home, theme
 
 # GS25 는 상품 카탈로그를 긁을 수 없다 — gs25.gsretail.com 은 전 경로가 본사
 # 브랜드 페이지로 리다이렉트되는 SPA 껍데기고, 카탈로그는 '우리동네GS' 앱 전용이다.
@@ -480,10 +480,15 @@ def main() -> None:
     rules.undupe_display(rows)                       # 다듬다 같아진 이름은 원본으로
     # 주소가 있다고 사진이 뜨는 건 아니다. 화면에 올릴 것만 실제로 때려 본다
     # (전수 1,044장 중 7장이 404·끊긴 TLS 체인이었다). 자세한 건 rules 쪽 주석.
-    hid, back = rules.verify_images(rules.pick(rows, today, cap=False)
-                                    + rules.pick(rows, today, goods=True, cap=False))
+    shown = (rules.pick(rows, today, cap=False)
+             + rules.pick(rows, today, goods=True, cap=False))
+    hid, back = rules.verify_images(shown)
     if hid or back:
         print(f"   사진 안 열리는 것 {hid}장 감춤 / 되살아난 것 {back}장")
+    # http 로만 열리는 사진은 브라우저가 막는다. 받아서 우리 쪽에 둔다.
+    got, gone = rules.mirror_images(shown, ROOT / "docs", theme.BASE_URL)
+    if got or gone:
+        print(f"   사진 받아둔 것 {got}장 / 안 쓰는 것 {gone}장 정리")
 
     fresh = rules.pick(rows, today)                  # 홈 목록(브랜드 상한 적용)
     # 페이지는 상한 없이 만든다. 상한에 걸린 것도 /b/<브랜드>/ 와 검색으로 닿아야 한다.

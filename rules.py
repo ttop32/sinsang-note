@@ -377,11 +377,20 @@ IMG_HEADERS = {"Referer": "https://ttop32.github.io/",
 _MAGIC = ((b"\x89PNG", "png"), (b"\xff\xd8", "jpeg"), (b"GIF8", "gif"),
           (b"BM", "bmp"), (b"\x00\x00\x01\x00", "ico"))
 
+# ⚠️ AVIF 를 빠뜨렸다가 멀쩡한 사진을 떨어뜨렸다. 빙동댕(Wix CDN)이 우리가
+# 보내는 `Accept: image/avif` 를 보고 avif 로 내려준다 — 즉 **우리가 요청한
+# 형식인데 우리가 모른다고 버린 것**이다. 최신 형식은 앞으로도 늘어난다.
+_BMFF = {b"avif", b"avis", b"heic", b"heix", b"hevc", b"mif1", b"msf1"}
+
 
 def _is_image(blob: bytes) -> bool:
     if any(blob.startswith(m) for m, _ in _MAGIC):
         return True
+    # 컨테이너 꼴 둘. RIFF/WEBP 와 ISO BMFF(avif·heic). 앞 네 바이트는 상자
+    # 길이라 종류는 4~12 바이트에 있다.
     if blob[:4] == b"RIFF" and blob[8:12] == b"WEBP":
+        return True
+    if blob[4:8] == b"ftyp" and blob[8:12] in _BMFF:
         return True
     head = blob[:400].lstrip()
     return head.startswith(b"<svg") or b"<svg" in head[:200]
@@ -490,3 +499,89 @@ def badge_only(rows: list) -> list:
         if r.get("is_new") and r.get("baseline")
         and not (r.get("released_at") or r.get("uploaded_at")))
     return [(b, n) for b, n in hit.most_common() if n >= BADGE_ONLY_MIN]
+
+
+# ── 브라우저가 못 받는 사진을 우리 쪽에 둔다 ──────────────────────
+# 우리 페이지는 https 인데 사진이 http 뿐인 브랜드가 있다. 혼합 콘텐츠라
+# 브라우저가 막고, 그 호스트들은 https 를 아예 안 연다(ConnectError) —
+# 주소만 바꿔선 안 된다. 에그드랍·퀴즈노스·쉐이크쉑·스쿨푸드가 그렇다.
+#
+# 그래서 빌드할 때 받아서 docs/i/ 에 둔다. 정적 호스팅이라 프록시를 돌릴 수
+# 없고, 남의 프록시(images.weserv.nl 같은 것)에 태우면 우리 트래픽이 그쪽을
+# 지나간다. 받아 두는 쪽이 단순하고 우리가 통제한다.
+#
+# **화면에 올라간 것만** 받는다. 전량을 받으면 레포가 매일 불어난다.
+# 안 쓰는 파일은 매번 지운다 — 60일 창 밖으로 나간 상품의 사진은 필요 없다.
+# 400px WebP 로 줄인다. 카드가 400×400 으로 그린다.
+MIRROR_DIR = "i"
+MIRROR_PX = 400
+MIRROR_Q = 72
+
+
+def mirror_images(rows: list, docs, base_url: str) -> tuple:
+    """http 로만 열리는 사진을 받아 docs/i/ 에 둔다. (받은 수, 지운 수).
+
+    `image` 가 비고 `image_src` 가 http 인 행만 본다. 성공하면 `image` 에
+    우리 주소를 넣는다 — 그 뒤로는 평범한 사진과 똑같이 다뤄진다.
+
+    ⚠️ 상대 경로를 쓰면 안 된다. 홈은 docs/ 에 있지만 상세는 docs/p/<...>/
+    라 한 칸 아래다. og:image 는 아예 절대 주소라야 크롤러가 읽는다.
+    그래서 base_url 을 받아 **전체 주소**로 적는다(https 라 derive 도 안 지운다).
+    base_url 은 collect 가 web.theme.BASE_URL 을 넘긴다 — rules 가 web 을
+    import 하면 지금 한 방향으로 정리해 둔 의존이 다시 엉킨다.
+    """
+    import hashlib
+    import io
+    import concurrent.futures as cf
+
+    import httpx
+    from PIL import Image
+
+    out = docs / MIRROR_DIR
+    out.mkdir(parents=True, exist_ok=True)
+    todo = {}
+    for r in rows:
+        src = r.get("image_src") or ""
+        if not r.get("image") and src.startswith("http://"):
+            todo.setdefault(src, []).append(r)
+
+    def grab(url: str):
+        name = hashlib.sha1(url.encode()).hexdigest()[:16] + ".webp"
+        dest = out / name
+        if dest.exists():
+            return url, name
+        try:
+            with httpx.Client(timeout=IMG_TIMEOUT, follow_redirects=True,
+                              headers={"User-Agent": base.UA, **IMG_HEADERS}) as c:
+                blob = c.get(url).content
+            if len(blob) < IMG_MIN or not _is_image(blob):
+                return url, ""
+            im = Image.open(io.BytesIO(blob))
+            im = im.convert("RGB") if im.mode not in ("RGB", "L") else im
+            im.thumbnail((MIRROR_PX, MIRROR_PX))
+            im.save(dest, "WEBP", quality=MIRROR_Q, method=4)
+        except Exception:
+            return url, ""
+        return url, name
+
+    got = {}
+    if todo:
+        with cf.ThreadPoolExecutor(IMG_WORKERS) as ex:
+            got = dict(ex.map(grab, todo))
+
+    used, n = set(), 0
+    for url, group in todo.items():
+        if not got.get(url):
+            continue
+        used.add(got[url])
+        for r in group:
+            r["image"] = f"{base_url.rstrip('/')}/{MIRROR_DIR}/{got[url]}"
+            n += 1
+
+    # 안 쓰는 파일은 지운다. 안 그러면 레포가 매일 불어난다.
+    gone = 0
+    for f in out.glob("*.webp"):
+        if f.name not in used:
+            f.unlink()
+            gone += 1
+    return n, gone
