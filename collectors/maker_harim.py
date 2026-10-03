@@ -224,6 +224,7 @@ _VERB = re.compile(r"(출시|선봬|선보여|선보인다|론칭|런칭)")
 _SINGLE = re.compile(r"[‘'`]([^’'`]{2,40})[’'`]")
 _HEAD = re.compile(r"[“\"]([^”\"]*)[”\"]")
 _MULTI = re.compile(r"\d+\s*종")
+_COUNT_TAIL = re.compile(r"\s*\d+\s*종\s*$")   # 따옴표 **안**에 든 `N종` 꼬리
 _TRAIL_SEP = re.compile(r"^\s*[·∙,、/]")
 
 _SKIP = ("돌파", "완판", "누적", "성료", "수상", "선정", "채용", "매출", "영업이익",
@@ -258,7 +259,16 @@ def _pick(title: str) -> str:
     if any(w in m.group(1) for m in _HEAD.finditer(t) for w in _REPACK_HEAD):
         return ""
     body = _HEAD.sub(" ", t)          # “…” 는 홍보 헤드라인이다
-    if any(w in body for w in _SKIP) or _MULTI.search(body):
+    # 🔴 **`N종` 으로 버리지 않는다. 꼬리만 뗀다.**
+    # 이 파일은 처음에 오리온 계보를 그대로 따라 `_MULTI` 로 통째로 버렸는데,
+    # 하림은 `N종 출시` 를 유난히 자주 쓴다. 2026-10-03 실측으로 **진짜 출시
+    # 11건이 그 한 줄에 죽고 있었다** — `‘중화 닭요리’ 4종` · `‘오븐구이’ 3종` ·
+    # 맥시칸 `‘저당 소스’ 4종` · 푸디버디 `‘리틀죽’ 3종` 꼴이다. 전부 따옴표 안이
+    # 온전한 상품명이라 버릴 이유가 없다.
+    # 사조·면사랑·신세계푸드·풀무원·대상이 같은 판단을 했다(그쪽도 `N종 출시` 가 기본형).
+    # ⚠️ 하림은 `N종` 이 따옴표 **밖**에 있는 게 대부분이라 `_MULTI` 를 떼기만 해도
+    #    이름은 깨끗하다. 따옴표 **안**에 든 경우(`‘X 2종’`)를 위해 꼬리도 턴다.
+    if any(w in body for w in _SKIP):
         return ""
     # ‘A’ 테마 ‘B’ 꼴 — 마지막 두 따옴표 사이가 테마/에디션이면 B 는 기존 제품이다.
     qs = list(_SINGLE.finditer(body))
@@ -277,7 +287,7 @@ def _pick(title: str) -> str:
         return ""
     if _TRAIL_SEP.match(head[quoted.end():]):
         return ""
-    name = quoted.group(1).strip(" ,·∙")
+    name = _COUNT_TAIL.sub("", quoted.group(1).strip()).strip(" ,·∙")
     if len(name) < 2 or any(c in name for c in "·∙&?"):
         return ""
     if any(w in name for w in _REPACK_NAME):

@@ -167,4 +167,18 @@ def fetch() -> list[Item]:
                 items.append(it)
                 if len(items) >= MAX_ITEMS:
                     break
+
+    # 🔴 '건수는 멀쩡한데 날짜만 사라진' 상태를 막는다. 이 브랜드는 NEW 배지도
+    # 신메뉴 탭도 없어서 경로 날짜가 **유일한 신호**인데, imweb 이 CDN 경로를
+    # 바꾸면(`/thumbnail/<8자리>/` 가 아니게 되면) `_uploaded_at` 이 전건 빈
+    # 문자열을 돌려준다. 건수는 35 그대로라 collect.py 의 0건 가드도 FLOOR 도
+    # 통과하고 "호식이는 신제품이 없다" 가 조용히 굳는다 — 2026-10-03 리뷰에서
+    # 재현했다(경로만 바꿔치니 35건·날짜 0건으로 성공 처리됐다).
+    # 치킨플러스·노랑통닭·가마치통닭과 같은 가드다(실측 35/35 가 날짜를 받는다).
+    dated = sum(1 for it in items if it.uploaded_at)
+    if dated * 2 < len(items):
+        raise RuntimeError(
+            f"호식이두마리치킨 업로드일 {len(items)}건 중 {dated}건만 붙었다 — "
+            f"CDN 경로(cdn.imweb.me/thumbnail/<YYYYMMDD>/)가 바뀌었을 가능성. "
+            f"이 브랜드의 유일한 신제품 신호다")
     return items

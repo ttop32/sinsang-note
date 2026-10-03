@@ -32,7 +32,7 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
 from collectors import dongsuh, fredit, gs25, lottechilsung, ourhome, sempio
 # 아이스크림·빙수 전수 조사(2026-10-03). 공정위 `아이스크림/빙수`(K1) 가맹점 수
 # 순위를 위에서부터 훑었다. 순위표와 불가 사유는 notes/CANDIDATES-ICECREAM-BINGSU.md.
-from collectors import dessert_yoajung
+from collectors import dessert_palazzo, dessert_yoajung
 # 햄버거·카페 전수 조사 2차(2026-10-02). 공정위 패스트푸드·커피·음료 업종의
 # 가맹점 수 순위를 위에서부터 훑어 아직 없던 곳만 붙였다.
 # 순위표와 불가 사유는 notes/CANDIDATES-BURGER-CAFE3.md.
@@ -40,8 +40,9 @@ from collectors import dessert_yoajung
 # 위장하지 않고, 주문 플로우가 아니라 브랜드 메뉴 면(/brand/ria)만 읽는다.
 from collectors import (burger_burgerunburger, burger_fiveguys,
                         burger_lotteria, burger_nobrand, burger_shakeshack,
-                        burger_whattheburger, cafe_blushaak, cafe_tomntoms,
-                        toast_ssoja)
+                        burger_whattheburger, cafe_blushaak,
+                        cafe_cafe051, cafe_gongcha, cafe_oozy,
+                        cafe_palgongtea, cafe_tomntoms, toast_ssoja)
 # 과자·음료 제조사 2차(2026-10-02). 매출 순위 기준 전수 조사에서 나왔다 —
 # 근거와 순위표는 notes/MAKER-SNACK-DRINK.md, 브랜드별 함정은 각 docstring.
 from collectors import (maker_binggrae, maker_crown, maker_dongwonfnb,
@@ -135,7 +136,8 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             burger_mcdonalds,
             burger_lotteria, burger_nobrand, burger_whattheburger,   # 햄버거 2차
             burger_shakeshack, burger_fiveguys, burger_burgerunburger,
-            cafe_tomntoms, cafe_blushaak,                            # 카페 2차
+            cafe_tomntoms, cafe_blushaak, cafe_gongcha, cafe_cafe051,  # 카페 2차
+            cafe_oozy, cafe_palgongtea,
             maker_ottogi, maker_paldo, maker_orion,                  # 제조사(과자·라면)
             lottechilsung, fredit, ourhome,             # 제조사(음료·냉동식품)
             dongsuh, sempio,                            # 제조사(커피·조미료)
@@ -172,7 +174,7 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
             # 아이스크림·빙수 전수 조사분(공정위 K1 가맹점 수 상위).
-            dessert_yoajung,
+            dessert_yoajung, dessert_palazzo,
             toast_isaac, snack_kimbabcheonguk, snack_barunkim,       # 분식
             snack_jaws, snack_myungrang,
             snack_yumsem, snack_gimgane, snack_schoolfood,  # 분식 2차

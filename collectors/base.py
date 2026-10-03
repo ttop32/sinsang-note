@@ -108,10 +108,20 @@ BRANDS = {
     "커피베이":     (FRANCHISE, "커피"),
     "하이오커피":   (FRANCHISE, "커피"),
     "카페만월경":   (FRANCHISE, "커피"),
-    "빙동댕":       (FRANCHISE, "빙수"),
-    "달롱도르":     (FRANCHISE, "디저트"),
-    "에밀리아젤라또": (FRANCHISE, "아이스크림"),
-    "타래퀸":       (FRANCHISE, "빙수"),
+    # 🔴 아래 넷은 **CAFE 다. FRANCHISE 가 아니다.** 미등록분을 일괄로 붙일 때
+    # 전부 FRANCHISE 로 들어갔는데, 그러면 taxonomy.primary_of() 가 '외식' 을
+    # 줘서 **같은 업종이 1단 탭 두 곳으로 갈린다** — 설빙·배스킨라빈스·요아정은
+    # '카페' 에 있는데 빙동댕·타래퀸만 '외식' 에 앉는다. 이 파일 맨 위 규칙이
+    # "빵집·빙수·아이스크림·도넛은 '외식'이 아니라 카페로 묶는다" 이고,
+    # 공정위도 이 넷을 설빙·배스킨라빈스와 **같은 업종(K1 아이스크림/빙수)**
+    # 으로 묶는다(2026-10-03 등록 71건 직접 확인).
+    # 달롱도르는 세부분류도 고쳤다 — 정식명이 '달롱도르요거트아이스크림' 이라
+    # '디저트'(편의점이 쓰는 칸)가 아니라 요아정과 같은 '아이스크림' 이 맞다.
+    "빙동댕":       (CAFE, "빙수"),
+    "달롱도르":     (CAFE, "아이스크림"),
+    "에밀리아젤라또": (CAFE, "아이스크림"),
+    "타래퀸":       (CAFE, "빙수"),
+    "빨라쪼":       (CAFE, "아이스크림"),   # 공정위 영업표지 `빨라쪼 델 프레도`, 젤라또
     "33떡볶이":   (FRANCHISE, "분식"),
     "병아리김밥":   (FRANCHISE, "분식"),
     "김밥킹":       (FRANCHISE, "분식"),
@@ -224,6 +234,10 @@ BRANDS = {
     "할리스":      (CAFE, "커피"),
     "탐앤탐스":    (CAFE, "커피"),
     "블루샥":      (CAFE, "커피"),
+    "공차":        (CAFE, "커피"),
+    "카페051":     (CAFE, "커피"),
+    "우지커피":    (CAFE, "커피"),
+    "팔공티":      (CAFE, "커피"),
     "김밥천국":    (FRANCHISE, "분식"),
     "바르다김선생": (FRANCHISE, "분식"),
     "죠스떡볶이":  (FRANCHISE, "분식"),
@@ -488,6 +502,14 @@ SITES = {
     # SPA 라 사람이 여는 주소는 /menu 다. 어댑터는 그 뒤의 내부 API 를 쓴다.
     "탐앤탐스":     "https://www.tomntoms.com/menu",
     "블루샥":       "https://www.blushaak.co.kr/menu",
+    # ⚠️ gongcha.co.kr 이 아니라 **하이픈이 든** gong-cha.co.kr 이 본 사이트다.
+    # 루트는 스플래시라 메뉴 카탈로그 경로를 폴백으로 둔다.
+    "공차":         "https://gong-cha.co.kr/brand/menu/product",
+    "카페051":      "https://cafe051.com/menu",
+    # 상품별 주소(보도자료 글)가 Item.url 로 붙으므로 이건 폴백이다.
+    "우지커피":     "https://oozycoffee.com/coffee",
+    # 쿼리값이 한글 그대로다(menu=신메뉴). 퍼센트 인코딩해서 넣는다.
+    "팔공티":       "https://palgongtea.co.kr/goods/newest.html?menu=%EC%8B%A0%EB%A9%94%EB%89%B4",
     "스시로":       "https://www.sushiro.co.kr/pm",
     "에그드랍":     "http://www.eggdrop.co.kr/menu/list.php?category=NEW",
     "써브웨이":     "https://www.subway.co.kr/menuList/sandwich",
@@ -549,6 +571,8 @@ SITES = {
     "달롱도르":     "https://dallondor.com",
     "에밀리아젤라또": "https://www.emiliagelato.co.kr",
     "타래퀸":       "https://www.taraequeen.com",
+    # ⚠️ http 전용이다. https 는 안 열린다(collectors/dessert_palazzo.py 참고).
+    "빨라쪼":       "http://www.ipalazzo.com",
     "33떡볶이":   "https://33success100.co.kr",
     "병아리김밥":   "https://chickgimbap.com",
     "김밥킹":       "https://xn--4k0bn7xt5p.com",
@@ -584,7 +608,11 @@ SITES = {
     # 보도자료 목록이 폴백이다(기사별 주소는 Item.url 로 따로 붙는다).
     # ⚠️ 신세계푸드는 어댑터가 XHR(/company/pr/response/…)을 읽지만, 사람이 열
     #    주소는 그게 아니다 — 사람이 보는 면을 적는다.
-    "농심":        "https://brand.nongshim.com/new_product/index",
+    # 🔴 `brand.nongshim.com/new_product/index`(브랜드관 신제품 면)를 가리키고
+    # 있었는데 **그 면은 2026-06 에서 갱신이 멈췄다.** 검수가 잡았다 —
+    # 농심이 실제로 낸 8~10월 신제품 3건이 거기 없다. 어댑터도 뉴스룸으로
+    # 옮겼으니 사람이 여는 주소도 같이 옮긴다(collectors/maker_nongshim.py 참고).
+    "농심":        "https://www.nongshim.com/newsroom/news/list",
     "CJ제일제당":  "https://www.cj.co.kr/kr/newsroom/pressreleases",
     "신세계푸드":  "https://www.shinsegaefood.com/company/pr/news_list.sf",
     "면사랑":      "https://www.noodlelovers.com/site/main/archive/post/category/news",
@@ -755,10 +783,6 @@ ALCOHOL_WORDS = (
     # 주종도 품종도 이름에 없는 것들. 제품명으로 잡을 수밖에 없고 이 목록은
     # 늘어난다 — 구조적 한계다. '클라우드' 는 할리스 '미니저그 (클라우드크림)'
     # 이 걸려서 편의점 제조사 접두 뒤에 오는 경우로 좁혔다.
-    # 중국 백주. 중식 브랜드가 자체 고량주를 낸다(보배반점 '보배고량주' 2026-02-26).
-    # 전체 9,199건에 '고량주'·'백주'·'연태' 가 0건이라 오탐 없이 넣을 수 있다.
-    # '백주' 는 넣지 않았다 — 2글자라 '백주년' 같은 말을 문다.
-    "고량주", "연태고량주",
     "옐로우테일", ")클라우드", "한맥", "카스아이스", "칼스버그", "삿포로",
     "더드래프트", "크로넨버그", "쇼쿠사이", "효케츠", "파울라너",
     "바이젠", "츄하이", "필스너", "스타우트",
@@ -767,7 +791,12 @@ ALCOHOL_WORDS = (
 )
 
 # 뒤에 무엇이 오느냐로 갈리는 것들. 단순 포함으로는 못 가른다.
-_ALCOHOL_RE = re.compile(r"막걸리(?!향|맛|풍미)")
+# 중국 백주. 중식 브랜드가 자체 고량주를 낸다(보배반점 '보배고량주' 2026-02-26).
+# ⚠️ 통짜 '고량주' 로 넣으면 안 된다 — 지금 데이터엔 0건이라 오탐이 안 보이지만
+# '고량주스'·'고량주스바'·'청고량주먹밥' 을 전부 문다. 실제로 찍어 보고 확인했다.
+# 카스 → 카스테라 28건과 같은 자리라 뒤에 한글이 안 오는 경우로 좁힌다.
+# '백주' 는 아예 넣지 않았다 — 2글자라 '백주년' 같은 말을 문다.
+_ALCOHOL_RE = re.compile(r"막걸리(?!향|맛|풍미)|고량주(?![가-힣])")
 # 넣으면 안 되는 단어들. 전체 데이터에 대고 센 결과다.
 #   막걸리 → 스타벅스 '막걸리향 크림 콜드 브루' = 커피. 2건 전부 오탐
 #   사케  → '사케라또 아포가토'(스타벅스), 사케동. 접두 '사케)' 로만 잡는다

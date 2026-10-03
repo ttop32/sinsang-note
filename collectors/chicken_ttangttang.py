@@ -205,4 +205,16 @@ def fetch() -> list[Item]:
                     continue
                 seen.add(it.key)
                 items.append(it)
+
+    # 🔴 신메뉴 탭(위 가드)과 별개로 **날짜만 조용히 사라지는** 경로가 있다.
+    # imweb 이 CDN 경로를 바꾸면(`/thumbnail/<8자리>/` 가 아니게 되면)
+    # `_uploaded_at` 이 전건 빈 문자열을 돌려주는데, 건수는 49 그대로고 is_new 도
+    # 3건 남아서 collect.py 의 0건 가드도 FLOOR 도 통과한다. 그러면 신메뉴 탭
+    # 밖의 46건은 신제품 판정 근거를 통째로 잃는다 — 2026-10-03 리뷰에서
+    # 재현했다. 치킨플러스·호식이두마리치킨과 같은 가드다(실측 49/49).
+    dated = sum(1 for it in items if it.uploaded_at)
+    if dated * 2 < len(items):
+        raise RuntimeError(
+            f"땅땅치킨 업로드일 {len(items)}건 중 {dated}건만 붙었다 — "
+            f"CDN 경로(cdn.imweb.me/thumbnail/<YYYYMMDD>/)가 바뀌었을 가능성")
     return items

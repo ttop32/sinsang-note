@@ -93,7 +93,6 @@ _VERB = re.compile(r"(출시|선봬|선보여|선보인다|론칭|런칭)")
 _LAUNCH_ONLY = re.compile(r"(론칭|런칭)")   # 브랜드 출범에 쓰이는 동사
 _SINGLE = re.compile(r"[‘'`]([^’'`]{2,40})[’'`]")
 _HEAD = re.compile(r"[“\"]([^”\"]*)[”\"]")
-_MULTI = re.compile(r"\d+\s*종")
 _TRAIL_SEP = re.compile(r"^\s*[·∙,、/]")
 # 따옴표 바로 앞의 '브랜드'. 상품이 아니라 브랜드 소개라는 신호다(아래 _pick 참고).
 _BRAND_HEAD = re.compile(r"브랜드\s*$")
@@ -116,6 +115,17 @@ _REPACK_HEAD = ("에디션", "라벨")
 _REPACK_MID = ("테마", "에디션", "라벨", "컬래버", "콜라보")
 _REPACK_NAME = ("에디션", "컬렉션", "한정판", "선물세트", "기획세트", "기획팩")
 
+# 🔴 **`N종` 을 버리지 않고 꼬리만 뗀다.** 오리온 규칙은 `N종` 이 들어간 제목을
+# 통째로 버리는데(따옴표 안이 상품이 아니라 라인 이름일 수 있어서), CJ 는
+# 따옴표 안이 **온전한 상품명**이라 그 걱정이 없고 버리면 진짜 신제품이 죽는다.
+# 2026-10-03 검수 실측 — 8페이지 48건에서 이 규칙 하나로 죽은 진짜 신제품:
+#     CJ제일제당, 전통 수제방식 살린 ‘비비고 김부각’ 3종 출시… “건강스낵 시장 공략”
+# 2026-10-02 판이 신세계푸드·풀무원만 되살리고 CJ 를 빠뜨렸다(§5-3 과 같은 사고).
+# 풀무원과 같은 처리다 — **따옴표 안만 쓰는 건 그대로 두고** `N종` 꼬리만 턴다.
+# 48건 전수 재실행: 2건 → 3건, 새로 들어온 1건이 위의 김부각이다.
+# ⚠️ `_MULTI` 는 지웠다. 쓰는 데가 없는데 남겨 두면 다음 사람이 되살린다.
+_COUNT_TAIL = re.compile(r"\s*\d+\s*종\s*$")
+
 
 def _pick(title: str) -> str:
     """보도자료 제목에서 상품명을 뽑는다. 상품을 특정 못 하면 빈 문자열."""
@@ -123,7 +133,8 @@ def _pick(title: str) -> str:
     if any(w in m.group(1) for m in _HEAD.finditer(t) for w in _REPACK_HEAD):
         return ""
     body = _HEAD.sub(" ", t)
-    if any(w in body for w in _SKIP) or _MULTI.search(body):
+    # ⚠️ `N종` 으로 버리지 않는다. 사유는 _COUNT_TAIL 위 주석.
+    if any(w in body for w in _SKIP):
         return ""
     qs = list(_SINGLE.finditer(body))
     if len(qs) >= 2 and any(w in body[qs[-2].end():qs[-1].start()] for w in _REPACK_MID):
@@ -151,7 +162,7 @@ def _pick(title: str) -> str:
         return ""
     if _TRAIL_SEP.match(head[quoted.end():]):
         return ""
-    name = quoted.group(1).strip(" ,·∙")
+    name = _COUNT_TAIL.sub("", quoted.group(1).strip()).strip(" ,·∙")
     if len(name) < 2 or any(c in name for c in "·∙&?!"):
         return ""
     if any(w in name for w in _REPACK_NAME):

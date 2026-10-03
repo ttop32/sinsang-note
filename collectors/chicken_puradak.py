@@ -94,6 +94,7 @@ LISTS = [("0", "치킨"), ("1", "사이드")]
 MAX_PAGES = 20    # 폭주 방지. 현재 분류당 5·3페이지.
 DELAY = 0.3       # 목록 요청 간격(초)
 IMG_DELAY = 0.15  # 이미지 HEAD 간격(초)
+PAGER = "div.paging_all"   # `이전 1 2 3 4 5 다음`. 마지막 페이지 번호가 여기 있다
 
 _IDX = re.compile(r"idx=(\d+)")
 
@@ -130,11 +131,23 @@ def _uploaded_at(client, img_url: str) -> str:
         return ""
 
 
-def _page(client, sermode: str, page: int) -> list:
+def _page(client, sermode: str, page: int) -> tuple:
     r = base.retry(
         lambda: client.get(f"{MENU}product.asp?sermode={sermode}&page={page}"))
     r.raise_for_status()
-    return HTMLParser(r.text).css("div.photo_list ul.list > li")
+    doc = HTMLParser(r.text)
+    return doc, doc.css("div.photo_list ul.list > li")
+
+
+def _last_page(doc) -> int:
+    """페이저(`이전 1 2 3 4 5 다음`)가 말하는 마지막 페이지 번호. 못 읽으면 0.
+
+    🔴 이게 없으면 '끝'과 '서버가 앞 페이지를 되돌려주는 중'을 구분할 수 없다.
+    아래 fetch 주석 참고 — 구분 못 하면 88건이 24건으로 조용히 줄어든다.
+    """
+    n = doc.css_first(PAGER)
+    nums = [int(x) for x in re.findall(r"\d+", n.text())] if n else []
+    return min(max(nums), MAX_PAGES) if nums else 0
 
 
 def fetch() -> list[Item]:
@@ -143,9 +156,20 @@ def fetch() -> list[Item]:
     new_badges = 0
     with base.client() as c:
         for sermode, category in LISTS:
+            last = 0
             for page in range(1, MAX_PAGES + 1):
                 time.sleep(DELAY)
-                cards = _page(c, sermode, page)
+                doc, cards = _page(c, sermode, page)
+                if page == 1:
+                    last = _last_page(doc)
+                    # 페이저를 못 읽으면 아래 '새 상품 0건' 판정이 '끝' 인지
+                    # '서버가 1페이지를 되돌려주는 중' 인지 못 가린다. 그 상태로
+                    # 돌면 조용히 1페이지만 긁고 성공으로 끝난다 — 실측으로
+                    # 88건이 24건이 됐다. 건수가 그럴듯해서 아무도 못 알아챈다.
+                    if not last:
+                        raise RuntimeError(
+                            f"푸라닭 sermode={sermode} 페이저('{PAGER}')를 못 읽었다 "
+                            "— 페이지 수를 모르면 부분수집을 구분할 수 없다")
                 if not cards:
                     break
                 added = 0
@@ -185,8 +209,18 @@ def fetch() -> list[Item]:
                     added += 1
 
                 # 끝 너머 페이지는 404 가 아니라 마지막 페이지를 다시 준다.
-                # 새로 들어온 게 없으면 거기가 끝이다.
+                # 그래서 '새로 들어온 게 0건' 은 두 가지 뜻이 된다 —
+                # 페이저 범위 **밖**이면 끝이고, **안**이면 서버가 앞 페이지를
+                # 되돌려주고 있는 것(= 부분수집)이다. 뒤엣것을 조용히 '끝' 으로
+                # 읽으면 88건이 24건이 된다. 세어서 가른다.
                 if not added:
+                    if page <= last:
+                        raise RuntimeError(
+                            f"푸라닭 sermode={sermode} {page}/{last} 페이지에 "
+                            "새 상품이 0건이다 — 서버가 앞 페이지를 되돌려주는 "
+                            "부분수집일 가능성")
+                    break
+                if page >= last:
                     break
 
         # 비어 있으면 셀렉터가 깨진 것이다. 조용히 [] 를 돌려주는 건 이 레포에서

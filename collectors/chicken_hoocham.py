@@ -92,6 +92,17 @@ _ITEM = re.compile(
     r'/superboard/data/product/thumb/[^"]+)"'
     r'[\s\S]{0,300}?<span class="tit">([^<]*)</span>')
 
+# 카드 한 장당 정확히 하나. 위 `_ITEM` 이 몇 장을 흘렸는지 세는 데만 쓴다.
+#
+# 🔴 같은 superboard CMS 를 쓰는 누구나홀딱반한닭에서 이 모양의 정규식이 사고를
+# 냈다. 상품명을 `<span class="tit">([^<]*)</span>` 로 받는데, 맵기 아이콘이
+# 이름 안에 들어간 카드(`<span class="tit">쏘핫레드홀릭 <i class="ico_spicy"></i>
+# </span>`)가 `[^<]` 에서 끊겨 **카드 7장이 통째로 사라졌다**(그중 하나가 신메뉴).
+# 건수가 그럴듯하게 남아서 collect.py 의 0건 가드도 FLOOR 도 통과했다.
+# 후참잘은 2026-10-03 실측으로 33/33 이 멀쩡하지만, 브랜드가 같은 아이콘을 쓰기
+# 시작하면 똑같이 당한다. 세어서 어긋나면 터뜨린다.
+_TIT = re.compile(r'<span class="tit">')
+
 # 출시 공지만 본다. 둘 다 없으면 상품 소식이 아니다.
 _LAUNCH = ("신메뉴", "출시")
 # 상품 이름이 이보다 짧으면 제목 안에서 우연히 걸린다. 대조에서 뺀다.
@@ -193,7 +204,15 @@ def fetch() -> list[Item]:
         news = _news(c)
 
         for path, cid, cate in cats[:MAX_CATEGORIES]:
-            for img, name in _ITEM.findall(pages.get(cid, "")):
+            html = pages.get(cid, "")
+            found = _ITEM.findall(html)
+            cards = len(_TIT.findall(html))
+            # 조용한 부분수집을 막는다. 카드 수와 파싱 수가 어긋나면 터뜨린다(_TIT 주석).
+            if len(found) != cards:
+                raise RuntimeError(
+                    f"후참잘 ca_id={cid} 카드 {cards}장 중 {len(found)}장만 읽혔다 "
+                    "— 상품명 안에 태그가 생겼거나 마크업이 바뀌었을 가능성")
+            for img, name in found:
                 name = " ".join(name.split())
                 if not name:
                     continue
