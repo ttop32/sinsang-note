@@ -51,6 +51,7 @@ robots: `chunlimalatang.com/robots.txt` → 200, text/plain. 본문이 두 줄�
 약관: 푸터에 개인정보처리방침만 있고 **이용약관 페이지가 없다**. 수집·복제를
       금지하는 문구는 찾지 못했다.
 """
+import html as html_mod
 import re
 import time
 from datetime import date, timedelta
@@ -77,12 +78,25 @@ _SKIP = ("오픈", "수상", "선정", "대상", "협력", "체결", "이벤트"
 _QUOTED = re.compile(r"[‘'`]([^’'`\n]{2,40})[’'`]")
 
 # 따옴표 안이 상품이 아닌 것들.
-_NOT_PRODUCT = ("점", "대상", "이벤트", "데이", "브랜드", "프랜차이즈", "캠페인",
+_NOT_PRODUCT = ("대상", "이벤트", "데이", "브랜드", "프랜차이즈", "캠페인",
                 "협약", "축제", "시리즈")
+
+# 지점명. `"점"` 을 _NOT_PRODUCT 에 넣으면 부분일치라 '점보마라탕'·'점보만두'
+# 같은 실존 작명을 죽인다(라화쿵부가 실제로 '3KG 점보마라탕' 을 판다).
+# 지점명은 항상 '…점' 으로 **끝나므로** 끝자리로만 본다.
+_BRANCH = re.compile(r"점$")
 
 
 def _strip(html: str) -> str:
-    return " ".join(re.sub(r"<[^>]*>", " ", html or "").replace("&nbsp;", " ").split())
+    """태그를 털고 한 줄로. **HTML 엔티티도 푼다.**
+
+    워드프레스 REST 는 `content.rendered` 를 엔티티로 이스케이프해서 준다 —
+    제목에 `&#8216;대한민국 대표 마라탕 Lite&#8217;` 처럼 들어온다. 안 풀면
+    따옴표가 `‘’` 가 아니라 숫자 참조라 _QUOTED 가 못 잡는다. 다른 9개 어댑터는
+    selectolax 가 알아서 풀어 주는데 여기만 JSON 을 직접 읽어서 손으로 풀어야 한다.
+    """
+    return " ".join(html_mod.unescape(
+        re.sub(r"<[^>]*>", " ", html or "")).split())
 
 
 def _date(s: str) -> str:
@@ -107,7 +121,11 @@ def _names(title: str, body: str) -> list:
     out, seen = [], set()
     for m in _QUOTED.finditer(body):
         name = m.group(1).strip(" ,·∙")
-        if len(name) < 2 or any(w in name for w in _NOT_PRODUCT):
+        # 두 상품을 '·' 로 묶은 한 덩어리는 버린다. 본문이 각각을 따로 부르므로
+        # 개별 상품은 이 반복에서 따로 잡힌다(보배반점에서 실제로 터진 오집이다).
+        if len(name) < 2 or any(ch in name for ch in "·∙&?"):
+            continue
+        if any(w in name for w in _NOT_PRODUCT) or _BRANCH.search(name):
             continue
         if name.replace(" ", "") not in flat or name in seen:
             continue

@@ -30,6 +30,9 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
                         pizza_pizzahut,
                         seven, starbucks, toast_isaac)
 from collectors import dongsuh, fredit, gs25, lottechilsung, ourhome, sempio
+# 아이스크림·빙수 전수 조사(2026-10-03). 공정위 `아이스크림/빙수`(K1) 가맹점 수
+# 순위를 위에서부터 훑었다. 순위표와 불가 사유는 notes/CANDIDATES-ICECREAM-BINGSU.md.
+from collectors import dessert_yoajung
 # 햄버거·카페 전수 조사 2차(2026-10-02). 공정위 패스트푸드·커피·음료 업종의
 # 가맹점 수 순위를 위에서부터 훑어 아직 없던 곳만 붙였다.
 # 순위표와 불가 사유는 notes/CANDIDATES-BURGER-CAFE3.md.
@@ -46,8 +49,8 @@ from collectors import (maker_binggrae, maker_crown, maker_dongwonfnb,
                         maker_maeil, maker_pulmuone, maker_sajo, maker_samyang)
 # 라면·냉동식품·냉동피자 전수 조사(2026-10-02). 순위표는
 # notes/CANDIDATES-RAMEN-FROZEN.md. 농심·CJ 는 1차가 robots 로 접었던 곳이다.
-from collectors import (maker_cj, maker_myunsarang, maker_nongshim,
-                        maker_shinsegaefood)
+from collectors import (maker_cj, maker_daesang, maker_myunsarang,
+                        maker_nongshim, maker_shinsegaefood)
 # SPC삼립. 같은 라운드에서 파일만 만들어진 채 등록이 빠져 있었다 — 2차가
 # `/brand/bakery` 한 경로만 보고 "신제품 신호 없음" 으로 접었는데 보도자료
 # JSON API 가 열려 있고 출시 밀도가 이번 조사 1위(120건 중 81건)다.
@@ -146,6 +149,7 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             maker_nongshim,                                   # 라면
             maker_cj, maker_shinsegaefood,                    # 냉동·간편식·냉동피자
             maker_myunsarang,                                 # 냉동면·생면·육수
+            maker_daesang,                                    # 장류·소스·조미료
             maker_spcsamlip,                                  # 베이커리(양산빵)
             alcohol_hitejinro,                          # 제조사(주류)
             maker_harim,                                # 제조사(육가공·식재료)
@@ -167,6 +171,8 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             chicken_nene, chicken_gamachi, chicken_norang,
             pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
+            # 아이스크림·빙수 전수 조사분(공정위 K1 가맹점 수 상위).
+            dessert_yoajung,
             toast_isaac, snack_kimbabcheonguk, snack_barunkim,       # 분식
             snack_jaws, snack_myungrang,
             snack_yumsem, snack_gimgane, snack_schoolfood,  # 분식 2차

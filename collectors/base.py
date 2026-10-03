@@ -182,7 +182,23 @@ BRANDS = {
     # 이미 붙어 있다. 면사랑은 그 바깥의 냉동면·생면·밀키트·육수 축이라
     # '라면' 이 아니라 '냉동식품' 으로 둔다.
     "면사랑":      (MAKER, "냉동식품"),
+    # 대상(청정원). **냉동식품이 아니라 조미료**다 — 호밍스·안주야 라인이 있지만
+    # 본체는 장류·소스·조미료고 실측 수집분도 전부 조미료였다(알룰로스·피클링소스·
+    # 화이트식초). 샘표와 같은 칸에 둔다. 근거는 collectors/maker_daesang.py docstring.
+    # ⚠️ 사진은 `/common/popup/download.jsp` 로 와서 octet-stream 이다.
+    #    rules.verify_images() 가 전부 지운다 — 알고 넣은 것이니 '깨졌다'고 읽지 마라.
+    "대상":        (MAKER, "조미료"),
     "배스킨라빈스": (CAFE, "아이스크림"),
+    # ── 아이스크림·빙수 전수 조사(2026-10-03) ─────────────────────────
+    # 순위는 공정위 `아이스크림/빙수`(K1) 가맹점 수. 2026-10-03 에 등록 71건을
+    # 직접 받아 확인했다(notes/FRANCHISE-MASTER.md §디저트/아이스크림).
+    # ⚠️ 공정위에 **같은 회사가 두 줄**로 올라 있다 —
+    #    `카페요아정` 372개 · `요거트아이스크림의 정석` 187개.
+    #    사업자등록번호가 `696-86-02195` 로 같다(상호만 트릴리언즈 → 요아정).
+    #    브랜드를 둘로 넣으면 같은 상품이 두 번 올라가므로 **하나로 합친다.**
+    # ⚠️ 공지 게시판이 2025-02-10 에서 멈춰 있어 **0건이 정상**이다.
+    #    theborn 과 같은 칸이다 — '수집 실패'로 읽지 마라.
+    "요아정":      (CAFE, "아이스크림"),
     "던킨":        (CAFE, "도넛"),
     "이삭토스트":  (FRANCHISE, "샌드위치"),
     "파리바게뜨":  (CAFE, "베이커리"),
@@ -416,6 +432,9 @@ SITES = {
     "미스터피자":   "https://www.mrpizza.co.kr/bbs/board.php?bo_table=menu",
     "파파존스":     "https://pji.co.kr/menu/pizza",
     "배스킨라빈스": "https://www.baskinrobbins.co.kr/menu/fom.php",
+    # 글별 주소가 Item.url 로 붙으므로 이건 폴백이다. 사람이 열 자리는
+    # 공지 게시판이 아니라 메뉴·매장 면이다.
+    "요아정":      "https://yoajung.co.kr/bbs/content.php?co_id=menustore",
     "던킨":         "https://www.dunkindonuts.co.kr/menu",
     "이삭토스트":   "https://www.isaac-toast.co.kr/menu/menu.php",
     "이마트24":     "https://emart24.co.kr/goods/pl",
@@ -569,6 +588,8 @@ SITES = {
     "CJ제일제당":  "https://www.cj.co.kr/kr/newsroom/pressreleases",
     "신세계푸드":  "https://www.shinsegaefood.com/company/pr/news_list.sf",
     "면사랑":      "https://www.noodlelovers.com/site/main/archive/post/category/news",
+    # 기사별 주소(newsView.do?idx=)가 Item.url 로 붙으므로 이건 폴백이다.
+    "대상":        "https://www.daesang.com/kr/news/newsList.do",
     # ── 더본코리아 외식 브랜드 ─────────────────────────────────────────
     # 상품별 주소(보도자료 기사)가 Item.url 로 붙으므로 이건 전부 폴백이다.
     # 자체 도메인이 있으면 그 브랜드의 **메뉴 페이지**를, 없으면 theborn.co.kr 의
@@ -1034,10 +1055,21 @@ def derive(d: dict, *, stored: bool = False) -> dict:
                     or taxonomy.vendor_nonfood(d["brand"], cat)
                     or is_nonfood(d["name"], cat))
     d["alcohol"] = "alcohol" in said or is_alcohol(d["name"], cat, d["brand"])
+    # 글자 칸에 None 이 들어오면 아래 어딘가에서 터진다. 어댑터가 한 번
+    # 터지면 그 브랜드가 통째로 빠지는데 건수가 0 이라 급감 가드에도 안
+    # 걸린다. 실제로 태리로제떡볶이 56건이 그렇게 날아갔다 — selectolax 의
+    # `.attributes.get(k, "")` 는 값 없는 속성을 "키는 있고 값은 None" 으로
+    # 주기 때문에 기본값 ""가 안 먹는다. 어댑터마다 `or ""` 를 적게 하는
+    # 대신 정본인 여기서 한 번 턴다.
+    for k in ("name", "name_en", "desc", "image", "category",
+              "url", "released_at", "uploaded_at"):
+        if d.get(k) is None:
+            d[k] = ""
+
     # 우리 페이지는 https 라 http 이미지는 브라우저가 막는다(혼합 콘텐츠).
     # 빈 네모가 뜨느니 사진 없는 카드로 그리는 게 낫다. 에그드랍 73건이
     # 그랬다 — 인증서가 2025-05-27 에 만료돼 https 로는 아예 안 열린다.
-    if (d.get("image") or "").startswith("http://"):
+    if d["image"].startswith("http://"):
         d["image"] = ""
     return d
 

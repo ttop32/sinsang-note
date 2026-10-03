@@ -98,9 +98,20 @@ _SKIP = ("수상", "선정", "오픈", "OPEN", "인증", "체결", "박람회",
 _QUOTE = "‘’'“”\"`"
 _QUOTED = re.compile(f"[{_QUOTE}]([^{_QUOTE}\n]{{2,30}})[{_QUOTE}]")
 
-# 따옴표 안이 상품이 아닌 것들. '점' 이 지점명을, '세트' 가 행사 묶음을 잡는다.
-_NOT_PRODUCT = ("짬뽕관", "점", "세트", "브랜드", "프랜차이즈", "어워즈", "대상",
+# 따옴표 안이 상품이 아닌 것들. '점' 이 지점명을 잡는다.
+#
+# 🔴 **'세트' 를 뺐다.** base.Item docstring 이 명시적으로 금지한다 —
+#    "세트·콤보는 여기 쓰지 마라. collect.drop_sets() 가 이름으로 거른다.
+#     어댑터마다 세트 기준이 달라져 신메뉴 세트가 잘렸다."
+#    행사 묶음('돌판간짬뽕 + 연태고량주 세트')은 바로 아래 '+' 기호 필터가
+#    이미 잡으므로 '세트' 를 따로 둘 이유가 없다.
+_NOT_PRODUCT = ("짬뽕관", "브랜드", "프랜차이즈", "어워즈", "대상",
                 "이벤트", "캠페인", "협약", "박람회", "매장", "주방")
+
+# 지점명. `"점"` 을 _NOT_PRODUCT 에 넣으면 부분일치라 '점보마라탕'·'점보만두'
+# 같은 실존 작명을 죽인다(라화쿵부가 실제로 '3KG 점보마라탕' 을 판다).
+# 지점명은 항상 '…점' 으로 **끝나므로** 끝자리로만 본다.
+_BRANCH = re.compile(r"점$")
 
 
 def _text(node) -> str:
@@ -154,7 +165,7 @@ def _names(title: str, body: str) -> list:
         # 묶음 기호가 들어가면 상품 하나가 아니다 — '돌판간짬뽕 + 연태고량주 세트'.
         if len(name) < 2 or any(c in name for c in "+·∙&?"):
             continue
-        if any(w in name for w in _NOT_PRODUCT):
+        if any(w in name for w in _NOT_PRODUCT) or _BRANCH.search(name):
             continue
         if name.replace(" ", "") not in flat or name in seen:
             continue

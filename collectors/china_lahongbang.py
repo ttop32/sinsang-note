@@ -12,7 +12,7 @@
   - 그누보드5다. 게시판 4개 중 `news`(언론 기사, 134건)만 쓴다.
     `notice`(공지사항)·`promotion`(프로모션)·`franchise`(매장안내)는 각각
     창업 안내·할인 행사·지점 목록이라 상품이 없다.
-  - 목록 `/bbs/board.php?bo_table=news&page=N`. SSR 이고 **제목이 안 잘린다**.
+  - 목록 `/bbs/board.php?bo_table=news&page=N`. SSR 이고 **제목이 안 잘린다**.\n    ⚠️ **페이징이 사실상 없다** — 1페이지에 134건이 전부 들어오고 `page=2` 는\n    0건이다. MAX_PAGES 는 글이 늘어나 페이징이 켜질 때를 대비한 상한일 뿐이다.
   - ⚠️ **목록의 날짜가 `06-17` 처럼 월·일뿐이다.** 그누보드가 올해 글은 연도를
     떼고 보여준다. 연도를 추측해 채우면 안 되므로 **상세의 `작성일 26-06-17 10:07`**
     을 쓴다. 상세는 어차피 교차검증 때문에 받는다.
@@ -55,7 +55,7 @@ BRAND = "라홍방마라탕"
 SITE = "https://www.lahongbang.com"
 LIST = SITE + "/bbs/board.php"
 BO_TABLE = "news"
-MAX_PAGES = 3        # 한 페이지 15건. 3페이지면 1년 반쯤 된다
+MAX_PAGES = 3        # 지금은 1페이지에 134건이 다 온다(위 docstring 참고).\n                     # 페이징이 켜질 때를 대비한 상한이다.
 DAYS = 540           # 중식은 신메뉴가 연 1~4건이라 300일이면 브랜드 페이지가 빈다.
                      # 화면 노출은 rules.WINDOW(60일)가 따로 자르므로 넓혀도
                      # '오래된 게 신상으로 뜨는' 일은 없다(짬뽕관 어댑터와 맞췄다).
@@ -78,8 +78,13 @@ _QUOTED = re.compile(r"[‘'`]([^’'`\n]{2,40})[’'`]")
 # ⚠️ 협업 제품은 본문이 두 이름을 ' x ' 로 이어 부른다 —
 #    '고래사 x 라홍방 마라탕 한그릇'. 같은 제품의 다른 표기라 중복이 되므로
 #    협업 접두가 붙은 쪽을 버리고 짧은 쪽('마라탕 한그릇')만 남긴다.
-_NOT_PRODUCT = ("점", "프로모션", "브랜드", "프랜차이즈", "박람회", "이벤트",
+_NOT_PRODUCT = ("프로모션", "브랜드", "프랜차이즈", "박람회", "이벤트",
                 "캠페인", "협약", "지원", "라홍방", "라홍")
+
+# 지점명. `"점"` 을 _NOT_PRODUCT 에 넣으면 부분일치라 '점보마라탕'·'점보만두'
+# 같은 실존 작명을 죽인다(라화쿵부가 실제로 '3KG 점보마라탕' 을 판다).
+# 지점명은 항상 '…점' 으로 **끝나므로** 끝자리로만 본다.
+_BRANCH = re.compile(r"점$")
 
 _COLLAB = re.compile(r"\s[xX×]\s")
 
@@ -89,6 +94,20 @@ _WROTE = re.compile(r"작성일\s*(\d{2})-(\d{2})-(\d{2})")
 
 def _text(node) -> str:
     return " ".join(node.text().split()) if node else ""
+
+
+def _date(s: str) -> str:
+    """'2026-06-17' → 같은 문자열. 월·일 범위를 검증한다.
+
+    그누보드가 두 자리 연도만 주는 자리라(`작성일 26-06-17`) 우리가 `20` 을 붙여
+    만든다. 그 값이 `2099-99-99` 같은 쓰레기여도 그대로 released_at 에 들어가면
+    정렬과 60일 창 판정이 통째로 깨진다. 다른 중식 어댑터와 같은 검증을 건다.
+    """
+    m = re.search(r"(20\d{2})-(\d{1,2})-(\d{1,2})", s or "")
+    if not m:
+        return ""
+    y, mo, d = (int(x) for x in m.groups())
+    return f"{y:04d}-{mo:02d}-{d:02d}" if 1 <= mo <= 12 and 1 <= d <= 31 else ""
 
 
 def _rows(html: str) -> list:
@@ -118,7 +137,7 @@ def _names(title: str, body: str) -> list:
         # 두 상품을 '·' 로 묶은 것과 구분이 안 되므로 묶음 기호가 있으면 버린다.
         if len(name) < 2 or any(c in name for c in "·∙&?") or _COLLAB.search(name):
             continue
-        if any(w in name for w in _NOT_PRODUCT):
+        if any(w in name for w in _NOT_PRODUCT) or _BRANCH.search(name):
             continue
         if name.replace(" ", "") not in flat or name in seen:
             continue
@@ -175,7 +194,9 @@ def fetch() -> list[Item]:
             m = _WROTE.search(body)
             if not m:
                 continue
-            when = f"20{m.group(1)}-{m.group(2)}-{m.group(3)}"
+            when = _date(f"20{m.group(1)}-{m.group(2)}-{m.group(3)}")
+            if not when:
+                continue
             if when < floor:
                 continue
             img = _image(doc)

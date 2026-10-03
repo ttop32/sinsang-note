@@ -95,7 +95,12 @@ _QUOTED = re.compile(r"[‘'`]([^’'`\n]{2,40})[’'`]")
 
 # 따옴표 안이 상품이 아닌 것들.
 _NOT_PRODUCT = ("보배그린하트", "마켓보배", "대상", "브랜드", "프랜차이즈", "미래",
-                "이벤트", "캠페인", "점", "협업", "일상")
+                "이벤트", "캠페인", "협업", "일상")
+
+# 지점명. `"점"` 을 _NOT_PRODUCT 에 넣으면 부분일치라 '점보마라탕'·'점보만두'
+# 같은 실존 작명을 죽인다(라화쿵부가 실제로 '3KG 점보마라탕' 을 판다).
+# 지점명은 항상 '…점' 으로 **끝나므로** 끝자리로만 본다.
+_BRANCH = re.compile(r"점$")
 
 _IMG = re.compile(r"url\(\s*['\"]?(https://[^'\")]+)")
 
@@ -185,7 +190,7 @@ def _names(title: str, body: str) -> list:
         # 부르므로 개별 상품은 아래 반복에서 따로 잡힌다(오리온 _pick 과 같은 규칙).
         if len(name) < 2 or any(c in name for c in "·∙&?"):
             continue
-        if any(w in name for w in _NOT_PRODUCT):
+        if any(w in name for w in _NOT_PRODUCT) or _BRANCH.search(name):
             continue
         if name in seen:
             continue

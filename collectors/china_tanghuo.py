@@ -103,7 +103,12 @@ _QUOTED = re.compile(r"[‘'`]([^’'`\n]{2,30})[’'`]")
 
 # 따옴표 안이 상품이 아닌 것들. 본문 인용에 섞여 들어온다.
 _NOT_PRODUCT = ("축제", "대동제", "지구의 날", "데이", "이벤트", "캠페인", "협약",
-                "프랜차이즈", "브랜드", "점", "기념", "서비스", "보너스", "마을")
+                "프랜차이즈", "브랜드", "기념", "서비스", "보너스", "마을")
+
+# 지점명. `"점"` 을 _NOT_PRODUCT 에 넣으면 부분일치라 '점보마라탕'·'점보만두'
+# 같은 실존 작명을 죽인다(라화쿵부가 실제로 '3KG 점보마라탕' 을 판다).
+# 지점명은 항상 '…점' 으로 **끝나므로** 끝자리로만 본다.
+_BRANCH = re.compile(r"점$")
 
 
 def _text(node) -> str:
@@ -174,7 +179,11 @@ def _names(title: str, body: str) -> list:
     out, seen = [], set()
     for m in _QUOTED.finditer(body):
         name = m.group(1).strip(" ,·∙")
-        if len(name) < 2 or any(w in name for w in _NOT_PRODUCT):
+        # 두 상품을 '·' 로 묶은 한 덩어리는 버린다. 본문이 각각을 따로 부르므로
+        # 개별 상품은 이 반복에서 따로 잡힌다(보배반점에서 실제로 터진 오집이다).
+        if len(name) < 2 or any(ch in name for ch in "·∙&?"):
+            continue
+        if any(w in name for w in _NOT_PRODUCT) or _BRANCH.search(name):
             continue
         if name.replace(" ", "") not in flat:   # 제목이 같은 이름을 부르지 않으면 버린다
             continue
@@ -186,11 +195,21 @@ def _names(title: str, body: str) -> list:
 
 
 def _image(doc) -> str:
-    """기사 본문 이미지. 사이트 UI 이미지(/default/, /bizdemo)는 뺀다."""
-    for n in doc.css("img"):
-        src = n.attributes.get("src", "")
-        if src.startswith("https://") and "/img/" not in src:
-            return src
+    """기사 본문 이미지.
+
+    ⚠️ 문서 전체에서 첫 https 이미지를 집으면 안 된다. 지금은 사이트 UI 가 전부
+    `/default/img/...`·`/bizdemo.../img/...` 라 우연히 비껴가지만, 레이아웃이
+    바뀌면 로고가 상품 사진으로 붙는다. 그래서 **본문 영역으로 먼저 좁히고**
+    (`dd.webzine_description` 안이 기사 본문이다) 거기서 못 찾을 때만 문서
+    전체를 보되, 경로에 `/img/` 가 든 사이트 이미지는 계속 뺀다.
+    다른 중식 어댑터도 전부 본문 컨테이너로 좁힌다(삼삼마라 `.board_view`,
+    미미관 `.board_txt_area`, 라홍방 `/data/editor/`).
+    """
+    for scope in ("dd.webzine_description img", "img"):
+        for n in doc.css(scope):
+            src = n.attributes.get("src", "")
+            if src.startswith("https://") and "/img/" not in src:
+                return src
     return ""
 
 

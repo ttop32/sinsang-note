@@ -102,6 +102,11 @@ _QUOTED = re.compile(r"[‘'`]([^’'`\n]{2,30})[’'`]")
 _NOT_PRODUCT = ("10101", "MINI", "고구려푸드", "브랜드", "가맹", "창업",
                 "프랜차이즈", "이벤트", "캠페인", "협약", "점")
 
+# 지점명. `"점"` 을 _NOT_PRODUCT 에 넣으면 부분일치라 '점보마라탕'·'점보만두'
+# 같은 실존 작명을 죽인다(라화쿵부가 실제로 '3KG 점보마라탕' 을 판다).
+# 지점명은 항상 '…점' 으로 **끝나므로** 끝자리로만 본다.
+_BRANCH = re.compile(r"점$")
+
 
 def _text(node) -> str:
     return " ".join(node.text().split()) if node else ""
@@ -156,7 +161,10 @@ def _names(title: str, body: str) -> list:
     out, seen = [], set()
     for m in _QUOTED.finditer(t):
         name = m.group(1).strip(" ,·∙")
-        if len(name) < 2 or any(w in name for w in _NOT_PRODUCT):
+        # 두 상품을 '·' 로 묶은 한 덩어리는 버린다(보배반점에서 실제로 터진 오집).
+        if len(name) < 2 or any(ch in name for ch in "·∙&?"):
+            continue
+        if any(w in name for w in _NOT_PRODUCT) or _BRANCH.search(name):
             continue
         if name.replace(" ", "") not in flat_body:   # 본문이 안 부르면 버린다
             continue
