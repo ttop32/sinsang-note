@@ -265,6 +265,30 @@ def load_previous() -> dict:
     return out
 
 
+# 카페에서 파는 것들. 이 분류를 달았으면 브랜드 유형이 '카페' 여야 1단 탭이
+# 맞게 간다. '프랜차이즈' 로 달면 primary_of 가 **외식**으로 보낸다.
+CAFE_SUBS = {"커피", "디저트", "빙수", "도넛", "아이스크림", "베이커리"}
+
+
+def miscast() -> list:
+    """분류는 카페 것인데 브랜드 유형이 어긋난 곳. (브랜드, 유형, 분류) 목록.
+
+    1단 탭은 brand_sub 이 아니라 **brand_type** 으로 갈린다. 그래서 커피
+    브랜드를 (FRANCHISE, "커피") 로 등록하면 2단 칩은 '커피' 인데 1단은
+    '외식' 이 된다 — 카페 탭을 눌러도 안 나온다.
+
+    실제로 8곳이 그 상태였다(하이오커피·투썸플레이스·엔제리너스·카페봄봄·
+    커피베이·카페만월경·백억커피·디저트39). 운영자가 "하이오커피가 왜
+    카페에 안 들어갔냐, 외식에 커피가 왜 이렇게 많냐" 고 해서 드러났다.
+    고치니 카페 439 → 558, 외식 393 → 274 로 움직였다.
+
+    제조사는 예외다 — 동서식품·SPC삼립·라벨리는 커피·베이커리·아이스크림을
+    만들지만 카페가 아니라 식품으로 가는 게 맞다.
+    """
+    return [(b, t, s) for b, (t, s) in base.BRANDS.items()
+            if s in CAFE_SUBS and t not in (base.CAFE, base.MAKER)]
+
+
 def orphans() -> list:
     """어댑터 파일은 있는데 배선이 빠진 곳. (모듈, 사유) 목록.
 
@@ -312,6 +336,10 @@ def main() -> None:
     lost = orphans()
     for name, why in lost:
         print(f"!! collectors/{name}.py — {why}")
+
+    for brand, typ, sub in miscast():
+        print(f"!! {brand} 은 '{sub}' 인데 유형이 '{typ}' 이다 "
+              "— 1단 탭이 카페가 아니라 외식으로 간다")
 
     today = date.today().isoformat()
     prev = load_previous()
