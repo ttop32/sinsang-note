@@ -73,6 +73,18 @@ background:linear-gradient(90deg,transparent,var(--bg) 70%)}
 .t.s{min-height:34px;font-size:13px;padding:0 12px;background:transparent}
 .t.s.on{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 
+/* 넓은 화면에서는 줄을 바꾼다. 가로 스크롤은 375px 에서 세로를 아끼려고
+   둔 것이지, 자리가 남는데도 칩을 자를 이유가 없다. 실제로 외식 탭의
+   '일식 44' 가 '일식 4' 로 잘려 **숫자가 틀리게 읽혔다** — 안 보이는 것보다
+   틀리게 보이는 게 나쁘다. 줄바꿈하면 잘릴 일 자체가 없어서 끝 그라데이션도
+   같이 끈다. 기준 560px 는 1단 탭 5개가 들어가고도 남는 폭이다. */
+@media (min-width: 560px){
+  .subnav{overflow-x:visible;margin:0;padding:8px 0}
+  .subnav .tw{width:auto;flex-wrap:wrap;row-gap:6px}
+  .subwrap::after{display:none}
+  nav .tw{flex-wrap:wrap;row-gap:6px;width:auto}
+}
+
 a.c{text-decoration:none;color:inherit;transition:border-color .15s}
 a.c:hover,a.c:focus-visible{border-color:var(--accent)}
 .c[hidden]{display:none}
