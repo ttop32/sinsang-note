@@ -410,3 +410,37 @@ def verify_images(rows: list) -> tuple:
                 r["image_src"], r["image"] = url, ""
                 hid += 1
     return hid, back
+
+
+# ── 날짜 없이 신상으로 들어온 것 ────────────────────────────────────
+# `is_new=True` 인데 released_at·uploaded_at 이 둘 다 비면 is_fresh 가 60일
+# 창을 건너뛴다. 날짜를 안 주는 브랜드(팔도·커피빈·컴포즈·빽다방 — 전부 0%)
+# 한테는 그게 설계대로다. 그 브랜드들은 first_seen 과 baseline 으로 가린다.
+#
+# 문제는 **평소엔 날짜를 주는 브랜드가 한 건만 비워 보낼 때**다. 그러면 창이
+# 통째로 열린다. 실제로 농심 `농심라면큰사발면`(1975년 제품의 2025-01 복각)이
+# 그 길로 화면에 올라와 있었다. 날짜를 비우는 게 안전한 쪽이 아니라 **창을
+# 우회하는 길**이었던 것이다.
+#
+# 지우지는 않는다. 지금 걸리는 건 CU 행사 132건뿐이고 그건 이미 행사 규칙이
+# 막고 있다 — 여기서 또 지우면 효과는 0인데 '조용히 사라지는' 위험만 는다.
+# 그건 이 레포에서 두 번째로 자주 난 사고다. 찾아서 찍기만 한다.
+DATED_BRAND = 0.7     # 이 비율 넘게 날짜를 주면 '날짜를 주는 브랜드'로 본다
+DATED_MIN = 10        # 그 판단을 할 최소 표본
+
+
+def undated_new(rows: list) -> list:
+    """날짜를 주는 브랜드가 날짜 없이 보낸 is_new. (브랜드, 보유율, 건수) 목록."""
+    cover = collections.defaultdict(lambda: [0, 0])
+    for r in rows:
+        c = cover[r.get("brand", "")]
+        c[0] += 1
+        if r.get("released_at") or r.get("uploaded_at"):
+            c[1] += 1
+    hit = collections.Counter()
+    for r in rows:
+        total, dated = cover[r.get("brand", "")]
+        if (r.get("is_new") and not (r.get("released_at") or r.get("uploaded_at"))
+                and total >= DATED_MIN and dated / total >= DATED_BRAND):
+            hit[(r["brand"], f"{dated}/{total}")] += 1
+    return [(b, cov, n) for (b, cov), n in hit.most_common()]

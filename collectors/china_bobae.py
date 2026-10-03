@@ -81,7 +81,15 @@ _LAUNCH = re.compile(r"(출시|선봬|선보|론칭|신메뉴|신제품|판매)"
 # 상품 기사가 아닌데 위 동사를 쓰는 것들. 실측 제목으로 뽑았다.
 _SKIP = ("대상", "수상", "선정", "오픈", "공모전", "이벤트", "나눔", "진출",
          "개편", "새단장", "매뉴얼", "강화", "고도화", "성료", "프로모션",
-         "창업", "채용", "표준화")
+         "창업", "채용", "표준화",
+         # 아래 셋은 MAX_PAGES 를 넓히고 나서 실제로 걸린 오집이다.
+         #   굿즈·콜라보 — '짱구는 못말려' 협업 2차 콜라보 굿즈 출시(2026-03-18).
+         #                 따옴표 안이 상품이 아니라 **캐릭터 IP** 다.
+         #   옵션       — '매운맛 3단계 선택 옵션' 출시(2026-02-23). 기존 8개 메뉴에
+         #                 맵기 선택을 붙인 것이지 새 상품이 아니다.
+         # ⚠️ '협업' 은 넣지 마라. CU 와 협업한 '짬뽕어묵탕'(2026-03-06)이 진짜
+         #    신제품인데 같이 죽는다.
+         "굿즈", "콜라보", "옵션")
 
 _QUOTED = re.compile(r"[‘'`]([^’'`\n]{2,40})[’'`]")
 
@@ -102,12 +110,43 @@ _IMG = re.compile(r"url\(\s*['\"]?(https://[^'\")]+)")
 # 문장 경계는 마침표로 끊는다 — 문서 전체를 보면 "‘보배그린하트’ 캠페인" 같은
 # 다른 문단의 따옴표가 섞인다.
 _SENTENCE = re.compile(r"[^.!?]*$")
-_NEW_WORD = ("신메뉴", "신제품", "새롭게", "선보")
+_NEW_WORD = ("신메뉴", "신제품", "새롭게", "선보", "출시")
+
+# 제목이 'A 등 4종 출시' 꼴이면 A 말고 나머지는 제목에 없다. 실측 2025-04-28:
+#   제목 `여름 시즌 신메뉴 '육회냉짬뽕' 등 4종 출시`
+#   본문 `… ▲'육회냉짬뽕' ▲'냉짬뽕' ▲'중화냉면' ▲'콩국수' 4종이다.`
+# 제목에 따옴표가 **있어도** 나머지 3종은 교차검증할 데가 없다. 그래서 'N종' 이
+# 보이면 제목 무인용 기사와 같게 다룬다(본문 '신메뉴 문장' 안의 따옴표를 믿는다).
+_MULTI = re.compile(r"\d+\s*종")
+
+# 한글 음절. 제목 포함 검사의 경계 판정에 쓴다.
+_HANGUL = re.compile(r"[가-힣]")
+
+
+def _in_title(name: str, flat: str) -> bool:
+    """제목이 이 이름을 **낱말로** 부르는가. 단순 포함은 안 된다.
+
+    한국어는 단어 경계가 없어서 `in` 만 쓰면 더 긴 상품명 안에 들어 있는 짧은
+    이름이 따로 잡힌다 — 실측: 제목 `'육회냉짬뽕' 등 4종` 에서 본문의 `'냉짬뽕'`
+    이 통과했다. 앞뒤 글자가 한글이면 그건 다른 낱말의 일부다.
+    """
+    k = name.replace(" ", "")
+    i = flat.find(k)
+    while i >= 0:
+        before = flat[i - 1] if i else ""
+        after = flat[i + len(k):i + len(k) + 1]
+        if not _HANGUL.match(before or " ") and not _HANGUL.match(after or " "):
+            return True
+        i = flat.find(k, i + 1)
+    return False
 
 
 def _in_new_sentence(body: str, pos: int) -> bool:
     """`body[pos]` 의 따옴표가 '신메뉴' 를 말하는 문장 안에 있는가."""
-    head = _SENTENCE.search(body[:pos]).group(0)[-120:]
+    # ⚠️ 창을 글자 수로 자르지 마라. 전에 마지막 120자만 봤더니 한 문장 안에서
+    #    뒤쪽에 있던 '콩국수'(4종 중 넷째)가 '출시' 에 못 닿아 빠졌다.
+    #    문장 경계가 이미 범위를 좁혀 주므로 문장 전체를 본다.
+    head = _SENTENCE.search(body[:pos]).group(0)
     return any(w in head for w in _NEW_WORD)
 
 
@@ -133,9 +172,9 @@ def _names(title: str, body: str) -> list:
     if any(w in t for w in _SKIP) or not _LAUNCH.search(t):
         return []
     flat = t.replace(" ", "")
-    # 제목이 따옴표로 상품을 부르지 않으면 교차검증할 대상이 없다. 그때만
-    # 본문의 '신메뉴 문장' 으로 넓힌다(_SENTENCE 주석 참고).
-    loose = not _QUOTED.search(t)
+    # 제목이 따옴표로 상품을 부르지 않거나 'N종' 이라 나머지를 안 부르면
+    # 교차검증할 대상이 없다. 그때만 본문의 '신메뉴 문장' 으로 넓힌다.
+    loose = not _QUOTED.search(t) or bool(_MULTI.search(t))
     out, seen = [], set()
     for m in _QUOTED.finditer(body):
         name = m.group(1).strip(" ,·∙")
@@ -150,7 +189,7 @@ def _names(title: str, body: str) -> list:
             continue
         if name in seen:
             continue
-        if name.replace(" ", "") not in flat:
+        if not _in_title(name, flat):
             if not (loose and _in_new_sentence(body, m.start())):
                 continue
         seen.add(name)

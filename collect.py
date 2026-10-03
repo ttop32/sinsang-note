@@ -411,6 +411,13 @@ def main() -> None:
     for brand, cat, n in taxonomy.unmapped(rows):
         print(f"   ! {brand} 의 분류 '{cat}' 를 아직 안 옮겼다 ({n}건)")
 
+    # 날짜를 주는 브랜드가 날짜 없이 보낸 신상. 그 길로 들어오면 60일 창이
+    # 통째로 열린다 — 농심이 1975년 제품의 복각을 그렇게 올렸다. 자세한 건
+    # rules.undated_new 주석.
+    for brand, cover, n in rules.undated_new(rows):
+        print(f"   ! {brand} 는 날짜를 {cover} 주는데 {n}건을 날짜 없이 "
+              "신상으로 보냈다 — 60일 창을 건너뛴다")
+
     home.render(fresh, new_today, total=len(listed))
 
     # 개별 페이지·sitemap·아이콘. web.seo 가 collect 를 import 하므로 여기서 늦게 부른다.
