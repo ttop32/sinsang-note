@@ -75,6 +75,11 @@ from . import base
 from .base import Item
 
 BRAND = "요아정"
+
+# 신제품 글 게시판이 유일한 소스라 **0건인 날이 정상**이다. 조사 시점에도
+# 창 안 글이 없었다. collect 의 0건 가드를 끄되 로그에는 한 줄 찍힌다
+# — 사유는 collect.py 의 ALLOW_EMPTY 주석 참고.
+ALLOW_EMPTY = True
 SITE = "https://yoajung.co.kr"
 LIST = SITE + "/bbs/board.php?bo_table=main_port"
 VIEW = LIST + "&wr_id="

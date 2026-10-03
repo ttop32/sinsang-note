@@ -328,6 +328,14 @@ def main() -> None:
             else:
                 items = mod.fetch()
             if not items:
+                # 소스가 '신제품 글 게시판' 뿐인 브랜드는 **정상적으로 0건**인
+                # 날이 많다. 홍짜장은 조사 때부터 게시판 글이 1건뿐이었고,
+                # 라벨리·요아정도 아직 올린 글이 없다. 그걸 실패로 치면 매일
+                # Actions 가 빨갛게 뜨고, 진짜 고장과 구분이 안 된다.
+                # 그렇다고 조용히 넘기면 파서가 깨져도 모르니 한 줄 찍는다.
+                if getattr(mod, "ALLOW_EMPTY", False):
+                    print(f"{label}: 0건 (소스에 신제품 글 없음 — 정상)")
+                    continue
                 raise RuntimeError("0건 수집 — 파서가 깨졌을 가능성")
             before = sum(1 for p in prev.values() if p["brand"] in names)
             if before >= FLOOR_MIN and len(items) < before * FLOOR:

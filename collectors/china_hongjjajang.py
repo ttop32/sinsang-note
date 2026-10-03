@@ -62,6 +62,11 @@ from . import base
 from .base import Item
 
 BRAND = "홍짜장"
+
+# 신제품 글 게시판이 유일한 소스라 **0건인 날이 정상**이다. 조사 시점에도
+# 창 안 글이 없었다. collect 의 0건 가드를 끄되 로그에는 한 줄 찍힌다
+# — 사유는 collect.py 의 ALLOW_EMPTY 주석 참고.
+ALLOW_EMPTY = True
 SITE = "https://hongjjajang.com"
 LIST = SITE + "/board/index.php"
 BOARD = "notice_01"   # 상품 신호가 있을 수 있는 유일한 게시판. 나머지는 전부 0건이다
