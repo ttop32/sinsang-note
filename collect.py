@@ -29,7 +29,7 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
                         mega, pizza_domino, pizza_mrpizza, pizza_papajohns,
                         pizza_pizzahut,
                         seven, starbucks, toast_isaac)
-from collectors import dongsuh, fredit, gs25, lottechilsung, ourhome, sempio
+from collectors import dongsuh, gs25, lottechilsung, ourhome, sempio
 # 아이스크림·빙수 전수 조사(2026-10-03). 공정위 `아이스크림/빙수`(K1) 가맹점 수
 # 순위를 위에서부터 훑었다. 순위표와 불가 사유는 notes/CANDIDATES-ICECREAM-BINGSU.md.
 from collectors import dessert_palazzo, dessert_yoajung
@@ -147,7 +147,15 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             cafe_hasamdong, cafe_dalcu, cafe_juicy, cafe_masscoffee,
             cafe_projectb,                     # 프로젝트비 2브랜드(고망고·차얌)
             maker_ottogi, maker_paldo, maker_orion,                  # 제조사(과자·라면)
-            lottechilsung, fredit, ourhome,             # 제조사(음료·냉동식품)
+            lottechilsung, ourhome,                     # 제조사(음료·냉동식품)
+            # hy프레딧은 뺐다. 제조사가 아니라 남의 상품을 파는 몰이라
+            # '신제품' 탭이 "우리 몰에 새로 들어온 것" 이다 — CU 의 "상품코드가
+            # 새로 생김" 과 같다. 화면 83장이 31개 제조사 상품이고 hy 자체
+            # 브랜드(쿠퍼스·슈퍼100)는 3장뿐이었다. 1980년대 천하장사 소시지·
+            # 나가타니엔 후리가케·머거본이 신상으로 떠 있었다. 진짜 신제품과
+            # 가를 신호가 hy 데이터에 없어서 운영자 판단으로 통째로 내린다.
+            # 어댑터 파일(collectors/fredit.py)은 남겨 둔다 — hy 가 자체 상품을
+            # 늘리거나 출시일을 주기 시작하면 이 줄만 되살리면 된다.
             dongsuh, sempio,                            # 제조사(커피·조미료)
             # 과자·음료 제조사 2차. 전부 보도자료형(오리온 계보)이다.
             maker_haitai, maker_crown, maker_lottewellfood,   # 과자
@@ -289,6 +297,28 @@ def miscast() -> list:
             if s in CAFE_SUBS and t not in (base.CAFE, base.MAKER)]
 
 
+def parked() -> list:
+    """일부러 내려둔 어댑터. (모듈, 사유) 목록.
+
+    지우지 않고 두는 것들이다. 사이트는 멀쩡한데 **우리 기준에 안 맞아서**
+    뺀 경우라, 그쪽이 바뀌면 한 줄로 되살릴 수 있다. 지워버리면 그 조사와
+    코드가 통째로 날아간다.
+    """
+    import importlib
+    out = []
+    for f in sorted((ROOT / "collectors").glob("*.py")):
+        if f.stem in ("base", "__init__"):
+            continue
+        try:
+            mod = importlib.import_module(f"collectors.{f.stem}")
+        except Exception:
+            continue
+        why = getattr(mod, "PARKED", "")
+        if why:
+            out.append((f.stem, " ".join(why.split())))
+    return out
+
+
 def orphans() -> list:
     """어댑터 파일은 있는데 배선이 빠진 곳. (모듈, 사유) 목록.
 
@@ -319,6 +349,10 @@ def orphans() -> list:
             [mod.BRAND] if hasattr(mod, "BRAND") else [])
         if not names:
             continue
+        # 일부러 내려둔 것은 '빠뜨린 것' 과 다르다. 섞어 찍으면 경고가 무뎌져서
+        # 진짜 사고를 놓친다. 어댑터가 PARKED 에 사유를 적어두면 넘어간다.
+        if getattr(mod, "PARKED", ""):
+            continue
         for b in names:
             if b not in base.BRANDS:
                 out.append((name, f"base.BRANDS 에 '{b}' 없음"))
@@ -336,6 +370,10 @@ def main() -> None:
     lost = orphans()
     for name, why in lost:
         print(f"!! collectors/{name}.py — {why}")
+
+    # 내려둔 어댑터는 조용히 한 줄만. 지운 게 아니라 쉬는 중이라는 표시다.
+    for name, why in parked():
+        print(f"   · collectors/{name}.py 내려둠 — {why}")
 
     for brand, typ, sub in miscast():
         print(f"!! {brand} 은 '{sub}' 인데 유형이 '{typ}' 이다 "

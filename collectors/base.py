@@ -95,12 +95,6 @@ BRANDS = {
     # 직영몰이라 남의 브랜드도 판다. 그래도 '제조사' 로 두는 건 1단 '가공식품' 이
     # 누가 만들었나가 아니라 무엇이냐 축이기 때문이다(TAXONOMY §3). 세부분류를
     # '음료' 가 아니라 '냉동식품' 으로 둔 근거는 collectors/fredit.py docstring.
-    # 제조사가 아니라 hy 의 쇼핑몰이다. 떡·치즈·세제·양말·펫푸드가 다 있어서
-    # 분류 하나로 못 찍는다 — 상품별 분류는 taxonomy.VENDOR_SUBS 가 옮긴다.
-    # 여기 적는 건 업체가 분류를 안 준 상품에 쓸 마지막 수단이고, 실측상
-    # 식재료가 제일 많다. 전에 '냉동식품' 이라 적어둔 탓에 105건이 통째로
-    # 냉동식품 칸에 들어갔다.
-    "hy프레딧":    (MAKER, "식재료"),
     # 주류 제조사 중 유일하게 넣을 수 있는 곳이다. 나머지 12곳은 성인 인증
     # 게이트 뒤이거나 뉴스가 멈췄다(notes/CANDIDATES-ALCOHOL.md).
     # 카페·디저트·분식 중위권. 가드(collect.orphans)가 잡아낸 미등록분이다.
@@ -619,7 +613,6 @@ SITES = {
     "하이트진로":  "https://www.hitejinro.com/socialmedia/press_list.asp",
     "하림":         "https://www.harim.com/main/?menu=52",
     "하림산업":     "https://harimholdings.com/kr/sub/newsroom/newsroom.asp",
-    "hy프레딧":    "https://m.fredit.co.kr/product/main-tab-menu?keyword=main&ctgId=C10000001001",
     # 아워홈·샘표는 상품 목록 페이지가 없어 보도자료를 폴백으로 쓴다(GS25 선례).
     # 동서식품은 상품 목록이 있고 어댑터도 그쪽을 읽는다.
     "아워홈":      "https://www.ourhome.co.kr/front/newsboardlist.do",

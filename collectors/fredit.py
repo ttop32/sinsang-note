@@ -139,6 +139,13 @@ from .base import Item
 BRAND = "hy프레딧"
 SITE = "https://m.fredit.co.kr"
 API = SITE + "/api/freditProduct/v01"
+# 일부러 내려둔 어댑터다. 지우지 않는 이유는 아래 사유가 풀릴 수 있어서다.
+# 되살리려면 base.BRANDS·SITES 에 "hy프레딧" 을 넣고 collect.ADAPTERS 에
+# 이 모듈을 넣으면 된다(그 자리에 주석으로 적어 뒀다).
+PARKED = ("제조사가 아니라 남의 상품을 파는 몰이다. '신제품' 탭이 "
+          "'우리 몰에 새로 들어온 것' 이라 1980년대 천하장사 소시지가 "
+          "신상으로 떴다. hy 가 자체 상품을 늘리거나 출시일을 주면 되살린다.")
+
 NEW_CTG = "C10000001001"                 # '신제품' 탭. <title>신제품 | hy프레딧</title>
 LIST_URL = "https://m.fredit.co.kr/product/main-tab-menu?keyword=main&ctgId=" + NEW_CTG
 DETAIL = SITE + "/product/detail?prdId="
