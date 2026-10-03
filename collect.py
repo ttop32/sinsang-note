@@ -41,8 +41,12 @@ from collectors import dessert_palazzo, dessert_yoajung
 from collectors import (burger_burgerunburger, burger_fiveguys,
                         burger_lotteria, burger_nobrand, burger_shakeshack,
                         burger_whattheburger, cafe_blushaak,
-                        cafe_cafe051, cafe_gongcha, cafe_oozy,
-                        cafe_palgongtea, cafe_tomntoms, toast_ssoja)
+                        cafe_cafe051, cafe_caffebene, cafe_eupcheonri,
+                        cafe_gongcha, cafe_oozy, cafe_palgongtea,
+                        cafe_caffeine, cafe_dalcu, cafe_hasamdong,
+                        cafe_juicy, cafe_masscoffee, cafe_pascucci,
+                        cafe_projectb, cafe_tenpercent, cafe_tomntoms,
+                        toast_ssoja)
 # 과자·음료 제조사 2차(2026-10-02). 매출 순위 기준 전수 조사에서 나왔다 —
 # 근거와 순위표는 notes/MAKER-SNACK-DRINK.md, 브랜드별 함정은 각 docstring.
 from collectors import (maker_binggrae, maker_crown, maker_dongwonfnb,
@@ -50,14 +54,15 @@ from collectors import (maker_binggrae, maker_crown, maker_dongwonfnb,
                         maker_maeil, maker_pulmuone, maker_sajo, maker_samyang)
 # 라면·냉동식품·냉동피자 전수 조사(2026-10-02). 순위표는
 # notes/CANDIDATES-RAMEN-FROZEN.md. 농심·CJ 는 1차가 robots 로 접었던 곳이다.
-from collectors import (maker_cj, maker_daesang, maker_myunsarang,
-                        maker_nongshim, maker_shinsegaefood)
+from collectors import (maker_cj, maker_daesang, maker_lavelee,
+                        maker_myunsarang, maker_nongshim, maker_shinsegaefood)
 # SPC삼립. 같은 라운드에서 파일만 만들어진 채 등록이 빠져 있었다 — 2차가
 # `/brand/bakery` 한 경로만 보고 "신제품 신호 없음" 으로 접었는데 보도자료
 # JSON API 가 열려 있고 출시 밀도가 이번 조사 1위(120건 중 81건)다.
 from collectors import maker_spcsamlip
 # 주류. 성인 인증 게이트가 없는 유일한 곳이다(notes/CANDIDATES-ALCOHOL.md).
 from collectors import cafe_angelinus, cafe_twosome
+from collectors import cafe_baekeok, cafe_dessert39
 from collectors import maker_harim
 # 카페·디저트·분식 중위권 14곳. 배선 가드가 잡아낸 미등록분.
 from collectors import (cafe_bombom,
@@ -137,7 +142,10 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             burger_lotteria, burger_nobrand, burger_whattheburger,   # 햄버거 2차
             burger_shakeshack, burger_fiveguys, burger_burgerunburger,
             cafe_tomntoms, cafe_blushaak, cafe_gongcha, cafe_cafe051,  # 카페 2차
-            cafe_oozy, cafe_palgongtea,
+            cafe_oozy, cafe_palgongtea, cafe_pascucci, cafe_tenpercent,
+            cafe_caffebene, cafe_eupcheonri, cafe_caffeine,
+            cafe_hasamdong, cafe_dalcu, cafe_juicy, cafe_masscoffee,
+            cafe_projectb,                     # 프로젝트비 2브랜드(고망고·차얌)
             maker_ottogi, maker_paldo, maker_orion,                  # 제조사(과자·라면)
             lottechilsung, fredit, ourhome,             # 제조사(음료·냉동식품)
             dongsuh, sempio,                            # 제조사(커피·조미료)
@@ -152,9 +160,11 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             maker_cj, maker_shinsegaefood,                    # 냉동·간편식·냉동피자
             maker_myunsarang,                                 # 냉동면·생면·육수
             maker_daesang,                                    # 장류·소스·조미료
+            maker_lavelee,                                    # 빙과 전업(아이스크림)
             maker_spcsamlip,                                  # 베이커리(양산빵)
             alcohol_hitejinro,                          # 제조사(주류)
             maker_harim,                                # 제조사(육가공·식재료)
+            cafe_baekeok, cafe_dessert39,               # 카페·디저트
             cafe_bombom, cafe_coffeebay, cafe_hio,      # 카페 중위권
             cafe_manwolkyung,
             dessert_bingdongdaeng, dessert_dallondor,   # 디저트·빙수

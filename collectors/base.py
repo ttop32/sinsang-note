@@ -128,6 +128,8 @@ BRANDS = {
     "모락떡볶이":   (FRANCHISE, "분식"),
     "태리로제떡볶이": (FRANCHISE, "분식"),
     "떡군이네떡볶이": (FRANCHISE, "분식"),
+    "백억커피":     (FRANCHISE, "커피"),
+    "디저트39":   (FRANCHISE, "디저트"),
     "하이트진로":  (MAKER, "주류"),
     "하림":         (MAKER, "냉동식품"),
     "하림산업":     (MAKER, "식재료"),
@@ -198,6 +200,11 @@ BRANDS = {
     # ⚠️ 사진은 `/common/popup/download.jsp` 로 와서 octet-stream 이다.
     #    rules.verify_images() 가 전부 지운다 — 알고 넣은 것이니 '깨졌다'고 읽지 마라.
     "대상":        (MAKER, "조미료"),
+    # 빙과 **전업** 제조사. 국내 빙과는 롯데웰푸드 39.8% · 빙그레 28.1% ·
+    # 해태아이스크림 14.6% 로 셋이 83% 고, 그 아래 전업사는 ㈜서주와 ㈜라벨리
+    # 둘뿐이다. 군납·PB 비중이 커서 자사 브랜드 신제품이 드물다 —
+    # **0건이 정상**이고 '수집 실패'가 아니다(theborn 과 같은 칸).
+    "라벨리":      (MAKER, "아이스크림"),
     "배스킨라빈스": (CAFE, "아이스크림"),
     # ── 아이스크림·빙수 전수 조사(2026-10-03) ─────────────────────────
     # 순위는 공정위 `아이스크림/빙수`(K1) 가맹점 수. 2026-10-03 에 등록 71건을
@@ -238,6 +245,18 @@ BRANDS = {
     "카페051":     (CAFE, "커피"),
     "우지커피":    (CAFE, "커피"),
     "팔공티":      (CAFE, "커피"),
+    "카페베네":    (CAFE, "커피"),
+    "읍천리382":   (CAFE, "커피"),
+    "파스쿠찌":    (CAFE, "커피"),
+    "텐퍼센트커피": (CAFE, "커피"),
+    "카페인중독":  (CAFE, "커피"),
+    "하삼동커피":  (CAFE, "커피"),
+    # (주)프로젝트비 한 본사의 두 브랜드. 어댑터도 collectors/cafe_projectb.py 하나다.
+    "고망고":      (CAFE, "커피"),
+    "차얌":        (CAFE, "커피"),
+    "달리는커피":  (CAFE, "커피"),
+    "쥬씨":        (CAFE, "커피"),
+    "매스커피":    (CAFE, "커피"),
     "김밥천국":    (FRANCHISE, "분식"),
     "바르다김선생": (FRANCHISE, "분식"),
     "죠스떡볶이":  (FRANCHISE, "분식"),
@@ -510,6 +529,22 @@ SITES = {
     "우지커피":     "https://oozycoffee.com/coffee",
     # 쿼리값이 한글 그대로다(menu=신메뉴). 퍼센트 인코딩해서 넣는다.
     "팔공티":       "https://palgongtea.co.kr/goods/newest.html?menu=%EC%8B%A0%EB%A9%94%EB%89%B4",
+    # ⚠️ http 전용이다. https 는 ConnectTimeout 이라 이미지가 derive() 에서 지워진다.
+    "카페베네":     "http://caffebene.co.kr/product",
+    # 한글 도메인(읍천리382.com)의 퓨니코드다.
+    "읍천리382":    "https://www.xn--382-v18me95c8ph.com/",
+    "파스쿠찌":     "https://www.pascucci.co.kr/product/productList.asp",
+    "텐퍼센트커피": "https://tenpercentcoffee.com/menu",
+    "카페인중독":   "https://www.caffeine-addiction.co.kr/",
+    "하삼동커피":   "https://www.hasamdongcoffee.com/",
+    # ⚠️ 둘 다 http 전용이라 이미지가 derive() 에서 지워진다.
+    "고망고":       "http://gomango.kr/menu",
+    "차얌":         "http://chayam.co.kr/menu",
+    "달리는커피":   "https://dalcu.co.kr/",
+    # juicy.co.kr 은 443/80 둘 다 연결거부다. 본 사이트는 no1juicy.com 이고
+    # ⚠️ http 전용이라 이미지가 derive() 에서 지워진다.
+    "쥬씨":         "http://www.no1juicy.com/",
+    "매스커피":     "https://mass-coffee.com/",
     "스시로":       "https://www.sushiro.co.kr/pm",
     "에그드랍":     "http://www.eggdrop.co.kr/menu/list.php?category=NEW",
     "써브웨이":     "https://www.subway.co.kr/menuList/sandwich",
@@ -579,6 +614,8 @@ SITES = {
     "모락떡볶이":   "https://moraktteok.com/",
     "태리로제떡볶이": "https://terryroze.com",
     "떡군이네떡볶이": "https://xn--6e0b73ep0espx.com",
+    "백억커피":     "https://10billioncoffee.co.kr",
+    "디저트39":   "https://dessert39.com",
     "하이트진로":  "https://www.hitejinro.com/socialmedia/press_list.asp",
     "하림":         "https://www.harim.com/main/?menu=52",
     "하림산업":     "https://harimholdings.com/kr/sub/newsroom/newsroom.asp",
@@ -618,6 +655,7 @@ SITES = {
     "면사랑":      "https://www.noodlelovers.com/site/main/archive/post/category/news",
     # 기사별 주소(newsView.do?idx=)가 Item.url 로 붙으므로 이건 폴백이다.
     "대상":        "https://www.daesang.com/kr/news/newsList.do",
+    "라벨리":      "https://lavelee.co.kr/media-coverage/",
     # ── 더본코리아 외식 브랜드 ─────────────────────────────────────────
     # 상품별 주소(보도자료 기사)가 Item.url 로 붙으므로 이건 전부 폴백이다.
     # 자체 도메인이 있으면 그 브랜드의 **메뉴 페이지**를, 없으면 theborn.co.kr 의

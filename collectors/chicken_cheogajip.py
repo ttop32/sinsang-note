@@ -55,6 +55,10 @@ cheogajip.co.kr 은 그누보드 게시판을 메뉴판으로 쓴다. 메뉴판 
     '후라이드 + 치즈슈프림양념' 류 반반메뉴는 세트가 아니라 맛 조합이라 그대로 담고
     (교촌 '반반…[간장+레드]' 선례), promo 는 전건 False 로 둔다. 이 브랜드엔
     할인·행사 표시가 없다. 세트 변형 처리는 collect.drop_sets() 담당이다.
+
+robots: https://cheogajip.co.kr/robots.txt 는 200 이고 `User-agent: *` / `Allow: /`
+        두 줄이 전부다(2026-10-03 실측, 22B). Disallow 가 없어 우리 경로
+        `/bbs/board.php` 는 허용 범위다.
 """
 import re
 import time

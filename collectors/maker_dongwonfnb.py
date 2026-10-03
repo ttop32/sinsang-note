@@ -84,7 +84,7 @@ LABEL = "보도자료"      # 공지는 안 쓴다
 _VERB = re.compile(r"(출시|선봬|선보여|선보인다|론칭|런칭)")
 _SINGLE = re.compile(r"[‘'`]([^’'`]{2,40})[’'`]")
 _HEAD = re.compile(r"[“\"]([^”\"]*)[”\"]")
-_MULTI = re.compile(r"\d+\s*종")
+_COUNT_TAIL = re.compile(r"\s*\d+\s*종\s*$")   # 따옴표 **안**에 든 `N종` 꼬리
 _TRAIL_SEP = re.compile(r"^\s*[·∙,、/]")
 
 _SKIP = ("돌파", "완판", "누적", "성료", "수상", "선정", "채용", "매출", "영업이익",
@@ -112,7 +112,17 @@ def _pick(title: str) -> str:
     if any(w in m.group(1) for m in _HEAD.finditer(t) for w in _REPACK_HEAD):
         return ""
     body = _HEAD.sub(" ", t)
-    if any(w in body for w in _SKIP) or _MULTI.search(body):
+    # 🔴 **`N종` 으로 버리지 않는다. 꼬리만 뗀다.**
+    # 오리온 계보를 복사하면 `_MULTI` 로 통째로 버리는데, 이 규칙 하나가 이번
+    # 라운드에 **네 어댑터**를 갉아먹었다 — 신세계푸드(27건 중 0건) · 풀무원(2건) ·
+    # 하림(13건) · CJ제일제당(1건). 전부 따옴표 안이 온전한 상품명이었다.
+    # ⚠️ 동원F&B 는 **1페이지 8건이 상한**이라(2페이지가 robots 금지 Ajax)
+    #    실측 손실을 만들 표본이 없다. 그래서 '손실 0' 이 아니라 **'아직 안 보였을
+    #    뿐'** 이다 — 지어낸 제목으로 실증했다:
+    #      `동원F&B, 블루 프로틴 담은 ‘동원참치 라이트스탠다드’ 2종 출시` → 소멸
+    #    표본이 영구히 8건이라 이 손실은 사후에도 안 잡힌다. 계보 전체를 고친 김에
+    #    여기도 맞춘다(죽은 `_MULTI` 를 남겨 두면 다음 사람이 되살린다).
+    if any(w in body for w in _SKIP):
         return ""
     qs = list(_SINGLE.finditer(body))
     if len(qs) >= 2 and any(w in body[qs[-2].end():qs[-1].start()] for w in _REPACK_MID):
@@ -130,7 +140,7 @@ def _pick(title: str) -> str:
         return ""
     if _TRAIL_SEP.match(head[quoted.end():]):
         return ""
-    name = quoted.group(1).strip(" ,·∙")
+    name = _COUNT_TAIL.sub("", quoted.group(1).strip()).strip(" ,·∙")
     if len(name) < 2 or any(c in name for c in "·∙&?!"):
         return ""
     if any(w in name for w in _REPACK_NAME):

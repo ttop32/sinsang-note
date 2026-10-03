@@ -21,10 +21,10 @@
 | | |
 |---|---|
 | 공정위 `K1` 등록 전수 | **71개 브랜드** (§5 에 전수 목록) |
-| 공식 사이트를 **실제로 연** 브랜드 | **33곳** |
-| 만든 어댑터 | **6개** |
-| 실측 수집 건수 합계 | **14건** |
-| 구조적 불가 판정 | **24곳** (사유는 표에 전부 적었다) |
+| 공식 사이트를 **실제로 연** 브랜드 | **35곳** |
+| 만든 어댑터 | **7개** (프랜차이즈 6 + 제조사 1) |
+| 실측 수집 건수 합계 | **14건** (+ 게시판은 살아 있으나 창 밖이라 0건인 곳 2) |
+| 구조적 불가 판정 | **25곳** (사유는 표에 전부 적었다) |
 | 타 에이전트 담당이라 손대지 않은 곳 | 배스킨라빈스·설빙(등록됨) · 빙그레 · 롯데웰푸드(나뚜루 포함) |
 
 만든 어댑터와 실측:
@@ -37,6 +37,7 @@
 | `collectors/dessert_palazzo.py` | 빨라쪼 | 아이스크림 | **2** | `uploaded_at`(포스터 업로드 폴더) |
 | `collectors/dessert_bingdongdaeng.py` | 빙동댕 | 빙수 | **3** | **없음** (§6 경고) |
 | `collectors/dessert_taraequeen.py` | 타래퀸 | 빙수 | **1** | **없음** (§6 경고) |
+| `collectors/maker_lavelee.py` | 라벨리 | **제조사**/아이스크림 | **0** | `uploaded_at`(상품 기사 연 1건, 최신 2025-01-06) |
 
 ---
 
@@ -71,7 +72,7 @@
 | 21 | 하겐다즈 | 5 | 공정위 2025 | haagendazs.co.kr | 없음 | 0 | 한국 사이트가 **전 경로 글로벌로 리디렉트**된다(`/`·`/our-story`·`/products` 전부 → `haagen-dazs.global`, 1,252,400B 동일 응답). 공식몰 `haagendazs-store.co.kr`(cafe24)은 공지 최신 글이 **2021-07-15**, 상품 목록에 날짜·배지 없음(세어 보니 `NEW` 10건은 전부 cafe24 JS 함수명 `CAPP_SHOP_NEW_PRODUCT_…` 였다 — 배지가 아니다) | 나 — 불가 |
 | — | 콜드스톤(Cold Stone) | 미확인 | 공정위 K1 등록(54번) | `coldstonecreamery.co.kr` DNS 없음 | — | 0 | 가맹본부 ㈜스타럭스. 자체 웹 못 찾음 | 나 — 불가 |
 | — | 반 루엔(VAN LEEUWEN) | 미확인 | 공정위 K1 등록(52번) | vanleeuwenicecream.co.kr | — | 0 | **403**(919B) — 봇 차단 | 나 — 불가 |
-| — | 오슬로(o'slo) | 미확인 | 공정위 K1 등록(66번) | `oslo.co.kr` 연결 타임아웃 | — | 0 | 가맹본부가 **㈜신세계푸드**라 제조사 축은 `maker_shinsegaefood.py`(타 담당)와 겹칠 소지가 있다. 자체 웹도 못 열었다 | 보류 |
+| — | 오슬로(o'slo) | 미확인 | 공정위 K1 등록(66번) | `oslo.co.kr` 연결 타임아웃 | — | 0 | **불가(자체 웹 확인 못 함).** 가맹본부가 ㈜신세계푸드지만 `maker_shinsegaefood.py` 는 **제조사 축 보도자료**(이마트 피자·보앤미·베키아에누보)만 읽어서 **겹치지 않는다** — 자체 웹만 열리면 별도 어댑터가 맞다. 지금은 못 열었다 | 나 — 불가(백로그) |
 
 > 순위 3번(요거트아이스크림의 정석)은 2번과 같은 사업자라 **표에서는 두 줄,
 > 어댑터는 한 개**다. 두 줄로 등록하면 같은 상품이 두 번 올라간다.
@@ -92,7 +93,7 @@
 | 4 | 한국하겐-다즈 | 제품 '하겐다즈' **344억** (2024 상반기 소매, 품목 3위) | aT FIS 인용 보도(헤럴드경제) | haagendazs.co.kr | 없음 | 0 | §1-21 과 같다. 한국 사이트가 글로벌로 리디렉트, 공식몰 공지는 2021년에 멈춤 | 나 — 불가 |
 | 5 | 롯데웰푸드 나뚜루사업부문 | 미확인(사업부) | 공정위 K1 19개 가맹점 | natuur.co.kr **(DNS 死)** | 없음 | 0 | 네이버 브랜드스토어로 통합. 모회사가 롯데웰푸드 | **타 담당**(롯데웰푸드) |
 | 6 | (주)서주 | **584.8억** (총매출, 빙과+건과+국수) | 사람인 기업정보 | seoju.kr | 없음 | 0 | 제품 페이지가 180개 가까이 있는데 **등록일도 NEW 배지도 없다**(`/bar1`·`/cone1`… 고정 슬러그). 공지사항(`/notice`·`/companynotice`)은 **"게시물이 없습니다"** | 나 — 불가 |
-| 7 | (주)라벨리 | **365.7억** (총매출) | 사람인 기업정보 | **못 찾음** | — | 0 | `lavely.co.kr`·`lavelly.co.kr` DNS 없음 | 나 — 불가 |
+| 7 | (주)라벨리 | **365.7억** (총매출) | 사람인 기업정보 | **lavelee.co.kr** | 언론보도 `/media-coverage/` (KBoard) | **0** | 게시판은 살아 있다(최신 2026-04-10). 다만 **전체 4건 중 상품 기사가 1건**(‘빅 아이스 콘칩’ 출시, 2025-01-06)이라 `DAYS=400` 창 밖 → 오늘 0건. ⚠️ `lavely.co.kr`·`lavelly.co.kr` 로 찾으면 못 찾는다. 철자가 **`lavelee`** 다 | 나 (`maker_lavelee`) |
 | 8 | 매일유업 (상하목장 아이스크림) | 미확인(빙과 분리 수치 없음) | — | maeil.com | 보도자료 | — | — | **타 담당** (`maker_maeil.py`) |
 | 9 | 신세계푸드 (오슬로 등) | 미확인 | — | shinsegaefood.com | 보도자료 | — | — | **타 담당** (`maker_shinsegaefood.py`) |
 | 10 | 동원F&B | 미확인 | — | dongwonfnb.com | 보도자료 | — | — | **타 담당** (`maker_dongwonfnb.py`) |
@@ -135,7 +136,10 @@
 
 ## 4. 등록할 줄 (`base.py` / `collect.py`)
 
-**⚠️ 부모 에이전트가 이미 전부 등록했다**(2026-10-03 통보 수신). 기록용으로만 남긴다.
+**⚠️ 7개 전부 부모 에이전트가 등록을 마쳤다**(2026-10-03 통보 수신). 기록용으로만 남긴다.
+등록 시점에 넷(빙동댕·달롱도르·에밀리아젤라또·타래퀸)이 `FRANCHISE` 로 들어갔다가
+**`CAFE` 로 정정**됐다(달롱도르는 세부분류도 `디저트`→`아이스크림`). 사유는 문서 머리말과 같다 —
+`FRANCHISE` 면 `taxonomy.primary_of()` 가 '외식' 을 줘서 설빙·배스킨라빈스와 1단 탭이 갈린다.
 
 ```
 BRANDS:
@@ -145,6 +149,7 @@ BRANDS:
     "빨라쪼":         (CAFE, "아이스크림"),
     "빙동댕":         (CAFE, "빙수"),
     "타래퀸":         (CAFE, "빙수"),
+    "라벨리":         (MAKER, "아이스크림"),
 
 SITES:
     "요아정":         "https://yoajung.co.kr/bbs/board.php?bo_table=main_port",
@@ -153,13 +158,15 @@ SITES:
     "빨라쪼":         "http://www.ipalazzo.com/menu/",
     "빙동댕":         "https://www.xn--hl1bno83x.kr/복제-메뉴-빙수",
     "타래퀸":         "https://www.taraequeen.com/menu",
+    "라벨리":         "https://lavelee.co.kr/media-coverage/",
 
 collect.py:
     from collectors import (dessert_bingdongdaeng, dessert_dallondor,
                             dessert_emiliagelato, dessert_palazzo,
-                            dessert_taraequeen, dessert_yoajung)
+                            dessert_taraequeen, dessert_yoajung, maker_lavelee)
     ADAPTERS 에 dessert_yoajung · dessert_dallondor · dessert_emiliagelato ·
-               dessert_palazzo · dessert_bingdongdaeng · dessert_taraequeen
+               dessert_palazzo · dessert_bingdongdaeng · dessert_taraequeen ·
+               maker_lavelee
 ```
 
 `taxonomy.SUBS` 는 **건드리지 않았다** — `아이스크림`·`빙수` 둘 다 이미 있다.

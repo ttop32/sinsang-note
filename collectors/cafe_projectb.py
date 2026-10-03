@@ -59,12 +59,18 @@ from .base import Item
 KST = timezone(timedelta(hours=9))
 
 # (브랜드, 사이트, 메뉴 경로들). 같은 CMS 라 파싱은 공통이다.
-BRANDS = [
+#
+# ⚠️ 이 목록을 `BRANDS` 라고 부르면 안 된다. 모듈 수준의 `BRANDS` 는
+# collect.orphans() 와 등록 검사가 **브랜드 이름 문자열 목록**으로 읽는 자리다
+# (bon_if.py 선례). 튜플을 넣어 뒀더니 "base.BRANDS 에 '('고망고', …)' 없음"
+# 이라는 엉뚱한 경고가 났다. 사양은 SPECS, 이름 목록만 BRANDS 로 둔다.
+SPECS = [
     ("고망고", "http://gomango.kr",
      ("mango", "coffee", "beverage", "tea", "dessert")),
     ("차얌", "http://chayam.co.kr",
      ("menu_milktea", "menu_coffee", "menu_tea")),
 ]
+BRANDS = [name for name, _site, _pages in SPECS]
 
 DELAY = 2.0
 MAX_PAGES = 10        # 폭주 방지. 현재 브랜드당 최대 5면.
@@ -124,7 +130,7 @@ def _cards(html: str, site: str) -> list:
 def fetch() -> list[Item]:
     items: list[Item] = []
     with base.client() as c:
-        for brand, site, pages in BRANDS:
+        for brand, site, pages in SPECS:
             seen = set()
             got = 0
             for page in pages[:MAX_PAGES]:

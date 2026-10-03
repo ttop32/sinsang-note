@@ -35,7 +35,7 @@ released_at 을 "가장 강한 신호" 라고 부르는 그 자리에 그대로 
       일이고 규칙을 두 벌로 두면 안 된다(rules 모듈 머리말). 대신 적어 둔다.
    덩어리 밖 27건은 상품별로 다르고 진짜 정보다. 거기까지가 이 필드의 값어치다.
 
-**요청 1번으로 끝난다.** 이미지 HEAD 도 필요 없다.
+**요청 2번으로 끝난다**(분류 이름용 탭 HTML + 목록 AJAX). 이미지 HEAD 도 필요 없다.
 
 NEW 배지도 신메뉴 탭도 없다. 그래서 `is_new` 는 **전건 None** 이다. 날짜가 있으니
 신제품 판정은 collect.py 의 날짜 창(WINDOW=60)이 한다 — 배지가 없다고 신호가 없는 게
@@ -75,6 +75,7 @@ M009 사이드메뉴 / M012 사이드메뉴(홀전용). 탭을 못 읽으면 코
    first_seen 이력이 끊긴다). base.py 쪽 과제로 넘긴다 — 2026-10-02 리뷰 보고.
 """
 import re
+import time
 
 from selectolax.parser import HTMLParser
 
@@ -88,6 +89,20 @@ MENU = SITE + "/menu/index.php"
 
 MAX_ITEMS = 300   # 폭주 방지. 현재 53건.
 LIMIT = 200       # 한 번에 받을 개수. TOTAL 과 대조해 부분수집을 잡는다.
+# 요청이 2번(탭 HTML + AJAX)뿐이라 체감은 없지만, 다른 어댑터와 같은 자리에
+# 같은 이름으로 둔다. 상한·지연을 어댑터마다 다른 이름으로 두면 반드시 하나는
+# 빠진다(notes/CRAWLING-POLICY.md §2-G).
+DELAY = 0.3       # 요청 간격(초)
+
+# `2026.09.22` 만 받는다. 이 필드는 released_at 으로 들어가는 **가장 강한 신호**라
+# 형식이 바뀌면 조용히 틀린 날짜를 쓰느니 비우는 게 낫다(또래오래 `_DATE` 선례).
+# `.replace(".", "-")` 만 걸어두면 `2026.09.22 14:33` 이나 epoch 가 그대로 들어간다.
+_DATE = re.compile(r"^(\d{4})\.(\d{2})\.(\d{2})$")
+
+
+def _released(raw: str) -> str:
+    m = _DATE.match((raw or "").strip())
+    return f"{m.group(1)}-{m.group(2)}-{m.group(3)}" if m else ""
 
 
 def _categories(client) -> dict:
@@ -112,6 +127,7 @@ def fetch() -> list[Item]:
     with base.client() as c:
         cats = _categories(c)
 
+        time.sleep(DELAY)
         r = base.retry(lambda: c.post(
             API, data={"page": 1, "limit": LIMIT, "sh": "", "shca": ""}))
         r.raise_for_status()
@@ -141,7 +157,7 @@ def fetch() -> list[Item]:
                 image=SITE + img if img.startswith("/") else img,
                 category=cats.get(code, code),
                 # 브랜드가 적어준 등록일이다. 업로드 시각이 아니라서 released_at 이다.
-                released_at=(p.get("first_reg_date") or "").replace(".", "-"),
+                released_at=_released(p.get("first_reg_date")),
                 # NEW 배지도 신메뉴 탭도 없다. 모르는 건 모른다고 둔다 —
                 # 날짜가 있으니 신제품 판정은 collect.py 의 날짜 창이 한다.
                 is_new=None,
