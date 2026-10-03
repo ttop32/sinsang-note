@@ -5,7 +5,7 @@
  <id>https://ttop32.github.io/sinsang-note/</id>
  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/"/>
  <link rel="self" type="application/atom+xml" href="https://ttop32.github.io/sinsang-note/feed.xml"/>
- <updated>2026-10-03T07:43:48Z</updated>
+ <updated>2026-10-03T07:53:19Z</updated>
  <author><name>신상노트</name></author>
  <rights>상품 정보와 이미지의 저작권은 각 브랜드에 있습니다.</rights>
  <entry>
@@ -1024,35 +1024,32 @@
  <entry>
   <title>쑥인절미 빙수</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EC%91%A5%EC%9D%B8%EC%A0%88%EB%AF%B8-%EB%B9%99%EC%88%98/"/>
-  <link rel="enclosure" type="image/png" href="https://static.wixstatic.com/media/28b05a_c9cc28df78ab423a848535972c4b9c7a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EC%91%A5%EC%9D%B8%EC%A0%88%EB%AF%B8%EB%B9%99%EC%88%98_%EB%B0%B0%EB%8B%AC%EC%95%B1.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EC%91%A5%EC%9D%B8%EC%A0%88%EB%AF%B8-%EB%B9%99%EC%88%98/</id>
   <updated>2026-10-03T00:00:00Z</updated>
   <author><name>빙동댕</name></author>
   <category term="빙동댕"/>
   <summary type="text">쑥과 인절미가 포근하게 어우러지는 쫀득고소한 매력 가득한 빙수</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://static.wixstatic.com/media/28b05a_c9cc28df78ab423a848535972c4b9c7a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EC%91%A5%EC%9D%B8%EC%A0%88%EB%AF%B8%EB%B9%99%EC%88%98_%EB%B0%B0%EB%8B%AC%EC%95%B1.png&quot; alt=&quot;쑥인절미 빙수&quot;&gt;&lt;/p&gt;&lt;p&gt;쑥과 인절미가 포근하게 어우러지는 쫀득고소한 매력 가득한 빙수&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;쑥과 인절미가 포근하게 어우러지는 쫀득고소한 매력 가득한 빙수&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>망고왔자몽 요거트</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD-%EC%9A%94%EA%B1%B0%ED%8A%B8/"/>
-  <link rel="enclosure" type="image/png" href="https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD-%EC%9A%94%EA%B1%B0%ED%8A%B8/</id>
   <updated>2026-10-03T00:00:00Z</updated>
   <author><name>빙동댕</name></author>
   <category term="빙동댕"/>
   <summary type="text">망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png&quot; alt=&quot;망고왔자몽 요거트&quot;&gt;&lt;/p&gt;&lt;p&gt;망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>망고왔자몽</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD/"/>
-  <link rel="enclosure" type="image/png" href="https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EB%8F%99%EB%8C%95-%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD/</id>
   <updated>2026-10-03T00:00:00Z</updated>
   <author><name>빙동댕</name></author>
   <category term="빙동댕"/>
   <summary type="text">망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://static.wixstatic.com/media/28b05a_27a3a8c2243c474483d37cd0ea65f01a~mv2.png/v1/fill/w_258,h_151,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/%EB%A7%9D%EA%B3%A0%EC%99%94%EC%9E%90%EB%AA%BD_%EB%B0%B0%EB%8B%AC%EC%95%B1.png&quot; alt=&quot;망고왔자몽&quot;&gt;&lt;/p&gt;&lt;p&gt;망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;망고, 자몽, 탱글한 코코넛이 만나 입안 가득 톡톡 터지는 매력&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>프응 야생화 꿀 토마토 주스</title>
@@ -2921,14 +2918,13 @@
  <entry>
   <title>뿌레카치킨</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%98%90%EB%9E%98%EC%98%A4%EB%9E%98-%EB%BF%8C%EB%A0%88%EC%B9%B4%EC%B9%98%ED%82%A8/"/>
-  <link rel="enclosure" type="image/png" href="https://www.toreore.com/upload_files/board/MENU/o_1js8brqeg15vt1u53g3ul3c1lema.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%98%90%EB%9E%98%EC%98%A4%EB%9E%98-%EB%BF%8C%EB%A0%88%EC%B9%B4%EC%B9%98%ED%82%A8/</id>
   <published>2026-09-29T00:00:00Z</published>
   <updated>2026-09-29T00:00:00Z</updated>
   <author><name>또래오래</name></author>
   <category term="또래오래"/>
   <summary type="text">#바비큐시즈닝 #바삭바삭 #찍먹마요소스 · 한마리, 순살, 윙봉, 스틱, 콤보</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.toreore.com/upload_files/board/MENU/o_1js8brqeg15vt1u53g3ul3c1lema.png&quot; alt=&quot;뿌레카치킨&quot;&gt;&lt;/p&gt;&lt;p&gt;#바비큐시즈닝 #바삭바삭 #찍먹마요소스 · 한마리, 순살, 윙봉, 스틱, 콤보&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;#바비큐시즈닝 #바삭바삭 #찍먹마요소스 · 한마리, 순살, 윙봉, 스틱, 콤보&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>바삭 누룽지</title>
@@ -2957,14 +2953,13 @@
  <entry>
   <title>김말이튀김</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%98%90%EB%9E%98%EC%98%A4%EB%9E%98-%EA%B9%80%EB%A7%90%EC%9D%B4%ED%8A%80%EA%B9%80/"/>
-  <link rel="enclosure" type="image/png" href="https://www.toreore.com/upload_files/board/MENU/o_1k2jtg3d964s1kpa1rqj1ttbajoa.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%98%90%EB%9E%98%EC%98%A4%EB%9E%98-%EA%B9%80%EB%A7%90%EC%9D%B4%ED%8A%80%EA%B9%80/</id>
   <published>2026-09-16T00:00:00Z</published>
   <updated>2026-09-16T00:00:00Z</updated>
   <author><name>또래오래</name></author>
   <category term="또래오래"/>
   <summary type="text">#바삭바삭 #김말이 · 사이드메뉴</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.toreore.com/upload_files/board/MENU/o_1k2jtg3d964s1kpa1rqj1ttbajoa.png&quot; alt=&quot;김말이튀김&quot;&gt;&lt;/p&gt;&lt;p&gt;#바삭바삭 #김말이 · 사이드메뉴&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;#바삭바삭 #김말이 · 사이드메뉴&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>우리아이 순 참기름</title>
@@ -3041,14 +3036,13 @@
  <entry>
   <title>일품진로 1924 헤리티지</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%95%98%EC%9D%B4%ED%8A%B8%EC%A7%84%EB%A1%9C-%EC%9D%BC%ED%92%88%EC%A7%84%EB%A1%9C-1924-%ED%97%A4%EB%A6%AC%ED%8B%B0%EC%A7%80/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://file.hitejinro.com/hitejinro2016/upFiles/notice/20260908_84579483.jpg"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%95%98%EC%9D%B4%ED%8A%B8%EC%A7%84%EB%A1%9C-%EC%9D%BC%ED%92%88%EC%A7%84%EB%A1%9C-1924-%ED%97%A4%EB%A6%AC%ED%8B%B0%EC%A7%80/</id>
   <published>2026-09-08T00:00:00Z</published>
   <updated>2026-09-08T00:00:00Z</updated>
   <author><name>하이트진로</name></author>
   <category term="하이트진로"/>
   <summary type="text">‘일품진로 전용쌀 100% 사용’ ‘일품진로 1924 헤리티지’ 한정판 출시</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://file.hitejinro.com/hitejinro2016/upFiles/notice/20260908_84579483.jpg&quot; alt=&quot;일품진로 1924 헤리티지&quot;&gt;&lt;/p&gt;&lt;p&gt;‘일품진로 전용쌀 100% 사용’ ‘일품진로 1924 헤리티지’ 한정판 출시&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;‘일품진로 전용쌀 100% 사용’ ‘일품진로 1924 헤리티지’ 한정판 출시&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>숯불치킨 샌드위치</title>
@@ -3064,14 +3058,13 @@
  <entry>
   <title>일품진로 하이볼 선물세트</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%95%98%EC%9D%B4%ED%8A%B8%EC%A7%84%EB%A1%9C-%EC%9D%BC%ED%92%88%EC%A7%84%EB%A1%9C-%ED%95%98%EC%9D%B4%EB%B3%BC-%EC%84%A0%EB%AC%BC%EC%84%B8%ED%8A%B8/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://file.hitejinro.com/hitejinro2016/upFiles/notice/20260904_43993817.jpg"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%95%98%EC%9D%B4%ED%8A%B8%EC%A7%84%EB%A1%9C-%EC%9D%BC%ED%92%88%EC%A7%84%EB%A1%9C-%ED%95%98%EC%9D%B4%EB%B3%BC-%EC%84%A0%EB%AC%BC%EC%84%B8%ED%8A%B8/</id>
   <published>2026-09-04T00:00:00Z</published>
   <updated>2026-09-04T00:00:00Z</updated>
   <author><name>하이트진로</name></author>
   <category term="하이트진로"/>
   <summary type="text">‘일품진로 하이볼 선물세트’ 출시</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://file.hitejinro.com/hitejinro2016/upFiles/notice/20260904_43993817.jpg&quot; alt=&quot;일품진로 하이볼 선물세트&quot;&gt;&lt;/p&gt;&lt;p&gt;‘일품진로 하이볼 선물세트’ 출시&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;‘일품진로 하이볼 선물세트’ 출시&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>어메이징 오트 말차</title>
@@ -7181,38 +7174,35 @@
  <entry>
   <title>안심텐더</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B0%80%EB%A7%88%EC%B9%98%ED%86%B5%EB%8B%AD-%EC%95%88%EC%8B%AC%ED%85%90%EB%8D%94/"/>
-  <link rel="enclosure" type="image/png" href="https://www.gamachi.co.kr/data/file/1503987965/thumb-1028293093_ZosL8VjH_49df1299353513b614e3853e9de8f2902bdbbc9d_368x368.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EA%B0%80%EB%A7%88%EC%B9%98%ED%86%B5%EB%8B%AD-%EC%95%88%EC%8B%AC%ED%85%90%EB%8D%94/</id>
   <published>2026-09-29T00:00:00Z</published>
   <updated>2026-09-29T00:00:00Z</updated>
   <author><name>가마치통닭</name></author>
   <category term="가마치통닭"/>
   <summary type="text">아이를 위해 더 부드럽고 순하게 만든 안심텐더</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.gamachi.co.kr/data/file/1503987965/thumb-1028293093_ZosL8VjH_49df1299353513b614e3853e9de8f2902bdbbc9d_368x368.png&quot; alt=&quot;안심텐더&quot;&gt;&lt;/p&gt;&lt;p&gt;아이를 위해 더 부드럽고 순하게 만든 안심텐더&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;아이를 위해 더 부드럽고 순하게 만든 안심텐더&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>순살국물닭발</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B0%80%EB%A7%88%EC%B9%98%ED%86%B5%EB%8B%AD-%EC%88%9C%EC%82%B4%EA%B5%AD%EB%AC%BC%EB%8B%AD%EB%B0%9C/"/>
-  <link rel="enclosure" type="image/png" href="https://www.gamachi.co.kr/data/file/1503987965/thumb-1028293093_dcDwxlKv_1ebae65687c1254bcd5b48c4e8efd23a50bc483c_368x368.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EA%B0%80%EB%A7%88%EC%B9%98%ED%86%B5%EB%8B%AD-%EC%88%9C%EC%82%B4%EA%B5%AD%EB%AC%BC%EB%8B%AD%EB%B0%9C/</id>
   <published>2026-09-29T00:00:00Z</published>
   <updated>2026-09-29T00:00:00Z</updated>
   <author><name>가마치통닭</name></author>
   <category term="가마치통닭"/>
   <summary type="text">매콤한 닭발에 담백한 닭가슴살을 더하다</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.gamachi.co.kr/data/file/1503987965/thumb-1028293093_dcDwxlKv_1ebae65687c1254bcd5b48c4e8efd23a50bc483c_368x368.png&quot; alt=&quot;순살국물닭발&quot;&gt;&lt;/p&gt;&lt;p&gt;매콤한 닭발에 담백한 닭가슴살을 더하다&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;매콤한 닭발에 담백한 닭가슴살을 더하다&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>빠삭먹태</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B0%80%EB%A7%88%EC%B9%98%ED%86%B5%EB%8B%AD-%EB%B9%A0%EC%82%AD%EB%A8%B9%ED%83%9C/"/>
-  <link rel="enclosure" type="image/png" href="https://www.gamachi.co.kr/data/file/1503987965/thumb-1028293093_Jr7Lkq62_2d306cbc1a7132fe8c4e3c5b19391e46786d878a_368x368.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EA%B0%80%EB%A7%88%EC%B9%98%ED%86%B5%EB%8B%AD-%EB%B9%A0%EC%82%AD%EB%A8%B9%ED%83%9C/</id>
   <published>2026-09-29T00:00:00Z</published>
   <updated>2026-09-29T00:00:00Z</updated>
   <author><name>가마치통닭</name></author>
   <category term="가마치통닭"/>
   <summary type="text">술 안주 저격! 마른 안주의 왕!</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.gamachi.co.kr/data/file/1503987965/thumb-1028293093_Jr7Lkq62_2d306cbc1a7132fe8c4e3c5b19391e46786d878a_368x368.png&quot; alt=&quot;빠삭먹태&quot;&gt;&lt;/p&gt;&lt;p&gt;술 안주 저격! 마른 안주의 왕!&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;술 안주 저격! 마른 안주의 왕!&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>쿠퍼스 블러드케어</title>
@@ -11453,14 +11443,13 @@
  <entry>
   <title>펩시 엑스트라 피즈</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C-%ED%8E%A9%EC%8B%9C-%EC%97%91%EC%8A%A4%ED%8A%B8%EB%9D%BC-%ED%94%BC%EC%A6%88/"/>
-  <link rel="enclosure" type="image/png" href="https://company.lottechilsung.co.kr/image/2026/9/202609220615531610.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C-%ED%8E%A9%EC%8B%9C-%EC%97%91%EC%8A%A4%ED%8A%B8%EB%9D%BC-%ED%94%BC%EC%A6%88/</id>
   <published>2026-09-22T00:00:00Z</published>
   <updated>2026-09-22T00:00:00Z</updated>
   <author><name>롯데칠성음료</name></author>
   <category term="롯데칠성음료"/>
   <summary type="text">오래 즐기고 싶은 너만의 짜릿함</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://company.lottechilsung.co.kr/image/2026/9/202609220615531610.png&quot; alt=&quot;펩시 엑스트라 피즈&quot;&gt;&lt;/p&gt;&lt;p&gt;오래 즐기고 싶은 너만의 짜릿함&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;오래 즐기고 싶은 너만의 짜릿함&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>레몬 버터 더블 살시챠</title>
@@ -12496,26 +12485,24 @@
  <entry>
   <title>오트몬드 프로틴 커피셰이크</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C-%EC%98%A4%ED%8A%B8%EB%AA%AC%EB%93%9C-%ED%94%84%EB%A1%9C%ED%8B%B4-%EC%BB%A4%ED%94%BC%EC%85%B0%EC%9D%B4%ED%81%AC/"/>
-  <link rel="enclosure" type="image/png" href="https://company.lottechilsung.co.kr/image/2026/9/202609101142453760.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C-%EC%98%A4%ED%8A%B8%EB%AA%AC%EB%93%9C-%ED%94%84%EB%A1%9C%ED%8B%B4-%EC%BB%A4%ED%94%BC%EC%85%B0%EC%9D%B4%ED%81%AC/</id>
   <published>2026-09-10T00:00:00Z</published>
   <updated>2026-09-10T00:00:00Z</updated>
   <author><name>롯데칠성음료</name></author>
   <category term="롯데칠성음료"/>
   <summary type="text">단백질로 꽉 채운 가벼움</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://company.lottechilsung.co.kr/image/2026/9/202609101142453760.png&quot; alt=&quot;오트몬드 프로틴 커피셰이크&quot;&gt;&lt;/p&gt;&lt;p&gt;단백질로 꽉 채운 가벼움&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;단백질로 꽉 채운 가벼움&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>오트몬드 검은콩단백</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C-%EC%98%A4%ED%8A%B8%EB%AA%AC%EB%93%9C-%EA%B2%80%EC%9D%80%EC%BD%A9%EB%8B%A8%EB%B0%B1/"/>
-  <link rel="enclosure" type="image/png" href="https://company.lottechilsung.co.kr/image/2026/9/202609101140215920.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%A1%AF%EB%8D%B0%EC%B9%A0%EC%84%B1%EC%9D%8C%EB%A3%8C-%EC%98%A4%ED%8A%B8%EB%AA%AC%EB%93%9C-%EA%B2%80%EC%9D%80%EC%BD%A9%EB%8B%A8%EB%B0%B1/</id>
   <published>2026-09-10T00:00:00Z</published>
   <updated>2026-09-10T00:00:00Z</updated>
   <author><name>롯데칠성음료</name></author>
   <category term="롯데칠성음료"/>
   <summary type="text">건강으로 꽉 채운 가벼움</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://company.lottechilsung.co.kr/image/2026/9/202609101140215920.png&quot; alt=&quot;오트몬드 검은콩단백&quot;&gt;&lt;/p&gt;&lt;p&gt;건강으로 꽉 채운 가벼움&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;건강으로 꽉 채운 가벼움&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>미주라 프로틴 오트밀비스켓</title>
@@ -15328,38 +15315,35 @@
  <entry>
   <title>호두정과</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%95%98%EC%82%BC%EB%8F%99%EC%BB%A4%ED%94%BC-%ED%98%B8%EB%91%90%EC%A0%95%EA%B3%BC/"/>
-  <link rel="enclosure" type="image/png" href="https://www.hasamdongcoffee.com/upld/2026/08/18/tpd_af_img_7832.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%95%98%EC%82%BC%EB%8F%99%EC%BB%A4%ED%94%BC-%ED%98%B8%EB%91%90%EC%A0%95%EA%B3%BC/</id>
   <published>2026-08-18T00:00:00Z</published>
   <updated>2026-08-18T00:00:00Z</updated>
   <author><name>하삼동커피</name></author>
   <category term="하삼동커피"/>
   <summary type="text">하삼동커피 신제품 호두정과</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.hasamdongcoffee.com/upld/2026/08/18/tpd_af_img_7832.png&quot; alt=&quot;호두정과&quot;&gt;&lt;/p&gt;&lt;p&gt;하삼동커피 신제품 호두정과&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;하삼동커피 신제품 호두정과&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>수정과</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%95%98%EC%82%BC%EB%8F%99%EC%BB%A4%ED%94%BC-%EC%88%98%EC%A0%95%EA%B3%BC/"/>
-  <link rel="enclosure" type="image/png" href="https://www.hasamdongcoffee.com/upld/2026/08/18/tpd_af_img_7829.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%95%98%EC%82%BC%EB%8F%99%EC%BB%A4%ED%94%BC-%EC%88%98%EC%A0%95%EA%B3%BC/</id>
   <published>2026-08-18T00:00:00Z</published>
   <updated>2026-08-18T00:00:00Z</updated>
   <author><name>하삼동커피</name></author>
   <category term="하삼동커피"/>
   <summary type="text">하삼동커피 신제품 수정과</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.hasamdongcoffee.com/upld/2026/08/18/tpd_af_img_7829.png&quot; alt=&quot;수정과&quot;&gt;&lt;/p&gt;&lt;p&gt;하삼동커피 신제품 수정과&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;하삼동커피 신제품 수정과&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>1.1L옛날냉차</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%95%98%EC%82%BC%EB%8F%99%EC%BB%A4%ED%94%BC-1-1l%EC%98%9B%EB%82%A0%EB%83%89%EC%B0%A8/"/>
-  <link rel="enclosure" type="image/png" href="https://www.hasamdongcoffee.com/upld/2026/08/18/tpd_af_img_7831.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%95%98%EC%82%BC%EB%8F%99%EC%BB%A4%ED%94%BC-1-1l%EC%98%9B%EB%82%A0%EB%83%89%EC%B0%A8/</id>
   <published>2026-08-18T00:00:00Z</published>
   <updated>2026-08-18T00:00:00Z</updated>
   <author><name>하삼동커피</name></author>
   <category term="하삼동커피"/>
   <summary type="text">하삼동커피 신제품 1.1L옛날냉차</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.hasamdongcoffee.com/upld/2026/08/18/tpd_af_img_7831.png&quot; alt=&quot;1.1L옛날냉차&quot;&gt;&lt;/p&gt;&lt;p&gt;하삼동커피 신제품 1.1L옛날냉차&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;하삼동커피 신제품 1.1L옛날냉차&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>왁뿌소금빵</title>

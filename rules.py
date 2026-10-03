@@ -365,6 +365,27 @@ IMG_WORKERS = 12      # 동시 요청 수. 1,035장에 30초쯤 걸린다.
 IMG_TIMEOUT = 20
 IMG_MIN = 500         # 이보다 작으면 사진이 아니라 에러 페이지다
 
+# ⚠️ 브라우저가 보내는 것을 똑같이 보내야 한다. 그냥 받으면 200 인데 우리
+# 도메인에서 부르면 막는 곳이 있다 — 가마치통닭이 Referer 를 붙이자 403 이
+# 됐다(핫링크 차단). 레퍼러 없이 재고 "멀쩡하다" 고 하면 화면에선 깨진다.
+IMG_HEADERS = {"Referer": "https://ttop32.github.io/",
+               "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8"}
+
+# Content-Type 으로 판정하면 안 된다. 탐앤탐스·커피베이는 **진짜 PNG 를
+# application/octet-stream 으로** 보낸다 — 타입만 보면 멀쩡한 사진 400여 장을
+# 숨긴다. 브라우저는 내용을 보고 그린다. 우리도 앞 몇 바이트를 본다.
+_MAGIC = ((b"\x89PNG", "png"), (b"\xff\xd8", "jpeg"), (b"GIF8", "gif"),
+          (b"BM", "bmp"), (b"\x00\x00\x01\x00", "ico"))
+
+
+def _is_image(blob: bytes) -> bool:
+    if any(blob.startswith(m) for m, _ in _MAGIC):
+        return True
+    if blob[:4] == b"RIFF" and blob[8:12] == b"WEBP":
+        return True
+    head = blob[:400].lstrip()
+    return head.startswith(b"<svg") or b"<svg" in head[:200]
+
 
 def verify_images(rows: list) -> tuple:
     """화면에 올릴 사진이 실제로 열리는지 확인한다. (고친 수, 되살린 수).
@@ -388,11 +409,10 @@ def verify_images(rows: list) -> tuple:
     def live(url: str) -> bool:
         try:
             with httpx.Client(timeout=IMG_TIMEOUT, follow_redirects=True,
-                              headers={"User-Agent": base.UA}) as c:
+                              headers={"User-Agent": base.UA, **IMG_HEADERS}) as c:
                 resp = c.get(url)
-                return (resp.status_code < 400
-                        and resp.headers.get("content-type", "").startswith("image")
-                        and len(resp.content) >= IMG_MIN)
+                return (resp.status_code < 400 and len(resp.content) >= IMG_MIN
+                        and _is_image(resp.content))
         except Exception:
             return False
 
@@ -444,3 +464,29 @@ def undated_new(rows: list) -> list:
                 and total >= DATED_MIN and dated / total >= DATED_BRAND):
             hit[(r["brand"], f"{dated}/{total}")] += 1
     return [(b, cov, n) for (b, cov), n in hit.most_common()]
+
+
+# ── 합류 첫날 배지 하나로만 올라온 것 ──────────────────────────────
+# `is_fresh` 는 `is_new is True` 를 맨 위에서 받아서 **baseline 검사를
+# 건너뛴다.** 브랜드가 붙인 배지를 믿는다는 뜻인데, 그 배지가 '이번 달 신상'
+# 이 아니라 **1년치가 쌓인 바구니**면 합류 첫날 그게 통째로 올라온다.
+#
+# 하이오커피가 그랬다. '신메뉴' 전용 카테고리 40건이 다른 탭과 하나도 안
+# 겹쳐서 믿을 만해 보였는데, 10월에 쌍화차·유자생강차(겨울)와 컵빙수·
+# 수박주스(여름)가 같이 들어 있었다. 날짜가 없어 60일 창도 못 쓰고,
+# STALE 은 first_seen 기준이라 합류 후 90일간 안 걸린다.
+#
+# 자동으로 지우지 않는다 — 같은 모양인 컴포즈 16건·설빙 4건은 눈으로 확인한
+# 진짜 신상이다. 기계가 가를 수 없으니 **사람이 보게 찍기만** 한다.
+# `baseline` 은 합류 첫날 묶음에만 붙으니 이 경고는 새로 들어온 브랜드에만
+# 뜬다. 즉 "새 브랜드를 붙였으면 이 목록을 한 번 보라" 는 뜻이다.
+BADGE_ONLY_MIN = 10   # 이보다 많으면 눈으로 볼 값어치가 있다
+
+
+def badge_only(rows: list) -> list:
+    """합류 첫날 배지만으로 올라온 카드. (브랜드, 건수) 목록, 많은 순."""
+    hit = collections.Counter(
+        r["brand"] for r in rows
+        if r.get("is_new") and r.get("baseline")
+        and not (r.get("released_at") or r.get("uploaded_at")))
+    return [(b, n) for b, n in hit.most_common() if n >= BADGE_ONLY_MIN]

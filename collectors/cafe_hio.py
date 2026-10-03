@@ -143,7 +143,19 @@ def fetch() -> list[Item]:
                         image=IMG_BASE + _clean(a.get("data-file")),
                         labels=_labels(a.get("data-size")),
                         category=label,
-                        is_new=(cate == NEW_CATE),
+                        # ⚠️ cate=1 을 is_new=True 로 주면 안 된다. 아래
+                        # docstring 에 적은 대로 그 탭은 **1년치가 쌓인
+                        # 바구니**다 — 10월에 쌍화차·유자생강차(겨울)와
+                        # 컵빙수·수박주스(여름)가 같이 들어 있다. 그런데
+                        # rules.is_fresh 는 is_new=True 면 baseline 검사를
+                        # 건너뛰어서, 합류 첫날 40건이 통째로 신상으로 올라갔다
+                        # (STALE 은 first_seen 기준이라 90일간 안 걸린다).
+                        #
+                        # 그래서 '모름' 으로 둔다. 브랜드가 승격되면 cate 를
+                        # 옮기는 운영이라 **cate=1 에 새로 나타나는 것**이 진짜
+                        # 신호고, 그건 collect 의 어제 대비 diff 가 잡는다.
+                        # 합류 첫날 0건이 정상이다(메가·빽다방과 같은 처지).
+                        is_new=None,
                     )
                     got += 1
                     if it.key in seen:
@@ -156,9 +168,11 @@ def fetch() -> list[Item]:
     if len(items) < MIN_ITEMS:
         raise RuntimeError(f"하이오커피 {len(items)}건 — 메뉴 구조가 바뀌었을 수 있다")
 
-    new = sum(1 for i in items if i.is_new)
+    # is_new 가 아니라 **카테고리 자체**를 센다. 위에서 is_new 를 내렸기
+    # 때문에 is_new 로 세면 항상 0 이 되어 가드가 늘 터진다.
+    new = sum(1 for i in items if i.category == CATEGORIES[NEW_CATE])
     if not new:
-        raise RuntimeError("하이오커피 신메뉴 0건 — 카테고리 번호가 바뀌었을 수 있다")
+        raise RuntimeError("하이오커피 신메뉴 칸 0건 — 카테고리 번호가 바뀌었을 수 있다")
     # 신메뉴 탭이 전체의 절반을 넘으면 그건 '신메뉴'가 아니다(퀴즈노스 66/66).
     if new > len(items) // 2:
         raise RuntimeError(f"하이오커피 신메뉴 {new}/{len(items)}건 — 믿을 수 없다")

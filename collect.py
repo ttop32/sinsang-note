@@ -468,6 +468,13 @@ def main() -> None:
     # 날짜를 주는 브랜드가 날짜 없이 보낸 신상. 그 길로 들어오면 60일 창이
     # 통째로 열린다 — 농심이 1975년 제품의 복각을 그렇게 올렸다. 자세한 건
     # rules.undated_new 주석.
+    # 합류 첫날 배지 하나로만 올라온 것. 그 배지가 '1년치 바구니' 면 상시
+    # 메뉴가 통째로 신상이 된다 — 하이오커피 40건이 그랬다. 사유는
+    # rules.badge_only 주석. 기계가 못 가르니 사람이 보게 찍는다.
+    for brand, n in rules.badge_only(fresh):
+        print(f"   ! {brand} 는 날짜 없이 배지만으로 {n}장이 올라왔다 "
+              "— 그 배지가 '이번 신상' 인지 '쌓인 목록' 인지 눈으로 봐라")
+
     for brand, cover, n in rules.undated_new(rows):
         print(f"   ! {brand} 는 날짜를 {cover} 주는데 {n}건을 날짜 없이 "
               "신상으로 보냈다 — 60일 창을 건너뛴다")
