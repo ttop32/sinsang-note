@@ -26,6 +26,12 @@ jobs:
       - run: pip install -r requirements.txt
 
       - run: python collect.py
+        env:
+          # 한국 IP 를 거쳐 나가고 싶으면 저장소 Secrets 에 SINSANG_PROXY 를
+          # 넣는다(예: http://user:pass@호스트:포트). 비어 있으면 러너에서
+          # 그대로 나간다 — 그러면 한국 사이트 여럿이 해외 IP 라고 막는다.
+          # 사유는 collectors/base.py 의 PROXY 주석 참고.
+          SINSANG_PROXY: ${{ secrets.SINSANG_PROXY }}
 
       - name: commit & push
         if: always()          # 일부 어댑터가 죽어도 나머지는 반영

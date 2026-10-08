@@ -1,4 +1,5 @@
 from dataclasses import dataclass, asdict, field
+import os
 import re
 import time
 
@@ -1191,9 +1192,25 @@ class Item:
 
 # 해외 러너에서 국내 사이트는 간헐적으로 연결 실패·타임아웃이 난다.
 # 연결 단계 재시도는 transport 가 맡고, 읽기 타임아웃은 retry() 로 감싼다.
+# 한국 안에서 요청을 내보내고 싶을 때 쓰는 구멍. 환경변수가 없으면 아무
+# 일도 안 한다(지금 로컬은 그대로 직접 나간다).
+#
+# 왜 필요한가 — 2026-10-08 러너에서 직접 쟀다. GitHub 호스팅 러너는 **지역을
+# 고를 수 없고**(라벨이 OS·아키텍처뿐이다) 바깥 IP 가 해외(Azure)다. 한국
+# 사이트 여럿이 그걸 막는다: 컴포즈·투썸·하이트진로·써브웨이가 403 이고
+# 봇UA 든 브라우저UA 든 똑같다(UA 문제가 아니다). 세븐일레븐은 아예
+# ConnectTimeout 이다. 상품의 19%가 그렇게 매일 이월되고 있었다.
+#
+# 한국 IP 를 거치면 풀린다. 어떤 경로를 쓸지는 운영자가 정하고(자체 VPS
+# 프록시·Tailscale 출구 노드·VPN 등) 여기는 주소만 받는다.
+PROXY = os.environ.get("SINSANG_PROXY", "").strip()
+
+
 def client(**kw) -> httpx.Client:
     # 어댑터가 Referer 같은 헤더를 더할 수 있게 UA 위에 덮어쓴다.
     headers = {"User-Agent": UA} | dict(kw.pop("headers", {}))
+    if PROXY:
+        kw.setdefault("proxy", PROXY)
     kw.setdefault("timeout", httpx.Timeout(30.0, connect=15.0))
     # verify 는 transport 에 넘겨야 한다. httpx.Client(transport=..., verify=...) 는
     # transport 가 있으면 verify 를 조용히 무시한다. 이걸 모르고 구형 TLS 사이트
