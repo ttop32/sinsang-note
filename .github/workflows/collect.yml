@@ -43,5 +43,9 @@ jobs:
             echo "변경 없음"
           else
             git commit -m "수집 $(date -u -d '+9 hours' +%Y-%m-%d)"
+            # ⚠️ 그냥 push 하면 터진다. 2026-10-08 에 수동 실행과 예약 실행이
+            #    5분 차이로 겹쳐 뒤엣것이 non-fast-forward 로 거절됐다.
+            #    수집은 다 해 놓고 마지막에 못 올리는 게 제일 아깝다.
+            git pull --rebase --autostash
             git push
           fi

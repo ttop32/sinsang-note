@@ -539,9 +539,13 @@ def main() -> None:
     if hid or back:
         print(f"   사진 안 열리는 것 {hid}장 감춤 / 되살아난 것 {back}장")
     # http 로만 열리는 사진은 브라우저가 막는다. 받아서 우리 쪽에 둔다.
-    got, gone = rules.mirror_images(shown, ROOT / "docs", theme.BASE_URL)
-    if got or gone:
-        print(f"   사진 받아둔 것 {got}장 / 안 쓰는 것 {gone}장 정리")
+    # ⚠️ 두 번째 값을 `gone` 으로 받으면 안 된다. 위(524줄)에서 **사라진 상품
+    #    목록**을 `gone` 에 담아 뒀는데 그걸 숫자로 덮어써서, 아래 요약 줄의
+    #    `len(gone)` 이 매번 TypeError 로 터졌다. 수집은 다 끝내 놓고 마지막
+    #    한 줄에서 죽는 바람에 products.json 만 쓰이고 docs 는 안 만들어졌다.
+    got, pruned = rules.mirror_images(shown, ROOT / "docs", theme.BASE_URL)
+    if got or pruned:
+        print(f"   사진 받아둔 것 {got}장 / 안 쓰는 것 {pruned}장 정리")
 
     fresh = rules.pick(rows, today)                  # 홈 목록(브랜드 상한 적용)
     # 페이지는 상한 없이 만든다. 상한에 걸린 것도 /b/<브랜드>/ 와 검색으로 닿아야 한다.

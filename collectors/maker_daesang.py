@@ -1,4 +1,81 @@
-"""대상(청정원·종가) — 뉴스 게시판 JSON 에서 신제품과 출시일을 뽑는다.
+"""대상(청정원·종가) — 뉴스 게시판 JSON **+ 대상홀딩스 그룹소식** 에서 신제품을 뽑는다.
+
+## 🔴 2026-10-08 소스 보강 — 자사 게시판이 그룹 보드의 **8분의 1** 이었다
+
+아래 원래 조사는 `daesang.com` 자사 뉴스 게시판만 보고 "3개월에 1건, 이 레포에서
+가장 낮은 축" 이라고 적었다. **그 판정이 소스 탓이었다.** 같은 날 받은 두 보드:
+
+| 보드 | 1페이지 | 300일 안 행 수 | 최신 글 | 창 안 출시 기사 |
+|---|---:|---:|---|---:|
+| `daesang.com` 자사 뉴스 (`boardListJson.jsp`) | 6건 | 30 | **2026-09-08** | **3** |
+| `daesangholdings.com` 그룹소식 (`news.php`) | 20건 | 110 | **2026-10-06** | **22** |
+
+자사 게시판은 **한 달 멈춰 있고**, 들어 있는 30건의 성격도 기부·협약·박람회·
+기획전으로 치우쳐 있다. 그룹 보드에는 같은 기간의 청정원·종가 출시 기사가
+그대로 다 있다(아래 §그룹 보드). 신세계그룹 뉴스룸으로 신세계푸드를 5→12 로
+올린 것과 **같은 수법**이고, 효과는 더 크다 — **3건 → 20건.**
+
+⚠️ **자사 보드를 떼지 않았다.** 두 보드는 같은 기사에 **다른 날짜**를 붙인다
+   (실측: `알룰로스 3종 출시` 가 자사 2026-08-10 / 그룹 2026-07-28, 13일 차).
+   그룹 쪽이 늘 더 이르다(그쪽이 원 배포일로 보인다). 그래도 **자사 보드를 먼저
+   돌리고 그룹 보드를 뒤에 더한다** — 원래 어댑터가 내보내던 3건의 날짜·사진·URL 이
+   그대로 유지돼야 회귀가 없기 때문이다. 겹치는 기사는 `make_key` 로 걸러진다.
+
+## 그룹 보드 — `daesangholdings.com` 그룹소식 (2026-10-08 실측)
+
+    GET https://www.daesangholdings.com/child/sub/bbs/news.php?page=N&code=news
+        200 / 약 37KB / **한 페이지 20건**. 완전 SSR, 쿠키·토큰 없음.
+    <li class="photo_b grid-8">
+      <a href="/child/sub/bbs/news.php?ptype=view&idx=6728&page=1&code=news">
+        <div class="photo_image" style="background-image:url(/adm/data/bbs/news/S2610060307527_1.png);"></div></a>
+      <div class="photo_body">
+        <div class="writer">대상주식회사</div>          ← ★ 계열사를 서버가 준다
+        <div class="name"><a href="…">대상 종가, … '볶음깍두기' 신제품 출시</a></div>
+        <div class="date">2026-10-06</div>
+      </div></li>
+    robots.txt → 200 / 21B / `User-agent: * / Allow:/` — 규칙 없음.
+
+**이 보드의 핵심은 `div.writer` 다.** 제목 주어로만 가르던 것을 서버가 준 계열사
+이름으로 한 번 더 받친다. 6페이지 120건 실측 분포 —
+
+    대상주식회사 52  ← ✅ 우리가 쓰는 쪽(청정원·종가·호밍스·그레인보우)
+    대상웰라이프 38  ← ❌ 뉴케어·것시스. 환자식·건기식이고 회사가 다르다
+    대상펫라이프  8  ← ❌ 펫푸드. 사람이 먹는 게 아니다
+    대상그룹      7  ← ❌ ESG·사회공헌
+    대상다이브스  5  ← ❌ 복음자리(잼·커피). 회사가 다르다
+    혜성프로비젼  5  ← ❌ 육가공. 회사가 다르다
+    대상홀딩스    2  ← ❌ 지주
+    (그 밖에 `대상주식회`·`대상웰라이` 처럼 **끝 글자가 잘려 오는 행이 3건** 있다.
+     그래서 완전 일치가 아니라 **접두 일치**로 받는다. 잘린 글자를 못 보고
+     `== "대상주식회사"` 로 짰으면 2건이 조용히 샜다.)
+
+⚠️ **`writer` 만 믿지 않는다.** 원래 어댑터의 `_subject_ok`(제목 주어 접두)를
+   그대로 한 번 더 통과시킨다 — `대상주식회사` 가 쓴 글에도 `대상 정원e샵`
+   (자사몰 할인 기획전)이 섞여 있다(실측 3건). 사조가 `img_area_s` 의 `alt` 를
+   믿었다가 펫푸드를 식품으로 올릴 뻔한 것과 같은 자리다.
+
+**날짜 — 일괄 등록 흔적이 없다.** 120건 중 서로 다른 날짜가 **99개**고 하루
+최대가 4건(2025-12-19)이다. `released_at` 에 넣는다(자사 보드와 같은 판단).
+
+**사진 — 자사 보드와 달리 진짜 `image/png` 로 온다.** 실측
+`/adm/data/bbs/news/S2610060307527_1.png` → 200 / `image/png` / 431,089B.
+자사 보드의 `download.jsp`(octet-stream, `verify_images()` 가 지움)와 달리
+**화면에 실제로 뜬다.**
+
+## 🔴 보강하며 고친 `_pick` 버그 2건 (둘 다 그룹 보드 22건 전수에서 잡혔다)
+
+① `대상 청정원, 브랜드 론칭 30주년 기념 엠블럼 공개` → 상품명이 **`브랜드`** 로
+   나왔다. 따옴표가 없어 머리 전체를 쓰는 분기인데 `_LEAD` 를 떼고 나면
+   `브랜드` 한 낱말만 남는다. → **`maker_cj.py` 의 규칙을 가져왔다** —
+   `론칭/런칭` + 머리에 `브랜드` 면 브랜드 출범이지 상품이 아니다. 거기에
+   더해 `_GENERIC`(브랜드·신제품·제품·라인업…)을 상품명으로 못 쓰게 막았다.
+   ⚠️ `출시` 는 건드리지 않았다 — `청정원 호밍스 브랜드 신제품 ‘X’ 출시` 꼴은
+      진짜 신제품이다(삼양·CJ 가 같은 이유로 동사로 갈랐다).
+② `대상, 메가박스와 협업 2탄 ‘복음자리 스페셜 딸기 메뉴 4종’ 출시` →
+   **극장에서 파는 메뉴**지 대상이 내는 상품이 아니다. `협업` 이 따옴표
+   **앞**에 있어서 `_BETWEEN`(따옴표와 동사 **사이**만 본다)에 안 걸린다.
+   → `_REPACK_NAME` 에 **`메뉴`** 를 넣었다. 제조사 상품 이름이 `…메뉴` 로
+     끝나는 일은 없다. (자사 보드 3건에는 영향이 없다 — 재실행으로 확인.)
 
 **1·2·3차가 세 번 연속 "보류" 로 둔 브랜드다. 이번에 열고 밀도를 다시 쟀다.**
 `notes/CANDIDATES-MAKER.md` §⑩ 은 파라미터와 응답 스키마까지 다 풀어 놓고도
@@ -125,6 +202,8 @@ import re
 import time
 from datetime import date, timedelta
 
+from selectolax.parser import HTMLParser
+
 from . import base
 from .base import Item
 
@@ -137,6 +216,20 @@ IMG = SITE + "/common/popup/download.jsp"     # ⚠️ octet-stream 으로 온�
 MAX_PAGES = 10       # 한 페이지 6건 = 60건 ≈ 14개월. 폭주 방지 상한.
 DAYS = 300
 DELAY = 2.2
+
+# --- 그룹 보드(대상홀딩스 그룹소식). 사유는 docstring 🔴 ----------------------
+HOLD_SITE = "https://www.daesangholdings.com"
+HOLD_LIST = HOLD_SITE + "/child/sub/bbs/news.php"
+HOLD_PER_PAGE = 20   # 2026-10-08 실측
+HOLD_MAX_PAGES = 8   # 20건×8 = 160건 ≈ 15개월. 폭주 방지 상한(창은 DAYS 가 끊는다).
+# `div.writer` 가 주는 계열사. **접두**로 본다 — 끝 글자가 잘려 오는 행이 있다.
+HOLD_WRITER_LEAD = "대상주식회"
+# 창 안 `대상주식회사` 행 가운데 상품으로 집히는 비율의 상한. 2026-10-08 실측
+# 22/52 = 42.3%. 제목 역필터가 통째로 풀리면 ESG·기획전까지 상품이 된다.
+HOLD_MAX_PICK_RATIO = 0.65
+# 같은 날짜에 이만큼 몰리면 일괄 등록으로 보고 터뜨린다. 실측 최대 4건(2025-12-19).
+HOLD_MAX_PER_DAY = 8
+_HOLD_BG = re.compile(r"url\(\s*['\"]?([^'\")]+)")
 
 # 주어 화이트리스트. **접두**로 본다(문자열 포함 금지 — 위 docstring 참고).
 # 제외를 먼저 보고, 그다음 허용을 본다.
@@ -171,7 +264,17 @@ _BETWEEN = ("협업", "컬래버", "콜라보", "브랜드", "메뉴", "에디�
 _TAIL = ("돌파", "만에", "만인", "판매", "인기", "완판", "누적", "기록", "연다", "쏜다")
 _REPACK_HEAD = ("에디션", "라벨")
 _REPACK_MID = ("테마", "에디션", "라벨", "컬래버", "콜라보")
-_REPACK_NAME = ("에디션", "컬렉션", "한정판", "선물세트", "기획팩", "시리즈")
+_REPACK_NAME = ("에디션", "컬렉션", "한정판", "선물세트", "기획팩", "시리즈",
+                # 극장·식당에서 파는 '메뉴' 는 제조사 상품이 아니다. 실측:
+                # `대상, 메가박스와 협업 2탄 ‘복음자리 스페셜 딸기 메뉴 4종’ 출시`
+                # (docstring 🔴②). 제조사 상품명이 '메뉴' 로 끝나는 일은 없다.
+                "메뉴")
+# 따옴표가 없어 머리 전체를 상품명으로 쓰는 분기에서 남는 껍데기 말.
+# 실측: `대상 청정원, 브랜드 론칭 30주년 기념 엠블럼 공개` → '브랜드'.
+_GENERIC = {"브랜드", "신제품", "제품", "신상품", "라인업", "시리즈", "패키지"}
+# 브랜드 출범에 쓰이는 동사. `론칭/런칭` + 머리에 '브랜드' 면 상품이 아니다
+# (maker_cj.py·maker_samyang.py 와 같은 규칙).
+_LAUNCH_ONLY = re.compile(r"(론칭|런칭)")
 
 
 def _subject_ok(title: str) -> bool:
@@ -202,6 +305,9 @@ def _pick(title: str) -> str:
     if not verb or any(w in body[verb.end():] for w in _TAIL):
         return ""
     head = body[:verb.start()]
+    # `브랜드 … 론칭` 은 브랜드 출범이지 상품 출시가 아니다(docstring 🔴①).
+    if _LAUNCH_ONLY.match(verb.group(1)) and "브랜드" in head:
+        return ""
     # 대상 제목은 `‘트렌드어’ … ‘상품명’ 출시` 가 기본형이라 **마지막** 따옴표를 쓴다.
     # 따옴표가 아예 없으면(`알룰로스 신제품 3종 출시`) 주어를 떼고 머리 전체를 쓴다.
     q = list(_SINGLE.finditer(head))
@@ -224,6 +330,9 @@ def _pick(title: str) -> str:
         return ""
     if any(w in name for w in _REPACK_NAME):
         return ""
+    # 껍데기 말만 남은 경우. 따옴표 없는 제목에서 머리 전체를 쓸 때 난다.
+    if name in _GENERIC:
+        return ""
     return name
 
 
@@ -238,7 +347,100 @@ def _date(s: str) -> str:
     return f"{y:04d}-{mo:02d}-{d:02d}"
 
 
-def fetch() -> list[Item]:
+def _hold_rows(html: str) -> list[tuple]:
+    """그룹소식 목록 HTML → (날짜, 계열사, 제목, idx, 이미지) 목록."""
+    out = []
+    for li in HTMLParser(html).css("li"):
+        a = li.css_first("div.name a")
+        if a is None:
+            continue
+        # ⚠️ selectolax 는 값 없는 속성에 None 을 준다. 기본값이 안 먹는다.
+        href = a.attributes.get("href") or ""
+        m = re.search(r"idx=(\d+)", href)
+        w = li.css_first("div.writer")
+        d = li.css_first("div.date")
+        ph = li.css_first("div.photo_image")
+        style = (ph.attributes.get("style") or "") if ph is not None else ""
+        bg = _HOLD_BG.search(style)
+        src = (bg.group(1).strip() if bg else "")
+        out.append((
+            _date((" ".join(d.text().split()) if d is not None else "").replace("-", ".")),
+            " ".join(w.text().split()) if w is not None else "",
+            " ".join(a.text().split()),
+            m.group(1) if m else "",
+            (HOLD_SITE + src) if src.startswith("/") else src,
+        ))
+    return out
+
+
+def _fetch_holdings(floor: str) -> tuple[list[Item], dict]:
+    """대상홀딩스 그룹소식에서 대상(식품) 신제품을 뽑는다. (상품, 진단) 로 돌려준다.
+
+    자사 게시판(`daesang.com`)이 한 달씩 멈추는 동안에도 여기는 돈다.
+    사유·실측은 docstring 🔴 참고.
+    """
+    items: list[Item] = []
+    rows_seen = 0                  # 읽은 행 수 전체
+    ours = 0                       # 창 안 `대상주식회사` 행 수
+    writers: set = set()           # 가드 진단용
+    per_day: dict = {}
+    stop = False
+    with base.client() as c:
+        for page in range(1, HOLD_MAX_PAGES + 1):
+            if page > 1:
+                time.sleep(DELAY)
+            r = base.retry(lambda: c.get(HOLD_LIST, params={"page": page,
+                                                            "code": "news"}))
+            r.raise_for_status()
+            rows = _hold_rows(r.text)
+            # 목록 0행은 고장이다. 상품 0건은 정상일 수 있어도 이건 아니다.
+            if page == 1 and not rows:
+                raise ValueError(
+                    f"대상홀딩스 그룹소식 1페이지가 비었다. {r.url} → "
+                    f"{len(r.content)}B — 목록 셀렉터(li / div.name a / "
+                    f"div.writer / div.date)가 바뀌었는지 확인하라")
+            if not rows:
+                break
+            rows_seen += len(rows)
+
+            for released, writer, title, idx, img in rows:
+                writers.add(writer)
+                if not released:
+                    # 날짜 없는 is_new=True 는 90일 동안 화면에 눌러앉는다.
+                    continue
+                if released < floor:
+                    stop = True
+                    continue
+                if not writer.startswith(HOLD_WRITER_LEAD):
+                    continue
+                ours += 1
+                per_day[released] = per_day.get(released, 0) + 1
+                # ⚠️ writer 만 믿지 않는다. `대상 정원e샵`(자사몰 기획전)이
+                #    같은 writer 로 올라온다. 제목 주어도 함께 본다.
+                if not _subject_ok(title):
+                    continue
+                name = _pick(title)
+                if not name:
+                    continue
+                items.append(Item(
+                    brand=BRAND,
+                    name=name,
+                    desc=_LEAD.sub("", title),
+                    image=img,          # 진짜 image/png 다(docstring §사진)
+                    category="조미료",
+                    released_at=released,
+                    is_new=True,        # 브랜드가 '출시' 라고 낸 기사다
+                    url=(f"{HOLD_LIST}?ptype=view&idx={idx}&code=news"
+                         if idx else HOLD_LIST),
+                ))
+            if stop:
+                break
+
+    return items, {"rows": rows_seen, "ours": ours,
+                   "writers": writers, "per_day": per_day}
+
+
+def _fetch_own() -> list[Item]:
     floor = (date.today() - timedelta(days=DAYS)).isoformat()
     items: list[Item] = []
     keys = set()
@@ -298,4 +500,57 @@ def fetch() -> list[Item]:
         raise ValueError(
             "대상: boardListJson 이 0행을 돌려줬다. b_id=notice·cate=news 가 "
             "맞는지 확인하라 — b_id=news 로 보내면 에러 없이 totalCount 0 이 온다")
+    return items
+
+
+def fetch() -> list[Item]:
+    """자사 보드를 먼저 돌리고 그룹 보드를 뒤에 더한다.
+
+    순서가 뜻이 있다 — 두 보드가 같은 기사에 **다른 날짜**를 붙이기 때문에
+    (실측 13일 차), 먼저 넣은 쪽이 남아야 원래 3건의 날짜·사진·URL 이
+    그대로 유지된다. 겹치는 기사는 `make_key` 로 걸러진다.
+    """
+    floor = (date.today() - timedelta(days=DAYS)).isoformat()
+    items = _fetch_own()
+    keys = {i.key for i in items}
+    own = len(items)
+
+    extra, diag = _fetch_holdings(floor)
+    for it in extra:
+        if it.key not in keys:
+            keys.add(it.key)
+            items.append(it)
+
+    # --- 그룹 보드 가드. 조용한 빈 리스트·조용한 폭주를 둘 다 막는다 ---------
+    # ① 계열사 칸이 사라지면 전건이 조용히 떨어져 보강분이 0 이 된다.
+    if not diag["ours"]:
+        raise ValueError(
+            f"대상홀딩스 그룹소식에서 '{HOLD_WRITER_LEAD}…' 계열사 행이 0건이다"
+            f"(읽은 행 {diag['rows']}). 읽힌 계열사={sorted(diag['writers'])} — "
+            f"div.writer 표기가 바뀌었는지 확인하라 "
+            f"(2026-10-08 실측 120행 중 대상주식회사 52행)")
+    # ② 반대쪽. 제목 역필터가 풀리면 ESG·기획전까지 상품이 된다.
+    ratio = (len(extra) / diag["ours"]) if diag["ours"] else 0.0
+    if ratio > HOLD_MAX_PICK_RATIO:
+        raise ValueError(
+            f"대상홀딩스 그룹소식: 대상주식회사 {diag['ours']}행 중 "
+            f"{len(extra)}건({ratio:.0%})이 상품으로 집혔다 — 기대 "
+            f"{HOLD_MAX_PICK_RATIO:.0%} 이하(2026-10-08 실측 22/52=42%). "
+            f"_SKIP·_subject_ok 가 풀렸는지 확인하라")
+    # ③ 일괄 등록. 실측은 하루 최대 4건이다. 날짜를 한꺼번에 갈면 메뉴판이
+    #    통째로 신상이 되는데 released_at 이라 60일 창에 그대로 걸린다.
+    if diag["per_day"]:
+        day, n = max(diag["per_day"].items(), key=lambda kv: kv[1])
+        if n >= HOLD_MAX_PER_DAY:
+            raise ValueError(
+                f"대상홀딩스 그룹소식: {day} 하루에 대상주식회사 글이 {n}건이다"
+                f"(2026-10-08 실측 최대 4건). 일괄 재등록이면 released_at 을 "
+                f"그대로 쓰면 안 된다 — uploaded_at 으로 내려야 한다")
+    # ④ 보강이 통째로 죽으면 원래 3건만 남는데 그건 '정상'처럼 보인다.
+    #    그룹 보드가 자사 보드보다 3배 이상 두꺼운 게 이 브랜드의 전제다.
+    if len(items) <= own:
+        raise ValueError(
+            f"대상: 그룹 보드가 보탠 상품이 0건이다(자사 {own}건 그대로). "
+            f"대상주식회사 행 {diag['ours']}건은 읽혔다 — _pick 이 전부 "
+            f"버렸는지 확인하라 (2026-10-08 실측 보강 후 20건)")
     return items
