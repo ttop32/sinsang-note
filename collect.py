@@ -297,6 +297,32 @@ def miscast() -> list:
             if s in CAFE_SUBS and t not in (base.CAFE, base.MAKER)]
 
 
+def blocked(e: Exception) -> bool:
+    """우리가 고칠 수 없는 실패인가 — 어댑터가 깨진 게 아니라 못 닿은 것인가.
+
+    2026-10-08 러너에서 직접 재서 나온 결론이다. 매일 수집이 나흘 연속
+    빨갛게 끝났는데, 실패한 26곳 중 **25곳이 로컬에서는 멀쩡했다.**
+    진단 워크플로를 돌려 보니:
+
+      컴포즈·투썸·하이트진로·써브웨이  403  (봇UA·브라우저UA 둘 다 403 → UA 무관)
+      세븐일레븐                    ConnectTimeout
+      노브랜드·하이오·이마트24        200  (깨끗이 열린다)
+
+    러너 바깥 IP 는 172.184.219.166(Azure, 해외)다. **한국 사이트들이 해외
+    IP 를 막는 것**이고 UA 를 바꿔도 소용없다. 고치려면 한국 IP 에서 돌려야
+    한다(자체 러너). 그건 운영자 결정이라 여기선 **가려내기만** 한다.
+
+    가려내는 이유는 하나다 — 매일 빨가면 아무도 안 본다. 실제로 그 나흘
+    동안 진짜 고장(지미존스가 신메뉴 칸을 잃은 것)이 묻혀 있었다.
+    """
+    import httpx
+    if isinstance(e, (httpx.TransportError, TimeoutError, OSError)):
+        return True
+    if isinstance(e, httpx.HTTPStatusError):
+        return e.response.status_code in (403, 429) or e.response.status_code >= 500
+    return False
+
+
 def parked() -> list:
     """일부러 내려둔 어댑터. (모듈, 사유) 목록.
 
@@ -383,7 +409,7 @@ def main() -> None:
     prev = load_previous()
     known_brands = {p["brand"] for p in prev.values()}
 
-    products, errors, failed_brands = [], [], []
+    products, errors, network, failed_brands = [], [], [], []
     for mod in ADAPTERS:
         names = brands_of(mod)
         label = names[0] if len(names) == 1 else f"{mod.__name__.split('.')[-1]}({len(names)}종)"
@@ -410,9 +436,13 @@ def main() -> None:
             print(f"{label}: {len(items)}건")
             products += items
         except Exception as e:                      # 한 브랜드가 죽어도 나머지는 살린다
-            errors.append(f"{label}: {e}")
             failed_brands += names
-            print(f"!! {label} 실패: {e}")
+            if blocked(e):
+                network.append(f"{label}: {e}")
+                print(f" ~ {label} 못 닿음: {e}")
+            else:
+                errors.append(f"{label}: {e}")
+                print(f"!! {label} 실패: {e}")
 
 
     rows = []
@@ -536,6 +566,15 @@ def main() -> None:
     # (워크플로의 커밋 스텝은 if: always() 라 부분 결과는 반영된다.)
     if lost:
         print(f"!! 배선이 빠진 어댑터 {len(lost)}건 — 위 '!!' 줄 참고")
+    # 못 닿은 것은 빨갛게 만들지 않는다. 우리가 고칠 수 있는 게 아니고,
+    # 매일 빨가면 진짜 고장을 못 본다 — 실제로 나흘 연속 빨갰고 그 안에 섞인
+    # 지미존스 한 건(브랜드가 신메뉴 칸을 내렸다)을 아무도 못 봤다.
+    if network:
+        print(f"\n~~ 못 닿은 브랜드 {len(network)}곳 (러너가 해외 IP 라 그렇다. "
+              "로컬에서는 열린다)")
+        for line in network:
+            print(f"   ~ {line}")
+
     if errors:
         raise SystemExit("어댑터 실패:\n" + "\n".join(errors))
 

@@ -135,9 +135,21 @@ def fetch() -> list[Item]:
         cats = _categories(r.text)
         if not cats:
             raise RuntimeError("지미존스: 카테고리 0개 — menu.php 구조가 바뀌었다")
-        # 이 어댑터의 is_new 는 통째로 '신메뉴' 칸 하나에 걸려 있다. 사라지면 드러낸다.
-        if not any(label == NEW_LABEL for _, label in cats):
-            raise RuntimeError(f"지미존스: '{NEW_LABEL}' 카테고리가 사라졌다 — 신상 신호 없음")
+        # '신메뉴' 칸이 사라지면 전에는 여기서 죽었다. 2026-10-04 부터 실제로
+        # 사라져 나흘째 어댑터가 통째로 실패했다 — 67건이 매일 이월됐다.
+        #
+        # 죽일 일이 아니다. 이 docstring 이 이미 예고한 일이다("그 행사 기간은
+        # 2026-09-24 에 끝났는데 신메뉴 칸은 그대로다. 배지가 낡는다"). 행사가
+        # 끝나면 브랜드가 칸을 내리는 게 정상이고, 이 어댑터는 **이미지
+        # Last-Modified 라는 독립 신호를 하나 더** 갖고 있다. 실제로 제일 최근
+        # 상품은 신메뉴 칸이 아니라 `지미모닝`(2026-08-26)이었다.
+        #
+        # 그러니 칸이 없으면 is_new 를 아무에게도 안 주고 날짜로만 간다.
+        # 한 줄 찍어서 조용히 넘어가지는 않게 한다.
+        has_new = any(label == NEW_LABEL for _, label in cats)
+        if not has_new:
+            print(f"   · 지미존스 '{NEW_LABEL}' 칸이 없다 — 날짜(이미지 "
+                  "Last-Modified)로만 판정한다")
         # 신메뉴를 먼저 돈다. 겹쳐 실린 상품의 is_new 가 떨어지지 않게.
         cats.sort(key=lambda x: x[1] != NEW_LABEL)
         time.sleep(DELAY)
