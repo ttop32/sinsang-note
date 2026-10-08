@@ -27,7 +27,7 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
                         dessert_baskinrobbins, emart24,
                         chicken_bhc, chicken_kyochon, cu, ediya,
                         mega, pizza_domino, pizza_mrpizza, pizza_papajohns,
-                        pizza_pizzahut,
+                        pizza_pizzahut, pizza_pizzaschool, pizza_pizzamaru,
                         seven, starbucks, toast_isaac)
 from collectors import dongsuh, gs25, lottechilsung, ourhome, sempio
 # 아이스크림·빙수 전수 조사(2026-10-03). 공정위 `아이스크림/빙수`(K1) 가맹점 수
@@ -80,6 +80,12 @@ from collectors import (cafe_bombom,
                         snack_terryroze,
                         snack_tteokgoon)
 from collectors import alcohol_hitejinro
+# 족발·보쌈. 공정위 '족발' 업종에서 살아 있는 NEW 배지를 가진 곳
+# (근거는 collectors/meat_mawangpork.py docstring).
+from collectors import meat_mawangpork
+# 베이커리. robots 재검토분(notes/RECHECK-ROBOTS-DINING.md).
+from collectors import bakery_tlj
+from collectors import western_outback
 # 한식 중위권. 공정위 가맹점 수 188~603위 구간(notes/CANDIDATES-KATSU-JPN-KOR.md).
 from collectors import (korean_damgguk, korean_obongzip, korean_twozzim,
                         korean_yoogane)
@@ -190,6 +196,7 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             chicken_mexicana, chicken_hosigi, chicken_60chicken,
             chicken_nene, chicken_gamachi, chicken_norang,
             pizza_pizzahut, pizza_mrpizza, pizza_papajohns, pizza_domino,  # 피자
+            pizza_pizzaschool, pizza_pizzamaru,
             dessert_baskinrobbins, cafe_dunkin,                      # 디저트
             # 아이스크림·빙수 전수 조사분(공정위 K1 가맹점 수 상위).
             dessert_yoajung, dessert_palazzo,
@@ -216,6 +223,9 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             sushi_qooqoo, sushi_mikado,                              # 일식 2차
             japan_motoishi, japan_tokyogyudong,
             korean_hansot, korean_keunmam, korean_wonandone,         # 한식 2차
+            meat_mawangpork,                                        # 족발
+            bakery_tlj,                                             # 베이커리
+            western_outback,                                        # 양식
             # 중식. 보도자료·공지 게시판형 5 + 메뉴 NEW 배지형 1(소림마라).
             # 소림마라는 배지가 2023년에 멈춰 있어 화면에 0건이 정상이다
             # (사유는 collectors/china_sorimmara.py docstring).

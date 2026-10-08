@@ -71,6 +71,9 @@ OV TLS CA 2025 → Root R46 → Root R3, `openssl s_client` 로 확인). `base.c
 모달을 띄울 뿐이라 가리킬 URL 자체가 존재하지 않는다. `url` 은 비우고
 `base.SITES` 폴백에 맡긴다. 가격은 페이지에 없다.
 """
+import certifi
+import pathlib
+import ssl
 import re
 from urllib.parse import quote
 
@@ -91,6 +94,32 @@ NEW_CLASS = "new"    # li.menu_item 에 붙는 소문자 클래스 (위 docstrin
 _BR = re.compile(r"<\s*/?\s*br\s*/?\s*>", re.I)
 _TAG = re.compile(r"<[^>]+>")
 _IMG_DATE = re.compile(r"^(\d{4})/(\d{2})/(\d{2})/")
+
+
+# 서버가 중간 인증서를 빠뜨린다. 2026-10-08 실측 10/10 전부 리프 한 장만 보낸다
+# (`openssl s_client` 로 확인). 리프의 issuer 는 GlobalSign GCC R46 OV TLS CA
+# 2025 이고 AIA 가 가리키는 곳에서 그 한 장을 받아 두었다.
+#
+# ⚠️ 10-02 실측에서는 **재현되지 않았다**(docstring 에 "verify=True 로 6회 연속
+# 200" 이라고 적혀 있다). 그 사이 서버 설정이 바뀐 것이다. 사이트가 멀쩡해
+# 보여도 체인은 따로 봐야 한다는 뜻이라 적어 둔다.
+#
+# `verify=False` 는 쓰지 않는다 — notes/CRAWLING-POLICY.md §6-1 이 명시적으로
+# 금지하고, 같은 사유·같은 처리의 선례가 lottechilsung.py·chicken_toreore.py 다.
+# 검증은 켜진 채 돈다. certifi 루트에 **더하기만** 한다.
+_CA_EXTRA = pathlib.Path(__file__).parent / "certs" / \
+    "globalsign-gcc-r46-ov-tls-ca-2025.pem"
+
+
+def _ssl_context() -> ssl.SSLContext:
+    """certifi 루트에 서버가 빠뜨린 중간 인증서 한 장을 **더한** 컨텍스트."""
+    if not _CA_EXTRA.exists():
+        raise FileNotFoundError(
+            f"중간 인증서가 없다: {_CA_EXTRA} — 이게 없으면 이 사이트는 "
+            "unable to get local issuer certificate 로 붙지 않는다")
+    ctx = ssl.create_default_context(cafile=certifi.where())
+    ctx.load_verify_locations(cafile=str(_CA_EXTRA))
+    return ctx
 
 
 def _clean(s: str) -> str:
@@ -126,7 +155,7 @@ def _uploaded_at(data_img: str) -> str:
 
 
 def fetch() -> list[Item]:
-    with base.client() as c:
+    with base.client(verify=_ssl_context()) as c:
         r = base.retry(lambda: c.get(MENU_URL))
         r.raise_for_status()
 

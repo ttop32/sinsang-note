@@ -62,6 +62,8 @@ BRANDS = {
     "미스터피자":  (FRANCHISE, "피자"),
     "파파존스":    (FRANCHISE, "피자"),
     "도미노피자":  (FRANCHISE, "피자"),
+    "피자스쿨":    (FRANCHISE, "피자"),
+    "피자마루":    (FRANCHISE, "피자"),
     "굽네치킨":    (FRANCHISE, "치킨"),
     "처갓집양념치킨": (FRANCHISE, "치킨"),
     "푸라닭":      (FRANCHISE, "치킨"),
@@ -214,6 +216,7 @@ BRANDS = {
     "던킨":        (CAFE, "도넛"),
     "이삭토스트":  (FRANCHISE, "샌드위치"),
     "파리바게뜨":  (CAFE, "베이커리"),
+    "뚜레쥬르":    (CAFE, "베이커리"),
     "나폴레옹과자점": (CAFE, "베이커리"),
     "브레댄코":    (CAFE, "베이커리"),
     "홍루이젠":    (CAFE, "베이커리"),
@@ -303,6 +306,7 @@ BRANDS = {
     # 파스타다. taxonomy.SUBS 에 '양식' 칸을 새로 만들어 붙였다 —
     # 전에는 맞는 칸이 없어서 비워뒀고 그러면 2단 칩에서만 안 보였다.
     "롤링파스타":   (FRANCHISE, "양식"),
+    "아웃백스테이크하우스": (FRANCHISE, "양식"),
     # ── 중식 (2026-10-02 공정위 가맹점수 전수조사로 합류) ────────────────
     # 공정위 `중식`(C1) 등록 313개 / 가맹점 5개 이상 99개를 가맹점 수 순으로
     # 전수 훑었다. 근거와 전체 순위표는 notes/CANDIDATES-CHINESE.md.
@@ -363,6 +367,7 @@ BRANDS = {
     "오봉집":      (FRANCHISE, "한식"),
     "큰맘할매순대국": (FRANCHISE, "한식"),
     "원할머니보쌈족발": (FRANCHISE, "한식"),
+    "마왕족발":    (FRANCHISE, "한식"),
     "박가부대":    (FRANCHISE, "한식"),
     # 아래 셋은 robots.txt 는 허용하지만 이용약관이 수집·복제를 금지한다.
     # 운영자 판단으로 수집하되, 삭제 요청이 오면 다투지 말고 즉시 내린다.
@@ -467,8 +472,13 @@ SITES = {
     "이삭토스트":   "https://www.isaac-toast.co.kr/menu/menu.php",
     "이마트24":     "https://emart24.co.kr/goods/pl",
     "도미노피자":   "https://www.dominos.co.kr/goods/list",
+    # 피자스쿨은 https 가 자체서명이라 http 로 건다(스쿨푸드와 같은 칸).
+    # collectors/pizza_pizzaschool.py 참고.
+    "피자스쿨":     "http://pizzaschool.net/menu/",
+    "피자마루":     "https://www.pizzamaru.co.kr/menu",
     "폴바셋":       "https://www.baristapaulbassett.co.kr/menu/List.pb",
     "파리바게뜨":   "https://www.paris.co.kr/products/",
+    "뚜레쥬르":     "https://www.tlj.co.kr/product/result.asp",
     "나폴레옹과자점": "https://napoleonbakery.co.kr/h/b/napoleon/products",
     "브레댄코":     "https://www.breadnco.kr/portfolio-category/new/",
     "홍루이젠":     "https://www.hongruizhen.com/goods/goods_list.php?cateCd=001",
@@ -574,6 +584,8 @@ SITES = {
     "오봉집":      "https://www.obongzip.com/mainmenu",
     "큰맘할매순대국": "https://www.keunmam.co.kr/html/menu.html",
     "원할머니보쌈족발": "https://wonandone.co.kr/bossam/menu.asp",
+    # ⚠️ mawangjokbal.com 은 NXDOMAIN 이다. 공식은 mawangpork.com.
+    "마왕족발":     "https://mawangpork.com/html/menu_1.html",
     "박가부대":     "https://wonandone.co.kr/parkga/menu.asp",
     "맥도날드":     "https://www.mcdonalds.co.kr/kor/menu/burger",
     # 롯데GRS 통합몰 안의 롯데리아 전용 브랜드 메뉴 면. /brand/lotteria 는 404 다.
@@ -658,6 +670,8 @@ SITES = {
     "역전우동0410": "https://udon0410.com/menu/",
     "미정국수0410": "https://www.0410noodle.com/menu/",
     "롤링파스타":   "https://rolling-pasta.com/",
+    # /menu/main.do 는 내비가 가리키지만 404 다. 목록 면을 직접 건다.
+    "아웃백스테이크하우스": "https://www.outback.co.kr/menu/productList.do?cateIdx=26&menuIdx=43",
     "한신포차":     "https://hanshinpocha.com/menu/",
     "백스비어":     "https://paiksbeer.com/menu/",
     "새마을식당":   "https://newmaul.com/sub/menu.php",

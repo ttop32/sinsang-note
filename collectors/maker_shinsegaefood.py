@@ -54,6 +54,9 @@ robots: https://www.shinsegaefood.com/robots.txt — 확인했다(아래 명령�
         수집 경로가 `/company/pr/` 라 금지 목록과 겹치지 않았다.
 약관:   확인하지 않았다.
 """
+import certifi
+import pathlib
+import ssl
 import re
 import time
 from datetime import date, timedelta
@@ -170,6 +173,32 @@ _CHANNEL_TAIL = re.compile(
 _NOT_A_NAME = ("겨냥", "트렌드", "…", "·")
 
 
+# 서버가 중간 인증서를 빠뜨린다. 2026-10-08 실측 10/10 전부 리프 한 장만 보낸다
+# (`openssl s_client` 로 확인). 리프의 issuer 는 GlobalSign GCC R46 OV TLS CA
+# 2025 이고 AIA 가 가리키는 곳에서 그 한 장을 받아 두었다.
+#
+# ⚠️ 10-02 실측에서는 **재현되지 않았다**(docstring 에 "verify=True 로 6회 연속
+# 200" 이라고 적혀 있다). 그 사이 서버 설정이 바뀐 것이다. 사이트가 멀쩡해
+# 보여도 체인은 따로 봐야 한다는 뜻이라 적어 둔다.
+#
+# `verify=False` 는 쓰지 않는다 — notes/CRAWLING-POLICY.md §6-1 이 명시적으로
+# 금지하고, 같은 사유·같은 처리의 선례가 lottechilsung.py·chicken_toreore.py 다.
+# 검증은 켜진 채 돈다. certifi 루트에 **더하기만** 한다.
+_CA_EXTRA = pathlib.Path(__file__).parent / "certs" / \
+    "globalsign-gcc-r46-ov-tls-ca-2025.pem"
+
+
+def _ssl_context() -> ssl.SSLContext:
+    """certifi 루트에 서버가 빠뜨린 중간 인증서 한 장을 **더한** 컨텍스트."""
+    if not _CA_EXTRA.exists():
+        raise FileNotFoundError(
+            f"중간 인증서가 없다: {_CA_EXTRA} — 이게 없으면 이 사이트는 "
+            "unable to get local issuer certificate 로 붙지 않는다")
+    ctx = ssl.create_default_context(cafile=certifi.where())
+    ctx.load_verify_locations(cafile=str(_CA_EXTRA))
+    return ctx
+
+
 def _pick(title: str) -> str:
     """보도자료 제목에서 상품명을 뽑는다. 상품을 특정 못 하면 빈 문자열."""
     t = " ".join(title.split())
@@ -250,7 +279,7 @@ def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
     floor = (date.today() - timedelta(days=DAYS)).isoformat()
-    with base.client() as c:
+    with base.client(verify=_ssl_context()) as c:
         for page in range(1, MAX_PAGES + 1):
             if page > 1:
                 time.sleep(DELAY)
