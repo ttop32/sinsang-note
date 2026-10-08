@@ -63,6 +63,7 @@ from collectors import maker_spcsamlip
 # 주류. 성인 인증 게이트가 없는 유일한 곳이다(notes/CANDIDATES-ALCOHOL.md).
 from collectors import cafe_angelinus, cafe_twosome
 from collectors import cafe_baekeok, cafe_dessert39, snack_yupdduk
+from collectors import bakery_auntieannes, bakery_songsabu
 from collectors import maker_harim
 # 카페·디저트·분식 중위권 14곳. 배선 가드가 잡아낸 미등록분.
 from collectors import (cafe_bombom,
@@ -180,6 +181,7 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             maker_harim,                                # 제조사(육가공·식재료)
             cafe_baekeok, cafe_dessert39,               # 카페·디저트
             snack_yupdduk,                              # 분식
+            bakery_auntieannes, bakery_songsabu,        # 베이커리
             cafe_bombom, cafe_coffeebay, cafe_hio,      # 카페 중위권
             cafe_manwolkyung,
             dessert_bingdongdaeng, dessert_dallondor,   # 디저트·빙수

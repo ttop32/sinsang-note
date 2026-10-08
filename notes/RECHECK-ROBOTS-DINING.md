@@ -28,6 +28,10 @@
 | **CJ푸드빌** | (지주 · 브랜드 없음) | `www.cjfoodville.co.kr` | robots `*: Disallow: /` | ❌ **어댑터 안 만듦** | 보도자료 `/campaign/PR_List.asp` 는 열리지만 **자사 상품이 없다** | — | — | 0 | — | — |
 | **엽기떡볶이** | 650+ (분식 1위) | `www.yupdduk.com` | robots `*: Disallow: /` (Yeti·Googlebot 만 허용) | ✅ **수집**(얇다) | 이벤트 게시판 JSON 의 **자사 신메뉴 공지** — 연 2건꼴, `ALLOW_EMPTY=True` | 메뉴판 60건엔 배지 0 → **안 씀**. 게시판 305건 중 자사 신제품 3건 | 본문 `[출시 일자]` → `released_at` / `Sdate` → `uploaded_at` | **1** | `collectors/snack_yupdduk.py` | (`FRANCHISE`, `분식`) |
 | **니뽕내뽕** | 미등록 | `www.nipongnaepong.co.kr` | robots.txt **403** → RFC 9309 상 전면 금지 | ❌ **어댑터 안 만듦** | **없다.** 메뉴가 카테고리당 포스터 JPG 한 장 | — | — | 0 | — | — |
+| **앤티앤스** | 미등록(직영/가맹 혼합) | `www.auntieannes.co.kr` | robots 에 `User-agent: *` 그룹이 없고 **AI 봇 수십 종만 명시 차단**(규칙상은 허용) | ✅ **수집** | `?cate=all` 안의 **신제품 전용 영역**(`href` 에 `&type=new`) | **전 메뉴 48건 중 10건 (20.8%)** → 산출 52건 중 10건 | 썸네일 캐시버스터 `?<유닉스초>` → `uploaded_at` | **52** (NEW 10) | `collectors/bakery_auntieannes.py` | (**`CAFE`**, `베이커리`) |
+| **송사부고로케** | 90 | `songsabu.co.kr` | robots 에 손으로 `# 스팸/AI 봇 강력 차단` 주석까지 달아 AI 봇 10종 차단 | ✅ **수집** | 그누보드 갤러리의 **`sca=NEW` 분류** | **36건 중 8건 (22.2%)** | 썸네일 `Last-Modified` → `uploaded_at` (⚠️ 이 브랜드는 진짜다, 근거 아래) | **36** (NEW 8) | `collectors/bakery_songsabu.py` | (**`CAFE`**, `베이커리`) |
+| **호밀호두** | 56 | `homilhodu.com` | robots.txt **403** | ❌ **불가 (기술적 차단)** | — 사이트 전체가 **Cloudflare WAF 403** | — | — | 0 | — | — |
+| **애슐리(애슐리퀸즈)** | 미등록(직영) | `app.elandeats.co.kr` (`myashley.co.kr` 이 리다이렉트) | robots `*: Disallow: /` | ❌ **불가 (로그인 벽)** | 메뉴·이벤트가 **비로그인 전부 빈 응답** | — | — | 0 | — | — |
 | **아웃백스테이크하우스** | 미등록(직영) | `www.outback.co.kr` | 이용약관 제10조 ④ (robots 는 원래 허용) | ✅ **수집** | `icon_new.png` 배지 | **110건 중 17건 (15.5%)** — 중복 턴 뒤 62건 중 12건 | 썸네일 경로 `/upload/product/YYYYMMDD/` → `uploaded_at` | **62** | `collectors/western_outback.py` | (`FRANCHISE`, `양식`) |
 
 ---
@@ -306,3 +310,154 @@ CSS 뿐이다. 돈까스클럽(포스터 1장)과 같은 건이다.
 
 파일명의 `2026_마라`·`2025_완탕` 으로 보아 **포스터를 통째로 갈아 끼우는 운영**이라
 OCR 없이는 상품을 특정할 수 없다. **어댑터를 만들지 않는다.**
+
+
+---
+
+### ✅ 앤티앤스 — 52건 (NEW 10). `collectors/bakery_auntieannes.py`
+
+**원래 사유**: `CANDIDATES-BAKERY.md` §3 "규칙상 허용인데 의도는 정반대다". robots 에
+`User-agent: *` 그룹이 **아예 없고** GPTBot·ChatGPT-User·CCBot·ClaudeBot·Amazonbot 등을
+하나씩 `Disallow: /` 한다. 우리 UA 는 목록에 없어 규칙상 통과였지만 의사표시로 보고 접었다.
+
+홈(7,992B)은 1차 기록대로 '브랜드/창업' 갈림길 스플래시고 본체는 `/main.html` 이다.
+워드프레스(Enfold)지만 상품은 커스텀 테이블이라 REST 로는 안 나온다.
+
+**`/product-all/?cate=all` 한 장(143KB)에 전부 있다.** 카테고리별 URL 을 돌 이유가 없다.
+
+⚠️ **한 페이지에 영역이 셋이고 마크업이 서로 다르다.**
+```
+.new-wrap02 .avia-image-container   신제품 10건  ← href 에 &type=new. 이름이 img alt 에만 있다
+.grid-entry .grid-entry-title        베스트  4건  ← 카테고리와 중복. 안 쓴다
+.menu-list(6칸) .grid-entry          전 메뉴 48건  ← 이름이 h3.entry-content-header
+     클래식 프레즐 6 · 스틱 프레즐 8 · 핫도그 프레즐 3 · 딥 4 · 에이드 12 · 커피 15
+```
+🔴 **전 메뉴 48건의 `img alt` 는 전부 `sweetpotato_creamcheese_stick-list` 라는 더미
+문자열이다**(테마 기본값). alt 로 긁으면 48건이 전부 같은 이름이 된다. 반대로 신제품
+영역은 제목 태그가 없고 alt 에만 이름이 있다. **영역마다 다르게 읽어야 한다.**
+
+`/menu-new` 는 안 받는다. 같은 10건인데 거기선 alt 까지 더미라 **이름을 하나도 못 뽑는다.**
+
+**배지 비율 20.8%**(48건 중 10건).
+```
+베이컨 피자 · 할라피뇨 피자 · 페퍼로니 피자 · 치즈피자        2026-09-23
+파인애플/자몽/청포도 오렌지에이드                            2026-04-30
+고구마 크림치즈 스틱 · 아몬드 ~ · 베이컨 치즈 ~               2025-08-29
+```
+🔴 **하이오커피와 같은 '1년치 바구니'다.** 2025-08 ~ 2026-09 세 묶음이 그대로 쌓여 있고
+고구마 크림치즈 스틱은 **13개월 전**이다. 신제품 탭이 있다는 사실만으로 올리면 작년
+상품이 오늘 신상이 된다. 날짜가 반드시 붙어야 한다.
+
+**날짜** — 썸네일 `/pds/menu/70_s?1790128850` 의 쿼리가 **유닉스 초**다.
+컴포즈커피(149건 전부 같은 값)·블루샥에서 이미지 시각이 배포 시각으로 판명된 전례가
+있어 분포를 봤는데 **여기는 진짜다** — 전 메뉴 다수가 `1731985109/…188/…252/…345` 처럼
+**2024-11-19 에 몇십 초 간격**(사이트 구축 일괄)이고, 신제품 10건만 묶음별로 따로 찍힌다.
+배포 시각이면 전건이 같아야 한다. 그래도 사진 시각 + 일괄이라 **`uploaded_at`** 에만 넣었다.
+
+---
+
+### ✅ 송사부고로케 — 36건 (NEW 8). `collectors/bakery_songsabu.py`
+
+**원래 사유**: `CANDIDATES-BAKERY2.md` §4. robots 에 `# 스팸/AI 봇 강력 차단` 주석까지
+손으로 달아 MJ12bot·GPTBot·ChatGPT-User·CCBot·ClaudeBot·Bytespider 를 막는다.
+`User-agent: *` 는 원래 허용이었고 우리 UA 는 목록에 없었다.
+
+홈(8,797B)은 스플래시, 본체는 `/main.php`. 메뉴는 **그누보드5 갤러리 게시판**이다.
+```
+/bbs/board.php?bo_table=menu&page=N     전체. 8건씩 5페이지 = 36건
+/bbs/board.php?bo_table=menu&sca=NEW    NEW 칸. 8건
+```
+분류는 `NEW / 고로케 / 도넛 / 꽈배기 / 핫도그＆샐러드 / 기타＆구운빵류` (URL 에 퍼센트
+인코딩된 한글). 카테고리별로 돌면 10요청이 더 붙고 얻는 게 분류명뿐이라 안 돌았다.
+
+**배지 비율 22.2%**(36건 중 8건). NEW 8건의 `wr_id` 가 **124~131 연속** = 한 묶음이다.
+
+⚠️ **목록 정렬을 날짜로 읽으면 안 된다.** 전체 목록 맨 위는 `고소미 도넛`(wr_id 120)
+인데 NEW 8건은 `wr_id 124~131` 로 **더 뒤 번호**다. `sst=wr_num` 으로 손수 정렬한
+진열 순서지 등록 순서가 아니다.
+
+**날짜 — HTML 에 없다.** 기각한 후보:
+- 상세 페이지에 `작성일`·`등록일`·`wr_datetime` 문자열이 **0건**(스킨이 안 찍는다)
+- `/bbs/rss.php?bo_table=menu` → 40바이트 `RSS 보기가 금지되어 있습니다.`
+- 썸네일 파일명 `thumb-2072903739_<토큰>_<sha1>_490x363.png` 에 시각이 없다
+
+남은 건 이미지 `Last-Modified` 뿐이다. **이 레포는 원래 이걸 안 믿는데**(컴포즈커피
+2026-06-16 149건 전부 동일 = 배포 시각) **여기는 24건을 찍어 보니 다르다**:
+```
+2025-08-19 09:46:18~26   20건   ← 10초 안에 몰린 사이트 이전 일괄
+2026-02-20 05:44~05:49    8건   ← NEW 8건. 30초 간격으로 하나씩
+2025-11-06 02:23·02:35    2건   ← 야채감자/안동찜닭 고로케
+```
+**묶음 경계가 `sca=NEW` 와 정확히 일치한다.** 배포 시각이면 이렇게 갈릴 수 없다.
+그래도 사진 시각 + 일괄이라 `uploaded_at` 에만 넣었다.
+
+🔴 **NEW 칸이 2026-02-20 이후 8개월째 그대로다.** 날짜 없이 `is_new=True` 만 올리면
+2월 상품이 10월에 신상으로 뜬다. 지금은 60일 창 밖이라 신상으로는 안 올라온다.
+
+⚠️ 비용: 목록 6장 + 썸네일 `HEAD` 36번 = **42요청**이다(본문은 안 받는다).
+더 싼 날짜 경로가 생기면 그 36번을 먼저 지워라.
+
+---
+
+### ❌ 호밀호두 — 불가. **Cloudflare WAF 가 사이트 전체를 403 으로 막는다**
+
+**원래 사유**: robots.txt 403 → RFC 9309 상 전면 금지. 그 사유는 풀렸다.
+**그런데 robots.txt 만 403 이 아니라 사이트가 통째로 403 이다.**
+
+```
+https://homilhodu.com/            403  4,550B  title="Attention Required! | Cloudflare"
+https://www.homilhodu.com/        403  (동일)
+https://homilhodu.com/robots.txt  403  (동일)
+http://homilhodu.com/             403  (동일)
+본문: "Sorry, you have been blocked / You are unable to access homilhodu.com"
+      server: cloudflare, cf-ray: …-LAX
+```
+
+**출구 IP 문제가 아닌지 먼저 확인했다**(`base.py` 가 적어둔 해외 러너 403 건과 구별).
+같은 세션에서 컴포즈커피 **200**, 써브웨이 **200** 이 나온다 — 그 둘은 해외 IP 에서
+막히던 곳이다. 즉 지금 출구는 그 차단군에 안 걸리는데 호밀호두만 막힌다. **봇 차단이다.**
+
+뚫으려면 **브라우저 UA 위장**이 필요하고, 그건 `CRAWLING-POLICY.md` §4 가 대법원
+2021도1533 을 근거로 금지한 행위다. **운영자 승인은 robots·약관에 대한 것이지 WAF
+우회·UA 위장에 대한 것이 아니다.** 여기서 멈췄다.
+
+대체 경로도 없다 — `homilhodu.modoo.at` 는 살아 있지만 본문이
+**"네이버 modoo!가 2025년 6월 26일 종료되었습니다"** 안내문이다(서비스 자체가 폐지).
+`homilhodu.co.kr` 는 자체서명 인증서라 호스트가 다른 곳이다(§도메인 오인 주의).
+
+**사람이 정할 일**: 한국 IP 로 재시도해서 풀리는지, 아니면 UA 정책을 손댈지.
+
+---
+
+### ❌ 애슐리(애슐리퀸즈) — 불가. **메뉴가 로그인 뒤에 있다**
+
+**원래 사유**: `app.elandeats.co.kr/robots.txt` 가 `User-agent: * / Disallow: /`.
+그 사유는 풀렸다. 그래서 끝까지 파 봤고, **1차가 못 찾은 도메인도 찾았다.**
+
+- `www.ashley.co.kr` — 여전히 **NXDOMAIN**
+- `www.elandeats.co.kr` — **NXDOMAIN** (⚠️ apex `elandeats.co.kr` 는 살아 있다)
+- **`https://www.myashley.co.kr/`** — 이랜드이츠 내비가 애슐리에 걸어 둔 링크. 새로 찾았다.
+  **그런데 `app.elandeats.co.kr/home` 으로 리다이렉트된다.** 별도 사이트가 아니다.
+
+`/s/menu?brand=AL` 은 66KB 가 오지만 **본문이 `메뉴 정보가 없습니다.`** 다. 목록은
+Handlebars 템플릿이고(`{{#if (eq ../options.new 'Y')}}<span class="tag">NEW</span>`)
+데이터는 `/v1/corner` 가 채운다. 비로그인으로 불러 보면:
+
+```
+GET /v1/corner?pageUrl=/s/menu        → {"data":{"corner":[]}}      (빈 배열)
+GET /v1/corner?pageUrl=/s/menu?brand=AL → {"data":{"corner":[]}}    (빈 배열)
+GET /v1/corner/login                  → {"data":{"login":{"loginYn":"N"}}}
+```
+`/e/main?brandCode=AL`(이벤트)도 **"진행 중인 이벤트가 없습니다"** 다. 비로그인에는
+아무것도 안 준다. 상품 단건 API(`/v1/item/uitem/api`)는 `itemNo` 를 알아야 쓰는데
+목록이 없으니 번호를 얻을 길이 없다.
+
+로그인하려면 **계정을 만들어야 한다. 그건 하지 않는다.** 비로그인으로 얻을 수 있는 건
+메인 배너 문구 `AUTUMN SELECTION [9/3출시] 더욱 풍성해진 가을 미식 셀렉션` 하나뿐이고
+상품명이 없다.
+
+참고로 모회사 `elandeats.co.kr` 에는 브랜드별 **브랜드 소식** 게시판이 있는데
+(`/bbs/board.php?bo_table=s1_1_2_3` 자연별곡, `s1_1_3_3` 로운, `s1_1_4_3` 피자몰 …)
+**애슐리만 게시판이 없다** — 내비가 `myashley.co.kr` 외부 링크로 빠진다.
+
+**판정: 로그인 벽. 어댑터를 만들지 않는다.**
