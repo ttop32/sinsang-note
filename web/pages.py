@@ -168,7 +168,6 @@ def _card(r: dict) -> str:
     badge = '<span class="lb">NEW</span>' if r.get("is_new") else ""
     tags = "".join(f'<span class="lb lb2">{E(l)}</span>'
                    for l in base.shown_labels(r.get("labels")))
-    when = _when(r)
     return (f'<a class="c" href="{_href(theme.product_path(r))}" data-g="{E(sub)}">{img}'
             f'<div class="b"><div class="m">{badge}{tags}'
             f'<span class="br">{E(r["brand"])}</span></div>'

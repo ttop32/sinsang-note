@@ -10,7 +10,6 @@
 훑어보는 `--doctor` 를 둔다. 터지고 나서 아는 것보다 전날 아는 게 낫다.
 """
 import socket
-import ssl
 import time
 import urllib.parse
 

@@ -164,7 +164,6 @@ def render(rows: list, new_today: list, total: int = 0) -> None:
     # 숫자는 화면에 실제로 있는 것만 센다. 전에 len(rows) 를 써서 "483건" 이라
     # 써놓고 끝까지 내려도 300장뿐이던 적이 있다. 지금은 rules.SHOW=0 이라 안 자른다.
     shown = rows[:rules.SHOW] if rules.SHOW else rows
-    more = len(rows) - len(shown)
     pcount = collections.Counter(taxonomy.primary_of(r) for r in shown)
     scount = collections.Counter(x for x in map(taxonomy.sub_of, shown) if x)
 
