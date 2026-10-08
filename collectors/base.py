@@ -534,7 +534,10 @@ SITES = {
     "더벤티":       "https://theventi.co.kr/new2022/menu/all.html",
     "컴포즈커피":   "https://composecoffee.com/index1",
     "투썸플레이스": "https://www.twosome.co.kr/mn/menuList.do",
-    "엔제리너스":   "https://www.angelinus.com/menu/menu_list.asp",
+    # angelinus.com 은 2026-10-08 현재 **도메인이 안 풀린다.** 롯데잇츠로
+    # 합쳐지면서 브랜드 사이트를 접었다. 어댑터는 진작 롯데잇츠를 보고
+    # 있었는데 여기만 옛 주소가 남아 카드 링크가 죽어 있었다.
+    "엔제리너스":   "https://www.lotteeatz.com/brand/angel",
     "할리스":       "https://www.hollys.co.kr/menu/espresso.do",
     # SPA 라 사람이 여는 주소는 /menu 다. 어댑터는 그 뒤의 내부 API 를 쓴다.
     "탐앤탐스":     "https://www.tomntoms.com/menu",
@@ -553,7 +556,8 @@ SITES = {
     "읍천리382":    "https://www.xn--382-v18me95c8ph.com/",
     "파스쿠찌":     "https://www.pascucci.co.kr/product/productList.asp",
     "텐퍼센트커피": "https://tenpercentcoffee.com/menu",
-    "카페인중독":   "https://www.caffeine-addiction.co.kr/",
+    # 로마자 주소는 안 풀린다. 이 브랜드는 한글 도메인만 쓴다(퓨니코드).
+    "카페인중독":   "https://xn--iq1bo78ac9at1k9mh.com/",
     "하삼동커피":   "https://www.hasamdongcoffee.com/",
     # ⚠️ 둘 다 http 전용이라 이미지가 derive() 에서 지워진다.
     "고망고":       "http://gomango.kr/menu",

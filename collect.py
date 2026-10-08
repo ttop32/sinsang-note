@@ -10,6 +10,7 @@ import json
 import pathlib
 from datetime import date, datetime, timezone
 
+import doctor
 from collectors import (bakery_parisbaguette, base, bon_if, cafe_yogerpresso,
                         snack_barunkim, snack_jaws, snack_kimbabcheonguk,
                         snack_myungrang)
@@ -455,12 +456,16 @@ def main() -> None:
             products += items
         except Exception as e:                      # 한 브랜드가 죽어도 나머지는 살린다
             failed_brands += names
-            if blocked(e):
-                network.append(f"{label}: {e}")
-                print(f" ~ {label} 못 닿음: {e}")
+            # 예외 문자열만으로는 못 가른다. 주소를 한 번 더 찔러 원인에
+            # 이름을 붙인다(해외차단·DNS·TLS·열림). 빨갛게 할지는 그 다음이다.
+            code, why = doctor.of(names, e)
+            tag = f"[{code}] " if code else ""
+            if code in doctor.OURS or (not code and not blocked(e)):
+                errors.append(f"{tag}{label}: {e}")
+                print(f"!! {label} 실패 {tag}{why}\n     ↳ {e}")
             else:
-                errors.append(f"{label}: {e}")
-                print(f"!! {label} 실패: {e}")
+                network.append(f"{tag}{label}: {why}")
+                print(f" ~ {label} 못 닿음 {tag}{why}")
 
 
     rows = []
@@ -588,8 +593,7 @@ def main() -> None:
     # 매일 빨가면 진짜 고장을 못 본다 — 실제로 나흘 연속 빨갰고 그 안에 섞인
     # 지미존스 한 건(브랜드가 신메뉴 칸을 내렸다)을 아무도 못 봤다.
     if network:
-        print(f"\n~~ 못 닿은 브랜드 {len(network)}곳 (러너가 해외 IP 라 그렇다. "
-              "로컬에서는 열린다)")
+        print(f"\n~~ 못 닿은 브랜드 {len(network)}곳 (egress={doctor.egress()})")
         for line in network:
             print(f"   ~ {line}")
 
@@ -598,5 +602,100 @@ def main() -> None:
 
 
 
+def checkup() -> int:
+    """수집 전에 주소를 미리 훑는다. `python collect.py --doctor`.
+
+    수집 한 바퀴는 몇 분이 걸리고, 터지고 나서야 원인을 본다. 이건 주소만
+    찔러서 **1~2분에** 어디가 어떤 이유로 막혀 있는지 먼저 보여준다.
+
+    두 가지를 따로 센다. 섞으면 둘 다 안 보인다.
+      ① 수집 주소 — 어댑터가 실제로 긁는 곳. 막히면 그 브랜드가 안 들어온다.
+      ② 사이트 링크 — base.SITES. 막히면 **우리 사이트의 링크가 죽는다.**
+    처음엔 ② 만 찔렀다가 여섯 곳을 헛되이 빨갛게 찍었다. 투썸은 API 로
+    멀쩡히 받아오는데 SITES 의 사람용 주소가 403 이었을 뿐이다.
+
+    ⚠️ `열림` 은 '수집이 된다' 가 아니라 '못 닿은 건 아니다' 까지다. 이 레포는
+    200 에 여러 번 속았다(탕화쿵푸 차단 안내 200, 모리샤브 soft-404).
+
+    돌리는 곳의 IP 에 따라 답이 달라진다. 그게 맞는 동작이다 — 이 맥(한국)에서
+    열리는 곳이 러너(Azure 해외)에선 `해외차단` 으로 찍힌다.
+    """
+    owner, feeds = {}, {}
+    for mod in ADAPTERS:
+        names = brands_of(mod)
+        # 소스에서 주운 주소 **와** 사이트 링크를 함께 본다. 하나라도 열려
+        # 있으면 막힘으로 안 친다. 라벨리는 주워온 게 썸네일 디렉터리뿐이라
+        # 그 403 하나로 통째로 빨갛게 찍혔었다.
+        urls = doctor.endpoints(mod) + [
+            base.SITES[b] for b in names if base.SITES.get(b)]
+        label = names[0] if len(names) == 1 else (
+            f"{mod.__name__.split('.')[-1]}({len(names)}종)")
+        for b in names:
+            owner[b] = mod
+        if urls:
+            feeds[label] = (mod, urls)
+    links = {b: base.SITES[b] for b in sorted(owner) if base.SITES.get(b)}
+
+    # 주소 하나를 두 번 찌르지 않는다. 수집 주소와 사이트 링크가 겹치는 곳이 많다.
+    every = {u: u for us in [v[1] for v in feeds.values()] for u in us}
+    every.update({u: u for u in links.values()})
+    print(f"egress={doctor.egress()} · 어댑터 {len(feeds)} · 링크 {len(links)}"
+          f" · 주소 {len(every)}곳 점검")
+    seen = {u: (c, w) for u, c, w in doctor.sweep(every)}
+
+    def verdict(mod, url):
+        code, why = seen.get(url, ("", "점검 못 함"))
+        # 이미 손봐둔 TLS 는 따로 센다. 안 가르면 열두 곳이 매번 찍혀서
+        # 새로 끊긴 한 곳이 그 안에 묻힌다.
+        if code == doctor.TLS and mod is not None and doctor.tls_handled(mod):
+            code = "TLS·조치됨"
+        return code, why
+
+    bad = 0
+    print("\n── ① 수집 주소 ──")
+    by = collections.defaultdict(list)
+    for label, (mod, urls) in feeds.items():
+        got = [verdict(mod, u) + (u,) for u in urls]
+        live = [g for g in got if g[0] in (doctor.OPEN, "TLS·조치됨")]
+        if live:
+            continue
+        # 막힌 것 중 **가장 고칠 만한** 원인 하나로 대표시킨다.
+        code, why, url = sorted(got, key=lambda g: g[0] not in doctor.OURS)[0]
+        by[code or "진단불가"].append((label, f"{why}  ({url})"))
+        bad += 1
+    _groups(by, len(feeds))
+
+    print("\n── ② 사이트 링크 ──")
+    by = collections.defaultdict(list)
+    for b, url in links.items():
+        code, why = verdict(owner.get(b), url)
+        if code in (doctor.OPEN, "TLS·조치됨"):
+            continue
+        by[code or "진단불가"].append((b, why))
+    _groups(by, len(links))
+    return bad
+
+
+def _groups(by: dict, total: int) -> None:
+    """원인별로 묶어 찍는다. 고칠 수 있는 것을 위에 둔다."""
+    order = [doctor.TLS, doctor.DNS, doctor.BOT, doctor.DOWN,
+             doctor.MUTE, doctor.GEO, "진단불가"]
+    hit = 0
+    for code in order + [c for c in by if c not in order]:
+        if code not in by:
+            continue
+        group = by[code]
+        hit += len(group)
+        mark = "  ← 우리가 고칠 것" if code in doctor.OURS else ""
+        print(f"  [{code}] {len(group)}곳{mark}")
+        for name, why in group:
+            print(f"     {name:14} {why}")
+    print(f"  멀쩡 {total - hit} / 막힘 {hit}")
+
+
 if __name__ == "__main__":
-    main()
+    import sys
+    if "--doctor" in sys.argv:
+        checkup()
+    else:
+        main()
