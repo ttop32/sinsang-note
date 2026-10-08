@@ -26,6 +26,8 @@
 | **뚜레쥬르** | 1,300+ (제과제빵 1위급) | `www.tlj.co.kr` | robots `*: Disallow: /` (Googlebot 만 허용) | ✅ **수집** | `/product/new.asp` **신제품 캠페인 전용 페이지** (seq 별 묶음, 과거 24페이지) | 신제품 11건 / 전 카탈로그 442건 = **2.5%** | 이미지 파일명 `/data/product/YYYY-M-D_` → `uploaded_at` | **438** (NEW 11) | `collectors/bakery_tlj.py` | (**`CAFE`**, `베이커리`) |
 | **빕스** | 미등록(직영) | `www.ivips.co.kr` | robots `*: Disallow: /` — "우리를 명시적으로 막는 유일한 브랜드" | ✅ **수집** | JSON API `tag` 필드 (`NEW`/`BEST`/`NONE`) | **14건 중 NEW 1건 (7.1%)**, BEST 2건 | API `startDate` → `uploaded_at` | **14** (NEW 1) | `collectors/western_vips.py` | (`FRANCHISE`, `양식`) |
 | **CJ푸드빌** | (지주 · 브랜드 없음) | `www.cjfoodville.co.kr` | robots `*: Disallow: /` | ❌ **어댑터 안 만듦** | 보도자료 `/campaign/PR_List.asp` 는 열리지만 **자사 상품이 없다** | — | — | 0 | — | — |
+| **엽기떡볶이** | 650+ (분식 1위) | `www.yupdduk.com` | robots `*: Disallow: /` (Yeti·Googlebot 만 허용) | ✅ **수집**(얇다) | 이벤트 게시판 JSON 의 **자사 신메뉴 공지** — 연 2건꼴, `ALLOW_EMPTY=True` | 메뉴판 60건엔 배지 0 → **안 씀**. 게시판 305건 중 자사 신제품 3건 | 본문 `[출시 일자]` → `released_at` / `Sdate` → `uploaded_at` | **1** | `collectors/snack_yupdduk.py` | (`FRANCHISE`, `분식`) |
+| **니뽕내뽕** | 미등록 | `www.nipongnaepong.co.kr` | robots.txt **403** → RFC 9309 상 전면 금지 | ❌ **어댑터 안 만듦** | **없다.** 메뉴가 카테고리당 포스터 JPG 한 장 | — | — | 0 | — | — |
 | **아웃백스테이크하우스** | 미등록(직영) | `www.outback.co.kr` | 이용약관 제10조 ④ (robots 는 원래 허용) | ✅ **수집** | `icon_new.png` 배지 | **110건 중 17건 (15.5%)** — 중복 턴 뒤 62건 중 12건 | 썸네일 경로 `/upload/product/YYYYMMDD/` → `uploaded_at` | **62** | `collectors/western_outback.py` | (`FRANCHISE`, `양식`) |
 
 ---
@@ -224,3 +226,83 @@ GET /menus/VIPS/<categoryIdx>?page=N&size=100
 
 **판정: 브랜드가 아니라 지주회사다. 어댑터를 만들지 않는다.** 뚜레쥬르·빕스 둘로 충분하고,
 셋을 다 붙이면 같은 상품이 세 번 올라간다.
+
+
+---
+
+### ✅ 엽기떡볶이 — 1건. `collectors/snack_yupdduk.py` (⚠️ 얇다)
+
+**원래 사유**: robots `User-agent: * / Disallow: /`(Yeti·Googlebot 만 `Allow`).
+
+**🔴 메뉴판은 쓰지 않았다.** `/sub/menu/yup-menu` 한 장에 전 메뉴 **약 60건**이 SSR 로
+있고(엽기메뉴 14,000원 / 숯불통뼈닭발 15,000원 / 떡추가 1,000원 …) 받기는 제일 쉽다.
+**그런데 NEW 배지도 날짜도 하나도 없다.** 그대로 올리면 60건이 전부 신상이 된다.
+공지사항(105건)도 아니다 — 최신 5건이 전부 휴무·포인트 적립률·개인정보처리방침 공지다.
+
+**쓴 경로**: 이벤트&안내 게시판의 JSON.
+```
+POST /json/event/j_event
+     ftype=list_adm & page=N & rows=10 & opt_s=2 & Isnotice=1 & Ordtype=2
+```
+총 **305건**. `Ordtype=2` 가 고정글(`Listtop`)을 위로 올리고 신제품 공지는 `Listtop=99`
+로 고정되므로 앞 2페이지(20건)면 닿는다.
+⚠️ **응답이 무겁다** — 행마다 상세 본문 HTML 이 통째로 들어 있어 한 쪽이 25KB~**2.3MB** 다.
+`rows` 를 키우면 수십 MB 가 된다.
+
+⚠️ **서버 검색(`sc_type`/`sc_value`)은 건드리지 마라.** 임의 값을 넣으면 응답이
+`{"result":"no","errtxt":"키워드 'like' 근처의 구문이 잘못되었습니다. …"}` 로 **DB 오류
+문구를 그대로 돌려준다.** 주입 가능성이 보이는 자리라 거기서 멈췄다. 목록만 받는다.
+
+**제목 거르기가 이 어댑터의 전부다.** 2026-01 ~ 2025-01 구간 **80건을 눈으로 읽었다.**
+엽떡 **자사** 신메뉴 글은 셋뿐이다 — 연 2건꼴이라 `ALLOW_EMPTY = True` 로 뒀다.
+```
+2026-09-11  신메뉴 더착한맛 출시 안내                ✔
+2025-09-09  오리지널(저당)&착한맛(저당) 출시 안내      ✔
+2025-06-30  신메뉴 양배추 토핑&대파 토핑 출시 안내     ✔
+```
+**반드시 걸러야 하는 건 남의 회사 제품이다.** 엽떡은 콜라보가 잦고 그 상품의 주인은
+엽떡이 아니며, 이 레포가 **이미 그 제조사 어댑터로 수집하고 있다.**
+```
+[롯데웰푸드X엽떡] 짱매워요 젤리 출시 이벤트      → maker_lottewellfood
+[농심 X 엽기떡볶이] 포테토칩 엽떡로제맛 출시     → maker_nongshim
+하림 X 동대문엽기떡볶이 맛닭가슴살 출시          → maker_harim
+[필리밀리X엽떡] 어워즈 기획 2종 출시 안내        → 굿즈(비식품)
+[안내] 닭발 메뉴 리뉴얼 / 엽기오돌뼈 메뉴 단종   → 신제품 아님
+```
+규칙 ①`출시` 필수 ②`[` 말머리 버림 ③` X `/` x `/`×` 버림 ④`_SKIP` 단어 버림.
+위 14개 음성 표본 전부 통과(0건), 양성 3건 전부 통과.
+이름은 `&` 로 쪼갠다 — 셋 중 둘이 2종 묶음이라 쪼개야 상품이 된다.
+
+**날짜** — 본문에 `[출시 일자] 2026.09.16.(수)` 가 있다. **브랜드가 '출시일'이라고 말한
+값**이라 여기만 `released_at` 에 넣었다(이 레포에서 드문 경우다). 못 읽으면 비우고
+게시글 `Sdate`(노출 시작일) → `uploaded_at` 에 맡긴다.
+
+⚠️ 현재 유일한 산출물 `더착한맛` 은 엄밀히 **맵기 단계**지 접시가 아니다. 브랜드가
+'신메뉴'로 공지해서 그대로 내보냈다. 사람이 보고 판단할 건이다.
+
+---
+
+### ❌ 니뽕내뽕 — 어댑터 안 만듦. **메뉴가 포스터 그림 한 장씩이다**
+
+**원래 사유**: robots.txt 가 **403** 이라 RFC 9309 §2.3.1.4 상 전 경로 금지
+(`CANDIDATES-ASIAN.md` §6-1 의 "403 은 404 와 정반대다" 사례). 그 사유는 풀렸다.
+
+홈 `https://www.nipongnaepong.co.kr/` 는 228바이트 `<meta http-equiv="refresh">` 이고
+본체는 `/main/index.php` 다. 메뉴는 `/menu/menu_list_wd.php?q_mcate=<cate>` 5칸이다.
+
+**다섯 칸 전부 상품 데이터가 0이다. 포스터 JPG 한두 장이 전부다.**
+```
+SET    /_upfiles/menu/thumb/2025_MENU(PC)2_대지 1 사본 4.jpg
+PONG   /_upfiles/menu/thumb/2026_마라-MENU(PC).jpg
+PIZZA  /_upfiles/menu/thumb/2025_완탕 MENU(PC)_대지 1 사본(1).jpg
+ADE    /_upfiles/menu/thumb/2025_완탕 MENU(PC)_대지 1 사본 2(1).jpg
+ETC    /_upfiles/menu/thumb/2026_마라-MENU_토핑(PC).jpg
+```
+상품명·가격·배지·날짜가 **마크업에 한 글자도 없다**. 본문 텍스트를 뽑으면 내비와 인라인
+CSS 뿐이다. 돈까스클럽(포스터 1장)과 같은 건이다.
+
+보도자료 쪽도 봤다(함정 #9). `/board/bbs_list.php?bbs=notice` **공지사항&홍보자료** 는
+200 으로 열리는데 본문이 **"- 내용이 없습니다 -"** 다. 글이 0건이다.
+
+파일명의 `2026_마라`·`2025_완탕` 으로 보아 **포스터를 통째로 갈아 끼우는 운영**이라
+OCR 없이는 상품을 특정할 수 없다. **어댑터를 만들지 않는다.**
