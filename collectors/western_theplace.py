@@ -86,6 +86,40 @@ tag=NEW    0건 (0%)      ← 빕스는 14건 중 1건(7.1%)이었다
 ⚠️ 같은 보도에 **'시즌 스페셜 세트'·'시즌 파티 세트'** 가 함께 나오는데
    API 에는 안 들어온다. 들어와도 `rules.drop_sets()` 가 이름으로 거른다.
 
+## 🔴 두 번째 신호 — 프로모션 게시판 (2026-10-08 추가)
+
+날짜 하나에만 기대는 게 이 어댑터의 약점이었다. **사이트를 다시 열며
+`startDate` 를 일괄 갱신하면 메뉴판 41건이 통째로 신상이 된다.** 비율 가드는
+그걸 막아 주지만 막기만 할 뿐, 진짜 신메뉴가 무엇인지는 여전히 날짜 하나로
+믿는 구조였다. 그래서 같은 API 에서 서로 독립인 신호를 하나 더 가져온다.
+
+  GET https://brand-api.ivips.co.kr/promotions/THEPLACE?page=0&size=100
+```
+2026-09-18  가을 대하의 감칠맛 가득한 신메뉴 출시   ← 신메뉴 공지
+2025-11-12  더플레이스 군인 할인 안내               ← 혜택
+2025-11-11  더플레이스 홍대 L7점 메뉴               ← 안내
+```
+제목에 `신메뉴·신상·출시·새롭게·NEW` 가 들어간 글만 센다. 혜택·안내까지
+전부 세면 "항상 신메뉴 공지가 있다"가 돼서 아무 말도 안 하는 것과 같다.
+
+공지 본문은 **이미지 한 장**이라 상품 이름이 없다(`type: IMAGE`,
+`pcHtml: null`). 그래서 "이 상품이 신상" 까지는 못 가고 "이 무렵 신메뉴가
+나왔다" 까지만 말한다. 쓰는 방식은 둘이다.
+
+  ① **올려주기** — 일괄 입력일(한 날 {BULK_DAY}건 이상)이 아니고 공지가
+     ±{NEAR_DAYS}일 안에 있는 `startDate` 만 `released_at` 으로 올리고
+     `is_new=True` 를 준다. 2026-10-08 실측에서 정확히 외부 보도로 대조한
+     **그 3건**만 올라왔다(무화과 2종 08-26, 대하 09-08). 2026-03-19·
+     2025-11-17 짝 없는 날짜 2건은 공지가 없어 안 올라온다 — 맞는 처분이다.
+  ② **받치기** — 신메뉴 공지가 **하나도 없는데** 60일 창 안 비율이
+     `SOFT_RATIO` 를 넘으면 터뜨린다. 브랜드가 아무 말도 안 했는데 날짜만
+     우르르 새로워지는 건 개편이지 신상이 아니다.
+
+⚠️ 공지는 `displayEndDate` 가 지나면 목록에서 **빠진다.** 무화과 2종의 공지는
+   이미 내려갔고 지금 남은 신메뉴 글은 09-18 하나뿐이다. 그래서 공지를
+   '있어야 하는 조건' 으로 쓰면 안 된다 — 없다고 신상이 아닌 게 아니다.
+   ①은 올려주기만 하고, ②의 바닥도 낮게(15%) 잡아 둔 이유가 이것이다.
+
 ## 기간 한정 — `endDate` 를 읽는다 (빕스 어댑터엔 없는 처리)
 
 2026-10-08 실측에서 더플레이스는 **41건 전부 `9999-12-31`**(상시)이라 지금은
@@ -134,6 +168,15 @@ SKIP_TYPES = {"SALAD", "DELIVERY", "ALLERGY"}
 # 2026-10-08 실측 3/41 = 7.3%.
 FRESH_MAX_RATIO = 0.35
 WINDOW = 60      # rules.WINDOW 와 같은 값. 가드 전용이라 여기서 다시 센다
+
+# 같은 API 의 프로모션 게시판. 날짜 말고 **다른 신호**가 하나 더 필요해서 붙였다.
+#   GET /promotions/THEPLACE?page=0&size=100   2026-10-08 실측 3건
+# 제목에 이 말이 들어간 글만 신메뉴 공지로 친다. '군인 할인'·'L7점 메뉴' 같은
+# 혜택·안내 글이 섞여 있어서 전부 세면 아무 말도 안 하는 것과 같아진다.
+PROMO_WORDS = ("신메뉴", "신상", "출시", "새롭게", "NEW")
+NEAR_DAYS = 30    # 공지와 startDate 가 이만큼 안에 붙어 있으면 같은 건으로 본다
+BULK_DAY = 5      # 한 날짜에 이만큼 몰리면 일괄 입력이다. 그 날짜는 안 믿는다
+SOFT_RATIO = 0.15  # 신메뉴 공지가 **하나도 없을 때** 허용하는 최대 비율
 
 
 def _json(c, path: str, page: int = 0):
@@ -185,12 +228,53 @@ def _limited(end: str) -> tuple:
     return d < date.today().isoformat(), ["기간 한정"]
 
 
+def _promos(c) -> list:
+    """브랜드가 '신메뉴 냈다'고 **스스로 말한 날**들. [YYYY-MM-DD].
+
+    이 브랜드의 유일한 신호가 `startDate` 라서, 사이트를 다시 열며 날짜를
+    일괄 갱신하면 메뉴판 41건이 통째로 신상이 된다. 비율 가드는 그걸 막아
+    주지만 **막기만 한다** — 진짜 신메뉴가 뭔지는 여전히 날짜 하나로 믿는다.
+    그래서 같은 API 에서 서로 독립인 신호를 하나 더 가져온다.
+
+    공지는 이미지 한 장이라 상품 이름이 안 들어 있다(`type: IMAGE`,
+    `pcHtml: null`). 그래서 "이 상품이 신상이다"까지는 못 말하고 "이 무렵에
+    신메뉴가 나왔다"까지만 말한다. 그거면 충분하다 — 날짜가 그 무렵이면
+    출시일로 올리고, 브랜드가 아무 말도 안 했는데 날짜만 우르르 새로워지면
+    그게 개편이다.
+
+    ⚠️ 공지는 `displayEndDate` 가 지나면 목록에서 빠진다. 지금 3건 중
+    신메뉴 글은 2026-09-18 하나뿐인데, 2026-08-26 에 나온 무화과 2종의
+    공지는 이미 내려갔다. **없다고 해서 신상이 아닌 게 아니다.** 그래서
+    공지를 '있어야 하는 조건' 으로 쓰지 않고 '있으면 올려주는' 쪽으로 쓴다.
+    """
+    out = []
+    for row in _pages(c, f"/promotions/{BRAND_CODE}"):
+        title = row.get("title") or ""
+        if not any(w in title for w in PROMO_WORDS):
+            continue
+        d = (row.get("displayStartDate") or row.get("registerDate") or "")[:10]
+        if d:
+            out.append(d)
+    return sorted(set(out))
+
+
+def _near(day: str, promos: list) -> bool:
+    """그 날짜가 신메뉴 공지 근처인가. 공지가 상품보다 뒤따르는 게 보통이다."""
+    if not day:
+        return False
+    d = date.fromisoformat(day)
+    return any(abs((date.fromisoformat(p) - d).days) <= NEAR_DAYS for p in promos)
+
+
 def fetch() -> list[Item]:
     items: list[Item] = []
     seen = set()
+    rows_by_day: dict = {}
 
     with base.client(headers={"Referer": SITE + "/",
                               "Accept": "application/json"}) as c:
+        promos = _promos(c)
+        time.sleep(DELAY)
         cats = _pages(c, f"/menus/{BRAND_CODE}/category")
         if not cats:
             raise RuntimeError(
@@ -209,36 +293,53 @@ def fetch() -> list[Item]:
                 f"{BRAND}: 상품이 들어 있는 카테고리가 0칸이다 — type 값이 바뀌었다. "
                 f"받은 값: {sorted({(x.get('type') or '') for x in cats})}")
 
+        # 날짜가 한 날에 몰렸는지 보려면 **전건을 다 받은 뒤** 세야 한다.
+        # 칸마다 바로 Item 을 만들면 그 판단을 할 수가 없다.
+        rows = []
         for cat in live:
             time.sleep(DELAY)
             for row in _pages(c, f"/menus/{BRAND_CODE}/{cat['idx']}"):
-                name = " ".join((row.get("koreanMenuName") or "").split())
-                if not name:
-                    continue
-                tag = (row.get("tag") or "").upper()
-                over, labels = _limited(row.get("endDate") or "")
-                if over:
-                    continue
-                it = Item(
-                    brand=BRAND,
-                    name=name,
-                    name_en=" ".join((row.get("englishMenuName") or "").split()),
-                    desc=" ".join((row.get("description") or "").split()),
-                    image=_image(row.get("images")),
-                    labels=labels,
-                    category=" ".join((cat.get("categoryName") or "").split()),
-                    # 노출 시작일. 41건 중 36건이 2025-11-14 한 날에 몰린 사이트
-                    # 오픈 일괄 입력이라 released_at 에 넣지 않는다(docstring).
-                    uploaded_at=(row.get("startDate") or "")[:10],
-                    # ⚠️ 빕스와 다르다. 이 브랜드는 tag 를 아예 안 써서(0/41)
-                    #    NONE 을 False 로 읽으면 통째로 화면에서 사라진다.
-                    #    '안 붙였다' 가 아니라 '모른다' 다.
-                    is_new=True if tag == "NEW" else None,
-                    url=SITE + "/menu",
-                )
-                if it.key not in seen:
-                    seen.add(it.key)
-                    items.append(it)
+                rows.append((cat, row))
+        for _, row in rows:
+            d = (row.get("startDate") or "")[:10]
+            if d:
+                rows_by_day[d] = rows_by_day.get(d, 0) + 1
+
+        for cat, row in rows:
+            name = " ".join((row.get("koreanMenuName") or "").split())
+            if not name:
+                continue
+            tag = (row.get("tag") or "").upper()
+            over, labels = _limited(row.get("endDate") or "")
+            if over:
+                continue
+            start = (row.get("startDate") or "")[:10]
+            # 일괄 입력일이 아니고 **브랜드가 그 무렵 신메뉴를 알린** 날짜만
+            # 출시일로 올린다. 둘 중 하나라도 어긋나면 올린 날로만 남긴다.
+            solo = bool(start) and rows_by_day.get(start, 0) < BULK_DAY
+            told = solo and _near(start, promos)
+            it = Item(
+                brand=BRAND,
+                name=name,
+                name_en=" ".join((row.get("englishMenuName") or "").split()),
+                desc=" ".join((row.get("description") or "").split()),
+                image=_image(row.get("images")),
+                labels=labels,
+                category=" ".join((cat.get("categoryName") or "").split()),
+                # 노출 시작일. 41건 중 36건이 2025-11-14 한 날에 몰린 사이트
+                # 오픈 일괄 입력이라 released_at 에 넣지 않는다(docstring).
+                uploaded_at=start,
+                # 공지로 뒷받침된 날짜만 출시일이다(docstring '두 번째 신호').
+                released_at=start if told else "",
+                # ⚠️ 빕스와 다르다. 이 브랜드는 tag 를 아예 안 써서(0/41)
+                #    NONE 을 False 로 읽으면 통째로 화면에서 사라진다.
+                #    '안 붙였다' 가 아니라 '모른다' 다.
+                is_new=True if (tag == "NEW" or told) else None,
+                url=SITE + "/menu",
+            )
+            if it.key not in seen:
+                seen.add(it.key)
+                items.append(it)
 
     if len(items) < MIN_ITEMS:
         raise RuntimeError(
@@ -264,4 +365,14 @@ def fetch() -> list[Item]:
             f"안이다(기대 {FRESH_MAX_RATIO:.0%} 이하, 2026-10-08 실측 3/41=7.3%). "
             f"사이트 개편으로 날짜가 일괄 갱신됐는지 확인하라 — 그대로 두면 "
             f"메뉴판 전체가 신상으로 올라간다")
+
+    # 두 번째 신호로 한 번 더 받친다. 브랜드가 신메뉴를 **아무것도 안 알렸는데**
+    # 날짜만 우르르 새로워졌으면 그건 개편이지 신상이 아니다. 공지는 끝나면
+    # 목록에서 빠지므로(무화과 2종) 바닥을 낮게 잡는다 — 지금 7.3% 는 통과한다.
+    if not promos and fresh > len(items) * SOFT_RATIO:
+        raise RuntimeError(
+            f"{BRAND}: 신메뉴 공지가 0건인데 {len(items)}건 중 {fresh}건의 "
+            f"startDate 가 최근 {WINDOW}일 안이다(기대 {SOFT_RATIO:.0%} 이하). "
+            f"/promotions/{BRAND_CODE} 에 아무 말도 없이 날짜만 갱신됐다 — "
+            f"사이트 개편을 의심하라")
     return items
