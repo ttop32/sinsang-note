@@ -365,6 +365,9 @@ IMG_WORKERS = 12      # 동시 요청 수. 1,035장에 30초쯤 걸린다.
 IMG_TIMEOUT = 20
 IMG_MIN = 500         # 이보다 작으면 사진이 아니라 에러 페이지다
 
+# 우리가 받아 둔 미러를 알아보는 표식(아래 MIRROR_DIR 와 짝이다).
+MIRROR_MARK = "/i/"
+
 # ⚠️ 브라우저가 보내는 것을 똑같이 보내야 한다. 그냥 받으면 200 인데 우리
 # 도메인에서 부르면 막는 곳이 있다 — 가마치통닭이 Referer 를 붙이자 403 이
 # 됐다(핫링크 차단). 레퍼러 없이 재고 "멀쩡하다" 고 하면 화면에선 깨진다.
@@ -407,10 +410,13 @@ def verify_images(rows: list) -> tuple:
 
     import httpx
 
+    # 🔴 우리가 받아 둔 미러는 확인하지 않는다. 아직 푸시 전이라 그 주소는
+    # 404 다 — 확인하면 **방금 받은 걸 스스로 지운다.** 실제로 그 순서로
+    # 돌렸더니 미러 12장이 전부 감춰졌다. 디스크에 파일이 있는지로 족하다.
     todo = {}
     for r in rows:
         url = r.get("image") or r.get("image_src") or ""
-        if url:
+        if url and MIRROR_MARK not in url:
             todo.setdefault(url, []).append(r)
     if not todo:
         return 0, 0
@@ -430,11 +436,19 @@ def verify_images(rows: list) -> tuple:
 
     hid = back = 0
     for url, group in todo.items():
+        # 🔴 http 는 살아 있어도 되살리지 않는다. 브라우저가 혼합 콘텐츠로
+        # 막으니 화면에선 어차피 안 보이고, 되살려 놓으면 `image` 가 차서
+        # **미러가 할 일이 없어진다**(실제로 그 순서로 미러가 0장이 됐다).
+        # http 는 mirror_images 담당이다 — 받아서 우리 쪽에 두는 게 답이다.
+        live_https = ok[url] and not url.startswith("http://")
         for r in group:
-            if ok[url]:
+            if live_https:
                 if not r.get("image"):
                     r["image"], back = url, back + 1
                 r.pop("image_src", None)
+            elif ok[url]:
+                # 살아 있는 http. image 는 비워 두고 주소만 남긴다.
+                r["image_src"], r["image"] = url, ""
             elif r.get("image"):
                 r["image_src"], r["image"] = url, ""
                 hid += 1
@@ -579,7 +593,20 @@ def mirror_images(rows: list, docs, base_url: str) -> tuple:
             n += 1
 
     # 안 쓰는 파일은 지운다. 안 그러면 레포가 매일 불어난다.
+    #
+    # 🔴 그런데 **받기에 실패한 날 전부 지우면 안 된다.** 2026-10-03 에 넣은
+    # 26장이 다음 날 수집(10-04)에서 통째로 사라졌다. 러너가 해외 IP 라 그
+    # http 호스트들에 못 닿았고, `used` 가 비니까 기존 파일이 전부 "안 쓰는
+    # 것" 으로 보여 지워진 것이다. **네트워크 실패가 영구 삭제로 이어졌다.**
+    #
+    # 받을 게 있었는데 **하나도 못 받았으면 그날은 안 지운다.** 사진이 잠깐
+    # 안 보이는 것과 영영 사라지는 것은 다르다 — 이 레포에서 두 번째로 자주
+    # 난 사고가 '조용히 사라지는 것' 이다.
     gone = 0
+    if todo and not used:
+        print(f"   ! 사진 {len(todo)}장을 하나도 못 받았다 — 기존 미러를 "
+              "지우지 않는다(네트워크 문제일 때 영구 삭제를 막는다)")
+        return n, 0
     for f in out.glob("*.webp"):
         if f.name not in used:
             f.unlink()
