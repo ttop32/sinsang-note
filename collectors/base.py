@@ -130,7 +130,12 @@ BRANDS = {
     "엽기떡볶이":  (FRANCHISE, "분식"),
     "앤티앤스":     (CAFE, "베이커리"),
     "송사부고로케": (CAFE, "베이커리"),
-    "벤슨":         (CAFE, "디저트"),
+    # 프리미엄 아이스크림 브랜드다. 자사몰 카테고리 실측이 아이스크림 20 ·
+    # 프리팩 8 · 아이스크림 케이크 11 · 커피/음료 11 · 디저트 3 이고 홈에
+    # '아이스크림' 이 9회 '음료' 가 2회 나온다. '디저트' 는 편의점이 쓰는
+    # 칸이라 달롱도르를 같은 사유로 옮긴 선례가 바로 위에 있다 —
+    # 설빙·배스킨라빈스·요아정·에밀리아젤라또와 같은 칸이 맞다.
+    "벤슨":        (CAFE, "아이스크림"),
     "더플레이스":   (FRANCHISE, "양식"),
     "제일제면소":   (FRANCHISE, "한식"),
     "하이트진로":  (MAKER, "주류"),
@@ -634,7 +639,9 @@ SITES = {
     "엽기떡볶이":  "https://www.yupdduk.com",
     "앤티앤스":     "https://www.auntieannes.co.kr",
     "송사부고로케": "https://songsabu.co.kr",
-    "벤슨":         "https://www.hanwhagalleria.co.kr/promotion/news.html",
+    # 모회사 보도자료 게시판이 아니라 자사몰이다. 여기가 url 이 빈 상품의
+    # 폴백이라, 게시판을 적어두면 사람이 백화점 뉴스로 떨어진다.
+    "벤슨":        "https://www.bensonicecream.com/product/new.php",
     "더플레이스":   "https://www.italiantheplace.co.kr/menu",
     "제일제면소":   "https://www.cheiljemyunso.co.kr/menu",
     "하이트진로":  "https://www.hitejinro.com/socialmedia/press_list.asp",
