@@ -85,7 +85,7 @@ from collectors import alcohol_hitejinro
 from collectors import meat_mawangpork
 # 베이커리. robots 재검토분(notes/RECHECK-ROBOTS-DINING.md).
 from collectors import bakery_tlj
-from collectors import western_outback
+from collectors import western_outback, western_vips
 # 한식 중위권. 공정위 가맹점 수 188~603위 구간(notes/CANDIDATES-KATSU-JPN-KOR.md).
 from collectors import (korean_damgguk, korean_obongzip, korean_twozzim,
                         korean_yoogane)
@@ -225,7 +225,7 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             korean_hansot, korean_keunmam, korean_wonandone,         # 한식 2차
             meat_mawangpork,                                        # 족발
             bakery_tlj,                                             # 베이커리
-            western_outback,                                        # 양식
+            western_outback, western_vips,                          # 양식
             # 중식. 보도자료·공지 게시판형 5 + 메뉴 NEW 배지형 1(소림마라).
             # 소림마라는 배지가 2023년에 멈춰 있어 화면에 0건이 정상이다
             # (사유는 collectors/china_sorimmara.py docstring).

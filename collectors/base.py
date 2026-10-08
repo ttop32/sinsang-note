@@ -307,6 +307,7 @@ BRANDS = {
     # 전에는 맞는 칸이 없어서 비워뒀고 그러면 2단 칩에서만 안 보였다.
     "롤링파스타":   (FRANCHISE, "양식"),
     "아웃백스테이크하우스": (FRANCHISE, "양식"),
+    "빕스":        (FRANCHISE, "양식"),
     # ── 중식 (2026-10-02 공정위 가맹점수 전수조사로 합류) ────────────────
     # 공정위 `중식`(C1) 등록 313개 / 가맹점 5개 이상 99개를 가맹점 수 순으로
     # 전수 훑었다. 근거와 전체 순위표는 notes/CANDIDATES-CHINESE.md.
@@ -384,8 +385,9 @@ BRANDS = {
     #   샘표      — 같은 성격의 복제·배포 제한. 단 그 조항이 '새미네부엌 커뮤니티'
     #               절 안에 있어 보도자료실에 걸리는지 애매하다. 크롤러 금지 없음.
     #
-    # 등록하지 않는 곳:
-    #   빕스     — robots.txt 가 Googlebot·NaverBot 외 전면 차단
+    # 빕스·뚜레쥬르는 robots 가 Googlebot 외 전면 차단이지만 2026-10-02
+    # 운영자 판단으로 무시하고 2026-10-08 에 등록했다(롯데리아와 같은 칸).
+    # 재검토 기록은 notes/RECHECK-ROBOTS-DINING.md.
     #
     # GS25 는 2026-10-01 에 등록했다. 상품 목록은 여전히 수집 불가다 —
     # gs25.gsretail.com 이 전 경로 본사 SPA 로 리다이렉트되고, 앱(우리동네GS)의 웹 짝인
@@ -672,6 +674,8 @@ SITES = {
     "롤링파스타":   "https://rolling-pasta.com/",
     # /menu/main.do 는 내비가 가리키지만 404 다. 목록 면을 직접 건다.
     "아웃백스테이크하우스": "https://www.outback.co.kr/menu/productList.do?cateIdx=26&menuIdx=43",
+    # ⚠️ ?ssoLoginYN=N 이 없으면 210바이트 리다이렉트 셸만 온다.
+    "빕스":         "https://www.ivips.co.kr/menu?ssoLoginYN=N",
     "한신포차":     "https://hanshinpocha.com/menu/",
     "백스비어":     "https://paiksbeer.com/menu/",
     "새마을식당":   "https://newmaul.com/sub/menu.php",

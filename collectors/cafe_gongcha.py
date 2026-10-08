@@ -83,7 +83,12 @@ from . import base
 from .base import Item
 
 BRAND = "공차"
-SITE = "https://gong-cha.co.kr"
+# ⚠️ `www.` 를 빼면 안 된다. apex(`gong-cha.co.kr`)는 **A 레코드가 없다** —
+# 2026-10-08 실측에서 자기 자신을 가리키는 CNAME 만 있어 DNS 가 안 풀리고
+# `nodename nor servname provided` 로 죽는다. `www.gong-cha.co.kr` 은 200 이다.
+# 그리고 `gongcha.co.kr`(하이픈 없는 쪽)은 공차가 아니다 — 다른 주소로
+# 풀리고 ConnectTimeout 이다. 도메인을 줄여 적지 마라.
+SITE = "https://www.gong-cha.co.kr"
 LIST_URL = f"{SITE}/brand/menu/product"
 DETAIL_URL = f"{SITE}/brand/menu/product_detail"
 FIRST_CATEGORY = "001001"     # 탭 목록을 긁어올 출발점
