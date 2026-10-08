@@ -1,0 +1,39 @@
+# 주소만 훑어보는 점검. 수집은 하지 않는다.
+#
+# 수집이 터지고 나서 원인을 보는 것보다 **미리 아는 게 낫다.** 그리고 러너에서
+# 돌려야 의미가 있다 — 맥(한국 IP)에서는 다 열리는 곳이 여기(Azure 해외)서는
+# 막힌다. 그 차이를 보는 게 이 워크플로의 용건이다.
+#
+# 절대 빨갛게 끝내지 않는다. 해외 IP 차단은 우리가 고칠 수 있는 게 아니라
+# 매일 빨가면 아무도 안 보게 된다 — 실제로 나흘 연속 빨간 로그 안에 진짜
+# 고장 한 건이 묻혀 있었다. 요약에 적어두고 사람이 읽게 한다.
+name: doctor
+
+on:
+  schedule:
+    - cron: "0 20 * * 1"   # UTC 월 20:00 = KST 화 05:00, 수집(06:00) 한 시간 전
+  workflow_dispatch:
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: 주소 점검
+        env:
+          SINSANG_PROXY: ${{ secrets.SINSANG_PROXY }}
+        run: |
+          python collect.py --doctor | tee doctor.txt
+          {
+            echo '```'
+            cat doctor.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
