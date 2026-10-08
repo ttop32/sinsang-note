@@ -5,3 +5,9 @@ __pycache__/
 
 # 조사 에이전트 임시 출력
 all_press.json
+
+# 조사·검증용 일회성 스크립트. 루트의 `_` 로 시작하는 파이썬 파일은 전부
+# 버리는 것들이다(`_probe_tmp.py`·`_measure_tmp.py`). 에이전트가 만들어 쓰고
+# 두고 가는데, `git add -A` 에 쓸려 들어가 두 번 커밋됐다.
+# 진짜 모듈은 collect·rules·taxonomy·doctor·social 뿐이라 걸릴 게 없다.
+/_*.py
