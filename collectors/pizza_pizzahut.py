@@ -39,7 +39,7 @@ import time
 from datetime import datetime, timedelta, timezone
 
 from . import base
-from .base import UA, Item
+from .base import Item
 
 BRAND = "피자헛"
 SITE = "https://www.pizzahut.co.kr"

@@ -22,11 +22,10 @@ menu.php?page=N 으로 페이지 단위 딥링크는 만들 수 있지만 만들
 링크가 오늘 다른 상품을 가리킨다. base.SITES 폴백(/menu/)이 더 정직하다.
 """
 import re
-import httpx
 from selectolax.parser import HTMLParser
 
 from . import base
-from .base import UA, Item
+from .base import Item
 
 BRAND = "메가MGC커피"
 URL = "https://www.mega-mgccoffee.com/menu/menu.php"

@@ -53,7 +53,6 @@ robots.txt: `Allow: /` + `/site_join`·`/login`·`/logout.cm`·`/shop_cart`·`/?
 import html as _html
 import re
 
-from selectolax.parser import HTMLParser
 
 from . import base
 from .base import Item

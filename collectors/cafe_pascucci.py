@@ -76,7 +76,6 @@ robots.txt 는 `Disallow: /cucciman/` 과 `/upload/` 두 줄뿐이다. 상품 �
 (/product/)은 막혀 있지 않고, 사진이 /upload/ 아래다 — 운영자 판단으로 수집하되
 UA 는 위장하지 않는다(이마트24·도미노피자와 같은 칸).
 """
-import re
 import time
 import urllib.parse
 

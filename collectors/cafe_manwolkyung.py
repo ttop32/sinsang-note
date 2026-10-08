@@ -59,7 +59,6 @@ HTML 텍스트를 긁을 필요가 없다.
 
 robots.txt 200, `User-agent:*` / `Allow: /` 뿐이다(2026-10-02 확인).
 """
-import re
 import time
 
 from selectolax.parser import HTMLParser

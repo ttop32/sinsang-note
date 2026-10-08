@@ -99,7 +99,7 @@ import httpx
 from selectolax.parser import HTMLParser
 
 from . import base
-from .base import UA, Item
+from .base import Item
 
 BRAND = "이마트24"
 URL = "https://emart24.co.kr/goods/{section}"

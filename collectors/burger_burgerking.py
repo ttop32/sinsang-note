@@ -33,10 +33,9 @@ www.burgerking.co.kr 은 Vue SPA 라 HTML 에는 아무것도 없다. 대신 biz
 import json
 import re
 
-import httpx
 
 from . import base
-from .base import UA, Item
+from .base import Item
 
 BRAND = "버거킹"
 URL = "https://www.burgerking.co.kr/burgerking/BKR0632.json"

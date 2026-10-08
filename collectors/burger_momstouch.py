@@ -25,13 +25,12 @@ import re
 import time
 from datetime import datetime
 
-import httpx
 from selectolax.parser import HTMLParser
 
 from . import base
 from datetime import timedelta, timezone
 
-from .base import UA, Item
+from .base import Item
 
 KST = timezone(timedelta(hours=9))
 

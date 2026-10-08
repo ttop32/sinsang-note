@@ -76,7 +76,6 @@ base.is_nonfood 가 `텀블러`·`머그`·`우산` 은 잡지만 **`보틀`·`�
 import re
 import time
 
-from selectolax.parser import HTMLParser
 
 from . import base
 from .base import Item

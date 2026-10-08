@@ -30,7 +30,7 @@ import time
 from selectolax.parser import HTMLParser
 
 from . import base
-from .base import UA, Item
+from .base import Item
 
 BRAND = "도미노피자"
 GOODS = "https://www.dominos.co.kr/goods/"

@@ -72,7 +72,7 @@ robots.txt 는 cafe051.com 에 없다(404). 간격은 2초.
 import io
 import re
 import time
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 from PIL import Image
 

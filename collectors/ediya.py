@@ -23,11 +23,10 @@ import time
 from datetime import datetime
 from urllib.parse import quote
 
-import httpx
 from selectolax.parser import HTMLParser
 
 from . import base
-from .base import UA, Item
+from .base import Item
 
 BRAND = "이디야커피"
 BASE = "https://www.ediya.com"

@@ -24,10 +24,9 @@ drink_view.do?product_cd= 의 인라인 drinkData 에만 들어있다. 상품당
 import json
 import re
 import time
-import httpx
 
 from . import base
-from .base import UA, Item
+from .base import Item
 
 BRAND = "스타벅스"
 # 2026-09-30 재확인: www 서브도메인의 A 레코드가 여전히 없다(8.8.8.8·1.1.1.1 양쪽 빈 응답).

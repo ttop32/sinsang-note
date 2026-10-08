@@ -39,7 +39,6 @@ OPTION 칸만 카드가 아니라 `.optgrid` 의 글자 목록이라 `article.it
 보도자료 게시판도 없다(사이트가 `/`·`/menu`·`/store` 세 장뿐이다).
 `/` 의 '신규 오픈' 목록은 **매장** 오픈이라 상품이 아니다 — 담지 않는다.
 """
-import re
 
 from selectolax.parser import HTMLParser
 

@@ -88,7 +88,6 @@
 상품으로 보기 애매하지만, 브랜드가 메뉴판에 올린 것이고 '분모자'·'푸주' 처럼
 신상이 나올 수 있는 자리라 그대로 둔다.
 """
-import re
 import time
 from email.utils import parsedate_to_datetime
 
