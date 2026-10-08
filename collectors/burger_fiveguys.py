@@ -61,6 +61,23 @@ robots.txt 는 `User-agent: * / Disallow:`(= 전면 허용) + `Crawl-delay: 10` 
 
 상품별 주소는 없다. 블록이 `<a>` 가 아니라 본문이라 `url` 은 비우고
 `base.SITES` 폴백(쉐이크 메뉴 페이지)에 맡긴다.
+
+## 두 번째 소스 — 한화갤러리아 보도자료. 2026-10-08 합류, **현재 수확 0건**
+
+한국 법인(에프지코리아)의 모회사 한화갤러리아가 보도자료를 낸다. 공용 모듈이
+`collectors/hanwhagalleria_press.py` 이고 벤슨(`collectors/dessert_benson.py`)과
+같은 목록을 **한 번만** 받아 나눠 쓴다.
+
+🔴 **실측 수확이 0건이다. 그래도 넣는다.** 4년치 144건 중 파이브가이즈 기사가
+18건인데 **전부 매장·실적 이야기**다 — 4·5·6·7·8·9호점 오픈, 용산 상륙, 배달
+개시, 글로벌 TOP5, 일본 진출 MOU, 1주년 행사. **신메뉴 출시 기사가 한 건도
+없다.** 한국 파이브가이즈는 코어 메뉴가 전 세계 공통이고 한국 한정 메뉴는
+위의 '기간 한정' 히어로 블록으로만 알린다는 뜻이고, 이 어댑터가 메뉴판을
+안 긁는 이유와 같은 그림이다. 배선을 미리 깔아 두는 쪽을 택한 건, 이 브랜드가
+한국에서 신메뉴를 내면 **그 소식이 올라올 곳이 거기뿐**이기 때문이다.
+
+중복은 `it.key`(= `base.make_key`) 로 본다. 한정 블록이 **먼저** 들어가고
+보도자료가 뒤에 붙으므로 겹치면 메뉴판 쪽 이름이 남는다.
 """
 import re
 
@@ -68,6 +85,7 @@ from selectolax.parser import HTMLParser
 
 from . import base
 from .base import Item
+from . import hanwhagalleria_press as press
 
 BRAND = "파이브가이즈"
 ROOT = "https://www.fiveguys.co.kr"
@@ -148,4 +166,12 @@ def fetch() -> list[Item]:
         raise RuntimeError(
             f"{API}: 메뉴 카드가 {cards}건뿐이다(기대 {MIN_CARDS}건 이상). "
             "WordPress 템플릿이 바뀌었는지 확인해라")
+
+    # 한화갤러리아 보도자료를 **더하기만** 한다. 메뉴판 쪽이 먼저 들어가 있어서
+    # 이름이 겹치면(`it.key`) 보도자료 건을 버린다 — 정규 표기는 메뉴판이다.
+    for it in press.items(BRAND):
+        if it.key in seen:
+            continue
+        seen.add(it.key)
+        items.append(it)
     return items

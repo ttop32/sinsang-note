@@ -64,6 +64,9 @@ from collectors import maker_spcsamlip
 from collectors import cafe_angelinus, cafe_twosome
 from collectors import cafe_baekeok, cafe_dessert39, snack_yupdduk
 from collectors import bakery_auntieannes, bakery_songsabu
+# 밀도 보강·CJ푸드빌 공용 API. 벤슨은 한화갤러리아 보도자료를 쓴다.
+from collectors import (dessert_benson, korean_cheiljemyunso,
+                        western_theplace)
 from collectors import maker_harim
 # 카페·디저트·분식 중위권 14곳. 배선 가드가 잡아낸 미등록분.
 from collectors import (cafe_bombom,
@@ -182,6 +185,8 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             cafe_baekeok, cafe_dessert39,               # 카페·디저트
             snack_yupdduk,                              # 분식
             bakery_auntieannes, bakery_songsabu,        # 베이커리
+            dessert_benson, western_theplace,           # 디저트·양식
+            korean_cheiljemyunso,
             cafe_bombom, cafe_coffeebay, cafe_hio,      # 카페 중위권
             cafe_manwolkyung,
             dessert_bingdongdaeng, dessert_dallondor,   # 디저트·빙수
