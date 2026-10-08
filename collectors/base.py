@@ -409,6 +409,22 @@ BRANDS = {
     # 했다(UA 는 위장하지 않고 sinsang-note 그대로 밝힌다). 수집하는 곳은 주문 플로우가
     # 아니라 브랜드 메뉴 면 /brand/ria 다 — 매장코드·세트·할인·품절이 섞이지 않는다.
     # 근거는 collectors/burger_lotteria.py docstring 참고.
+
+    # 2026-10-08 미조사 구간 조사분 9곳. 업종별 경계를 숫자로 닫으면서
+    # 나온 것들이다(notes/COVERAGE-BOUNDARY-2026-10-08.md).
+    # 카페에서 파는 것은 전부 CAFE 다 — FRANCHISE 로 넣으면 1단 탭이
+    # '외식' 으로 새고, 실제로 그렇게 샌 곳이 11곳 있었다.
+    "와플샵":       (CAFE, "베이커리"),
+    "베러먼데이":   (CAFE, "커피"),
+    "카페게이트":   (CAFE, "커피"),
+    "커피마마":     (CAFE, "커피"),
+    "컵넛":         (CAFE, "도넛"),          # 던킨과 같은 칸
+    "모스버거":     (FRANCHISE, "햄버거"),
+    "뽕뜨락피자":   (FRANCHISE, "피자"),
+    "피자와치킨의러브레터": (FRANCHISE, "피자"),
+    # 주점이지만 받아오는 건 안주뿐이다. 68건 전수를 is_alcohol 로 재서
+    # 주류 0건을 확인했다(튀김·스낵·탕·마른안주·치킨·볶음·아이스 …).
+    "월간맥주":     (FRANCHISE, "안주"),
 }
 
 
@@ -701,6 +717,17 @@ SITES = {
     "빕스":         "https://www.ivips.co.kr/menu?ssoLoginYN=N",
     "한신포차":     "https://hanshinpocha.com/menu/",
     "백스비어":     "https://paiksbeer.com/menu/",
+    # 2026-10-08 조사분 9곳. 어댑터가 실제로 긁는 곳이 아니라 **사람이 눌러
+    # 들어갈 곳**이다(--doctor 가 이 둘을 따로 센다).
+    "와플샵":       "https://waffleshop.co.kr/menu",
+    "베러먼데이":   "https://www.bettermonday.coffee/menu-new",
+    "카페게이트":   "https://cafegate.co.kr/new",
+    "커피마마":     "https://www.coffeemama.co.kr/?c=4/35",
+    "컵넛":         "https://cupnut.co.kr/product/list?s_category1=5000000",
+    "모스버거":     "http://www.moskorea.kr/menu/list",   # ⚠️ https 없음, mosburger.co.kr 아님
+    "뽕뜨락피자":   "https://www.bbongdderak.com/bbs/board.php?bo_table=11",
+    "피자와치킨의러브레터": "http://loveletterds.com/menu/2200_menu.php",   # ⚠️ https 없음
+    "월간맥주":     "https://www.monthlybeer.co.kr/product/list",
     "새마을식당":   "https://newmaul.com/sub/menu.php",
     "원조쌈밥집":   "https://ssambap.co.kr/menu/",
     "돌배기집":     "https://dolbaegi.com/",

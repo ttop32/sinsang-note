@@ -30,6 +30,13 @@ from collectors import (burger_burgerking, burger_frankburger, burger_momstouch,
                         pizza_pizzahut, pizza_pizzaschool, pizza_pizzamaru,
                         seven, starbucks, toast_isaac)
 from collectors import dongsuh, gs25, lottechilsung, ourhome, sempio
+# 2026-10-08 미조사 구간 조사분. 업종별 경계를 숫자로 닫으면서 나온 9곳이다.
+# 순위표와 불가 사유는 notes/COVERAGE-BOUNDARY-2026-10-08.md 와
+# notes/CANDIDATES-BAKERY3.md · CANDIDATES-CAFE5.md ·
+# CANDIDATES-PIZZA3-FASTFOOD2.md · CANDIDATES-PUB-RETAIL-DRINK.md.
+from collectors import (bakery_waffleshop, burger_mosburger, cafe_bettermonday,
+                        cafe_cafegate, cafe_coffeemama, cafe_cupnut,
+                        pizza_bbongdderak, pizza_loveletter, pub_monthlybeer)
 # 아이스크림·빙수 전수 조사(2026-10-03). 공정위 `아이스크림/빙수`(K1) 가맹점 수
 # 순위를 위에서부터 훑었다. 순위표와 불가 사유는 notes/CANDIDATES-ICECREAM-BINGSU.md.
 from collectors import dessert_palazzo, dessert_yoajung
@@ -241,7 +248,17 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             china_sorimmara, china_lahongbang, china_jjambbonggwan,
             china_hongjjajang, china_mimigwan, china_jjambbong10101,
             china_samsammara,
-            salad_salady]                                            # 샐러드
+            salad_salady,                                            # 샐러드
+            # 2026-10-08 미조사 구간 조사분 9곳. 합류 첫날 화면에 올라오는
+            # 건수를 전건 시뮬레이션으로 확인하고 붙였다 — 553건을 받아
+            # 33건만 올라온다(베러먼데이 0 · 커피마마 5 · 카페게이트 4 ·
+            # 컵넛 3 · 와플샵 3 · 모스버거 4 · 뽕뜨락 3 · 러브레터 4 ·
+            # 월간맥주 7). 메뉴판이 통째로 올라오는 곳은 없다.
+            bakery_waffleshop, cafe_bettermonday, cafe_cafegate,     # 카페 3차
+            cafe_coffeemama, cafe_cupnut,
+            burger_mosburger,                                        # 햄버거 3차
+            pizza_bbongdderak, pizza_loveletter,                     # 피자 3차
+            pub_monthlybeer]                                         # 주점(안주만)
 # 롯데리아·빕스·GS25 는 뺀다. 사유는 base.BRANDS 주석 참고.
 
 # 전일 대비 이 비율 밑으로 떨어지면 부분수집으로 보고 실패 처리한다.
@@ -276,6 +293,26 @@ def brands_of(mod) -> list:
     if hasattr(mod, "BRANDS"):
         return list(mod.BRANDS)
     return [mod.BRAND]
+
+
+def load_tries() -> dict:
+    """어제 각 어댑터가 **몇 건을 받아왔는지**. {라벨: 건수}.
+
+    급감 가드가 쿠우쿠우에서 무한 루프에 빠졌다. 그 어댑터는 보도자료 게시판
+    300일치만 읽는데, 19종이 실린 작년 12월 기사가 창 밖으로 나가며 27 → 9 로
+    줄었다. **소스가 정말 줄어든 것**이지 부분수집이 아니다.
+
+    그런데 가드가 터지면 그 브랜드는 '실패' 라서 **이전 27건이 그대로 유지**된다.
+    그래서 다음 날도 27 → 9 로 보이고 또 터진다. 영원히.
+
+    그래서 '받아온 건수' 를 따로 적어 둔다. 어제도 오늘도 같은 수가 나왔으면
+    소스가 그만큼인 것으로 받아들인다. 하루치 확인을 두는 셈이다.
+    ⚠️ 파서가 **일정하게** 깨진 경우도 이틀이면 통과한다. 완벽한 구분은
+    사람만 할 수 있고, 그때는 두 번 찍힌 경고가 근거가 된다.
+    """
+    if not DATA.exists():
+        return {}
+    return json.loads(DATA.read_text(encoding="utf-8")).get("tried") or {}
 
 
 def load_previous() -> dict:
@@ -427,6 +464,7 @@ def main() -> None:
     prev = load_previous()
     known_brands = {p["brand"] for p in prev.values()}
 
+    was_tried, tried = load_tries(), {}
     products, errors, network, failed_brands = [], [], [], []
     for mod in ADAPTERS:
         names = brands_of(mod)
@@ -448,9 +486,17 @@ def main() -> None:
                     continue
                 raise RuntimeError("0건 수집 — 파서가 깨졌을 가능성")
             before = sum(1 for p in prev.values() if p["brand"] in names)
+            tried[label] = len(items)
             if before >= FLOOR_MIN and len(items) < before * FLOOR:
-                raise RuntimeError(
-                    f"수집량 급감 {before} → {len(items)}건 — 부분수집 의심")
+                # 어제도 꼭 같은 수였으면 소스가 정말 줄어든 것으로 본다.
+                # 안 그러면 실패 → 이전분 유지 → 내일도 같은 급감 으로 영원히
+                # 터진다(쿠우쿠우 27 → 9, 300일 창 밖으로 나간 기사 하나).
+                if was_tried.get(label) == len(items):
+                    print(f"{label}: {before} → {len(items)}건 — 어제도 같은 수였다. "
+                          f"소스가 줄어든 것으로 받아들인다")
+                else:
+                    raise RuntimeError(
+                        f"수집량 급감 {before} → {len(items)}건 — 부분수집 의심")
             print(f"{label}: {len(items)}건")
             products += items
         except Exception as e:                      # 한 브랜드가 죽어도 나머지는 살린다
@@ -523,9 +569,13 @@ def main() -> None:
     gone = [k for k in prev if k not in {r["key"] for r in rows}]
 
     DATA.parent.mkdir(parents=True, exist_ok=True)
+    # `tried` 는 어댑터가 **오늘 받아온 건수**다. 저장된 상품 수와 다르다 —
+    # 실패한 브랜드는 이전분이 그대로 남기 때문이다. 급감 가드가 그 차이에
+    # 걸려 무한 루프에 빠져서 따로 적는다(load_tries 주석 참고).
+    # 실패한 어댑터는 오늘 값이 없으므로 어제 값을 그대로 들고 간다.
     DATA.write_text(json.dumps(
         {"updated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
-         "count": len(rows), "products": rows},
+         "count": len(rows), "tried": was_tried | tried, "products": rows},
         ensure_ascii=False, indent=1), encoding="utf-8")
 
     rules.untrust_bulk_dates(rows)                   # 사이트 개편 재발행분을 날짜에서 뺀다

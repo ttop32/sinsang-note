@@ -70,10 +70,17 @@ def cause(url: str) -> tuple:
     port = u.port or (443 if tls else 80)
 
     # ① 이름부터. 여기서 걸리면 아래는 볼 것도 없다.
-    try:
-        socket.getaddrinfo(host, port)
-    except socket.gaierror as e:
-        return DNS, f"{host} 가 안 풀린다 ({e.strerror or e})"
+    #    한 번은 봐준다 — HTTP 쪽은 재시도하는데 여기만 단판이라, 노랑통닭이
+    #    한 번 못 풀린 걸로 `DNS 없음` 에 올랐다. dig 로 다시 보니 멀쩡했다.
+    #    진짜로 사라진 도메인과 잠깐 못 푼 것은 다르게 다뤄야 한다.
+    for attempt in (0, 1):
+        try:
+            socket.getaddrinfo(host, port)
+            break
+        except socket.gaierror as e:
+            if attempt:
+                return DNS, f"{host} 가 두 번 다 안 풀린다 ({e.strerror or e})"
+            time.sleep(1.5)
 
     # ② 실제로 받아 본다. **어댑터와 똑같은 경로**(base.client — 프록시·UA·
     #    재시도 포함)로 간다. 전엔 소켓으로 직접 악수해 보고 인증서 메시지를
@@ -180,6 +187,11 @@ def endpoints(mod) -> list:
             continue
         if not host or host.startswith("image.") or host.startswith("img"):
             continue
+        # robots.txt 는 **수집 주소가 아니다.** 어댑터 주석이 "robots 를 이렇게
+        # 확인했다" 며 적어 두는 자리라 소스에 흔한데, 경로가 길어서 호스트
+        # 대표로 뽑히기 쉽다. 그게 막혀도 수집과는 상관없다.
+        if url.endswith("/robots.txt"):
+            continue
         # 같은 호스트면 **경로가 긴 쪽**을 쓴다. 루트는 열려 있는데 정작
         # 쓰는 경로가 404 인 경우가 이 레포에 여럿 있었다(BBQ /menu 등).
         if len(url) > len(seen.get(host, "")):
@@ -214,16 +226,37 @@ def tls_handled(mod) -> bool:
 
 
 def sweep(urls: dict, workers: int = 8) -> list:
-    """{이름: 주소} 를 한꺼번에 훑는다. [(이름, 코드, 설명)] 을 돌려준다."""
+    """{이름: 주소} 를 한꺼번에 훑는다. [(이름, 코드, 설명)] 을 돌려준다.
+
+    🔴 **막힌 것은 한꺼번에 두드리기를 끝낸 뒤 혼자 다시 본다.**
+
+    동시에 찌르는 것 자체가 오보를 만든다. 이 레포에서 두 번 겪었다 —
+    유가네는 서버가 동시 접속을 못 견디고 끊었고(혼자 네 번 찌르면 네 번 다
+    200), 노랑통닭은 **맥의 리졸버가 몰린 질의에서 이름을 못 풀었다**(혼자
+    풀면 세 번 다 풀리고 어댑터는 47건을 받아온다).
+
+    둘 다 `cause()` 안에서 한 번 더 걸어 봤지만 소용없었다. 재시도가 **같은
+    burst 안**에 있으면 같은 이유로 또 막힌다. 그래서 실패만 모아 스레드를
+    다 거둔 뒤에 순차로 다시 본다. 실패는 원래 몇 건 안 되니 비싸지 않고,
+    여기서 살아나면 그건 우리 탐침이 만든 오보였다는 뜻이다.
+    """
     import concurrent.futures as cf
-    out = []
+    out = {}
     with cf.ThreadPoolExecutor(workers) as pool:
         jobs = {pool.submit(cause, u): n for n, u in urls.items()}
         for j in cf.as_completed(jobs):
             name = jobs[j]
             try:
-                code, why = j.result()
+                out[name] = j.result()
             except Exception as e:
-                code, why = "", f"{type(e).__name__}: {e}"
-            out.append((name, code, why))
-    return sorted(out)
+                out[name] = ("", f"{type(e).__name__}: {e}")
+
+    for name, (code, why) in list(out.items()):
+        if code in ("", OPEN):
+            continue
+        time.sleep(0.3)
+        try:
+            out[name] = cause(urls[name])
+        except Exception:
+            pass
+    return sorted((n, c, w) for n, (c, w) in out.items())

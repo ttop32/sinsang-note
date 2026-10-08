@@ -71,7 +71,20 @@
    → 이미지 경로 날짜가 최선이고, **묶음 하나가 계절 오차를 달고 올라올 수
      있다는 걸 알고 등록해야 한다.** 등록 담당에게 이 문단을 같이 넘겨라.
 
-## 전건 `is_new=True` 인데 하이오커피는 `None` 인 이유
+## 🔴 배지 100%(14/14) — 연도 분포와 계절 모순 검사
+
+```
+배지 비율   14/14 (100%)   소스가 신제품 전용 칸이라 False 를 줄 항목이 없다
+연도 분포   2026년 5장 100%  (2025년 이전 포스터가 **한 장도 없다** — 칸이
+                             연 단위로 비워진다. 베러먼데이의 4년치 아카이브와
+                             다른 모양이고, 그래서 하한 가드를 낮게 잡았다)
+계절 검사   2026-09-06 (9월) 헤이즐넛 크림 2종        가을 ✓
+            2026-09-06 (9월) 민트 3종                 🔴 **모순**(민트수박스무디=여름)
+            2026-05-12 (5월) 우베 3종                 계절무관
+            2026-03-15 (3월) 허니자몽 4종             봄 ✓
+            2026-01-12 (1월) 딸기슈페너 2종           겨울딸기 ✓
+→ 4묶음 중 1묶음(민트 3종, 3건)이 계절 모순. 아래 §날짜에 사유를 적었다.
+```
 
 같은 업종의 `collectors/cafe_hio.py` 도 '브랜드 전용 신메뉴 탭'을 읽는데 거기는
 `is_new=None` 이고, 그 파일에 "`True` 로 줬더니 합류 첫날 40건이 통째로
@@ -115,9 +128,19 @@ BRAND = "커피마마"
 SITE = "https://www.coffeemama.co.kr"
 LIST_URL = f"{SITE}/?c=4/35"          # 메뉴 > 신메뉴
 
-MIN_SLIDES = 3        # 2026-10-08 실측 5장
+# 🔴 하한을 1장/2건으로 **일부러 낮게** 잡았다. 캡션이 전부 `2026년 신메뉴 - …`
+#    이고 2025년치가 한 장도 없다 — 이 칸은 **연 단위로 비워진다.** 2027년 1월이면
+#    포스터가 한두 장일 게 뻔한데 하한을 실측(5장/14건) 가까이 두면 **진짜 신상이
+#    올라오는 바로 그때 어댑터가 죽어서** 1~3월 내내 0건 + 매일 실패 알림이 난다.
+#    '줄었다'는 판단은 collect 의 전날 대비 이월 로직에 맡긴다.
+MIN_SLIDES = 1
+MIN_ITEMS = 2
 MAX_SLIDES = 30       # 칸이 통째로 바뀌면(예: 메뉴판이 들어오면) 터뜨린다
-MIN_ITEMS = 8         # 2026-10-08 실측 14건
+# 캡션에서 상품명을 못 뽑은 포스터 비율. 이보다 많으면 표기가 통째로 바뀐 것이다.
+SKIP_MAX_RATIO = 0.5
+# 업로드일이 한 날로 뭉쳤는지 보는 가드. 포스터가 이보다 적으면 한 날이 정상이라
+# 끄고 지나간다(연초에 한 장만 남는 칸이다).
+BULK_MIN_SLIDES = 3
 
 _FILE_DATE = re.compile(r"/files/(\d{4})/(\d{2})/(\d{2})/")
 # 묶음 제목과 상품명을 가르는 자리. '2026년 신메뉴 - 우베 3종' 까지가 제목이다.
@@ -170,16 +193,19 @@ def fetch() -> list[Item]:
                 f"{BRAND}: 신메뉴 포스터가 {len(slides)}장이다 — 2026-10-08 실측은 "
                 f"5장(2026년치)이었다. 칸 내용이 바뀌었는지 확인하라")
 
+        bad = []
         for s in slides:
             tit = s.css_first(".visual_tit")
-            group, names = _split(tit.text() if tit else "")
+            caption = _clean(tit.text() if tit else "")
+            _, names = _split(caption)
             if not names:
-                # 캡션에서 상품명을 못 뽑으면 묶음 제목이 상품명으로 올라간다.
-                # 그게 이 어댑터가 낼 수 있는 가장 나쁜 결과라 조용히 넘기지 않는다.
-                raise RuntimeError(
-                    f"{BRAND}: 캡션에서 상품명을 하나도 못 뽑았다 — "
-                    f"{_clean(tit.text() if tit else '')!r}. 표기가 바뀌면 묶음 "
-                    f"제목('우베 3종')이 그대로 상품으로 올라간다")
+                # 캡션에서 상품명을 못 뽑으면 묶음 제목('우베 3종')이 상품명으로
+                # 올라간다 — 이 어댑터가 낼 수 있는 가장 나쁜 결과라 그 장은
+                # 확실히 버린다. 다만 한 장 때문에 나머지를 같이 죽이지는 않는다
+                # (형제 어댑터 cafe_cafegate.py 와 같은 처리). 절반을 넘기면
+                # 아래에서 터뜨린다.
+                bad.append(caption)
+                continue
 
             img = s.css_first(".center_area img")
             # ⚠️ selectolax 의 .attributes.get(k, "") 는 값 없는 속성에 None 을 준다.
@@ -191,19 +217,27 @@ def fetch() -> list[Item]:
                 it = Item(
                     brand=BRAND,
                     name=name,
-                    desc=group,                 # 묶음 제목('우베 3종')
+                    # desc 는 비운다. 이 레포의 desc 는 상품 소개문 자리인데
+                    # 여기서 쓸 수 있는 건 묶음 제목('우베 3종')뿐이다.
                     image=src,
                     category="신메뉴",
                     # 포스터 업로드일이다. 브랜드가 말한 출시일이 아니므로
                     # released_at 은 비운다.
                     uploaded_at=uploaded,
-                    is_new=True,
+                    # ⚠️ 날짜를 못 읽었으면 배지를 주지 않는다. 전건이 is_new 인
+                    #    소스라 날짜가 유일한 안전장치다(하이오 40건 사고).
+                    is_new=True if uploaded else None,
                     url=LIST_URL,
                 )
                 if it.key in seen:
                     continue
                 seen.add(it.key)
                 items.append(it)
+
+    if len(bad) > len(slides) * SKIP_MAX_RATIO:
+        raise RuntimeError(
+            f"{BRAND}: 포스터 {len(slides)}장 중 {len(bad)}장에서 상품명을 못 "
+            f"뽑았다(기대 0장) — 캡션 표기가 통째로 바뀌었다. 버린 캡션: {bad}")
 
     if len(items) < MIN_ITEMS:
         raise RuntimeError(
@@ -219,9 +253,11 @@ def fetch() -> list[Item]:
 
     # 포스터 업로드일이 전건 같은 날이면 사이트 개편 일괄 재업로드다.
     # 그러면 1년치가 통째로 오늘 신상이 된다(컴포즈 2026-06-16 149건 선례).
+    # ⚠️ 포스터가 두 장 이하면 한 날인 게 정상이라(연초) 그때는 재지 않는다.
     days = {i.uploaded_at for i in items if i.uploaded_at}
-    if len(days) < 2:
+    if len(slides) >= BULK_MIN_SLIDES and len(days) < 2:
         raise RuntimeError(
-            f"{BRAND}: 포스터 업로드일이 {days} 한 날뿐이다 — 일괄 재업로드로 "
-            f"보인다. 2026-10-08 실측은 01-12/03-15/05-12/09-06 네 날이었다")
+            f"{BRAND}: 포스터 {len(slides)}장의 업로드일이 {days} 한 날뿐이다 — "
+            f"일괄 재업로드로 보인다. 2026-10-08 실측은 01-12/03-15/05-12/09-06 "
+            f"네 날이었다")
     return items

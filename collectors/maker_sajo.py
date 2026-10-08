@@ -74,8 +74,46 @@ CI 이미지가 밀려 붙은 것으로 보인다. alt 를 믿었으면 **펫푸
 
 신제품 게시판은 **두 달 넘게 사조대림 글이 없고 전체가 7건**이다. 같은 기간
 뉴스 보드에는 캠핑어묵탕·사각어묵·로얄크랩·간장소스·쥐포후라이드·골드 비엔나가
-들어와 있다. → **5건 → 11건.** (신세계그룹 뉴스룸으로 신세계푸드를 5→12 로
-올린 것과 같은 수법이다.)
+들어와 있다. → **보강 전 5건 → 후 11건.** (신세계그룹 뉴스룸으로 신세계푸드를
+5→12 로 올린 것과 같은 수법이다.)
+
+**회귀 확인 (2026-10-08)**: `_fetch_new_product()` 단독 = **5건 그대로**
+(해표 더 고소한 김 · 해표 순창궁 태양초 고추장 · 하우스&펍 소시지 ·
+쟌슨빌 베다위드체다 · 바로먹는 어묵면). 이름·날짜·URL 전부 보강 전과 같다.
+이 모듈은 브랜드가 `사조대림` 하나뿐이라(`BRANDS` 없음) 같이 담긴 다른 브랜드가
+줄어들 자리도 없다.
+
+## 배지·날짜 실측 (2026-10-08. 숫자로 박아 둔다)
+
+**배지 = 100% (11/11 `is_new=True`). 정상이다.**
+두 보드 다 카탈로그가 아니다 — 하나는 **신제품 전용 게시판**이고 하나는
+**'출시' 라고 쓴 기사만 골라낸 것**이다. 카탈로그 전수를 신상으로 만든 것과
+구분하려면 **'집히는 비율'** 을 봐야 한다 —
+
+    뉴스 보드 10페이지 57행 → 창(300일) 안에서
+      주어가 '쓰는 계열사' ……………………… 20행   ← 분모(사조대림 18 + 사조씨푸드 2)
+      그중 역필터(_SKIP 류)가 버림 ……………  2건   ← 선물세트 2
+      그 밖의 이유로 떨어짐 ……………………  8건   ← '출시' 동사 없음(수상·점유율·
+                                                 가격인하·캐릭터 공개…) + 리뉴얼
+                                                 교차검증 1건(`한알레시피`)
+      제목이 상품으로 집힘 ……………………… 10건   ← 분자. **50.0%**
+      그중 신제품 게시판과 겹침 ……………………  4건 (토큰 비교로 병합)
+      리뉴얼 교차검증에 막힘 ………………………  0건 (`한알레시피` 는 역필터 전에 걸림)
+      → 최종으로 보탠 건 **6건**. 5 + 6 = **11건**
+
+    ⚠️ **분모·분자를 헷갈리지 마라.** 가드가 보는 건 **중복 제거 전 10건**이다.
+       "6건" 은 병합까지 끝난 최종값이라 가드 수치가 아니다. 2026-10-08 검수가
+       이 혼동을 잡아냈다(노트에 6/17=35.3% 로 잘못 적혀 있었다).
+
+**날짜 = 100% (11/11 `released_at`). 11건 날짜가 전부 다르다.**
+57행 전체에도 같은 날짜가 2건 넘게 몰린 자리가 없다 — 일괄 등록 지문이 없다.
+⚠️ **워드프레스가 아니다.** `p.date` 하나뿐이고 `modified` 류 필드가 없어서
+   신세계(`date`≠`modified` 61%, 최대 541일)·피자스쿨(`modified` 안의 2015년
+   치즈피자) 류 함정이 생길 자리가 없다.
+
+⚠️ **`search=` 류 검색으로 거르지 않았다.** 그룹 보드를 본문 검색으로 거르면
+   남의 기사가 통째로 딸려 온다(신세계 뉴스룸 선례). 여기는 **제목 주어 접두**
+   한 관문으로만 가르고, 본문은 아예 받지 않는다(목록이 다 준다).
 
 ### 뉴스 보드 — 마크업은 신제품 게시판과 **같다**
 
@@ -161,8 +199,23 @@ NEWS_VIEW = SITE + "/2026/product/sajo_news_view.asp"
 NEWS_MAX_PAGES = 14   # 6건×14 = 84건. 2026-10-08 현재 57건(10페이지). 상한.
 NEWS_DAYS = 300       # 이보다 오래된 기사는 신제품 섹션에 쓸모가 없다.
 # 뉴스 보드에서 창 안 '쓰는 계열사' 행 가운데 상품으로 집히는 비율의 상한.
-# 2026-10-08 실측 6/17 = 35.3%. 역필터가 풀리면 수상·실적까지 상품이 된다.
-NEWS_MAX_PICK_RATIO = 0.70
+# 2026-10-08 실측 **10/20 = 50.0%** (중복 제거 **전** 값이다 — 가드가 보는 게 그거다).
+# ⚠️ 이 가드는 **변별력이 약하다.** 2026-10-08 검수가 실측으로 보였다 — 역필터를
+#    통째로 비워도 비율이 **65%(13/20)** 에 그친다(2026-10-08 실측. `_SKIP`·
+#    `_NEWS_SKIP`·`_NEWS_TAIL` 을 `()` 로 두고 재실행). 뉴스 보드에 '출시' 가
+#    들어간 비상품 기사가 구조적으로 적어서다.
+#    그래서 ① 임계를 0.70 → **0.58** 로 내려 그 최악(65%)이 실제로 걸리게 했고,
+#    ② 비율과 별개로 **역필터가 몇 건이나 걸렀는지**를 직접 세는 가드를 더했다
+#    (`NEWS_MIN_FILTERED`). 비율만 믿지 마라.
+NEWS_MAX_PICK_RATIO = 0.58
+# 창 안 '쓰는 계열사' 행이 이만큼 있는데 역필터가 **한 건도** 안 걸렀다면 리스트가
+# 비었거나 매칭이 깨진 것이다.
+# 2026-10-08 실측: 20행 중 역필터(`_SKIP`·`_NEWS_SKIP`·`_NEWS_TAIL`)가 **2건**을
+# 걸렀다(선물세트 2건). 나머지 8건은 역필터가 아니라 **'출시' 동사가 없어서**
+# 떨어진다(수상·점유율·가격 인하·캐릭터 공개…). 그래서 비율 가드가 둔한 것이다 —
+# 이 보드는 애초에 '출시' 가 붙은 비상품 기사가 적다. 2 는 얇은 신호지만
+# **역필터가 통째로 비면 0 이 되는** 자리라 회귀 탐지용으로는 제 몫을 한다.
+NEWS_MIN_ROWS_FOR_FILTER_CHECK = 10
 
 # 소비자 식품을 내는 계열사만. 제목의 `[...]` 접두로 가른다(alt 는 못 믿는다).
 _AFFILIATES = {"사조대림", "사조오양", "사조씨푸드", "사조산업", "사조원"}
@@ -243,6 +296,18 @@ def _news_affiliate(title: str) -> str:
     return m.group(1) if m else ""
 
 
+def _news_filtered(head: str, tail: str) -> bool:
+    """역필터(`_SKIP`·`_NEWS_SKIP`·`_NEWS_TAIL`)가 이 기사를 버리는가.
+
+    `_news_pick` 안에 두지 않고 따로 뺀 이유는 **몇 건을 걸렀는지 세기 위해서**다.
+    `fetch()` 의 가드 ③ 이 그 수를 본다 — 비율 가드만으로는 역필터가 통째로
+    풀려도 안 터진다는 것이 2026-10-08 검수에서 실측으로 드러났다(docstring §가드).
+    """
+    return (any(w in head for w in _SKIP)
+            or any(w in head for w in _NEWS_SKIP)
+            or any(w in tail for w in _NEWS_TAIL))
+
+
 def _news_pick(title: str) -> str:
     """뉴스 보드 제목에서 상품명을 뽑는다. 상품을 특정 못 하면 빈 문자열.
 
@@ -261,9 +326,7 @@ def _news_pick(title: str) -> str:
     if not verb:
         return ""
     head, tail = body[:verb.start()], body[verb.end():]
-    if any(w in head for w in _SKIP) or any(w in head for w in _NEWS_SKIP):
-        return ""
-    if any(w in tail for w in _NEWS_TAIL):
+    if _news_filtered(head, tail):
         return ""
     q = list(_QUOTED.finditer(head))
     seg = head[q[-1].start():] if q else head
@@ -393,6 +456,13 @@ def _fetch_new_product() -> tuple[list[Item], list]:
                 affiliates.add(aff)
                 if aff not in _AFFILIATES:
                     continue
+                # ⚠️ 날짜 없는 `is_new=True` 는 rules.is_fresh() 의 '날짜 없는
+                #    is_new' 분기를 타서 STALE(90일) 동안 무조건 화면에 올라간다
+                #    (농심 1975년 복각 사고). 2026-10-08 검수가 뉴스 보드에만
+                #    이 가드가 있고 여기엔 없는 **비대칭**을 잡아냈다. 지금은
+                #    7행 전부 날짜가 있지만 사이트가 칸을 비우면 그대로 샌다.
+                if not released:
+                    continue
                 name = _pick(title)
                 if not name:
                     continue
@@ -433,6 +503,7 @@ def _fetch_news(blocked: set) -> tuple[list[Item], dict]:
     items: list[Item] = []
     rows_seen = 0
     ours = 0                      # 창 안 '쓰는 계열사' 행 수
+    filtered = 0                  # 그중 역필터가 버린 행 수. 가드 ③ 의 재료다
     subjects: set = set()         # 가드 진단용
     with base.client() as c:
         for page in range(1, NEWS_MAX_PAGES + 1):
@@ -460,6 +531,12 @@ def _fetch_news(blocked: set) -> tuple[list[Item], dict]:
                 if aff not in _AFFILIATES:
                     continue
                 ours += 1
+                body = title[_NEWS_LEAD.match(" ".join(title.split())).end():]
+                v = None
+                for mv in _VERB.finditer(body):
+                    v = mv
+                if v and _news_filtered(body[:v.start()], body[v.end():]):
+                    filtered += 1
                 name = _news_pick(title)
                 if not name:
                     continue
@@ -480,7 +557,8 @@ def _fetch_news(blocked: set) -> tuple[list[Item], dict]:
             if len(rows) < 6:        # 마지막 페이지
                 break
 
-    return items, {"rows": rows_seen, "ours": ours, "subjects": subjects}
+    return items, {"rows": rows_seen, "ours": ours, "filtered": filtered,
+                   "subjects": subjects}
 
 
 def fetch() -> list[Item]:
@@ -509,16 +587,24 @@ def fetch() -> list[Item]:
             f"SAJO 뉴스에서 쓸 수 있는 계열사 행이 0건이다(읽은 행 "
             f"{diag['rows']}). 읽힌 주어={sorted(diag['subjects'])} — 제목의 "
             f"'<계열사>,' 접두 형식이 바뀌었는지 확인하라 "
-            f"(2026-10-08 실측 57행 중 사조대림 17행)")
+            f"(2026-10-08 실측 57행 중 쓰는 계열사 20행)")
     # ② 반대쪽. 역필터가 풀리면 수상·실적·급식 기사까지 상품이 된다.
     ratio = len(extra) / diag["ours"]
     if ratio > NEWS_MAX_PICK_RATIO:
         raise ValueError(
             f"SAJO 뉴스: 쓰는 계열사 {diag['ours']}행 중 {len(extra)}건"
             f"({ratio:.0%})이 상품으로 집혔다 — 기대 "
-            f"{NEWS_MAX_PICK_RATIO:.0%} 이하(2026-10-08 실측 6/17=35%). "
+            f"{NEWS_MAX_PICK_RATIO:.0%} 이하(2026-10-08 실측 10/20=50%). "
             f"_NEWS_SKIP 이 풀렸는지 확인하라")
-    # ③ 보강이 통째로 죽으면 원래 5건만 남는데 그건 '정상'처럼 보인다.
+    # ③ 비율만으로는 모자란다(상수 주석 참고). 역필터가 **몇 건을 걸렀는지**를
+    #    직접 센다. 리스트가 비거나 매칭이 깨지면 여기서 먼저 걸린다.
+    if (diag["ours"] >= NEWS_MIN_ROWS_FOR_FILTER_CHECK
+            and not diag["filtered"]):
+        raise ValueError(
+            f"SAJO 뉴스: 쓰는 계열사 {diag['ours']}행인데 역필터가 한 건도 "
+            f"거르지 않았다(2026-10-08 실측 20행 중 2건 걸렀다). "
+            f"_SKIP·_NEWS_SKIP·_NEWS_TAIL 이 비었거나 매칭이 깨졌는지 확인하라")
+    # ④ 보강이 통째로 죽으면 원래 5건만 남는데 그건 '정상'처럼 보인다.
     if len(items) <= own:
         raise ValueError(
             f"사조대림: 뉴스 보드가 보탠 상품이 0건이다(신제품 게시판 {own}건 "
