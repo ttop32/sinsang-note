@@ -28,9 +28,20 @@
 ⚠️ **응답이 무겁다.** 행마다 상세 본문 HTML(`Remark`)이 통째로 들어 있어 한 페이지가
 25KB~2.3MB 다. `rows` 를 키우면 수십 MB 가 된다. **10건씩 2페이지만 받는다.**
 
-⚠️ **`sc_type`/`sc_value` 서버 검색은 쓰지 않는다.** 임의 값을 넣으면 응답이
-`{"result":"no","errtxt":"키워드 'like' 근처의 구문이 잘못되었습니다. …"}` 로 **DB 오류
-문구를 그대로 돌려준다.** 주입 가능성이 보이는 자리라 더 건드리지 않았다. 목록만 받는다.
+## 🔴 서버 검색은 쓰지 않는다 — 그리고 그쪽 오류 문구를 우리 로그에 남기지 않는다
+
+`sc_type`/`sc_value` 에 임의 값을 넣으면 응답이 `{"result":"no","errtxt":"…"}` 로
+**저쪽 DB 오류 문구를 그대로 돌려준다.** 주입 가능성이 보이는 자리라 **더 찔러보지
+않았고, 앞으로도 안 찌른다.** 확인에 쓴 값이 무엇이었는지도 여기 적지 않는다.
+
+지키는 방법은 둘이다.
+  ① `_PARAMS` 를 상수로 못박고 `sc_value` 가 비었는지 매번 확인한다. 나중에 누가
+     "검색으로 걸러오면 편하겠다" 며 채워 넣는 걸 코드가 막는다.
+  ② 실패해도 **`errtxt` 를 로그에 찍지 않는다.** 이 레포의 수집 로그는 공개
+     저장소의 Actions 로그다. 그대로 올리면 남의 DB 내부 사정을 우리가 퍼뜨리는
+     꼴이 된다. 우리가 알 건 '검색이 아닌 목록 호출이 실패했다' 까지다.
+
+목록 호출(`sc_value` 빈 값)은 정상적으로 `result:"ok"` 를 준다. 우리가 쓰는 건 그것뿐이다.
 
 ## 🔴 제목 거르기 — 여기가 이 어댑터의 전부다
 
@@ -99,6 +110,13 @@ ROWS = 10
 
 # 신제품 공지가 연 2건꼴이라 **0건인 날이 정상**이다. collect 의 0건 가드를 끈다.
 ALLOW_EMPTY = True
+
+# 목록 호출에 쓰는 값. **이대로 고정이다.**
+# `sc_type`/`sc_value` 는 절대 채우지 않는다 — 윗글 '서버 검색은 쓰지 않는다' 참고.
+# 여기를 채우면 저쪽 DB 오류를 끌어내게 되고, 그건 우리가 할 일이 아니다.
+_PARAMS = {"ftype": "list_adm", "rows": ROWS, "opt_ev": "",
+           "sc_type": "", "sc_value": "", "opt_s": "2",
+           "Isnotice": 1, "Ordtype": 2}
 
 # ① 출시를 말해야 한다
 _LAUNCH = re.compile(r"출시")
@@ -169,16 +187,22 @@ def fetch() -> list[Item]:
         for page in range(1, PAGES + 1):
             if page > 1:
                 time.sleep(DELAY)
-            r = base.retry(lambda page=page: c.post(LIST, data={
-                "ftype": "list_adm", "page": page, "rows": ROWS,
-                "opt_ev": "", "sc_type": "", "sc_value": "",
-                "opt_s": "2", "Isnotice": 1, "Ordtype": 2}))
+            if _PARAMS["sc_type"] or _PARAMS["sc_value"]:
+                raise RuntimeError(
+                    "서버 검색 파라미터가 채워져 있다. 이 게시판은 임의 검색어에 "
+                    "DB 오류를 그대로 돌려주는 자리라 목록만 받기로 한 곳이다 "
+                    "— 모듈 주석 '서버 검색은 쓰지 않는다' 참고")
+            r = base.retry(lambda page=page: c.post(LIST,
+                                                    data=_PARAMS | {"page": page}))
             r.raise_for_status()
             body = r.json()
             if body.get("result") != "ok":
+                # ⚠️ `errtxt` 를 찍지 않는다. 저쪽 DB 오류 문구가 그대로 담겨
+                #    오는데, 우리 수집 로그는 공개 저장소의 Actions 로그다.
+                #    우리가 알 건 '목록 호출이 실패했다' 까지다.
                 raise RuntimeError(
-                    f"{LIST} page={page}: result={body.get('result')} "
-                    f"errtxt={(body.get('errtxt') or '')[:120]}")
+                    f"{LIST} page={page}: result={body.get('result')} — "
+                    f"목록 호출이 거절됐다(응답 본문은 일부러 안 찍는다)")
 
             rows = body.get("rows") or []
             rows_seen += len(rows)
