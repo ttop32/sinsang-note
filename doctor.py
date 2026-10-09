@@ -24,6 +24,10 @@ DOWN = "서버오류"     # 저쪽 5xx. 우리 쪽 문제가 아니고 기다리
 MUTE = "무응답"       # 연결은 시도되는데 답이 없다
 OPEN = "열림"         # 사이트는 열린다 → 어댑터·파서 문제다
 
+# 이만큼 작은 200 은 차단 안내로 본다. 러너에서 막힌 곳들이 763~1610B 였고
+# 실제로 열리는 곳은 30KB 부터였다. 근거는 아래 cause() 주석.
+SMALL_BYTES = 2000
+
 # 우리가 고칠 수 있는 것. 이것만 수집을 빨갛게 만든다.
 OURS = (TLS, OPEN)
 
@@ -129,6 +133,24 @@ def cause(url: str) -> tuple:
         return DOWN, f"{r.status_code} — 저쪽 장애"
     if r.status_code >= 400:
         return OPEN, f"{r.status_code} — 주소가 바뀐 듯하다"
+
+    # 🔴 200 이라고 열린 게 아니다. 2026-10-09 러너 로그에서 처음 드러났다 —
+    # 열두 곳이 `[열림]` 으로 찍혀 **우리 잘못으로 분류됐는데**, 본문이
+    # 763·775·783·785·786·794B 와 1598·1600·1610B 였다. 같은 크기가 반복되는
+    # 건 차단 안내 두 종류를 돌려주고 있다는 뜻이고, 실제로 열리는 곳들은
+    # 30KB·79KB·145KB 였다. 해외 IP 를 200 으로 막은 것이다.
+    #
+    # 이 레포가 여러 번 당한 '200 ≠ 성공' 의 또 다른 얼굴이다(탕화쿵푸 차단
+    # 안내 200, 모리샤브 soft-404, 삼다수 87B meta refresh, 머거본 240B alert).
+    # 해외에서 몸통이 이만큼 작으면 차단으로 본다. 한국에서 작으면 그건
+    # 주소가 틀린 쪽이라 그대로 우리 몫으로 둔다.
+    if len(r.content) < SMALL_BYTES:
+        loc = egress()
+        if loc not in ("KR", "??"):
+            return GEO, (f"{r.status_code} 인데 본문이 {len(r.content)}B뿐이다 — "
+                         f"egress 가 {loc} 다. 차단 안내로 본다")
+        return OPEN, (f"{r.status_code} {len(r.content)}B — 너무 작다. "
+                      f"빈 셸이거나 주소가 틀렸을 수 있다")
     return OPEN, f"{r.status_code} {len(r.content)}B — 사이트는 열린다"
 
 
