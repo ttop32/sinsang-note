@@ -439,6 +439,7 @@ BRANDS = {
     # 신메뉴 공지가 1~3년에 한 번꼴인 게시판형. 0건인 날이 정상이다.
     "킹스타피자":   (FRANCHISE, "피자"),
     "티엠티피자":   (FRANCHISE, "피자"),
+    "템포커피":     (CAFE, "커피"),
 }
 
 
@@ -751,6 +752,7 @@ SITES = {
     "엘리팝":       "http://www.alleypub.co.kr/new/board/index.php?board=menu_01&sca=new",   # ⚠️ https 없음
     "킹스타피자":   "http://kingstarpizza.co.kr/html/brandstory/notice.php",   # ⚠️ https 없음
     "티엠티피자":   "https://tmtpizza.com/news",
+    "템포커피":     "http://tempocoffee.co.kr/web/cop/bbsWeb/selectBoardList.do?bbsId=BBSMSTR_000000000191",   # ⚠️ https 거부
     "새마을식당":   "https://newmaul.com/sub/menu.php",
     "원조쌈밥집":   "https://ssambap.co.kr/menu/",
     "돌배기집":     "https://dolbaegi.com/",

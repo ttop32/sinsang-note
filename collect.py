@@ -40,7 +40,8 @@ from collectors import (bakery_waffleshop, burger_mosburger, cafe_bettermonday,
 # 2026-10-14 미조사 구간 2차분. 순위표·불가 사유는 notes/CANDIDATES-BAKERY4.md ·
 # CANDIDATES-CAFE6.md · CANDIDATES-PUB2.md.
 from collectors import (bakery_soopssokhodu, cafe_cafe16oz, cafe_quad, cafe_valdos,
-                        cafe_vienna, pizza_kingstar, pizza_tmt, pub_alleypub)
+                        cafe_tempo, cafe_vienna, pizza_kingstar, pizza_tmt,
+                        pub_alleypub)
 # 아이스크림·빙수 전수 조사(2026-10-03). 공정위 `아이스크림/빙수`(K1) 가맹점 수
 # 순위를 위에서부터 훑었다. 순위표와 불가 사유는 notes/CANDIDATES-ICECREAM-BINGSU.md.
 from collectors import dessert_palazzo, dessert_yoajung
@@ -268,7 +269,8 @@ ADAPTERS = [mega, starbucks, ediya, cafe_sulbing, cafe_paikdabang,   # 카페
             bakery_soopssokhodu, cafe_valdos, cafe_cafe16oz,         # 카페·베이커리 4차
             cafe_quad, cafe_vienna,
             pub_alleypub,                                            # 주점 2차(안주만)
-            pizza_kingstar, pizza_tmt]                               # 피자 4차(공지 게시판형)
+            pizza_kingstar, pizza_tmt,                               # 피자 4차(공지 게시판형)
+            cafe_tempo]                                              # 카페 긴 꼬리(공지 게시판형)
 # 롯데리아·빕스·GS25 는 뺀다. 사유는 base.BRANDS 주석 참고.
 
 # 전일 대비 이 비율 밑으로 떨어지면 부분수집으로 보고 실패 처리한다.
