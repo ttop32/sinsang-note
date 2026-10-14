@@ -425,6 +425,17 @@ BRANDS = {
     # 주점이지만 받아오는 건 안주뿐이다. 68건 전수를 is_alcohol 로 재서
     # 주류 0건을 확인했다(튀김·스낵·탕·마른안주·치킨·볶음·아이스 …).
     "월간맥주":     (FRANCHISE, "안주"),
+
+    # 2026-10-14 미조사 구간 2차분 6곳. 사이트·보도자료가 스스로 '숲속호두' 라
+    # 불러서 그 이름을 쓴다(프차몰 표기는 숲속호두과자).
+    "숲속호두":     (CAFE, "베이커리"),
+    "발도스커피":   (CAFE, "커피"),
+    "카페16온스":   (CAFE, "커피"),
+    "쿼드커피":     (CAFE, "커피"),
+    "비엔나커피하우스": (CAFE, "커피"),
+    # 주점이지만 안주만 받는다. 주류 칸(sca=10)은 아예 안 열고, 받은 44건을
+    # is_alcohol 로 재서 0건을 확인했다.
+    "엘리팝":       (FRANCHISE, "안주"),
 }
 
 
@@ -728,6 +739,13 @@ SITES = {
     "뽕뜨락피자":   "https://www.bbongdderak.com/bbs/board.php?bo_table=11",
     "피자와치킨의러브레터": "http://loveletterds.com/menu/2200_menu.php",   # ⚠️ https 없음
     "월간맥주":     "https://www.monthlybeer.co.kr/product/list",
+    # 2026-10-14 조사분 6곳.
+    "숲속호두":     "https://soopssokhodu.com/?module=Goods&action=SiteGoods&sMode=SELECT_FORM&sCurrSortCd=001",
+    "발도스커피":   "http://valdos.co.kr/bbs/bbs/board.php?bo_table=m31",   # ⚠️ https 없음
+    "카페16온스":   "https://cafe16oz.com/bbs/m01.php",
+    "쿼드커피":     "https://www.quadcoffee.co.kr/board/notice",
+    "비엔나커피하우스": "https://viennacoffeehouse.co.kr/notice",
+    "엘리팝":       "http://www.alleypub.co.kr/new/board/index.php?board=menu_01&sca=new",   # ⚠️ https 없음
     "새마을식당":   "https://newmaul.com/sub/menu.php",
     "원조쌈밥집":   "https://ssambap.co.kr/menu/",
     "돌배기집":     "https://dolbaegi.com/",
