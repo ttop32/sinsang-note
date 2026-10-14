@@ -436,6 +436,9 @@ BRANDS = {
     # 주점이지만 안주만 받는다. 주류 칸(sca=10)은 아예 안 열고, 받은 44건을
     # is_alcohol 로 재서 0건을 확인했다.
     "엘리팝":       (FRANCHISE, "안주"),
+    # 신메뉴 공지가 1~3년에 한 번꼴인 게시판형. 0건인 날이 정상이다.
+    "킹스타피자":   (FRANCHISE, "피자"),
+    "티엠티피자":   (FRANCHISE, "피자"),
 }
 
 
@@ -746,6 +749,8 @@ SITES = {
     "쿼드커피":     "https://www.quadcoffee.co.kr/board/notice",
     "비엔나커피하우스": "https://viennacoffeehouse.co.kr/notice",
     "엘리팝":       "http://www.alleypub.co.kr/new/board/index.php?board=menu_01&sca=new",   # ⚠️ https 없음
+    "킹스타피자":   "http://kingstarpizza.co.kr/html/brandstory/notice.php",   # ⚠️ https 없음
+    "티엠티피자":   "https://tmtpizza.com/news",
     "새마을식당":   "https://newmaul.com/sub/menu.php",
     "원조쌈밥집":   "https://ssambap.co.kr/menu/",
     "돌배기집":     "https://dolbaegi.com/",
