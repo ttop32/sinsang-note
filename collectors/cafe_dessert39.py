@@ -79,6 +79,8 @@ from .base import Item
 
 BRAND = "디저트39"
 SITE = "https://dessert39.com"
+_HANGUL = re.compile(r"[가-힣]")
+LATIN_MAX_RATIO = 0.1   # 한글판 실측 0%, 해외 IP 영문판 44%
 PAGES = (
     ("menu_beverage", "음료"),
     ("menu_dessert", "디저트"),
@@ -171,4 +173,11 @@ def fetch() -> list[Item]:
     # 날짜가 통째로 사라지면 사진 파일명 규칙이 바뀐 것이다. 조용히 넘기지 않는다.
     if not any(it.uploaded_at for it in items):
         raise RuntimeError("디저트39 날짜가 0건 — 사진 파일명의 epoch 규칙이 바뀌었다")
+    # 🔴 해외 IP 에서는 영문판이 온다(base.GeoVariant 주석). 한글판은 한글 없는 이름이
+    # 0/461 이고 러너가 받은 영문판은 193/441(44%) 였다. 1할을 넘으면 다른 판으로 본다.
+    # 그대로 저장하면 실행 장소가 바뀔 때마다 상품 수백 개가 갈아엎어진다.
+    latin = sum(1 for it in items if not _HANGUL.search(it.name))
+    if latin > len(items) * LATIN_MAX_RATIO:
+        raise base.GeoVariant(
+            f"디저트39 이름 {len(items)}개 중 {latin}개가 한글이 없다 — 영문판을 받았다")
     return items

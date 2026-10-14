@@ -515,6 +515,12 @@ def main() -> None:
             failed_brands += names
             # 예외 문자열만으로는 못 가른다. 주소를 한 번 더 찔러 원인에
             # 이름을 붙인다(해외차단·DNS·TLS·열림). 빨갛게 할지는 그 다음이다.
+            # 나라별로 다른 판을 받은 건 어댑터가 스스로 안다. 주소를 다시 찌를
+            # 필요도 없고(찌르면 200 이 와서 '열림' 으로 오판한다) 우리 잘못도 아니다.
+            if isinstance(e, base.GeoVariant):
+                network.append(f"[해외판] {label}: {e}")
+                print(f" ~ {label} 못 닿음 [해외판] {e}")
+                continue
             code, why = doctor.of(names, e)
             tag = f"[{code}] " if code else ""
             if code in doctor.OURS or (not code and not blocked(e)):
