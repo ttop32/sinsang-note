@@ -5,56 +5,152 @@
  <id>https://ttop32.github.io/sinsang-note/</id>
  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/"/>
  <link rel="self" type="application/atom+xml" href="https://ttop32.github.io/sinsang-note/feed.xml"/>
- <updated>2026-10-21T01:23:44Z</updated>
+ <updated>2026-10-22T01:45:03Z</updated>
  <author><name>신상노트</name></author>
  <rights>상품 정보와 이미지의 저작권은 각 브랜드에 있습니다.</rights>
  <entry>
-  <title>허니윙콤비</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%ED%97%88%EB%8B%88%EC%9C%99%EC%BD%A4%EB%B9%84/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Honey%20Wing%20Combo.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%ED%97%88%EB%8B%88%EC%9C%99%EC%BD%A4%EB%B9%84/</id>
+  <title>샤인머스캣 샌드</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%8C%8C%EB%A6%AC%EB%B0%94%EA%B2%8C%EB%9C%A8-%EC%83%A4%EC%9D%B8%EB%A8%B8%EC%8A%A4%EC%BA%A3-%EC%83%8C%EB%93%9C/"/>
+  <link rel="enclosure" type="image/png" href="https://d2afncas1tel3t.cloudfront.net/wp-content/uploads/2026/10/%EC%83%A4%EC%9D%B8%EB%A8%B8%EC%8A%A4%EC%BA%A3%EC%83%8C%EB%93%9C_%ED%8F%AC%EC%9E%A5%EC%B5%9C%EC%A2%85.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/%ED%8C%8C%EB%A6%AC%EB%B0%94%EA%B2%8C%EB%9C%A8-%EC%83%A4%EC%9D%B8%EB%A8%B8%EC%8A%A4%EC%BA%A3-%EC%83%8C%EB%93%9C/</id>
   <published>2026-10-21T00:00:00Z</published>
   <updated>2026-10-21T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살(다리살)의 새로운 조합으로 즐기는, 달콤바삭한 허니윙콤비[날개(윙)+정육(다리살), 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Honey%20Wing%20Combo.png&quot; alt=&quot;허니윙콤비&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살(다리살)의 새로운 조합으로 즐기는, 달콤바삭한 허니윙콤비[날개(윙)+정육(다리살), 조리 전 중량 700g]&lt;/p&gt;</content>
+  <author><name>파리바게뜨</name></author>
+  <category term="파리바게뜨"/>
+  <summary type="text">달콤하고 산뜻한 샤인머스캣과 상큼한 요거트 크림이 어우러진 과일샌드</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://d2afncas1tel3t.cloudfront.net/wp-content/uploads/2026/10/%EC%83%A4%EC%9D%B8%EB%A8%B8%EC%8A%A4%EC%BA%A3%EC%83%8C%EB%93%9C_%ED%8F%AC%EC%9E%A5%EC%B5%9C%EC%A2%85.png&quot; alt=&quot;샤인머스캣 샌드&quot;&gt;&lt;/p&gt;&lt;p&gt;달콤하고 산뜻한 샤인머스캣과 상큼한 요거트 크림이 어우러진 과일샌드&lt;/p&gt;</content>
  </entry>
  <entry>
-  <title>허니옥수수윙콤비</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%ED%97%88%EB%8B%88%EC%98%A5%EC%88%98%EC%88%98%EC%9C%99%EC%BD%A4%EB%B9%84/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Honey%20Corn%20Wing%20Combo.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%ED%97%88%EB%8B%88%EC%98%A5%EC%88%98%EC%88%98%EC%9C%99%EC%BD%A4%EB%B9%84/</id>
+  <title>아카페라 심플리 오크 아메리카노</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EA%B7%B8%EB%A0%88-%EC%95%84%EC%B9%B4%ED%8E%98%EB%9D%BC-%EC%8B%AC%ED%94%8C%EB%A6%AC-%EC%98%A4%ED%81%AC-%EC%95%84%EB%A9%94%EB%A6%AC%EC%B9%B4%EB%85%B8/"/>
+  <link rel="enclosure" type="image/jpeg" href="https://www.bing.co.kr/upload/ckeditor/2026/10/9a78d8ad-17fa-47e2-b13c-9022a51e7848"/>
+  <id>https://ttop32.github.io/sinsang-note/p/%EB%B9%99%EA%B7%B8%EB%A0%88-%EC%95%84%EC%B9%B4%ED%8E%98%EB%9D%BC-%EC%8B%AC%ED%94%8C%EB%A6%AC-%EC%98%A4%ED%81%AC-%EC%95%84%EB%A9%94%EB%A6%AC%EC%B9%B4%EB%85%B8/</id>
   <published>2026-10-21T00:00:00Z</published>
   <updated>2026-10-21T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살(다리살)의 새로운 조합으로 즐기는, 리얼옥수수의 진한 풍미와 달콤함을 허니윙콤비[날개(윙)+정육(다리살), 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Honey%20Corn%20Wing%20Combo.png&quot; alt=&quot;허니옥수수윙콤비&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살(다리살)의 새로운 조합으로 즐기는, 리얼옥수수의 진한 풍미와 달콤함을 허니윙콤비[날개(윙)+정육(다리살), 조리 전 중량 700g]&lt;/p&gt;</content>
+  <author><name>빙그레</name></author>
+  <category term="빙그레"/>
+  <summary type="text">색다른 향의 신제품 ‘아카페라 심플리 오크 아메리카노’ 출시</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.bing.co.kr/upload/ckeditor/2026/10/9a78d8ad-17fa-47e2-b13c-9022a51e7848&quot; alt=&quot;아카페라 심플리 오크 아메리카노&quot;&gt;&lt;/p&gt;&lt;p&gt;색다른 향의 신제품 ‘아카페라 심플리 오크 아메리카노’ 출시&lt;/p&gt;</content>
  </entry>
  <entry>
-  <title>허니옥수수윙박스20pcs</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%ED%97%88%EB%8B%88%EC%98%A5%EC%88%98%EC%88%98%EC%9C%99%EB%B0%95%EC%8A%A420pcs/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Honey%20Corn%20Wing%20Box_20pcs.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%ED%97%88%EB%8B%88%EC%98%A5%EC%88%98%EC%88%98%EC%9C%99%EB%B0%95%EC%8A%A420pcs/</id>
+  <title>빅아치™ 세트</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%A7%A5%EB%8F%84%EB%82%A0%EB%93%9C-%EB%B9%85%EC%95%84%EC%B9%98-%EC%84%B8%ED%8A%B8/"/>
+  <link rel="enclosure" type="image/png" href="https://www.mcdonalds.co.kr/upload/2026/10/Corp_PC_VIEW_772x530_%EB%B9%85%EC%95%84%EC%B9%98_EVM.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/%EB%A7%A5%EB%8F%84%EB%82%A0%EB%93%9C-%EB%B9%85%EC%95%84%EC%B9%98-%EC%84%B8%ED%8A%B8/</id>
   <published>2026-10-21T00:00:00Z</published>
   <updated>2026-10-21T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">리얼옥수수의 진한 풍미와 달콤함이 특징인 윙 메뉴[조각수: 윙 10조각, 봉 10조각]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Honey%20Corn%20Wing%20Box_20pcs.png&quot; alt=&quot;허니옥수수윙박스20pcs&quot;&gt;&lt;/p&gt;&lt;p&gt;리얼옥수수의 진한 풍미와 달콤함이 특징인 윙 메뉴[조각수: 윙 10조각, 봉 10조각]&lt;/p&gt;</content>
+  <author><name>맥도날드</name></author>
+  <category term="맥도날드"/>
+  <summary type="text">NEW 치아씨드 참깨 번에 두툼한 더블 비프와 화이트 체다 치즈 3장, 시그니처 빅아치™ 소스까지! 맥도날드의 새로운 아이콘 빅아치™!</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.mcdonalds.co.kr/upload/2026/10/Corp_PC_VIEW_772x530_%EB%B9%85%EC%95%84%EC%B9%98_EVM.png&quot; alt=&quot;빅아치™ 세트&quot;&gt;&lt;/p&gt;&lt;p&gt;NEW 치아씨드 참깨 번에 두툼한 더블 비프와 화이트 체다 치즈 3장, 시그니처 빅아치™ 소스까지! 맥도날드의 새로운 아이콘 빅아치™!&lt;/p&gt;</content>
  </entry>
  <entry>
-  <title>허니옥수수윙박스16pcs</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%ED%97%88%EB%8B%88%EC%98%A5%EC%88%98%EC%88%98%EC%9C%99%EB%B0%95%EC%8A%A416pcs/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Honey%20Corn%20Wing%20Box_16pcs.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%ED%97%88%EB%8B%88%EC%98%A5%EC%88%98%EC%88%98%EC%9C%99%EB%B0%95%EC%8A%A416pcs/</id>
+  <title>파싹소스</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%ED%8C%8C%EC%8B%B9%EC%86%8C%EC%8A%A4/"/>
+  <link rel="enclosure" type="image/png" href="https://home-img.bhc.co.kr/bhc/product/20261021_133623_0a843eb1.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%ED%8C%8C%EC%8B%B9%EC%86%8C%EC%8A%A4/</id>
   <published>2026-10-21T00:00:00Z</published>
   <updated>2026-10-21T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">리얼옥수수의 진한 풍미와 달콤함이 특징인 윙 메뉴[조각수: 윙 8조각, 봉 8조각]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Honey%20Corn%20Wing%20Box_16pcs.png&quot; alt=&quot;허니옥수수윙박스16pcs&quot;&gt;&lt;/p&gt;&lt;p&gt;리얼옥수수의 진한 풍미와 달콤함이 특징인 윙 메뉴[조각수: 윙 8조각, 봉 8조각]&lt;/p&gt;</content>
+  <author><name>bhc치킨</name></author>
+  <category term="bhc치킨"/>
+  <summary type="text">대파와 청양고추의 알싸함을 크리미하게 완성한 소스</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://home-img.bhc.co.kr/bhc/product/20261021_133623_0a843eb1.png&quot; alt=&quot;파싹소스&quot;&gt;&lt;/p&gt;&lt;p&gt;대파와 청양고추의 알싸함을 크리미하게 완성한 소스&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>콰삭킹반 콰삭양념킹반</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%BD%B0%EC%82%AD%ED%82%B9%EB%B0%98-%EC%BD%B0%EC%82%AD%EC%96%91%EB%85%90%ED%82%B9%EB%B0%98/"/>
+  <link rel="enclosure" type="image/png" href="https://home-img.bhc.co.kr/bhc/product/20261021_132937_f614f8c4.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%BD%B0%EC%82%AD%ED%82%B9%EB%B0%98-%EC%BD%B0%EC%82%AD%EC%96%91%EB%85%90%ED%82%B9%EB%B0%98/</id>
+  <published>2026-10-21T00:00:00Z</published>
+  <updated>2026-10-21T00:00:00Z</updated>
+  <author><name>bhc치킨</name></author>
+  <category term="bhc치킨"/>
+  <summary type="text">양념을 버무리지 않고 드리즐해 콰삭한 식감을 그대로! 두 가지 맛으로 즐기는 반반</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://home-img.bhc.co.kr/bhc/product/20261021_132937_f614f8c4.png&quot; alt=&quot;콰삭킹반 콰삭양념킹반&quot;&gt;&lt;/p&gt;&lt;p&gt;양념을 버무리지 않고 드리즐해 콰삭한 식감을 그대로! 두 가지 맛으로 즐기는 반반&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>콰삭모짜킹 (2조각)</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%BD%B0%EC%82%AD%EB%AA%A8%EC%A7%9C%ED%82%B9-2%EC%A1%B0%EA%B0%81/"/>
+  <link rel="enclosure" type="image/png" href="https://home-img.bhc.co.kr/bhc/product/20261021_133909_e99388df.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%BD%B0%EC%82%AD%EB%AA%A8%EC%A7%9C%ED%82%B9-2%EC%A1%B0%EA%B0%81/</id>
+  <published>2026-10-21T00:00:00Z</published>
+  <updated>2026-10-21T00:00:00Z</updated>
+  <author><name>bhc치킨</name></author>
+  <category term="bhc치킨"/>
+  <summary type="text">[샘킴 × bhc치킨] 콰삭함 속에 통모짜렐라를 가득 담은 &#x27;반전 식감&#x27; 콰삭모짜킹을 사이드로 즐길 수 있는 메뉴 (2조각) *아라비아따딥, 그린올리브딥 중 택1</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://home-img.bhc.co.kr/bhc/product/20261021_133909_e99388df.png&quot; alt=&quot;콰삭모짜킹 (2조각)&quot;&gt;&lt;/p&gt;&lt;p&gt;[샘킴 × bhc치킨] 콰삭함 속에 통모짜렐라를 가득 담은 &amp;#x27;반전 식감&amp;#x27; 콰삭모짜킹을 사이드로 즐길 수 있는 메뉴 (2조각) *아라비아따딥, 그린올리브딥 중 택1&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>콰삭모짜킹 (1조각)</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%BD%B0%EC%82%AD%EB%AA%A8%EC%A7%9C%ED%82%B9-1%EC%A1%B0%EA%B0%81/"/>
+  <link rel="enclosure" type="image/png" href="https://home-img.bhc.co.kr/bhc/product/20261021_133242_971ade77.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%BD%B0%EC%82%AD%EB%AA%A8%EC%A7%9C%ED%82%B9-1%EC%A1%B0%EA%B0%81/</id>
+  <published>2026-10-21T00:00:00Z</published>
+  <updated>2026-10-21T00:00:00Z</updated>
+  <author><name>bhc치킨</name></author>
+  <category term="bhc치킨"/>
+  <summary type="text">[샘킴 × bhc치킨] 콰삭함 속에 통모짜렐라를 가득 담은 &#x27;반전 식감&#x27; 콰삭모짜킹을 사이드로 즐길 수 있는 메뉴 (1조각) *소스 미포함/플래그십스토어 강남역점에서만 판매합니다.</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://home-img.bhc.co.kr/bhc/product/20261021_133242_971ade77.png&quot; alt=&quot;콰삭모짜킹 (1조각)&quot;&gt;&lt;/p&gt;&lt;p&gt;[샘킴 × bhc치킨] 콰삭함 속에 통모짜렐라를 가득 담은 &amp;#x27;반전 식감&amp;#x27; 콰삭모짜킹을 사이드로 즐길 수 있는 메뉴 (1조각) *소스 미포함/플래그십스토어 강남역점에서만 판매합니다.&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>콰삭모짜킹 하프 (4조각)</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%BD%B0%EC%82%AD%EB%AA%A8%EC%A7%9C%ED%82%B9-%ED%95%98%ED%94%84-4%EC%A1%B0%EA%B0%81/"/>
+  <link rel="enclosure" type="image/png" href="https://home-img.bhc.co.kr/bhc/product/20261021_134150_df9753e1.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%BD%B0%EC%82%AD%EB%AA%A8%EC%A7%9C%ED%82%B9-%ED%95%98%ED%94%84-4%EC%A1%B0%EA%B0%81/</id>
+  <published>2026-10-21T00:00:00Z</published>
+  <updated>2026-10-21T00:00:00Z</updated>
+  <author><name>bhc치킨</name></author>
+  <category term="bhc치킨"/>
+  <summary type="text">[샘킴 × bhc치킨] 콰삭함 속에 통모짜렐라를 가득 담은 &#x27;반전 식감&#x27; 콰삭모짜킹을 사이드로 즐길 수 있는 메뉴 (4조각) *아라비아따딥, 그린올리브딥 중 택1</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://home-img.bhc.co.kr/bhc/product/20261021_134150_df9753e1.png&quot; alt=&quot;콰삭모짜킹 하프 (4조각)&quot;&gt;&lt;/p&gt;&lt;p&gt;[샘킴 × bhc치킨] 콰삭함 속에 통모짜렐라를 가득 담은 &amp;#x27;반전 식감&amp;#x27; 콰삭모짜킹을 사이드로 즐길 수 있는 메뉴 (4조각) *아라비아따딥, 그린올리브딥 중 택1&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>양념킹</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%96%91%EB%85%90%ED%82%B9/"/>
+  <link rel="enclosure" type="image/png" href="https://home-img.bhc.co.kr/bhc/product/20261021_132257_d08db35a.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%96%91%EB%85%90%ED%82%B9/</id>
+  <published>2026-10-21T00:00:00Z</published>
+  <updated>2026-10-21T00:00:00Z</updated>
+  <author><name>bhc치킨</name></author>
+  <category term="bhc치킨"/>
+  <summary type="text">조청으로 깊은 단맛을 살린 양념을 바삭한 후라이드에 듬뿍 입힌 양념치킨</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://home-img.bhc.co.kr/bhc/product/20261021_132257_d08db35a.png&quot; alt=&quot;양념킹&quot;&gt;&lt;/p&gt;&lt;p&gt;조청으로 깊은 단맛을 살린 양념을 바삭한 후라이드에 듬뿍 입힌 양념치킨&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>알싹킹</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%95%8C%EC%8B%B9%ED%82%B9/"/>
+  <link rel="enclosure" type="image/png" href="https://home-img.bhc.co.kr/bhc/product/20261021_132850_b9890d9b.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%95%8C%EC%8B%B9%ED%82%B9/</id>
+  <published>2026-10-21T00:00:00Z</published>
+  <updated>2026-10-21T00:00:00Z</updated>
+  <author><name>bhc치킨</name></author>
+  <category term="bhc치킨"/>
+  <summary type="text">알싸한 고추와 양파, 대파의 깊은 풍미로 감칠맛을 살린 파싹한 식감의 후라이드 *맵싸소스, 파싹소스가 함께 제공됩니다.</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://home-img.bhc.co.kr/bhc/product/20261021_132850_b9890d9b.png&quot; alt=&quot;알싹킹&quot;&gt;&lt;/p&gt;&lt;p&gt;알싸한 고추와 양파, 대파의 깊은 풍미로 감칠맛을 살린 파싹한 식감의 후라이드 *맵싸소스, 파싹소스가 함께 제공됩니다.&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>반반치킨 (후라이드/양념킹)</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%B9%98%ED%82%A8-%ED%9B%84%EB%9D%BC%EC%9D%B4%EB%93%9C-%EC%96%91%EB%85%90%ED%82%B9/"/>
+  <link rel="enclosure" type="image/png" href="https://home-img.bhc.co.kr/bhc/product/20261021_132517_825415d1.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%B9%98%ED%82%A8-%ED%9B%84%EB%9D%BC%EC%9D%B4%EB%93%9C-%EC%96%91%EB%85%90%ED%82%B9/</id>
+  <published>2026-10-21T00:00:00Z</published>
+  <updated>2026-10-21T00:00:00Z</updated>
+  <author><name>bhc치킨</name></author>
+  <category term="bhc치킨"/>
+  <summary type="text">바삭하고 고소한 후라이드와 달콤한 양념킹을 동시에 즐기는 반반</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://home-img.bhc.co.kr/bhc/product/20261021_132517_825415d1.png&quot; alt=&quot;반반치킨 (후라이드/양념킹)&quot;&gt;&lt;/p&gt;&lt;p&gt;바삭하고 고소한 후라이드와 달콤한 양념킹을 동시에 즐기는 반반&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>맵싸소스</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EB%A7%B5%EC%8B%B8%EC%86%8C%EC%8A%A4/"/>
+  <link rel="enclosure" type="image/png" href="https://home-img.bhc.co.kr/bhc/product/20261021_133402_4d539a7c.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EB%A7%B5%EC%8B%B8%EC%86%8C%EC%8A%A4/</id>
+  <published>2026-10-21T00:00:00Z</published>
+  <updated>2026-10-21T00:00:00Z</updated>
+  <author><name>bhc치킨</name></author>
+  <category term="bhc치킨"/>
+  <summary type="text">불향이 느껴지는 화끈한 매운 맛에 달콤함이 어우러진 소스</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://home-img.bhc.co.kr/bhc/product/20261021_133402_4d539a7c.png&quot; alt=&quot;맵싸소스&quot;&gt;&lt;/p&gt;&lt;p&gt;불향이 느껴지는 화끈한 매운 맛에 달콤함이 어우러진 소스&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>자가리코</title>
@@ -203,13 +299,74 @@
  <entry>
   <title>가을 제철 샤인머스캣 활용한 케이크</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8B%A0%EC%84%B8%EA%B3%84%ED%91%B8%EB%93%9C-%EA%B0%80%EC%9D%84-%EC%A0%9C%EC%B2%A0-%EC%83%A4%EC%9D%B8%EB%A8%B8%EC%8A%A4%EC%BA%A3-%ED%99%9C%EC%9A%A9%ED%95%9C-%EC%BC%80%EC%9D%B4%ED%81%AC/"/>
+  <link rel="enclosure" type="image/jpeg" href="https://www.shinsegaefood.com/uimages/2026/10/20/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C-1.jpg"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8B%A0%EC%84%B8%EA%B3%84%ED%91%B8%EB%93%9C-%EA%B0%80%EC%9D%84-%EC%A0%9C%EC%B2%A0-%EC%83%A4%EC%9D%B8%EB%A8%B8%EC%8A%A4%EC%BA%A3-%ED%99%9C%EC%9A%A9%ED%95%9C-%EC%BC%80%EC%9D%B4%ED%81%AC/</id>
   <published>2026-10-20T00:00:00Z</published>
   <updated>2026-10-20T00:00:00Z</updated>
   <author><name>신세계푸드</name></author>
   <category term="신세계푸드"/>
   <summary type="text">가을 제철 샤인머스캣 활용한 케이크 출시</summary>
-  <content type="html">&lt;p&gt;가을 제철 샤인머스캣 활용한 케이크 출시&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.shinsegaefood.com/uimages/2026/10/20/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C-1.jpg&quot; alt=&quot;가을 제철 샤인머스캣 활용한 케이크&quot;&gt;&lt;/p&gt;&lt;p&gt;가을 제철 샤인머스캣 활용한 케이크 출시&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>플레인 탕종 베이글&amp;플레인 크림치즈</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%ED%94%8C%EB%A0%88%EC%9D%B8-%ED%83%95%EC%A2%85-%EB%B2%A0%EC%9D%B4%EA%B8%80-%ED%94%8C%EB%A0%88%EC%9D%B8-%ED%81%AC%EB%A6%BC%EC%B9%98%EC%A6%88/"/>
+  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20261020/96af863f106d494a81040e4cbdf6bff5.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%ED%94%8C%EB%A0%88%EC%9D%B8-%ED%83%95%EC%A2%85-%EB%B2%A0%EC%9D%B4%EA%B8%80-%ED%94%8C%EB%A0%88%EC%9D%B8-%ED%81%AC%EB%A6%BC%EC%B9%98%EC%A6%88/</id>
+  <published>2026-10-20T00:00:00Z</published>
+  <updated>2026-10-20T00:00:00Z</updated>
+  <author><name>백억커피</name></author>
+  <category term="백억커피"/>
+  <summary type="text">백억커피 신제품 플레인 탕종 베이글&amp;플레인 크림치즈</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20261020/96af863f106d494a81040e4cbdf6bff5.png&quot; alt=&quot;플레인 탕종 베이글&amp;amp;플레인 크림치즈&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 플레인 탕종 베이글&amp;amp;플레인 크림치즈&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>찐 멜론 우유</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EC%B0%90-%EB%A9%9C%EB%A1%A0-%EC%9A%B0%EC%9C%A0/"/>
+  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20261020/cd36feb235c37da1fa13542ffe7bbe26.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EC%B0%90-%EB%A9%9C%EB%A1%A0-%EC%9A%B0%EC%9C%A0/</id>
+  <published>2026-10-20T00:00:00Z</published>
+  <updated>2026-10-20T00:00:00Z</updated>
+  <author><name>백억커피</name></author>
+  <category term="백억커피"/>
+  <summary type="text">백억커피 신제품 찐 멜론 우유</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20261020/cd36feb235c37da1fa13542ffe7bbe26.png&quot; alt=&quot;찐 멜론 우유&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 찐 멜론 우유&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>연유 버터롤</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EC%97%B0%EC%9C%A0-%EB%B2%84%ED%84%B0%EB%A1%A4/"/>
+  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20261020/4bba0062bca93bfc92caaebd91897da4.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EC%97%B0%EC%9C%A0-%EB%B2%84%ED%84%B0%EB%A1%A4/</id>
+  <published>2026-10-20T00:00:00Z</published>
+  <updated>2026-10-20T00:00:00Z</updated>
+  <author><name>백억커피</name></author>
+  <category term="백억커피"/>
+  <summary type="text">백억커피 신제품 연유 버터롤</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20261020/4bba0062bca93bfc92caaebd91897da4.png&quot; alt=&quot;연유 버터롤&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 연유 버터롤&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>보성 키위 스무디</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%B3%B4%EC%84%B1-%ED%82%A4%EC%9C%84-%EC%8A%A4%EB%AC%B4%EB%94%94/"/>
+  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20261020/d646be0ecb7e2b62b0ab9bbf0273825e.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%B3%B4%EC%84%B1-%ED%82%A4%EC%9C%84-%EC%8A%A4%EB%AC%B4%EB%94%94/</id>
+  <published>2026-10-20T00:00:00Z</published>
+  <updated>2026-10-20T00:00:00Z</updated>
+  <author><name>백억커피</name></author>
+  <category term="백억커피"/>
+  <summary type="text">백억커피 신제품 보성 키위 스무디</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20261020/d646be0ecb7e2b62b0ab9bbf0273825e.png&quot; alt=&quot;보성 키위 스무디&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 보성 키위 스무디&lt;/p&gt;</content>
+ </entry>
+ <entry>
+  <title>갈릭 크림치즈 바게트</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EA%B0%88%EB%A6%AD-%ED%81%AC%EB%A6%BC%EC%B9%98%EC%A6%88-%EB%B0%94%EA%B2%8C%ED%8A%B8/"/>
+  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20261020/d91e96fce85f9007db2d5dd7ee5a1bf4.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EA%B0%88%EB%A6%AD-%ED%81%AC%EB%A6%BC%EC%B9%98%EC%A6%88-%EB%B0%94%EA%B2%8C%ED%8A%B8/</id>
+  <published>2026-10-20T00:00:00Z</published>
+  <updated>2026-10-20T00:00:00Z</updated>
+  <author><name>백억커피</name></author>
+  <category term="백억커피"/>
+  <summary type="text">백억커피 신제품 갈릭 크림치즈 바게트</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20261020/d91e96fce85f9007db2d5dd7ee5a1bf4.png&quot; alt=&quot;갈릭 크림치즈 바게트&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 갈릭 크림치즈 바게트&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>초코 츄로 츄이스티</title>
@@ -392,14 +549,14 @@
  <entry>
   <title>제스티치폴레버거</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/cu-%ED%96%84-%EC%A0%9C%EC%8A%A4%ED%8B%B0%EC%B9%98%ED%8F%B4%EB%A0%88%EB%B2%84%EA%B1%B0/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://tqklhszfkvzk6518638.edge.naverncp.com/product/8801068944655.jpg"/>
+  <link rel="enclosure" type="image/png" href="https://tqklhszfkvzk6518638.edge.naverncp.com/product/8801068944655.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/cu-%ED%96%84-%EC%A0%9C%EC%8A%A4%ED%8B%B0%EC%B9%98%ED%8F%B4%EB%A0%88%EB%B2%84%EA%B1%B0/</id>
   <published>2026-10-19T00:00:00Z</published>
   <updated>2026-10-19T00:00:00Z</updated>
   <author><name>CU</name></author>
   <category term="CU"/>
   <summary type="text">입안 가득 퍼지는 글레이즈번의 부드러움과 육즙 가득한 비프패티, 치폴레 소스의 알싸한 매콤함이 어우러져 중독성 있는 강렬한 만족감을 선사하는 버거</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://tqklhszfkvzk6518638.edge.naverncp.com/product/8801068944655.jpg&quot; alt=&quot;제스티치폴레버거&quot;&gt;&lt;/p&gt;&lt;p&gt;입안 가득 퍼지는 글레이즈번의 부드러움과 육즙 가득한 비프패티, 치폴레 소스의 알싸한 매콤함이 어우러져 중독성 있는 강렬한 만족감을 선사하는 버거&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://tqklhszfkvzk6518638.edge.naverncp.com/product/8801068944655.png&quot; alt=&quot;제스티치폴레버거&quot;&gt;&lt;/p&gt;&lt;p&gt;입안 가득 퍼지는 글레이즈번의 부드러움과 육즙 가득한 비프패티, 치폴레 소스의 알싸한 매콤함이 어우러져 중독성 있는 강렬한 만족감을 선사하는 버거&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>멜팅통모짜떡갈비버거</title>
@@ -1387,13 +1544,14 @@
  <entry>
   <title>NBB 훅</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%85%B8%EB%B8%8C%EB%9E%9C%EB%93%9C%EB%B2%84%EA%B1%B0-nbb-%ED%9B%85/"/>
+  <link rel="enclosure" type="image/png" href="https://www.shinsegaefood.com/uimages/2026/10/15/NBB_%ED%9B%85_%EB%8B%A8%ED%92%88_06.%ED%99%88%ED%8E%98%EC%9D%B4%EC%A7%80.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EB%85%B8%EB%B8%8C%EB%9E%9C%EB%93%9C%EB%B2%84%EA%B1%B0-nbb-%ED%9B%85/</id>
   <published>2026-10-15T00:00:00Z</published>
   <updated>2026-10-15T00:00:00Z</updated>
   <author><name>노브랜드버거</name></author>
   <category term="노브랜드버거"/>
   <summary type="text">고기의 풍미를 살린 올인원 소스의 감칠맛</summary>
-  <content type="html">&lt;p&gt;고기의 풍미를 살린 올인원 소스의 감칠맛&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.shinsegaefood.com/uimages/2026/10/15/NBB_%ED%9B%85_%EB%8B%A8%ED%92%88_06.%ED%99%88%ED%8E%98%EC%9D%B4%EC%A7%80.png&quot; alt=&quot;NBB 훅&quot;&gt;&lt;/p&gt;&lt;p&gt;고기의 풍미를 살린 올인원 소스의 감칠맛&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>NBB 펀치</title>
@@ -2973,6 +3131,18 @@
   <content type="html">&lt;p&gt;&lt;img src=&quot;https://ttop32.github.io/sinsang-note/i/e63fe227504440d0.webp&quot; alt=&quot;감튀마운틴피자&quot;&gt;&lt;/p&gt;&lt;p&gt;피자와치킨의러브레터 신제품 감튀마운틴피자&lt;/p&gt;</content>
  </entry>
  <entry>
+  <title>레몬 피치 스파클링</title>
+  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%83%90%EC%95%A4%ED%83%90%EC%8A%A4-%EB%A0%88%EB%AA%AC-%ED%94%BC%EC%B9%98-%EC%8A%A4%ED%8C%8C%ED%81%B4%EB%A7%81/"/>
+  <link rel="enclosure" type="image/png" href="https://kr.object.iwinv.kr/tomntoms-web/uploads/menu/1791433536691_26_n%C2%A4g.png"/>
+  <id>https://ttop32.github.io/sinsang-note/p/%ED%83%90%EC%95%A4%ED%83%90%EC%8A%A4-%EB%A0%88%EB%AA%AC-%ED%94%BC%EC%B9%98-%EC%8A%A4%ED%8C%8C%ED%81%B4%EB%A7%81/</id>
+  <published>2026-10-08T00:00:00Z</published>
+  <updated>2026-10-08T00:00:00Z</updated>
+  <author><name>탐앤탐스</name></author>
+  <category term="탐앤탐스"/>
+  <summary type="text">달콤한 복숭아 아이스티에 피오디 레몬주스와 탄산의 청량감을 더한 음료. * 해당 메뉴는 블랙그레이트점, 거여역점에서만 판매합니다. * 카페인 함유. 어린이, 임산부, 카페인 민감자는 섭취에 주의하여 주시기 바랍니다.</summary>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://kr.object.iwinv.kr/tomntoms-web/uploads/menu/1791433536691_26_n%C2%A4g.png&quot; alt=&quot;레몬 피치 스파클링&quot;&gt;&lt;/p&gt;&lt;p&gt;달콤한 복숭아 아이스티에 피오디 레몬주스와 탄산의 청량감을 더한 음료. * 해당 메뉴는 블랙그레이트점, 거여역점에서만 판매합니다. * 카페인 함유. 어린이, 임산부, 카페인 민감자는 섭취에 주의하여 주시기 바랍니다.&lt;/p&gt;</content>
+ </entry>
+ <entry>
   <title>디저트박스</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%BB%B5%EB%84%9B-%EB%94%94%EC%A0%80%ED%8A%B8%EB%B0%95%EC%8A%A4/"/>
   <link rel="enclosure" type="image/jpeg" href="https://cupnut.co.kr/_public/uploadFiles/goods/20261008140705509/15TH182ZS43X9TBRCF26.jpg"/>
@@ -3591,13 +3761,14 @@
  <entry>
   <title>캠핑어묵탕</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%82%AC%EC%A1%B0%EB%8C%80%EB%A6%BC-%EC%BA%A0%ED%95%91%EC%96%B4%EB%AC%B5%ED%83%95/"/>
+  <link rel="enclosure" type="image/png" href="https://www.sajo.co.kr/upload_data/board/thumbnail/20260901_News01.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%82%AC%EC%A1%B0%EB%8C%80%EB%A6%BC-%EC%BA%A0%ED%95%91%EC%96%B4%EB%AC%B5%ED%83%95/</id>
   <published>2026-09-01T00:00:00Z</published>
   <updated>2026-09-01T00:00:00Z</updated>
   <author><name>사조대림</name></author>
   <category term="사조대림"/>
   <summary type="text">롯데마트 단독 &#x27;캠핑어묵탕&#x27; 1만개 한정 출시</summary>
-  <content type="html">&lt;p&gt;롯데마트 단독 &amp;#x27;캠핑어묵탕&amp;#x27; 1만개 한정 출시&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.sajo.co.kr/upload_data/board/thumbnail/20260901_News01.png&quot; alt=&quot;캠핑어묵탕&quot;&gt;&lt;/p&gt;&lt;p&gt;롯데마트 단독 &amp;#x27;캠핑어묵탕&amp;#x27; 1만개 한정 출시&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>무화과 티라미수</title>
@@ -5654,13 +5825,14 @@
  <entry>
   <title>보앤미 프리미엄 건강빵</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%8B%A0%EC%84%B8%EA%B3%84%ED%91%B8%EB%93%9C-%EB%B3%B4%EC%95%A4%EB%AF%B8-%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84-%EA%B1%B4%EA%B0%95%EB%B9%B5/"/>
+  <link rel="enclosure" type="image/jpeg" href="https://www.shinsegaefood.com/uimages/2026/09/21/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C-1.jpg"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%8B%A0%EC%84%B8%EA%B3%84%ED%91%B8%EB%93%9C-%EB%B3%B4%EC%95%A4%EB%AF%B8-%ED%94%84%EB%A6%AC%EB%AF%B8%EC%97%84-%EA%B1%B4%EA%B0%95%EB%B9%B5/</id>
   <published>2026-09-21T00:00:00Z</published>
   <updated>2026-09-21T00:00:00Z</updated>
   <author><name>신세계푸드</name></author>
   <category term="신세계푸드"/>
   <summary type="text">“원재료의 수준이 다르다”…신세계푸드 ‘보앤미’, 프리미엄 건강빵 5종 출시</summary>
-  <content type="html">&lt;p&gt;“원재료의 수준이 다르다”…신세계푸드 ‘보앤미’, 프리미엄 건강빵 5종 출시&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.shinsegaefood.com/uimages/2026/09/21/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C-1.jpg&quot; alt=&quot;보앤미 프리미엄 건강빵&quot;&gt;&lt;/p&gt;&lt;p&gt;“원재료의 수준이 다르다”…신세계푸드 ‘보앤미’, 프리미엄 건강빵 5종 출시&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>생생신툼바떡볶이면</title>
@@ -5773,14 +5945,13 @@
  <entry>
   <title>식감혁신 본격 떡볶이</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%92%80%EB%AC%B4%EC%9B%90-%EC%8B%9D%EA%B0%90%ED%98%81%EC%8B%A0-%EB%B3%B8%EA%B2%A9-%EB%96%A1%EB%B3%B6%EC%9D%B4/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://news.pulmuone.co.kr/webfile/bbs/3/3936/20260914132550_%5B%EC%82%AC%EC%A7%84%5Dth.jpg"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%92%80%EB%AC%B4%EC%9B%90-%EC%8B%9D%EA%B0%90%ED%98%81%EC%8B%A0-%EB%B3%B8%EA%B2%A9-%EB%96%A1%EB%B3%B6%EC%9D%B4/</id>
   <published>2026-09-15T00:00:00Z</published>
   <updated>2026-09-15T00:00:00Z</updated>
   <author><name>풀무원</name></author>
   <category term="풀무원"/>
   <summary type="text">고압으로 두 번 뽑아 격이 다른 식감 ‘식감혁신 본격 떡볶이’ 출시</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://news.pulmuone.co.kr/webfile/bbs/3/3936/20260914132550_%5B%EC%82%AC%EC%A7%84%5Dth.jpg&quot; alt=&quot;식감혁신 본격 떡볶이&quot;&gt;&lt;/p&gt;&lt;p&gt;고압으로 두 번 뽑아 격이 다른 식감 ‘식감혁신 본격 떡볶이’ 출시&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;고압으로 두 번 뽑아 격이 다른 식감 ‘식감혁신 본격 떡볶이’ 출시&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>저당 소스</title>
@@ -5856,26 +6027,24 @@
  <entry>
   <title>콩나물국 요리키트</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%92%80%EB%AC%B4%EC%9B%90-%EC%BD%A9%EB%82%98%EB%AC%BC%EA%B5%AD-%EC%9A%94%EB%A6%AC%ED%82%A4%ED%8A%B8/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://news.pulmuone.co.kr/webfile/bbs/3/3921/20260828095251_%5B%EC%82%AC%EC%A7%84%5Dth.jpg"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%92%80%EB%AC%B4%EC%9B%90-%EC%BD%A9%EB%82%98%EB%AC%BC%EA%B5%AD-%EC%9A%94%EB%A6%AC%ED%82%A4%ED%8A%B8/</id>
   <published>2026-08-28T00:00:00Z</published>
   <updated>2026-08-28T00:00:00Z</updated>
   <author><name>풀무원</name></author>
   <category term="풀무원"/>
   <summary type="text">‘콩나물국 요리키트’ 출시…소재에서 간편식으로 나물 제품군 확대</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://news.pulmuone.co.kr/webfile/bbs/3/3921/20260828095251_%5B%EC%82%AC%EC%A7%84%5Dth.jpg&quot; alt=&quot;콩나물국 요리키트&quot;&gt;&lt;/p&gt;&lt;p&gt;‘콩나물국 요리키트’ 출시…소재에서 간편식으로 나물 제품군 확대&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;‘콩나물국 요리키트’ 출시…소재에서 간편식으로 나물 제품군 확대&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>ORGA 저염 육수</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%92%80%EB%AC%B4%EC%9B%90-orga-%EC%A0%80%EC%97%BC-%EC%9C%A1%EC%88%98/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://news.pulmuone.co.kr/webfile/bbs/3/3920/20260827090923_%EC%98%AC%EA%B0%80_th.jpg"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%92%80%EB%AC%B4%EC%9B%90-orga-%EC%A0%80%EC%97%BC-%EC%9C%A1%EC%88%98/</id>
   <published>2026-08-27T00:00:00Z</published>
   <updated>2026-08-27T00:00:00Z</updated>
   <author><name>풀무원</name></author>
   <category term="풀무원"/>
   <summary type="text">국산 원물 본연의 감칠맛 살린 ‘ORGA 저염 육수’ 2종 출시</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://news.pulmuone.co.kr/webfile/bbs/3/3920/20260827090923_%EC%98%AC%EA%B0%80_th.jpg&quot; alt=&quot;ORGA 저염 육수&quot;&gt;&lt;/p&gt;&lt;p&gt;국산 원물 본연의 감칠맛 살린 ‘ORGA 저염 육수’ 2종 출시&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;국산 원물 본연의 감칠맛 살린 ‘ORGA 저염 육수’ 2종 출시&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>씬샌드</title>
@@ -7578,18 +7747,6 @@
   <category term="GS25"/>
   <summary type="text">로로멜로와 ‘한정선 요거트 찹쌀떡’ 출시…외국인도 줄 선 K-디저트, 편의점 상륙!</summary>
   <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.gsretail.com/api/public/fileUpload/d3ff73b1-253c-4b3c-aa41-0cf15635dc20.jpg&quot; alt=&quot;한정선 요거트 찹쌀떡&quot;&gt;&lt;/p&gt;&lt;p&gt;로로멜로와 ‘한정선 요거트 찹쌀떡’ 출시…외국인도 줄 선 K-디저트, 편의점 상륙!&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>워터젤리 하이볼</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/gs25-%EC%9B%8C%ED%84%B0%EC%A0%A4%EB%A6%AC-%ED%95%98%EC%9D%B4%EB%B3%BC/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://www.gsretail.com/api/public/fileUpload/65ec0aaf-b78b-4b06-9c06-5a42976e6ad9.jpg"/>
-  <id>https://ttop32.github.io/sinsang-note/p/gs25-%EC%9B%8C%ED%84%B0%EC%A0%A4%EB%A6%AC-%ED%95%98%EC%9D%B4%EB%B3%BC/</id>
-  <published>2026-08-21T00:00:00Z</published>
-  <updated>2026-08-21T00:00:00Z</updated>
-  <author><name>GS25</name></author>
-  <category term="GS25"/>
-  <summary type="text">흔들어 마시는 ‘워터젤리 하이볼’로 새로운 주류 경험 제안</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.gsretail.com/api/public/fileUpload/65ec0aaf-b78b-4b06-9c06-5a42976e6ad9.jpg&quot; alt=&quot;워터젤리 하이볼&quot;&gt;&lt;/p&gt;&lt;p&gt;흔들어 마시는 ‘워터젤리 하이볼’로 새로운 주류 경험 제안&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>치즈 소보루빵</title>
@@ -9368,14 +9525,13 @@
  <entry>
   <title>식이섬유 플러스 흑미밥</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%98%A4%EB%9A%9C%EA%B8%B0-%EC%8B%9D%EC%9D%B4%EC%84%AC%EC%9C%A0-%ED%94%8C%EB%9F%AC%EC%8A%A4-%ED%9D%91%EB%AF%B8%EB%B0%A5/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://www.otoki.com/pds/news/2609/3616c69ee76c4cdf8e30cd280a007ca1.jpg"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%98%A4%EB%9A%9C%EA%B8%B0-%EC%8B%9D%EC%9D%B4%EC%84%AC%EC%9C%A0-%ED%94%8C%EB%9F%AC%EC%8A%A4-%ED%9D%91%EB%AF%B8%EB%B0%A5/</id>
   <published>2026-09-16T00:00:00Z</published>
   <updated>2026-09-16T00:00:00Z</updated>
   <author><name>오뚜기</name></author>
   <category term="오뚜기"/>
   <summary type="text">식이섬유 더한 소용량 즉석밥 ‘식이섬유 플러스 흑미밥’ 출시</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.otoki.com/pds/news/2609/3616c69ee76c4cdf8e30cd280a007ca1.jpg&quot; alt=&quot;식이섬유 플러스 흑미밥&quot;&gt;&lt;/p&gt;&lt;p&gt;식이섬유 더한 소용량 즉석밥 ‘식이섬유 플러스 흑미밥’ 출시&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;식이섬유 더한 소용량 즉석밥 ‘식이섬유 플러스 흑미밥’ 출시&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>일품 떡갈비</title>
@@ -9388,30 +9544,6 @@
   <category term="오뚜기"/>
   <summary type="text">100% 국산 돼지고기 사용한 ‘일품 떡갈비’ 출시</summary>
   <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.otoki.com/pds/news/2609/a03a5c05c49643679637987f475d0f87.jpg&quot; alt=&quot;일품 떡갈비&quot;&gt;&lt;/p&gt;&lt;p&gt;100% 국산 돼지고기 사용한 ‘일품 떡갈비’ 출시&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>맥크리스피™ 고추장 버터 세트</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%A7%A5%EB%8F%84%EB%82%A0%EB%93%9C-%EB%A7%A5%ED%81%AC%EB%A6%AC%EC%8A%A4%ED%94%BC-%EA%B3%A0%EC%B6%94%EC%9E%A5-%EB%B2%84%ED%84%B0-%EC%84%B8%ED%8A%B8/"/>
-  <link rel="enclosure" type="image/png" href="https://www.mcdonalds.co.kr/upload/2026/09/Corp_PC_VIEW_772x530_%EA%B3%A0%EC%B6%94%EC%9E%A5%EB%B2%84%ED%84%B0_%EB%A7%A5%ED%81%AC%EB%A6%AC%EC%8A%A4%ED%94%BC_EVM.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%A7%A5%EB%8F%84%EB%82%A0%EB%93%9C-%EB%A7%A5%ED%81%AC%EB%A6%AC%EC%8A%A4%ED%94%BC-%EA%B3%A0%EC%B6%94%EC%9E%A5-%EB%B2%84%ED%84%B0-%EC%84%B8%ED%8A%B8/</id>
-  <published>2026-09-15T00:00:00Z</published>
-  <updated>2026-09-15T00:00:00Z</updated>
-  <author><name>맥도날드</name></author>
-  <category term="맥도날드"/>
-  <summary type="text">100% 통닭다리살 겉바속촉 케이준 치킨 패티와 부드럽고 매콤한 고추장 버터 소스의 조화</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.mcdonalds.co.kr/upload/2026/09/Corp_PC_VIEW_772x530_%EA%B3%A0%EC%B6%94%EC%9E%A5%EB%B2%84%ED%84%B0_%EB%A7%A5%ED%81%AC%EB%A6%AC%EC%8A%A4%ED%94%BC_EVM.png&quot; alt=&quot;맥크리스피™ 고추장 버터 세트&quot;&gt;&lt;/p&gt;&lt;p&gt;100% 통닭다리살 겉바속촉 케이준 치킨 패티와 부드럽고 매콤한 고추장 버터 소스의 조화&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>맥스파이시® 고추장 버터 세트</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%A7%A5%EB%8F%84%EB%82%A0%EB%93%9C-%EB%A7%A5%EC%8A%A4%ED%8C%8C%EC%9D%B4%EC%8B%9C-%EA%B3%A0%EC%B6%94%EC%9E%A5-%EB%B2%84%ED%84%B0-%EC%84%B8%ED%8A%B8/"/>
-  <link rel="enclosure" type="image/png" href="https://www.mcdonalds.co.kr/upload/2026/09/Corp_PC_VIEW_772x530_%EA%B3%A0%EC%B6%94%EC%9E%A5%EB%B2%84%ED%84%B0_%EB%A7%A5%EC%8A%A4%ED%8C%8C%EC%9D%B4%EC%8B%9C_EVM.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%A7%A5%EB%8F%84%EB%82%A0%EB%93%9C-%EB%A7%A5%EC%8A%A4%ED%8C%8C%EC%9D%B4%EC%8B%9C-%EA%B3%A0%EC%B6%94%EC%9E%A5-%EB%B2%84%ED%84%B0-%EC%84%B8%ED%8A%B8/</id>
-  <published>2026-09-15T00:00:00Z</published>
-  <updated>2026-09-15T00:00:00Z</updated>
-  <author><name>맥도날드</name></author>
-  <category term="맥도날드"/>
-  <summary type="text">쌀가루로 더 바삭해진 100% 닭가슴살 패티와 부드럽고 매콤한 고추장 버터 소스의 조화</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.mcdonalds.co.kr/upload/2026/09/Corp_PC_VIEW_772x530_%EA%B3%A0%EC%B6%94%EC%9E%A5%EB%B2%84%ED%84%B0_%EB%A7%A5%EC%8A%A4%ED%8C%8C%EC%9D%B4%EC%8B%9C_EVM.png&quot; alt=&quot;맥스파이시® 고추장 버터 세트&quot;&gt;&lt;/p&gt;&lt;p&gt;쌀가루로 더 바삭해진 100% 닭가슴살 패티와 부드럽고 매콤한 고추장 버터 소스의 조화&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>정통 보름달 도넛</title>
@@ -9440,26 +9572,24 @@
  <entry>
   <title>후라이드순살치킨</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%ED%9B%84%EB%9D%BC%EC%9D%B4%EB%93%9C%EC%88%9C%EC%82%B4%EC%B9%98%ED%82%A8/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8809877690886.JPG"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%ED%9B%84%EB%9D%BC%EC%9D%B4%EB%93%9C%EC%88%9C%EC%82%B4%EC%B9%98%ED%82%A8/</id>
   <published>2026-09-11T00:00:00Z</published>
   <updated>2026-09-11T00:00:00Z</updated>
   <author><name>이마트24</name></author>
   <category term="이마트24"/>
   <summary type="text">이마트24 신제품 후라이드순살치킨</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8809877690886.JPG&quot; alt=&quot;후라이드순살치킨&quot;&gt;&lt;/p&gt;&lt;p&gt;이마트24 신제품 후라이드순살치킨&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;이마트24 신제품 후라이드순살치킨&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>양념순살치킨</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EC%96%91%EB%85%90%EC%88%9C%EC%82%B4%EC%B9%98%ED%82%A8/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8809877690893.JPG"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EC%96%91%EB%85%90%EC%88%9C%EC%82%B4%EC%B9%98%ED%82%A8/</id>
   <published>2026-09-11T00:00:00Z</published>
   <updated>2026-09-11T00:00:00Z</updated>
   <author><name>이마트24</name></author>
   <category term="이마트24"/>
   <summary type="text">이마트24 신제품 양념순살치킨</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8809877690893.JPG&quot; alt=&quot;양념순살치킨&quot;&gt;&lt;/p&gt;&lt;p&gt;이마트24 신제품 양념순살치킨&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;이마트24 신제품 양념순살치킨&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>반반순살치킨 (양념&amp;마늘간장)</title>
@@ -9476,13 +9606,14 @@
  <entry>
   <title>마늘간장순살치킨</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EB%A7%88%EB%8A%98%EA%B0%84%EC%9E%A5%EC%88%9C%EC%82%B4%EC%B9%98%ED%82%A8/"/>
+  <link rel="enclosure" type="image/jpeg" href="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8809877690909.JPG"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EB%A7%88%EB%8A%98%EA%B0%84%EC%9E%A5%EC%88%9C%EC%82%B4%EC%B9%98%ED%82%A8/</id>
   <published>2026-09-11T00:00:00Z</published>
   <updated>2026-09-11T00:00:00Z</updated>
   <author><name>이마트24</name></author>
   <category term="이마트24"/>
   <summary type="text">이마트24 신제품 마늘간장순살치킨</summary>
-  <content type="html">&lt;p&gt;이마트24 신제품 마늘간장순살치킨&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8809877690909.JPG&quot; alt=&quot;마늘간장순살치킨&quot;&gt;&lt;/p&gt;&lt;p&gt;이마트24 신제품 마늘간장순살치킨&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>성수310 피스타치오크림소금빵</title>
@@ -9571,14 +9702,13 @@
  <entry>
   <title>한강라면</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%98%A4%EB%9A%9C%EA%B8%B0-%ED%95%9C%EA%B0%95%EB%9D%BC%EB%A9%B4/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://www.otoki.com/pds/news/2609/ab617975121541b8a15bbd650596b601.jpg"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%98%A4%EB%9A%9C%EA%B8%B0-%ED%95%9C%EA%B0%95%EB%9D%BC%EB%A9%B4/</id>
   <published>2026-09-09T00:00:00Z</published>
   <updated>2026-09-09T00:00:00Z</updated>
   <author><name>오뚜기</name></author>
   <category term="오뚜기"/>
   <summary type="text">한강에서 먹던 그 맛 그대로…‘한강라면’ 출시</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.otoki.com/pds/news/2609/ab617975121541b8a15bbd650596b601.jpg&quot; alt=&quot;한강라면&quot;&gt;&lt;/p&gt;&lt;p&gt;한강에서 먹던 그 맛 그대로…‘한강라면’ 출시&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;한강에서 먹던 그 맛 그대로…‘한강라면’ 출시&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>콘치즈 크로크무슈 by 오스틴 강</title>
@@ -9619,13 +9749,14 @@
  <entry>
   <title>박은영 흑후추비프버거</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EB%B0%95%EC%9D%80%EC%98%81-%ED%9D%91%ED%9B%84%EC%B6%94%EB%B9%84%ED%94%84%EB%B2%84%EA%B1%B0/"/>
+  <link rel="enclosure" type="image/jpeg" href="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800398700375.JPG"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EB%B0%95%EC%9D%80%EC%98%81-%ED%9D%91%ED%9B%84%EC%B6%94%EB%B9%84%ED%94%84%EB%B2%84%EA%B1%B0/</id>
   <published>2026-09-07T00:00:00Z</published>
   <updated>2026-09-07T00:00:00Z</updated>
   <author><name>이마트24</name></author>
   <category term="이마트24"/>
   <summary type="text">이마트24 신제품 박은영 흑후추비프버거</summary>
-  <content type="html">&lt;p&gt;이마트24 신제품 박은영 흑후추비프버거&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800398700375.JPG&quot; alt=&quot;박은영 흑후추비프버거&quot;&gt;&lt;/p&gt;&lt;p&gt;이마트24 신제품 박은영 흑후추비프버거&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>더빅펜타치즈버거</title>
@@ -9665,24 +9796,26 @@
  <entry>
   <title>성수310 피스타치오초코칩크루아상 (냉장)</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EC%84%B1%EC%88%98310-%ED%94%BC%EC%8A%A4%ED%83%80%EC%B9%98%EC%98%A4%EC%B4%88%EC%BD%94%EC%B9%A9%ED%81%AC%EB%A3%A8%EC%95%84%EC%83%8165g-%EB%83%89%EC%9E%A5/"/>
+  <link rel="enclosure" type="image/jpeg" href="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800348943531.JPG"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EC%84%B1%EC%88%98310-%ED%94%BC%EC%8A%A4%ED%83%80%EC%B9%98%EC%98%A4%EC%B4%88%EC%BD%94%EC%B9%A9%ED%81%AC%EB%A3%A8%EC%95%84%EC%83%8165g-%EB%83%89%EC%9E%A5/</id>
   <published>2026-09-02T00:00:00Z</published>
   <updated>2026-09-02T00:00:00Z</updated>
   <author><name>이마트24</name></author>
   <category term="이마트24"/>
   <summary type="text">이마트24 신제품 성수310 피스타치오초코칩크루아상 (냉장)</summary>
-  <content type="html">&lt;p&gt;이마트24 신제품 성수310 피스타치오초코칩크루아상 (냉장)&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800348943531.JPG&quot; alt=&quot;성수310 피스타치오초코칩크루아상 (냉장)&quot;&gt;&lt;/p&gt;&lt;p&gt;이마트24 신제품 성수310 피스타치오초코칩크루아상 (냉장)&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>성수310 피스타치오베리케이크 (냉장)</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EC%84%B1%EC%88%98310-%ED%94%BC%EC%8A%A4%ED%83%80%EC%B9%98%EC%98%A4%EB%B2%A0%EB%A6%AC%EC%BC%80%EC%9D%B4%ED%81%AC55g-%EB%83%89%EC%9E%A5/"/>
+  <link rel="enclosure" type="image/jpeg" href="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800348943784.JPG"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EC%84%B1%EC%88%98310-%ED%94%BC%EC%8A%A4%ED%83%80%EC%B9%98%EC%98%A4%EB%B2%A0%EB%A6%AC%EC%BC%80%EC%9D%B4%ED%81%AC55g-%EB%83%89%EC%9E%A5/</id>
   <published>2026-09-02T00:00:00Z</published>
   <updated>2026-09-02T00:00:00Z</updated>
   <author><name>이마트24</name></author>
   <category term="이마트24"/>
   <summary type="text">이마트24 신제품 성수310 피스타치오베리케이크 (냉장)</summary>
-  <content type="html">&lt;p&gt;이마트24 신제품 성수310 피스타치오베리케이크 (냉장)&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800348943784.JPG&quot; alt=&quot;성수310 피스타치오베리케이크 (냉장)&quot;&gt;&lt;/p&gt;&lt;p&gt;이마트24 신제품 성수310 피스타치오베리케이크 (냉장)&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>박은영 짬뽕짜장불고기김밥</title>
@@ -9829,14 +9962,13 @@
  <entry>
   <title>구황작물 단호박에그샌드위치</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EA%B5%AC%ED%99%A9%EC%9E%91%EB%AC%BC-%EB%8B%A8%ED%98%B8%EB%B0%95%EC%97%90%EA%B7%B8%EC%83%8C%EB%93%9C%EC%9C%84%EC%B9%98/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800348943685.JPG"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EA%B5%AC%ED%99%A9%EC%9E%91%EB%AC%BC-%EB%8B%A8%ED%98%B8%EB%B0%95%EC%97%90%EA%B7%B8%EC%83%8C%EB%93%9C%EC%9C%84%EC%B9%98/</id>
   <published>2026-08-27T00:00:00Z</published>
   <updated>2026-08-27T00:00:00Z</updated>
   <author><name>이마트24</name></author>
   <category term="이마트24"/>
   <summary type="text">이마트24 신제품 구황작물 단호박에그샌드위치</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800348943685.JPG&quot; alt=&quot;구황작물 단호박에그샌드위치&quot;&gt;&lt;/p&gt;&lt;p&gt;이마트24 신제품 구황작물 단호박에그샌드위치&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;이마트24 신제품 구황작물 단호박에그샌드위치&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>열찐만두</title>
@@ -10057,26 +10189,24 @@
  <entry>
   <title>단짠멸치반찬삼각김밥</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EB%8B%A8%EC%A7%A0%EB%A9%B8%EC%B9%98%EB%B0%98%EC%B0%AC%EC%82%BC%EA%B0%81%EA%B9%80%EB%B0%A5/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800323763284.JPG"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EB%8B%A8%EC%A7%A0%EB%A9%B8%EC%B9%98%EB%B0%98%EC%B0%AC%EC%82%BC%EA%B0%81%EA%B9%80%EB%B0%A5/</id>
   <published>2026-09-29T00:00:00Z</published>
   <updated>2026-09-29T00:00:00Z</updated>
   <author><name>이마트24</name></author>
   <category term="이마트24"/>
   <summary type="text">이마트24 신제품 단짠멸치반찬삼각김밥</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800323763284.JPG&quot; alt=&quot;단짠멸치반찬삼각김밥&quot;&gt;&lt;/p&gt;&lt;p&gt;이마트24 신제품 단짠멸치반찬삼각김밥&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;이마트24 신제품 단짠멸치반찬삼각김밥&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>고추장멸치반찬삼각김밥</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EA%B3%A0%EC%B6%94%EC%9E%A5%EB%A9%B8%EC%B9%98%EB%B0%98%EC%B0%AC%EC%82%BC%EA%B0%81%EA%B9%80%EB%B0%A5/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800323763260.JPG"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%EA%B3%A0%EC%B6%94%EC%9E%A5%EB%A9%B8%EC%B9%98%EB%B0%98%EC%B0%AC%EC%82%BC%EA%B0%81%EA%B9%80%EB%B0%A5/</id>
   <published>2026-09-29T00:00:00Z</published>
   <updated>2026-09-29T00:00:00Z</updated>
   <author><name>이마트24</name></author>
   <category term="이마트24"/>
   <summary type="text">이마트24 신제품 고추장멸치반찬삼각김밥</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800323763260.JPG&quot; alt=&quot;고추장멸치반찬삼각김밥&quot;&gt;&lt;/p&gt;&lt;p&gt;이마트24 신제품 고추장멸치반찬삼각김밥&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;이마트24 신제품 고추장멸치반찬삼각김밥&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>가나 초코 소프트 아이스크림 아포가토</title>
@@ -12282,38 +12412,38 @@
  <entry>
   <title>투움바카츠</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%95%98%EB%A3%A8%EC%97%94%EC%86%8C%EC%BF%A0-%ED%88%AC%EC%9B%80%EB%B0%94%EC%B9%B4%EC%B8%A0/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://haruensoku.co.kr/uploaded/product/50/large_4c392e988e6978bf2181dbce40127f790.jpg"/>
+  <link rel="enclosure" type="image/png" href="https://haruensoku.co.kr/uploaded/product/50/large_0da29eda5edf1c86f353b242fd7c04400.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%95%98%EB%A3%A8%EC%97%94%EC%86%8C%EC%BF%A0-%ED%88%AC%EC%9B%80%EB%B0%94%EC%B9%B4%EC%B8%A0/</id>
-  <published>2026-09-28T00:00:00Z</published>
-  <updated>2026-09-28T00:00:00Z</updated>
+  <published>2026-10-21T00:00:00Z</published>
+  <updated>2026-10-21T00:00:00Z</updated>
   <author><name>하루엔소쿠</name></author>
   <category term="하루엔소쿠"/>
   <summary type="text">하루엔소쿠 신제품 투움바카츠</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://haruensoku.co.kr/uploaded/product/50/large_4c392e988e6978bf2181dbce40127f790.jpg&quot; alt=&quot;투움바카츠&quot;&gt;&lt;/p&gt;&lt;p&gt;하루엔소쿠 신제품 투움바카츠&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://haruensoku.co.kr/uploaded/product/50/large_0da29eda5edf1c86f353b242fd7c04400.png&quot; alt=&quot;투움바카츠&quot;&gt;&lt;/p&gt;&lt;p&gt;하루엔소쿠 신제품 투움바카츠&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>투움바우동</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%95%98%EB%A3%A8%EC%97%94%EC%86%8C%EC%BF%A0-%ED%88%AC%EC%9B%80%EB%B0%94%EC%9A%B0%EB%8F%99/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://haruensoku.co.kr/uploaded/product/49/large_e98e078777b5642c6649fe79214ba4190.jpg"/>
+  <link rel="enclosure" type="image/png" href="https://haruensoku.co.kr/uploaded/product/49/large_63e855bb527c11938772958da115b0950.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%95%98%EB%A3%A8%EC%97%94%EC%86%8C%EC%BF%A0-%ED%88%AC%EC%9B%80%EB%B0%94%EC%9A%B0%EB%8F%99/</id>
-  <published>2026-09-28T00:00:00Z</published>
-  <updated>2026-09-28T00:00:00Z</updated>
+  <published>2026-10-21T00:00:00Z</published>
+  <updated>2026-10-21T00:00:00Z</updated>
   <author><name>하루엔소쿠</name></author>
   <category term="하루엔소쿠"/>
   <summary type="text">하루엔소쿠 신제품 투움바우동</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://haruensoku.co.kr/uploaded/product/49/large_e98e078777b5642c6649fe79214ba4190.jpg&quot; alt=&quot;투움바우동&quot;&gt;&lt;/p&gt;&lt;p&gt;하루엔소쿠 신제품 투움바우동&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://haruensoku.co.kr/uploaded/product/49/large_63e855bb527c11938772958da115b0950.png&quot; alt=&quot;투움바우동&quot;&gt;&lt;/p&gt;&lt;p&gt;하루엔소쿠 신제품 투움바우동&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>스키야키나베</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%95%98%EB%A3%A8%EC%97%94%EC%86%8C%EC%BF%A0-%EC%8A%A4%ED%82%A4%EC%95%BC%ED%82%A4%EB%82%98%EB%B2%A0/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://haruensoku.co.kr/uploaded/product/48/large_879411d830d7c771c4fcfa0be69ad3c40.jpg"/>
+  <link rel="enclosure" type="image/png" href="https://haruensoku.co.kr/uploaded/product/48/large_9ec88226e3daff2908e561fe4e29ad930.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%95%98%EB%A3%A8%EC%97%94%EC%86%8C%EC%BF%A0-%EC%8A%A4%ED%82%A4%EC%95%BC%ED%82%A4%EB%82%98%EB%B2%A0/</id>
-  <published>2026-09-28T00:00:00Z</published>
-  <updated>2026-09-28T00:00:00Z</updated>
+  <published>2026-10-21T00:00:00Z</published>
+  <updated>2026-10-21T00:00:00Z</updated>
   <author><name>하루엔소쿠</name></author>
   <category term="하루엔소쿠"/>
   <summary type="text">하루엔소쿠 신제품 스키야키나베</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://haruensoku.co.kr/uploaded/product/48/large_879411d830d7c771c4fcfa0be69ad3c40.jpg&quot; alt=&quot;스키야키나베&quot;&gt;&lt;/p&gt;&lt;p&gt;하루엔소쿠 신제품 스키야키나베&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://haruensoku.co.kr/uploaded/product/48/large_9ec88226e3daff2908e561fe4e29ad930.png&quot; alt=&quot;스키야키나베&quot;&gt;&lt;/p&gt;&lt;p&gt;하루엔소쿠 신제품 스키야키나베&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>아이스크림 밀크티 카페라떼</title>
@@ -12342,14 +12472,13 @@
  <entry>
   <title>햄토치샌드위치</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%ED%96%84%ED%86%A0%EC%B9%98%EC%83%8C%EB%93%9C%EC%9C%84%EC%B9%98/"/>
-  <link rel="enclosure" type="image/jpeg" href="https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800348944897.JPG"/>
   <id>https://ttop32.github.io/sinsang-note/p/%EC%9D%B4%EB%A7%88%ED%8A%B824-%ED%96%84%ED%86%A0%EC%B9%98%EC%83%8C%EB%93%9C%EC%9C%84%EC%B9%98/</id>
   <published>2026-09-28T00:00:00Z</published>
   <updated>2026-09-28T00:00:00Z</updated>
   <author><name>이마트24</name></author>
   <category term="이마트24"/>
   <summary type="text">이마트24 신제품 햄토치샌드위치</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://msave.emart24.co.kr/cmsbo/upload/nHq/plu_image/500x500/8800348944897.JPG&quot; alt=&quot;햄토치샌드위치&quot;&gt;&lt;/p&gt;&lt;p&gt;이마트24 신제품 햄토치샌드위치&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;이마트24 신제품 햄토치샌드위치&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>포도주스</title>
@@ -12790,18 +12919,6 @@
   <category term="본도시락"/>
   <summary type="text">웨지감자, 해시브라운, 일회용케첩 2ea</summary>
   <content type="html">&lt;p&gt;&lt;img src=&quot;https://cdn.bonif.co.kr/cmdt/20260923_5VW_1790148257176_726Kb.jpg&quot; alt=&quot;모둠감자튀김&quot;&gt;&lt;/p&gt;&lt;p&gt;웨지감자, 해시브라운, 일회용케첩 2ea&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>콰삭모짜킹</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%BD%B0%EC%82%AD%EB%AA%A8%EC%A7%9C%ED%82%B9/"/>
-  <link rel="enclosure" type="image/png" href="https://home-img.bhc.co.kr/bhc/product/20260923_094355_a5378c56.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/bhc%EC%B9%98%ED%82%A8-%EC%BD%B0%EC%82%AD%EB%AA%A8%EC%A7%9C%ED%82%B9/</id>
-  <published>2026-09-23T00:00:00Z</published>
-  <updated>2026-09-23T00:00:00Z</updated>
-  <author><name>bhc치킨</name></author>
-  <category term="bhc치킨"/>
-  <summary type="text">[샘킴×bhc치킨] 이탈리안 대표 셰프 샘킴과bhc치킨의 특별한 만남! 콰삭함 속에 통모짜렐라를가득 담은&#x27;반전 식감&#x27; 콰삭모짜킹 *아라비아따딥, 그린올리브딥과 함께 제공됩니다. *BHC APP, 쿠팡이츠 한정 판매</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://home-img.bhc.co.kr/bhc/product/20260923_094355_a5378c56.png&quot; alt=&quot;콰삭모짜킹&quot;&gt;&lt;/p&gt;&lt;p&gt;[샘킴×bhc치킨] 이탈리안 대표 셰프 샘킴과bhc치킨의 특별한 만남! 콰삭함 속에 통모짜렐라를가득 담은&amp;#x27;반전 식감&amp;#x27; 콰삭모짜킹 *아라비아따딥, 그린올리브딥과 함께 제공됩니다. *BHC APP, 쿠팡이츠 한정 판매&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>아라비아따딥</title>
@@ -13721,126 +13838,6 @@
   <content type="html">&lt;p&gt;&lt;img src=&quot;https://img.lotteeatz.com/upload/product/2026/09/10/2026091015021421_9.png&quot; alt=&quot;디카페인_라이트모카크림라떼&quot;&gt;&lt;/p&gt;&lt;p&gt;엔제리너스 신제품 디카페인_라이트모카크림라떼&lt;/p&gt;</content>
  </entry>
  <entry>
-  <title>트로피컬 피나콜라다</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%ED%8A%B8%EB%A1%9C%ED%94%BC%EC%BB%AC-%ED%94%BC%EB%82%98%EC%BD%9C%EB%9D%BC%EB%8B%A4/"/>
-  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20260910/79a3e9e42f544a4803126ca0d68f691a.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%ED%8A%B8%EB%A1%9C%ED%94%BC%EC%BB%AC-%ED%94%BC%EB%82%98%EC%BD%9C%EB%9D%BC%EB%8B%A4/</id>
-  <published>2026-09-10T00:00:00Z</published>
-  <updated>2026-09-10T00:00:00Z</updated>
-  <author><name>백억커피</name></author>
-  <category term="백억커피"/>
-  <summary type="text">백억커피 신제품 트로피컬 피나콜라다</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20260910/79a3e9e42f544a4803126ca0d68f691a.png&quot; alt=&quot;트로피컬 피나콜라다&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 트로피컬 피나콜라다&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>쿠앤크밀크쉐이크 핫도그 세트</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EC%BF%A0%EC%95%A4%ED%81%AC%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC-%ED%95%AB%EB%8F%84%EA%B7%B8-%EC%84%B8%ED%8A%B8/"/>
-  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20260910/b7561389631d2c8cbd18d3865eaaec2e.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EC%BF%A0%EC%95%A4%ED%81%AC%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC-%ED%95%AB%EB%8F%84%EA%B7%B8-%EC%84%B8%ED%8A%B8/</id>
-  <published>2026-09-10T00:00:00Z</published>
-  <updated>2026-09-10T00:00:00Z</updated>
-  <author><name>백억커피</name></author>
-  <category term="백억커피"/>
-  <summary type="text">백억커피 신제품 쿠앤크밀크쉐이크 핫도그 세트</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20260910/b7561389631d2c8cbd18d3865eaaec2e.png&quot; alt=&quot;쿠앤크밀크쉐이크 핫도그 세트&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 쿠앤크밀크쉐이크 핫도그 세트&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>쿠앤크 밀크쉐이크</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EC%BF%A0%EC%95%A4%ED%81%AC-%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC/"/>
-  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20260910/d3b17a98854e9cf61f38151b8445adb4.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EC%BF%A0%EC%95%A4%ED%81%AC-%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC/</id>
-  <published>2026-09-10T00:00:00Z</published>
-  <updated>2026-09-10T00:00:00Z</updated>
-  <author><name>백억커피</name></author>
-  <category term="백억커피"/>
-  <summary type="text">백억커피 신제품 쿠앤크 밀크쉐이크</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20260910/d3b17a98854e9cf61f38151b8445adb4.png&quot; alt=&quot;쿠앤크 밀크쉐이크&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 쿠앤크 밀크쉐이크&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>치즈 치폴레 핫도그</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EC%B9%98%EC%A6%88-%EC%B9%98%ED%8F%B4%EB%A0%88-%ED%95%AB%EB%8F%84%EA%B7%B8/"/>
-  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20260910/2c5cf591a6d8209c4d95942423cf1464.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EC%B9%98%EC%A6%88-%EC%B9%98%ED%8F%B4%EB%A0%88-%ED%95%AB%EB%8F%84%EA%B7%B8/</id>
-  <published>2026-09-10T00:00:00Z</published>
-  <updated>2026-09-10T00:00:00Z</updated>
-  <author><name>백억커피</name></author>
-  <category term="백억커피"/>
-  <summary type="text">백억커피 신제품 치즈 치폴레 핫도그</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20260910/2c5cf591a6d8209c4d95942423cf1464.png&quot; alt=&quot;치즈 치폴레 핫도그&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 치즈 치폴레 핫도그&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>버터 리치 크림 라떼</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%B2%84%ED%84%B0-%EB%A6%AC%EC%B9%98-%ED%81%AC%EB%A6%BC-%EB%9D%BC%EB%96%BC/"/>
-  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20260910/b106f6b7ba605521722e764e7d4cf6b5.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%B2%84%ED%84%B0-%EB%A6%AC%EC%B9%98-%ED%81%AC%EB%A6%BC-%EB%9D%BC%EB%96%BC/</id>
-  <published>2026-09-10T00:00:00Z</published>
-  <updated>2026-09-10T00:00:00Z</updated>
-  <author><name>백억커피</name></author>
-  <category term="백억커피"/>
-  <summary type="text">백억커피 신제품 버터 리치 크림 라떼</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20260910/b106f6b7ba605521722e764e7d4cf6b5.png&quot; alt=&quot;버터 리치 크림 라떼&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 버터 리치 크림 라떼&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>바닐라 밀크쉐이크 핫도그 세트</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%B0%94%EB%8B%90%EB%9D%BC-%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC-%ED%95%AB%EB%8F%84%EA%B7%B8-%EC%84%B8%ED%8A%B8/"/>
-  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20260910/5a4ba47ebc5bb6374f31eabe22ad4d0e.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%B0%94%EB%8B%90%EB%9D%BC-%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC-%ED%95%AB%EB%8F%84%EA%B7%B8-%EC%84%B8%ED%8A%B8/</id>
-  <published>2026-09-10T00:00:00Z</published>
-  <updated>2026-09-10T00:00:00Z</updated>
-  <author><name>백억커피</name></author>
-  <category term="백억커피"/>
-  <summary type="text">백억커피 신제품 바닐라 밀크쉐이크 핫도그 세트</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20260910/5a4ba47ebc5bb6374f31eabe22ad4d0e.png&quot; alt=&quot;바닐라 밀크쉐이크 핫도그 세트&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 바닐라 밀크쉐이크 핫도그 세트&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>바닐라 밀크쉐이크</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%B0%94%EB%8B%90%EB%9D%BC-%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC/"/>
-  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20260910/7a5d9ec59d74f0ec7bf9da6bf48f7e63.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%B0%94%EB%8B%90%EB%9D%BC-%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC/</id>
-  <published>2026-09-10T00:00:00Z</published>
-  <updated>2026-09-10T00:00:00Z</updated>
-  <author><name>백억커피</name></author>
-  <category term="백억커피"/>
-  <summary type="text">백억커피 신제품 바닐라 밀크쉐이크</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20260910/7a5d9ec59d74f0ec7bf9da6bf48f7e63.png&quot; alt=&quot;바닐라 밀크쉐이크&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 바닐라 밀크쉐이크&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>더블치즈 밀크쉐이크 핫도그 세트</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%8D%94%EB%B8%94%EC%B9%98%EC%A6%88-%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC-%ED%95%AB%EB%8F%84%EA%B7%B8-%EC%84%B8%ED%8A%B8/"/>
-  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20260910/40fdf0ff57c207c6ef1f682b20d2dea6.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%8D%94%EB%B8%94%EC%B9%98%EC%A6%88-%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC-%ED%95%AB%EB%8F%84%EA%B7%B8-%EC%84%B8%ED%8A%B8/</id>
-  <published>2026-09-10T00:00:00Z</published>
-  <updated>2026-09-10T00:00:00Z</updated>
-  <author><name>백억커피</name></author>
-  <category term="백억커피"/>
-  <summary type="text">백억커피 신제품 더블치즈 밀크쉐이크 핫도그 세트</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20260910/40fdf0ff57c207c6ef1f682b20d2dea6.png&quot; alt=&quot;더블치즈 밀크쉐이크 핫도그 세트&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 더블치즈 밀크쉐이크 핫도그 세트&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>더블 치즈 프라이</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%8D%94%EB%B8%94-%EC%B9%98%EC%A6%88-%ED%94%84%EB%9D%BC%EC%9D%B4/"/>
-  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20260910/936a2bd3d6228ea3553ae1bf3a2b136b.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%8D%94%EB%B8%94-%EC%B9%98%EC%A6%88-%ED%94%84%EB%9D%BC%EC%9D%B4/</id>
-  <published>2026-09-10T00:00:00Z</published>
-  <updated>2026-09-10T00:00:00Z</updated>
-  <author><name>백억커피</name></author>
-  <category term="백억커피"/>
-  <summary type="text">백억커피 신제품 더블 치즈 프라이</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20260910/936a2bd3d6228ea3553ae1bf3a2b136b.png&quot; alt=&quot;더블 치즈 프라이&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 더블 치즈 프라이&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>더블 치즈 밀크쉐이크</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%8D%94%EB%B8%94-%EC%B9%98%EC%A6%88-%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC/"/>
-  <link rel="enclosure" type="image/png" href="https://10billioncoffee.co.kr/uploads/menu_boards/20260910/a5faccab81c279ba6f1d059e68c9fe09.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EB%B0%B1%EC%96%B5%EC%BB%A4%ED%94%BC-%EB%8D%94%EB%B8%94-%EC%B9%98%EC%A6%88-%EB%B0%80%ED%81%AC%EC%89%90%EC%9D%B4%ED%81%AC/</id>
-  <published>2026-09-10T00:00:00Z</published>
-  <updated>2026-09-10T00:00:00Z</updated>
-  <author><name>백억커피</name></author>
-  <category term="백억커피"/>
-  <summary type="text">백억커피 신제품 더블 치즈 밀크쉐이크</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://10billioncoffee.co.kr/uploads/menu_boards/20260910/a5faccab81c279ba6f1d059e68c9fe09.png&quot; alt=&quot;더블 치즈 밀크쉐이크&quot;&gt;&lt;/p&gt;&lt;p&gt;백억커피 신제품 더블 치즈 밀크쉐이크&lt;/p&gt;</content>
- </entry>
- <entry>
   <title>수제 라멘 + 미니 등심돈카츠 정식</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EB%A9%98%EC%A7%80-%EC%88%98%EC%A0%9C-%EB%9D%BC%EB%A9%98-%EB%AF%B8%EB%8B%88-%EB%93%B1%EC%8B%AC%EB%8F%88%EC%B9%B4%EC%B8%A0-%EC%A0%95%EC%8B%9D/"/>
   <link rel="enclosure" type="image/jpeg" href="https://cdn.bonif.co.kr/cmdt/20260910_7LI_1788995538378_457Kb.jpg"/>
@@ -14184,14 +14181,13 @@
  <entry>
   <title>쑥 팥 슈페너</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%83%90%EC%95%A4%ED%83%90%EC%8A%A4-%EC%91%A5-%ED%8C%A5-%EC%8A%88%ED%8E%98%EB%84%88/"/>
-  <link rel="enclosure" type="image/png" href="https://kr.object.iwinv.kr/tomntoms-web/uploads/menu/1011/1788854135670_26_n%C2%A5g.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%83%90%EC%95%A4%ED%83%90%EC%8A%A4-%EC%91%A5-%ED%8C%A5-%EC%8A%88%ED%8E%98%EB%84%88/</id>
   <published>2026-09-08T00:00:00Z</published>
   <updated>2026-09-08T00:00:00Z</updated>
   <author><name>탐앤탐스</name></author>
   <category term="탐앤탐스"/>
   <summary type="text">탐앤탐스 신제품 쑥 팥 슈페너</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://kr.object.iwinv.kr/tomntoms-web/uploads/menu/1011/1788854135670_26_n%C2%A5g.png&quot; alt=&quot;쑥 팥 슈페너&quot;&gt;&lt;/p&gt;&lt;p&gt;탐앤탐스 신제품 쑥 팥 슈페너&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;탐앤탐스 신제품 쑥 팥 슈페너&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>바닐라 판단 라떼</title>
@@ -15440,18 +15436,6 @@
   <content type="html">&lt;p&gt;&lt;img src=&quot;https://img.lotteeatz.com/upload/product/2026/08/27/20260827141846348_9.png/dims/resize/x214/optimize&quot; alt=&quot;리아 불고기 더블 레드&quot;&gt;&lt;/p&gt;&lt;p&gt;롯데리아 신제품 리아 불고기 더블 레드&lt;/p&gt;</content>
  </entry>
  <entry>
-  <title>간장윙콤비</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EA%B0%84%EC%9E%A5%EC%9C%99%EC%BD%A4%EB%B9%84/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Soy%20Sauce%20Wing%20Combo.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EA%B0%84%EC%9E%A5%EC%9C%99%EC%BD%A4%EB%B9%84/</id>
-  <published>2026-08-27T00:00:00Z</published>
-  <updated>2026-08-27T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 풍부한 맛의 간장윙콤비[날개(윙)+정육, 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Soy%20Sauce%20Wing%20Combo.png&quot; alt=&quot;간장윙콤비&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 풍부한 맛의 간장윙콤비[날개(윙)+정육, 조리 전 중량 700g]&lt;/p&gt;</content>
- </entry>
- <entry>
   <title>우리찹쌀모카찰떡빵</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%8C%8C%EB%A6%AC%EB%B0%94%EA%B2%8C%EB%9C%A8-%EC%9A%B0%EB%A6%AC%EC%B0%B9%EC%8C%80%EB%AA%A8%EC%B9%B4%EC%B0%B0%EB%96%A1%EB%B9%B5/"/>
   <link rel="enclosure" type="image/jpeg" href="https://d2afncas1tel3t.cloudfront.net/wp-content/uploads/2023/02/221118_PB-%ED%99%88%ED%8E%98%EC%9D%B4%EC%A7%80-HMR%EB%B8%8C%EB%A0%88%EB%93%9C%ED%8C%A8%ED%82%A4%EC%A7%800019.jpg"/>
@@ -15632,114 +15616,6 @@
   <content type="html">&lt;p&gt;&lt;img src=&quot;https://img.mega-mgccoffee.com/megahp/manager/upload/menu/20260826193109_1787740269466_ydyECbIq8A.jpg&quot; alt=&quot;중식마녀 마라크림 새우토스트&quot;&gt;&lt;/p&gt;&lt;p&gt;수리수리 중마수리~ 바삭한 식빵과 고소한 새우 패티에 매콤달콤 부드러운 마라크림 소스를 더해 풍성한 맛과 식감을 담아낸 중식마녀 특제 토스트&lt;/p&gt;</content>
  </entry>
  <entry>
-  <title>허니갈릭윙콤비</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%ED%97%88%EB%8B%88%EA%B0%88%EB%A6%AD%EC%9C%99%EC%BD%A4%EB%B9%84/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Honey%20Garlic%20Wing%20Combo(3).png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%ED%97%88%EB%8B%88%EA%B0%88%EB%A6%AD%EC%9C%99%EC%BD%A4%EB%B9%84/</id>
-  <published>2026-08-26T00:00:00Z</published>
-  <updated>2026-08-26T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 달콤알싸한 허니갈릭윙콤비[날개(윙)+정육, 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Honey%20Garlic%20Wing%20Combo(3).png&quot; alt=&quot;허니갈릭윙콤비&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 달콤알싸한 허니갈릭윙콤비[날개(윙)+정육, 조리 전 중량 700g]&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>반반윙콤비[마라레드+허니갈릭]</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EB%A7%88%EB%9D%BC%EB%A0%88%EB%93%9C-%ED%97%88%EB%8B%88%EA%B0%88%EB%A6%AD/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Mala%20Red%20&amp;%20Honey%20Garlic%20Combo.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EB%A7%88%EB%9D%BC%EB%A0%88%EB%93%9C-%ED%97%88%EB%8B%88%EA%B0%88%EB%A6%AD/</id>
-  <published>2026-08-26T00:00:00Z</published>
-  <updated>2026-08-26T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 마라레드와 허니갈릭을 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Mala%20Red%20&amp;amp;%20Honey%20Garlic%20Combo.png&quot; alt=&quot;반반윙콤비[마라레드+허니갈릭]&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 마라레드와 허니갈릭을 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>반반윙콤비[레드+허니갈릭]</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EB%A0%88%EB%93%9C-%ED%97%88%EB%8B%88%EA%B0%88%EB%A6%AD/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Red%20&amp;%20Honey%20Garlic%20Combo.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EB%A0%88%EB%93%9C-%ED%97%88%EB%8B%88%EA%B0%88%EB%A6%AD/</id>
-  <published>2026-08-26T00:00:00Z</published>
-  <updated>2026-08-26T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 레드와 허니갈릭을 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Red%20&amp;amp;%20Honey%20Garlic%20Combo.png&quot; alt=&quot;반반윙콤비[레드+허니갈릭]&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 레드와 허니갈릭을 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>반반윙콤비[레드+마라레드]</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EB%A0%88%EB%93%9C-%EB%A7%88%EB%9D%BC%EB%A0%88%EB%93%9C/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Red%20&amp;%20Mala%20Red%20Combo.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EB%A0%88%EB%93%9C-%EB%A7%88%EB%9D%BC%EB%A0%88%EB%93%9C/</id>
-  <published>2026-08-26T00:00:00Z</published>
-  <updated>2026-08-26T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 레드와 마라레드를 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Red%20&amp;amp;%20Mala%20Red%20Combo.png&quot; alt=&quot;반반윙콤비[레드+마라레드]&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 레드와 마라레드를 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>반반윙콤비[간장+허니갈릭]</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EA%B0%84%EC%9E%A5-%ED%97%88%EB%8B%88%EA%B0%88%EB%A6%AD/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Soy%20&amp;%20Honey%20Garlic%20Combo.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EA%B0%84%EC%9E%A5-%ED%97%88%EB%8B%88%EA%B0%88%EB%A6%AD/</id>
-  <published>2026-08-26T00:00:00Z</published>
-  <updated>2026-08-26T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 간장과 허니갈릭을 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Soy%20&amp;amp;%20Honey%20Garlic%20Combo.png&quot; alt=&quot;반반윙콤비[간장+허니갈릭]&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 간장과 허니갈릭을 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>반반윙콤비[간장+마라레드]</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EA%B0%84%EC%9E%A5-%EB%A7%88%EB%9D%BC%EB%A0%88%EB%93%9C/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Soy%20&amp;%20Mala%20Red%20Combo.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EA%B0%84%EC%9E%A5-%EB%A7%88%EB%9D%BC%EB%A0%88%EB%93%9C/</id>
-  <published>2026-08-26T00:00:00Z</published>
-  <updated>2026-08-26T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 간장과 마라레드를 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Soy%20&amp;amp;%20Mala%20Red%20Combo.png&quot; alt=&quot;반반윙콤비[간장+마라레드]&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 간장과 마라레드를 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>반반윙콤비[간장+레드]</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EA%B0%84%EC%9E%A5-%EB%A0%88%EB%93%9C/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Soy%20&amp;%20Red%20Wing%20Combo.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%B0%98%EB%B0%98%EC%9C%99%EC%BD%A4%EB%B9%84-%EA%B0%84%EC%9E%A5-%EB%A0%88%EB%93%9C/</id>
-  <published>2026-08-26T00:00:00Z</published>
-  <updated>2026-08-26T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 간장과 레드를 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Soy%20&amp;amp;%20Red%20Wing%20Combo.png&quot; alt=&quot;반반윙콤비[간장+레드]&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 간장과 레드를 함께 맛볼 수 있는 윙콤비 메뉴[날개(윙)+정육, 조리 전 중량 700g]&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>마라레드윙콤비</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%A7%88%EB%9D%BC%EB%A0%88%EB%93%9C%EC%9C%99%EC%BD%A4%EB%B9%84/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Mala%20Red%20Wing%20Combo.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%A7%88%EB%9D%BC%EB%A0%88%EB%93%9C%EC%9C%99%EC%BD%A4%EB%B9%84/</id>
-  <published>2026-08-26T00:00:00Z</published>
-  <updated>2026-08-26T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 얼얼화끈한 마라레드윙콤비[날개(윙)+정육, 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Mala%20Red%20Wing%20Combo.png&quot; alt=&quot;마라레드윙콤비&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 얼얼화끈한 마라레드윙콤비[날개(윙)+정육, 조리 전 중량 700g]&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>레드윙콤비</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%A0%88%EB%93%9C%EC%9C%99%EC%BD%A4%EB%B9%84/"/>
-  <link rel="enclosure" type="image/png" href="https://www.kyochon.com/uploadFiles/TB_ITEM/list_Red%20Wing%20Combo.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%EA%B5%90%EC%B4%8C%EC%B9%98%ED%82%A8-%EB%A0%88%EB%93%9C%EC%9C%99%EC%BD%A4%EB%B9%84/</id>
-  <published>2026-08-26T00:00:00Z</published>
-  <updated>2026-08-26T00:00:00Z</updated>
-  <author><name>교촌치킨</name></author>
-  <category term="교촌치킨"/>
-  <summary type="text">먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 맛있게 매운 레드윙콤비[날개(윙)+정육, 조리 전 중량 700g]</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://www.kyochon.com/uploadFiles/TB_ITEM/list_Red%20Wing%20Combo.png&quot; alt=&quot;레드윙콤비&quot;&gt;&lt;/p&gt;&lt;p&gt;먹기 편한 하프윙과 부드러운 정육순살의 새로운 조합으로 즐기는, 맛있게 매운 레드윙콤비[날개(윙)+정육, 조리 전 중량 700g]&lt;/p&gt;</content>
- </entry>
- <entry>
   <title>모둠까스</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%99%8D%EC%9D%B5%EB%8F%88%EA%B9%8C%EC%8A%A4-%EB%AA%A8%EB%91%A0%EA%B9%8C%EC%8A%A4/"/>
   <link rel="enclosure" type="image/png" href="https://contents.sixshop.com/thumbnails/uploadedFiles/39154/default/image_1787640259686_1000.png"/>
@@ -15766,14 +15642,13 @@
  <entry>
   <title>오트 오곡 라떼</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%83%90%EC%95%A4%ED%83%90%EC%8A%A4-%EC%98%A4%ED%8A%B8-%EC%98%A4%EA%B3%A1-%EB%9D%BC%EB%96%BC/"/>
-  <link rel="enclosure" type="image/png" href="https://kr.object.iwinv.kr/tomntoms-web/uploads/menu/1787619224436_26_n%C2%BCg.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%83%90%EC%95%A4%ED%83%90%EC%8A%A4-%EC%98%A4%ED%8A%B8-%EC%98%A4%EA%B3%A1-%EB%9D%BC%EB%96%BC/</id>
   <published>2026-08-25T00:00:00Z</published>
   <updated>2026-08-25T00:00:00Z</updated>
   <author><name>탐앤탐스</name></author>
   <category term="탐앤탐스"/>
   <summary type="text">고소한 오곡의 풍미에 부드러운 오트밀크를 더해 담백하고 깊은 맛을 즐길 수 있는 오곡 라떼</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://kr.object.iwinv.kr/tomntoms-web/uploads/menu/1787619224436_26_n%C2%BCg.png&quot; alt=&quot;오트 오곡 라떼&quot;&gt;&lt;/p&gt;&lt;p&gt;고소한 오곡의 풍미에 부드러운 오트밀크를 더해 담백하고 깊은 맛을 즐길 수 있는 오곡 라떼&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;고소한 오곡의 풍미에 부드러운 오트밀크를 더해 담백하고 깊은 맛을 즐길 수 있는 오곡 라떼&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>아이스 오트 오곡 라떼</title>
@@ -15802,25 +15677,25 @@
  <entry>
   <title>아이스 배생강차</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%83%90%EC%95%A4%ED%83%90%EC%8A%A4-%EC%95%84%EC%9D%B4%EC%8A%A4-%EB%B0%B0%EC%83%9D%EA%B0%95%EC%B0%A8/"/>
-  <link rel="enclosure" type="image/png" href="https://kr.object.iwinv.kr/tomntoms-web/uploads/menu/1787618715698_26_n%C2%95g.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%83%90%EC%95%A4%ED%83%90%EC%8A%A4-%EC%95%84%EC%9D%B4%EC%8A%A4-%EB%B0%B0%EC%83%9D%EA%B0%95%EC%B0%A8/</id>
   <published>2026-08-25T00:00:00Z</published>
   <updated>2026-08-25T00:00:00Z</updated>
   <author><name>탐앤탐스</name></author>
   <category term="탐앤탐스"/>
   <summary type="text">추운 겨울 목이 아플 때 챙겨먹게 되는 생강차에 배를 혼합하여 매콤달콤하게 즐길 수 있는 한국차</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://kr.object.iwinv.kr/tomntoms-web/uploads/menu/1787618715698_26_n%C2%95g.png&quot; alt=&quot;아이스 배생강차&quot;&gt;&lt;/p&gt;&lt;p&gt;추운 겨울 목이 아플 때 챙겨먹게 되는 생강차에 배를 혼합하여 매콤달콤하게 즐길 수 있는 한국차&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;추운 겨울 목이 아플 때 챙겨먹게 되는 생강차에 배를 혼합하여 매콤달콤하게 즐길 수 있는 한국차&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>쌍화차</title>
   <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%83%90%EC%95%A4%ED%83%90%EC%8A%A4-%EC%8C%8D%ED%99%94%EC%B0%A8/"/>
+  <link rel="enclosure" type="image/png" href="https://kr.object.iwinv.kr/tomntoms-web/uploads/menu/1787618438388_26_n_g.png"/>
   <id>https://ttop32.github.io/sinsang-note/p/%ED%83%90%EC%95%A4%ED%83%90%EC%8A%A4-%EC%8C%8D%ED%99%94%EC%B0%A8/</id>
   <published>2026-08-25T00:00:00Z</published>
   <updated>2026-08-25T00:00:00Z</updated>
   <author><name>탐앤탐스</name></author>
   <category term="탐앤탐스"/>
   <summary type="text">작약, 천궁, 당귀 등 쌍화 원료를 사용한 탐앤탐스 개발 제품으로 면역력 향상과 몸을 따뜻하게 데우는데 도움이 되는 대표적인 한국 전통차</summary>
-  <content type="html">&lt;p&gt;작약, 천궁, 당귀 등 쌍화 원료를 사용한 탐앤탐스 개발 제품으로 면역력 향상과 몸을 따뜻하게 데우는데 도움이 되는 대표적인 한국 전통차&lt;/p&gt;</content>
+  <content type="html">&lt;p&gt;&lt;img src=&quot;https://kr.object.iwinv.kr/tomntoms-web/uploads/menu/1787618438388_26_n_g.png&quot; alt=&quot;쌍화차&quot;&gt;&lt;/p&gt;&lt;p&gt;작약, 천궁, 당귀 등 쌍화 원료를 사용한 탐앤탐스 개발 제품으로 면역력 향상과 몸을 따뜻하게 데우는데 도움이 되는 대표적인 한국 전통차&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>배생강차</title>
@@ -15987,18 +15862,6 @@
   <category term="스타벅스"/>
   <summary type="text">촉촉한 커피 시트 위에 진한 마스카포네 치즈 크림과 얇게 구워낸 모카 크레이프를 층층이 쌓아올린 티라미수 케이크 입니다. (지름 13.5cm / 중량 330g)</summary>
   <content type="html">&lt;p&gt;&lt;img src=&quot;https://image.istarbucks.co.kr/upload/store/skuimg/2026/08/[9300000006880]_20260818090612678.jpg&quot; alt=&quot;티라미수 크레이프 케이크&quot;&gt;&lt;/p&gt;&lt;p&gt;촉촉한 커피 시트 위에 진한 마스카포네 치즈 크림과 얇게 구워낸 모카 크레이프를 층층이 쌓아올린 티라미수 케이크 입니다. (지름 13.5cm / 중량 330g)&lt;/p&gt;</content>
- </entry>
- <entry>
-  <title>파란라벨 저당 카카오 케이크 (조각)</title>
-  <link rel="alternate" type="text/html" href="https://ttop32.github.io/sinsang-note/p/%ED%8C%8C%EB%A6%AC%EB%B0%94%EA%B2%8C%EB%9C%A8-%ED%8C%8C%EB%9E%80%EB%9D%BC%EB%B2%A8-%EC%A0%80%EB%8B%B9-%EC%B9%B4%EC%B9%B4%EC%98%A4-%EC%BC%80%EC%9D%B4%ED%81%AC-%EC%A1%B0%EA%B0%81/"/>
-  <link rel="enclosure" type="image/png" href="https://d2afncas1tel3t.cloudfront.net/wp-content/uploads/2026/02/%EC%A0%80%EB%8B%B9%EC%B9%B4%EC%B9%B4%EC%98%A4%EC%BC%80%EC%9D%B4%ED%81%AC-%EC%A1%B0%EA%B0%81.png"/>
-  <id>https://ttop32.github.io/sinsang-note/p/%ED%8C%8C%EB%A6%AC%EB%B0%94%EA%B2%8C%EB%9C%A8-%ED%8C%8C%EB%9E%80%EB%9D%BC%EB%B2%A8-%EC%A0%80%EB%8B%B9-%EC%B9%B4%EC%B9%B4%EC%98%A4-%EC%BC%80%EC%9D%B4%ED%81%AC-%EC%A1%B0%EA%B0%81/</id>
-  <published>2026-08-21T00:00:00Z</published>
-  <updated>2026-08-21T00:00:00Z</updated>
-  <author><name>파리바게뜨</name></author>
-  <category term="파리바게뜨"/>
-  <summary type="text">저당 설계로 부담은 Down, 카카오 풍미는 Up! 폴리페놀 80mgGAE/(총내용량당)을 담아 건강까지 더한 저당 카카오 케이크&quot;</summary>
-  <content type="html">&lt;p&gt;&lt;img src=&quot;https://d2afncas1tel3t.cloudfront.net/wp-content/uploads/2026/02/%EC%A0%80%EB%8B%B9%EC%B9%B4%EC%B9%B4%EC%98%A4%EC%BC%80%EC%9D%B4%ED%81%AC-%EC%A1%B0%EA%B0%81.png&quot; alt=&quot;파란라벨 저당 카카오 케이크 (조각)&quot;&gt;&lt;/p&gt;&lt;p&gt;저당 설계로 부담은 Down, 카카오 풍미는 Up! 폴리페놀 80mgGAE/(총내용량당)을 담아 건강까지 더한 저당 카카오 케이크&amp;quot;&lt;/p&gt;</content>
  </entry>
  <entry>
   <title>초코멜로베어 밀크</title>
